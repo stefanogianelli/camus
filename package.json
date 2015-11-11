@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node_modules/.bin/mocha"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
     "bluebird": "^3.0.5",
     "hapi": "^11.1.0",
     "lodash": "^3.10.1",
+    "mocha": "^2.3.3",
     "mongoose": "^4.2.5"
   }
 }
