@@ -1,16 +1,16 @@
 var _ = require('lodash');
-var promise = require('bluebird');
+var Promise = require('bluebird');
 var util = require('util');
 
 var contextManager = function () { };
 
 /**
- * Retrieve the nodes of the CDT that are used for service selection
+ * Retrieve the nodes of the CDT that are used for Service selection
  * @param context The current context
  * @returns {bluebird|exports|module.exports} The list of nodes
  */
-contextManager.prototype.getFilterNodes = function (context) {
-    return new promise (function (resolve, reject) {
+contextManager.prototype.getFilterNodes = function getFilterNodes (context) {
+    return new Promise (function (resolve, reject) {
         if (context !== null && context.length > 0) {
             var params = [];
             _.forEach(context, function (item) {
@@ -35,12 +35,12 @@ contextManager.prototype.getFilterNodes = function (context) {
 };
 
 /**
- * Retrieve the CDT nodes that uses a specific method for service selection
+ * Retrieve the CDT nodes that uses a specific method for Service selection
  * @param context The current context
  * @returns {bluebird|exports|module.exports} The list of nodes
  */
-contextManager.prototype.getSpecificNodes = function (context) {
-    return new promise (function (resolve, reject) {
+contextManager.prototype.getSpecificNodes = function getSpecificNodes (context) {
+    return new Promise (function (resolve, reject) {
         if (context !== null && context.length > 0) {
             var params = [];
             _.forEach(context, function (item) {
@@ -69,8 +69,8 @@ contextManager.prototype.getSpecificNodes = function (context) {
  * @param context The current context
  * @returns {bluebird|exports|module.exports} The list of nodes
  */
-contextManager.prototype.getParameterNodes = function (context) {
-    return new promise (function (resolve, reject) {
+contextManager.prototype.getParameterNodes = function getParameterNodes (context) {
+    return new Promise (function (resolve, reject) {
         if (context !== null && context.length > 0) {
             var params = [];
             _.forEach(context, function (item) {

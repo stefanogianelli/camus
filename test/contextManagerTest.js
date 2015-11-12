@@ -32,9 +32,9 @@ var wrongContext = [
     }
 ];
 
-describe('contextManager', function() {
+describe('Component: ContextManager', function() {
 
-    describe('getFilterNodes', function () {
+    describe('#getFilterNodes()', function () {
         it('check if correct filter nodes are returned', function () {
             contextManager
                 .getFilterNodes(context)
@@ -73,7 +73,7 @@ describe('contextManager', function() {
         });
     });
 
-    describe('getSpecificNodes', function () {
+    describe('#getSpecificNodes()', function () {
         it('check if correct specific nodes are returned', function () {
             contextManager
                 .getSpecificNodes(context)
@@ -110,7 +110,7 @@ describe('contextManager', function() {
         });
     });
 
-    describe('getParameterNodes', function () {
+    describe('#getParameterNodes()', function () {
         it('check if correct parameter nodes are returned', function () {
             contextManager
                 .getParameterNodes(context)

@@ -2,14 +2,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var primaryServiceSchema = new Schema ({
-    idOperation: ObjectId,
+    idOperation: Schema.ObjectId,
     dimension: String,
     value: String,
     ranking: Number,
     weight: Number,
-    idCDT: ObjectId
+    idCDT: Schema.ObjectId
 });
 
-var primaryServiceDescriptor = mongoose.model('primaryService', primaryServiceSchema);
+var primaryServiceDescriptor = mongoose.model('primary_service', primaryServiceSchema);
 
 module.exports = primaryServiceDescriptor;
