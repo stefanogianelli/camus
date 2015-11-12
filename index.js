@@ -1,6 +1,5 @@
 var hapi = require('hapi');
-var contextManager = require('./components/contextManager.js');
-var serviceManager = require('./components/serviceManager.js');
+var serviceManager = require('./components/primaryServiceSelection.js');
 
 var app = new hapi.Server();
 
