@@ -6,6 +6,8 @@ var contextManager = require('./contextManager.js');
 Promise.promisifyAll(Service);
 Promise.promisifyAll(Service.prototype);
 
+var N = 3;
+
 var primaryServiceSelection = function () { };
 
 /**
@@ -15,17 +17,21 @@ var primaryServiceSelection = function () { };
  */
 primaryServiceSelection.prototype.selectServices = function selectServices (context) {
     return new Promise(function (resolve, reject) {
-        contextManager
-            .getFilterNodes(context.context)
-            .then(function (filterNodes) {
-                return searchServices(filterNodes, context._id);
-            })
-            .then(function(services) {
-                resolve(services);
-            })
-            .catch(function (e) {
-                reject(e);
-            });
+        if (context !== null && _.has(context, 'context')) {
+            contextManager
+                .getFilterNodes(context.context)
+                .then(function (filterNodes) {
+                    return searchServices(filterNodes, context._id);
+                })
+                .then(function (services) {
+                    resolve(calculateRanking(services));
+                })
+                .catch(function (e) {
+                    reject(e.message);
+                });
+        } else {
+            reject('No context selected');
+        }
     })
 };
 
@@ -50,8 +56,34 @@ function searchServices (filterNodes, idCDT) {
         return Service
             .findAsync(whereClause, '_idOperation ranking weight');
     } else {
-        return new Error('No filter nodes selected!');
+        throw new Error('No filter nodes selected!');
     }
+}
+
+/**
+ * Compute the ranking of each operation found by the previous steps
+ * @param services The list of services, with own rank and weight
+ * @returns {Array} The ranked list of Top-N services
+ */
+function calculateRanking (services) {
+    var rankedList = [];
+    _.forEach(services, function (s) {
+        var rank = s.weight * (1 / s.ranking);
+        var index = _.findIndex(rankedList, function (i) {
+            return i._idOperation.equals(s._idOperation);
+        });
+        if (index === -1) {
+            rankedList.push({
+                _idOperation: s._idOperation,
+                rank: rank
+            });
+        } else {
+            rankedList[index].rank += rank;
+        }
+    });
+    rankedList = _.sortByOrder(rankedList, 'rank', 'desc');
+    _.take(rankedList, N);
+    return rankedList;
 }
 
 module.exports = new primaryServiceSelection();

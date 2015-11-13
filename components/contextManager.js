@@ -49,7 +49,8 @@ contextManager.prototype.getSpecificNodes = function getSpecificNodes (context) 
                         if (_.has(item, 'search')) {
                             params.push({
                                 dimension: item.dimension,
-                                value: item.value
+                                value: item.value,
+                                search: item.search
                             });
                         }
                 } else {

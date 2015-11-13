@@ -55,7 +55,7 @@ var serviceDescriptorSchema = new Schema({
 });
 
 serviceDescriptorSchema.static('findByOperationId', function (idOperation, callback) {
-    return this.find({'operations._id': idOperation}, callback);
+    return this.findOne({'operations._id': idOperation}, callback);
 });
 
 var serviceDescriptor = mongoose.model('service_descriptor', serviceDescriptorSchema);

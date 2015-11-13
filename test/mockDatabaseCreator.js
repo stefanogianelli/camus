@@ -11,29 +11,67 @@ var mockDatabaseCreator = function (idCDT) {
     _idCDT = idCDT;
 };
 
+/**
+ * Create a mock database for testing purposes
+ * @param callback The callback function
+ */
 mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback) {
-    async.waterfall([
-            function (callback) {
-                var googlePlaces = new ServiceModel(mockData.googlePlaces);
-                googlePlaces.save(function (err, service) {
-                    callback(err, service.operations[0].id);
+    async.parallel({
+        one: function (callback) {
+            async.waterfall([
+                    function (callback) {
+                        var googlePlaces = new ServiceModel(mockData.googlePlaces);
+                        googlePlaces.save(function (err, service) {
+                            callback(err, service.operations[0].id);
+                        });
+                    },
+                    function (idOperation, callback) {
+                        _.forEach(mockData.googlePlacesAssociations(idOperation, _idCDT), function (a) {
+                            var associations = new PrimaryServiceModel(a);
+                            associations.save(function (err) {
+                                assert.equal(err, null);
+                            });
+                        });
+                        callback(null, 'done');
+                    }
+                ],
+                function (err) {
+                    callback(err, 'done');
                 });
-            },
-            function (idOperation, callback) {
-                _.forEach(mockData.googlePlacesAssociations(idOperation, _idCDT), function (a) {
-                    var associations = new PrimaryServiceModel(a);
-                    associations.save(function (err) {
-                        assert.equal(err, null);
-                    });
+        },
+        two: function (callback) {
+            async.waterfall([
+                    function (callback) {
+                        var eventful = new ServiceModel(mockData.eventful);
+                        eventful.save(function (err, service) {
+                            callback(err, service.operations[0].id);
+                        });
+                    },
+                    function (idOperation, callback) {
+                        _.forEach(mockData.eventfulAssociations(idOperation, _idCDT), function (a) {
+                            var associations = new PrimaryServiceModel(a);
+                            associations.save(function (err) {
+                                assert.equal(err, null);
+                            });
+                        });
+                        callback(null, 'done');
+                    }
+                ],
+                function (err) {
+                    callback(err, 'done');
                 });
-                callback(null, 'done');
-            }
-        ],
-        function (err) {
-            callback(err, 'done');
-        });
+        }
+    },
+    function (err) {
+        callback(err, 'done');
+    });
 };
 
+/**
+ * Delete the created database.
+ * It must be called at the end of the tests
+ * @param callback The callback function
+ */
 mockDatabaseCreator.prototype.deleteDatabase = function deleteDatabase (callback) {
     async.parallel({
             one: function (callback) {

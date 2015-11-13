@@ -12,13 +12,15 @@ describe('Component: ContextManager', function() {
             return contextManager
                 .getFilterNodes(mockData.context(idCDT).context)
                 .then(function (nodes) {
-                    if (nodes.length === 2) {
+                    if (nodes.length === 3) {
                         assert.equal(nodes[0].dimension, 'InterestTopic');
                         assert.equal(nodes[0].value, 'Restaurant');
                         assert.equal(nodes[1].dimension, 'Budget');
                         assert.equal(nodes[1].value, 'Low');
+                        assert.equal(nodes[2].dimension, 'Tipology');
+                        assert.equal(nodes[2].value, 'DinnerWithFriends');
                     } else {
-                        assert.fail(nodes.length, 2, 'Wrong nodes count');
+                        assert.fail(nodes.length, 3, 'Wrong nodes count');
                     }
                 }).catch(function (e) {
                     assert.equal(e, null);
@@ -41,9 +43,9 @@ describe('Component: ContextManager', function() {
         });
         it('check error when context have a wrong format', function () {
             return contextManager
-                .getFilterNodes(mockData.wrongContext)
+                .getFilterNodes(mockData.wrongContext(idCDT).context)
                 .catch(function (e) {
-                    assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'Test\', value: \'Test\' }');
+                    assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'InterestTopic\', value: \'Restaurant\' }');
                 });
         });
     });
@@ -56,6 +58,7 @@ describe('Component: ContextManager', function() {
                     if (nodes.length === 1) {
                         assert.equal(nodes[0].dimension, 'Location');
                         assert.equal(nodes[0].value, 'Milan');
+                        assert.equal(nodes[0].search, 'citySearch');
                     } else {
                         assert.fail(nodes.length, 1, 'Wrong nodes count');
                     }
@@ -78,9 +81,9 @@ describe('Component: ContextManager', function() {
         });
         it('check error when context have a wrong format', function () {
             return contextManager
-                .getSpecificNodes(mockData.wrongContext)
+                .getSpecificNodes(mockData.wrongContext(idCDT).context)
                 .catch(function (e) {
-                    assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'Test\', value: \'Test\' }');
+                    assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'InterestTopic\', value: \'Restaurant\' }');
                 });
         });
     });
@@ -116,9 +119,9 @@ describe('Component: ContextManager', function() {
         });
         it('check error when context have a wrong format', function () {
             return contextManager
-                .getParameterNodes(mockData.wrongContext)
+                .getParameterNodes(mockData.wrongContext(idCDT).context)
                 .catch(function (e) {
-                    assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'Test\', value: \'Test\' }');
+                    assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'InterestTopic\', value: \'Restaurant\' }');
                 });
         });
     });

@@ -23,6 +23,11 @@ var context = function(idCDT) {
                 dimension: 'Budget',
                 value: 'Low',
                 for: 'filter|parameter'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'DinnerWithFriends',
+                for: 'filter'
             }
         ]
     }
@@ -31,16 +36,37 @@ var context = function(idCDT) {
 module.exports.context = context;
 
 //wrong context
-var wrongContext = [
-    {
-        dimension: 'Test',
-        value: 'Test'
+var wrongContext = function(idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant'
+            }
+        ]
     }
-];
+};
 
 module.exports.wrongContext = wrongContext;
 
-//googlePlaces
+//context with only parameter attribues
+var parameterContext = function(idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'Guests',
+                value: '4',
+                for: 'parameter'
+            }
+        ]
+    }
+};
+
+module.exports.parameterContext = parameterContext;
+
+//googlePlaces service
 var googlePlaces = {
     name: 'GooglePlaces',
     type: 'primary',
@@ -53,13 +79,13 @@ var googlePlaces = {
             parameters: [
                 {
                     name: 'query',
-                    required: '1',
+                    required: true,
                     default: 'restaurant+in+milan',
                     mappingCDT: 'search_key'
                 },
                 {
                     name: 'key',
-                    required: '1',
+                    required: true,
                     default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio'
                 }
             ],
@@ -90,6 +116,62 @@ var googlePlaces = {
 
 module.exports.googlePlaces = googlePlaces;
 
+//eventful service
+var eventful = {
+    name: 'evenful',
+    type: 'primary',
+    protocol: 'rest',
+    basePath: 'http://localhost:3000/json',
+    operations: [
+        {
+            name: 'eventSearch',
+            path: '/events/search',
+            parameters: [
+                {
+                    name: 'app_key',
+                    required: true,
+                    default: 'cpxgqQcFnbVSmvc2'
+                },
+                {
+                    name: 'keywords',
+                    required: false,
+                    default: 'restaurant',
+                    mappingCDT: 'search_key'
+                },
+                {
+                    name: 'location',
+                    required: false,
+                    default: 'chicago',
+                    mappingCDT: 'location'
+                }
+            ],
+            responseMapping: {
+                list: 'events.event',
+                items: [
+                    {
+                        termName: 'title',
+                        path: 'title'
+                    },
+                    {
+                        termName: 'venue_address',
+                        path: 'address'
+                    },
+                    {
+                        termName: 'latitude',
+                        path: 'latitude'
+                    },
+                    {
+                        termName: 'longitude',
+                        path: 'longitude'
+                    }
+                ]
+            }
+        }
+    ]
+};
+
+module.exports.eventful = eventful;
+
 //googlePlaces associations
 var googlePlacesAssociations = function (idOperation, idCDT) {
     return [
@@ -103,13 +185,29 @@ var googlePlacesAssociations = function (idOperation, idCDT) {
         },
         {
             _idOperation: idOperation,
-            dimension: 'Tipologia',
-            value: 'CenaConAmici',
+            dimension: 'Tipology',
+            value: 'DinnerWithFriends',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idCDT
+        }
+    ];
+};
+
+module.exports.googlePlacesAssociations = googlePlacesAssociations;
+
+//eventful associations
+var eventfulAssociations = function (idOperation, idCDT) {
+    return [
+        {
+            _idOperation: idOperation,
+            dimension: 'InterestTopic',
+            value: 'Restaurant',
             ranking: 2,
             weight: 2,
             _idCDT: idCDT
         }
-    ]
+    ];
 };
 
-module.exports.googlePlacesAssociations = googlePlacesAssociations;
+module.exports.eventfulAssociations = eventfulAssociations;
