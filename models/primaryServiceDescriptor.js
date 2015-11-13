@@ -7,7 +7,7 @@ var primaryServiceSchema = new Schema ({
     value: String,
     ranking: Number,
     weight: Number,
-    idCDT: Schema.ObjectId
+    _idCDT: Schema.ObjectId
 });
 
 var primaryServiceDescriptor = mongoose.model('primary_service', primaryServiceSchema);

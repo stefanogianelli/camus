@@ -34,14 +34,14 @@ var responseSchema = new Schema({
 });
 
 var operationSchema = new Schema({
-    _id: {type:Schema.ObjectId, default: function () { return new mongoose.Types.ObjectId()} },
+    _id: {type: Schema.ObjectId, default: function () { return new mongoose.Types.ObjectId()} },
     name: String,
     description: String,
     path: String,
     bridgeName: String,
     parameters: [parameterSchema],
     headers: [headerSchema],
-    responseMapping: [responseSchema]
+    responseMapping: responseSchema
 });
 
 var serviceDescriptorSchema = new Schema({
@@ -52,6 +52,10 @@ var serviceDescriptorSchema = new Schema({
     category: String,
     basePath: String,
     operations: [operationSchema]
+});
+
+serviceDescriptorSchema.static('findByOperationId', function (idOperation, callback) {
+    return this.find({'operations._id': idOperation}, callback);
 });
 
 var serviceDescriptor = mongoose.model('service_descriptor', serviceDescriptorSchema);

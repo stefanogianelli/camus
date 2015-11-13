@@ -1,13 +1,16 @@
 var assert = require('assert');
+var mongoose = require('mongoose');
 var contextManager = require('../components/contextManager.js');
 var mockData = require('./mockModel.js');
+
+var idCDT = new mongoose.Types.ObjectId();
 
 describe('Component: ContextManager', function() {
 
     describe('#getFilterNodes()', function () {
         it('check if correct filter nodes are returned', function () {
             return contextManager
-                .getFilterNodes(mockData.context.context)
+                .getFilterNodes(mockData.context(idCDT).context)
                 .then(function (nodes) {
                     if (nodes.length === 2) {
                         assert.equal(nodes[0].dimension, 'InterestTopic');
@@ -48,7 +51,7 @@ describe('Component: ContextManager', function() {
     describe('#getSpecificNodes()', function () {
         it('check if correct specific nodes are returned', function () {
             return contextManager
-                .getSpecificNodes(mockData.context.context)
+                .getSpecificNodes(mockData.context(idCDT).context)
                 .then(function (nodes) {
                     if (nodes.length === 1) {
                         assert.equal(nodes[0].dimension, 'Location');
@@ -85,7 +88,7 @@ describe('Component: ContextManager', function() {
     describe('#getParameterNodes()', function () {
         it('check if correct parameter nodes are returned', function () {
             return contextManager
-                .getParameterNodes(mockData.context.context)
+                .getParameterNodes(mockData.context(idCDT).context)
                 .then(function (nodes) {
                     if (nodes.length === 2) {
                         assert.equal(nodes[0].dimension, 'Guests');
