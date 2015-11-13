@@ -17,7 +17,7 @@ primaryServiceSelection.prototype.selectServices = function selectServices (cont
                 resolve(services);
             })
             .catch(function (e) {
-                console.log(e);
+                reject(e);
             });
     })
 };
@@ -25,7 +25,7 @@ primaryServiceSelection.prototype.selectServices = function selectServices (cont
 function serchServices (filterNodes) {
     if (filterNodes.length > 0) {
         return Service
-            .findAsync(filterNodes, 'idOperation ranking weight');
+            .findAsync(filterNodes, '_idOperation ranking weight');
     } else {
         return new Error('No filter nodes selected!');
     }

@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var primaryServiceSchema = new Schema ({
-    idOperation: Schema.ObjectId,
+    _idOperation: Schema.ObjectId,
     dimension: String,
     value: String,
     ranking: Number,

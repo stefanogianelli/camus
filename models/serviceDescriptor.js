@@ -24,7 +24,7 @@ var itemSchema = new Schema({
 
 var operateSchema = new Schema({
     run: String,
-    on: String
+    onAttribute: String
 });
 
 var responseSchema = new Schema({
@@ -34,7 +34,7 @@ var responseSchema = new Schema({
 });
 
 var operationSchema = new Schema({
-    _id: Schema.ObjectId,
+    _id: {type:Schema.ObjectId, default: function () { return new mongoose.Types.ObjectId()} },
     name: String,
     description: String,
     path: String,
@@ -54,6 +54,6 @@ var serviceDescriptorSchema = new Schema({
     operations: [operationSchema]
 });
 
-var serviceDescriptor = mongoose.model('serviceDescriptor', serviceDescriptorSchema);
+var serviceDescriptor = mongoose.model('service_descriptor', serviceDescriptorSchema);
 
 module.exports = serviceDescriptor;
