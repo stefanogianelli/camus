@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "node_modules/.bin/mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/stefanogianelli/camus.git"
+    "url": "https://github.com/stefanogianelli/camus.git"
   },
   "author": "Stefano Gianelli",
   "license": "ISC",
@@ -20,7 +21,9 @@
     "bluebird": "^3.0.5",
     "hapi": "^11.1.0",
     "lodash": "^3.10.1",
-    "mocha": "^2.3.3",
     "mongoose": "^4.2.5"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.3"
   }
 }

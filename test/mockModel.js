@@ -118,7 +118,7 @@ module.exports.googlePlaces = googlePlaces;
 
 //eventful service
 var eventful = {
-    name: 'evenful',
+    name: 'eventful',
     type: 'primary',
     protocol: 'rest',
     basePath: 'http://localhost:3000/json',

@@ -29,33 +29,30 @@ describe('Component: PrimaryServiceSelection', function() {
                 .then(function(services) {
                     assert.notEqual(services, null);
                     assert.equal(services.length, 2);
-                    _.forEach(services, function (s, index) {
-                        switch (index) {
-                            case 0:
-                                assert.equal(s.rank, 4);
-                                break;
-                            case 1:
-                                assert.equal(s.rank, 1);
-                                break;
+                    async.parallel({
+                        one: function (callback) {
+                            assert.equal(services[0].rank, 4);
+                            ServiceModel.findByOperationId(services[0]._idOperation, function (err, data) {
+                                assert.equal(err, null);
+                                assert.equal(data.name, 'GooglePlaces');
+                                assert.equal(data.operations[0].name, 'placeTextSearch');
+                                callback(null, 'done');
+                            });
+                        },
+                        two: function (callback) {
+                            assert.equal(services[1].rank, 1);
+                            ServiceModel.findByOperationId(services[1]._idOperation, function (err, data) {
+                                assert.equal(err, null);
+                                assert.equal(data.name, 'eventful');
+                                assert.equal(data.operations[0].name, 'eventSearch');
+                                callback(null, 'done');
+                            });
                         }
-                        ServiceModel.findByOperationId(s._idOperation, function (err, data) {
-                            //assert.notEqual(err, null);
-                            switch (index) {
-                                case 0:
-                                    console.log('Nome: ' + data.name);
-                                    assert.equal(data.name, 'GooglePlaces');
-                                    assert.equal(data.operations[0].name, 'placeTextSearch');
-                                    break;
-                                case 1:
-                                    console.log('Nome: ' + data.name);
-                                    assert.equal(data.name, 'Eventful');
-                                    assert.equal(data.operations[0].name, 'eventSearch');
-                                    break;
-                            }
-                        });
+                    },
+                    function (err) {
+                        assert.equal(err, null);
+                        done();
                     });
-                    console.log('end');
-                    done();
                 });
         });
         it('check error when no context selected', function() {
