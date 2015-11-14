@@ -2,8 +2,8 @@ var _ = require('lodash');
 var async = require('async');
 var assert = require('assert');
 var mockData = require('./mockModel.js');
-var ServiceModel = require('../models/ServiceDescriptor.js');
-var PrimaryServiceModel = require('../models/primaryServiceDescriptor.js');
+var ServiceModel = require('../models/serviceDescription.js');
+var PrimaryServiceModel = require('../models/primaryServiceAssociation.js');
 
 var _idCDT;
 

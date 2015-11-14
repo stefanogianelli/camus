@@ -1,0 +1,39 @@
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var ObjectId = Schema.Types.ObjectId;
+
+/**
+ * Schema for the primary services associations with the CDT nodes
+ */
+var primaryServiceSchema = new Schema ({
+    _idOperation: {
+        type: ObjectId,
+        required: true
+    },
+    dimension: {
+        type: String,
+        required: true
+    },
+    value: {
+        type: String,
+        required: true
+    },
+    ranking: {
+        type: Number,
+        min: 1,
+        required: true
+    },
+    weight: {
+        type: Number,
+        min: 1,
+        required: true
+    },
+    _idCDT: {
+        type: ObjectId,
+        required: true
+    }
+});
+
+var primaryServiceAssociation = mongoose.model('primary_service', primaryServiceSchema);
+
+module.exports = primaryServiceAssociation;

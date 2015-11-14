@@ -81,7 +81,56 @@ var googlePlaces = {
                     name: 'query',
                     required: true,
                     default: 'restaurant+in+milan',
-                    mappingCDT: 'search_key'
+                    mappingCDT: [
+                        'search_key'
+                    ]
+                },
+                {
+                    name: 'key',
+                    required: true,
+                    default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio'
+                }
+            ],
+            responseMapping: {
+                list: 'results',
+                items: [
+                    {
+                        termName: 'title',
+                        path: 'name'
+                    },
+                    {
+                        termName: 'address',
+                        path: 'formatted_address'
+                    },
+                    {
+                        termName: 'latitude',
+                        path: 'geometry.location.lat'
+                    },
+                    {
+                        termName: 'longitude',
+                        path: 'geometry.location.lng'
+                    }
+                ]
+            }
+        },
+        {
+            name: 'nearbySearch',
+            path: '/nearbysearch/json',
+            parameters: [
+                {
+                    name: 'location',
+                    required: true,
+                    default: '-33.8670522,151.1957362',
+                    collectionFormat: 'csv',
+                    mappingCDT: [
+                        'latitude',
+                        'longitude'
+                    ]
+                },
+                {
+                    name: 'radius',
+                    required: true,
+                    default: '500'
                 },
                 {
                     name: 'key',
@@ -136,13 +185,17 @@ var eventful = {
                     name: 'keywords',
                     required: false,
                     default: 'restaurant',
-                    mappingCDT: 'search_key'
+                    mappingCDT: [
+                        'search_key'
+                    ]
                 },
                 {
                     name: 'location',
                     required: false,
                     default: 'chicago',
-                    mappingCDT: 'location'
+                    mappingCDT: [
+                        'location'
+                    ]
                 }
             ],
             responseMapping: {

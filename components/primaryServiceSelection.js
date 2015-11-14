@@ -1,11 +1,12 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
-var Service = require('../models/primaryServiceDescriptor.js');
+var Service = require('../models/primaryServiceAssociation.js');
 var contextManager = require('./contextManager.js');
 
 Promise.promisifyAll(Service);
 Promise.promisifyAll(Service.prototype);
 
+//number of services to keep
 var N = 3;
 
 var primaryServiceSelection = function () { };
