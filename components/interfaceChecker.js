@@ -31,8 +31,8 @@ Interface.ensureImplements = function(object) {
 
         for (var j = 0, methodsLen = interface.methods.length; j < methodsLen; j++) {
             var method = interface.methods[j];
-            if (!object[method] || typeof object[method] !== 'function') {
-                throw new Error("Function Interface.ensureImplements: object does not implement the " + interface.name + " interface. Method " + method + " was not found.");
+            if (!object.prototype[method] || typeof object.prototype[method] !== 'function') {
+                throw new Error("Function Interface.ensureImplements: object does not implement the " + interface.name + " interface. Method \'" + method + "\' was not found.");
             }
         }
     }

@@ -3,6 +3,7 @@ var testCustomSearch = function (data) {
 };
 
 testCustomSearch.prototype.search = function (callback) {
+    //add code below
     callback([this.data[0]]);
 };
 

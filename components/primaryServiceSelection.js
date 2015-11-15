@@ -3,6 +3,9 @@ var async = require('async');
 var Promise = require('bluebird');
 var Service = require('../models/primaryServiceAssociation.js');
 var contextManager = require('./contextManager.js');
+var Interface = require('./interfaceChecker.js');
+
+var searchPluginInterface = new Interface('searchPluginInterface', ['search']);
 
 Promise.promisifyAll(Service);
 Promise.promisifyAll(Service.prototype);
@@ -135,6 +138,7 @@ function executeModules (nodes, data, callback) {
     async.each(nodes, function (n, callback) {
             try {
                 var module = require('../searchPlugins/' + n.search + ".js");
+                Interface.ensureImplements(module, searchPluginInterface);
                 var Module = new module(data);
                 Module.search(function (results) {
                     if (results !== null && results !== 'undefined') {
