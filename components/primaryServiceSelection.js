@@ -69,32 +69,6 @@ function searchServices (filterNodes, idCDT) {
 }
 
 /**
- * Compute the ranking of each operation found by the previous steps
- * @param services The list of services, with own rank and weight
- * @returns {Array} The ranked list of Top-N services
- */
-function calculateRanking (services) {
-    var rankedList = [];
-    _.forEach(services, function (s) {
-        var rank = s.weight * (1 / s.ranking);
-        var index = _.findIndex(rankedList, function (i) {
-            return i._idOperation.equals(s._idOperation);
-        });
-        if (index === -1) {
-            rankedList.push({
-                _idOperation: s._idOperation,
-                rank: rank
-            });
-        } else {
-            rankedList[index].rank += rank;
-        }
-    });
-    rankedList = _.sortByOrder(rankedList, 'rank', 'desc');
-    _.take(rankedList, N);
-    return rankedList;
-}
-
-/**
  * Search for the CDT nodes that need a specific search function and execute it
  * @param idCDT The id of the CDT
  * @param services The list of services retrieved by the standard search function
@@ -107,8 +81,17 @@ function loadSearchPlugins (idCDT, services, context) {
             .getSpecificNodes(context)
             .then(function (nodes) {
                 if (nodes.length > 0) {
+                    var whereClause = {
+                        _idCDT: idCDT,
+                        $or: []
+                    };
+                    _.forEach(nodes, function (n) {
+                        whereClause.$or.push({
+                            dimension: n.dimension
+                        });
+                    });
                     Service
-                        .findAsync({_idCDT: idCDT}, {_idCDT: 0, _id: 0, __v: 0})
+                        .findAsync(whereClause, {_idCDT: 0, _id: 0, __v: 0})
                         .then(function (data) {
                             executeModules(nodes, data, function (results) {
                                 if (results !== null && results !== 'undefined') {
@@ -136,10 +119,12 @@ function loadSearchPlugins (idCDT, services, context) {
 function executeModules (nodes, data, callback) {
     var services = [];
     async.each(nodes, function (n, callback) {
-            try {
+        try {
+            var filter = _.filter(data, {dimension: n.dimension});
+            if (filter.length > 0) {
                 var module = require('../searchPlugins/' + n.search + ".js");
                 Interface.ensureImplements(module, searchPluginInterface);
-                var Module = new module(data);
+                var Module = new module(filter);
                 Module.search(function (results) {
                     if (results !== null && results !== 'undefined') {
                         if (_.isArray(results) && results.length > 0) {
@@ -147,15 +132,44 @@ function executeModules (nodes, data, callback) {
                         }
                     }
                 });
-            } catch (e) {
-                console.log(e);
-            } finally {
-                callback();
             }
-        },
-        function () {
-            callback(services);
-        });
+        } catch (e) {
+            console.log(e.message);
+        } finally {
+            callback();
+        }
+    },
+    function () {
+        callback(services);
+    });
+}
+
+/**
+ * Compute the ranking of each operation found by the previous steps
+ * @param services The list of services, with own rank and weight
+ * @returns {Array} The ranked list of Top-N services
+ */
+function calculateRanking (services) {
+    var rankedList = [];
+    _.forEach(services, function (s) {
+        if ('weight' in s && 'ranking' in s && '_idOperation' in s) {
+            var rank = s.weight * (1 / s.ranking);
+            var index = _.findIndex(rankedList, function (i) {
+                return i._idOperation.equals(s._idOperation);
+            });
+            if (index === -1) {
+                rankedList.push({
+                    _idOperation: s._idOperation,
+                    rank: rank
+                });
+            } else {
+                rankedList[index].rank += rank;
+            }
+        }
+    });
+    rankedList = _.sortByOrder(rankedList, 'rank', 'desc');
+    _.take(rankedList, N);
+    return rankedList;
 }
 
 module.exports = new primaryServiceSelection();

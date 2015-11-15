@@ -10,6 +10,39 @@ var db = mongoose.connection;
 var idCDT = new mongoose.Types.ObjectId();
 var MockDatabase = new mockDatabase(idCDT);
 
+//contex with wrong search module name
+var context1 = {
+    _id: idCDT,
+    context: [
+        {
+            dimension: 'InterestTopic',
+            value: 'Restaurant',
+            for: 'filter'
+        },
+        {
+            dimension: 'Location',
+            value: 'Milan',
+            for: 'filter|parameter',
+            search: 'wrongName'
+        },
+        {
+            dimension: 'Guests',
+            value: '4',
+            for: 'parameter'
+        },
+        {
+            dimension: 'Budget',
+            value: 'Low',
+            for: 'filter|parameter'
+        },
+        {
+            dimension: 'Tipology',
+            value: 'DinnerWithFriends',
+            for: 'filter'
+        }
+    ]
+};
+
 describe('Component: PrimaryServiceSelection', function() {
 
     before(function(done) {
@@ -70,6 +103,17 @@ describe('Component: PrimaryServiceSelection', function() {
                 .selectServices(mockData.parameterContext(idCDT))
                 .catch(function (e) {
                     assert.equal(e, 'No filter nodes selected!');
+                });
+        });
+        it('check correct execution when specified a wrong specific module name', function() {
+            return serviceManager
+                .selectServices(context1)
+                .then(function(services) {
+                    assert.equal(services[0].rank, 4);
+                    assert.equal(services[1].rank, 1);
+                })
+                .catch(function (e) {
+                    assert.equal(e, null);
                 });
         });
     });

@@ -243,6 +243,14 @@ var googlePlacesAssociations = function (idOperation, idCDT) {
             ranking: 1,
             weight: 2,
             _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
+            dimension: 'Location',
+            value: 'Milan',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idCDT
         }
     ];
 };
