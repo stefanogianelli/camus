@@ -43,11 +43,25 @@ var context1 = {
     ]
 };
 
+//contex with no associated services
+var context2 = {
+    _id: idCDT,
+    context: [
+        {
+            dimension: 'SportType',
+            value: 'Tennis',
+            for: 'filter'
+        }
+    ]
+};
+
 describe('Component: PrimaryServiceSelection', function() {
 
     before(function(done) {
-        mongoose.connect('mongodb://localhost/camus_test');
-        db.on('error', console.error.bind(console, 'connection error:'));
+        if (!db.db) {
+            mongoose.connect('mongodb://localhost/camus_test');
+            db.on('error', console.error.bind(console, 'connection error:'));
+        }
         MockDatabase.createDatabase(function (err) {
             assert.equal(err, null);
             done();
@@ -105,6 +119,16 @@ describe('Component: PrimaryServiceSelection', function() {
                     assert.equal(e, 'No filter nodes selected!');
                 });
         });
+        it('check error when no services found', function() {
+            return serviceManager
+                .selectServices(context2)
+                .then(function (services) {
+                    assert.equal(services.length, 0);
+                })
+                .catch(function (e) {
+                    assert.equal(e, null);
+                });
+        });
         it('check correct execution when specified a wrong specific module name', function() {
             return serviceManager
                 .selectServices(context1)
@@ -120,7 +144,7 @@ describe('Component: PrimaryServiceSelection', function() {
 
     after(function (done) {
         MockDatabase.deleteDatabase(function (err) {
-           assert.equal(err, null);
+            assert.equal(err, null);
             done();
         });
     });

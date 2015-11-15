@@ -5,10 +5,8 @@ var mockData = require('./mockModel.js');
 var ServiceModel = require('../models/serviceDescription.js');
 var PrimaryServiceModel = require('../models/primaryServiceAssociation.js');
 
-var _idCDT;
-
 var mockDatabaseCreator = function (idCDT) {
-    _idCDT = idCDT;
+    this._idCDT = idCDT;
 };
 
 /**
@@ -16,6 +14,7 @@ var mockDatabaseCreator = function (idCDT) {
  * @param callback The callback function
  */
 mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback) {
+    var _idCDT = this._idCDT;
     async.parallel({
         one: function (callback) {
             async.waterfall([

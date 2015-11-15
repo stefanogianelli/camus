@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/stefanogianelli/camus#readme",
   "dependencies": {
+    "async": "^1.5.0",
     "bluebird": "^3.0.5",
     "hapi": "^11.1.0",
     "lodash": "^3.10.1",
