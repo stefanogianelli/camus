@@ -12,7 +12,7 @@ var context = function(idCDT) {
                 dimension: 'Location',
                 value: 'Milan',
                 for: 'filter|parameter',
-                search: 'citySearch'
+                search: 'testCustomSearch'
             },
             {
                 dimension: 'Guests',

@@ -30,7 +30,7 @@ describe('Component: PrimaryServiceSelection', function() {
                     assert.equal(services.length, 2);
                     async.parallel({
                         one: function (callback) {
-                            assert.equal(services[0].rank, 4);
+                            assert.equal(services[0].rank, 6);
                             ServiceModel.findByOperationId(services[0]._idOperation, function (err, data) {
                                 assert.equal(err, null);
                                 assert.equal(data.name, 'GooglePlaces');
@@ -52,6 +52,10 @@ describe('Component: PrimaryServiceSelection', function() {
                         assert.equal(err, null);
                         done();
                     });
+                })
+                .catch(function (e) {
+                    console.log(e);
+                    done();
                 });
         });
         it('check error when no context selected', function() {

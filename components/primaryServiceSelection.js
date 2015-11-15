@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var async = require('async');
 var Promise = require('bluebird');
 var Service = require('../models/primaryServiceAssociation.js');
 var contextManager = require('./contextManager.js');
@@ -23,6 +24,9 @@ primaryServiceSelection.prototype.selectServices = function selectServices (cont
                 .getFilterNodes(context.context)
                 .then(function (filterNodes) {
                     return searchServices(filterNodes, context._id);
+                })
+                .then(function (services) {
+                    return loadSearchPlugins(context._id, services, context.context);
                 })
                 .then(function (services) {
                     resolve(calculateRanking(services));
@@ -55,7 +59,7 @@ function searchServices (filterNodes, idCDT) {
             whereClause.$or.push(obj);
         });
         return Service
-            .findAsync(whereClause, '_idOperation ranking weight');
+            .findAsync(whereClause, {_idOperation:1, ranking:1, weight: 1, _id: 0});
     } else {
         throw new Error('No filter nodes selected!');
     }
@@ -85,6 +89,69 @@ function calculateRanking (services) {
     rankedList = _.sortByOrder(rankedList, 'rank', 'desc');
     _.take(rankedList, N);
     return rankedList;
+}
+
+/**
+ * Search for the CDT nodes that need a specific search function and execute it
+ * @param idCDT The id of the CDT
+ * @param services The list of services retrieved by the standard search function
+ * @param context The current context item
+ * @returns {bluebird|exports|module.exports} The promise with the updated list of services
+ */
+function loadSearchPlugins (idCDT, services, context) {
+    return new Promise(function (resolve, reject) {
+        contextManager
+            .getSpecificNodes(context)
+            .then(function (nodes) {
+                if (nodes.length > 0) {
+                    Service
+                        .findAsync({_idCDT: idCDT}, {_idCDT: 0, _id: 0, __v: 0})
+                        .then(function (data) {
+                            executeModules(nodes, data, function (results) {
+                                if (results !== null && results !== 'undefined') {
+                                    services = services.concat(results);
+                                    resolve(services);
+                                }
+                            });
+                        });
+                } else {
+                    resolve(services);
+                }
+            })
+            .catch(function (e) {
+                reject(e);
+            });
+    });
+}
+
+/**
+ * Executes all the specific search modules
+ * @param nodes The list of nodes that need a specific search function
+ * @param data The service association list for the current CDT
+ * @param callback The callback function
+ */
+function executeModules (nodes, data, callback) {
+    var services = [];
+    async.each(nodes, function (n, callback) {
+            try {
+                var module = require('../searchPlugins/' + n.search + ".js");
+                var Module = new module(data);
+                Module.search(function (results) {
+                    if (results !== null && results !== 'undefined') {
+                        if (_.isArray(results) && results.length > 0) {
+                            services = services.concat(results);
+                        }
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            } finally {
+                callback();
+            }
+        },
+        function () {
+            callback(services);
+        });
 }
 
 module.exports = new primaryServiceSelection();

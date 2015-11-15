@@ -58,7 +58,7 @@ describe('Component: ContextManager', function() {
                     if (nodes.length === 1) {
                         assert.equal(nodes[0].dimension, 'Location');
                         assert.equal(nodes[0].value, 'Milan');
-                        assert.equal(nodes[0].search, 'citySearch');
+                        assert.equal(nodes[0].search, 'testCustomSearch');
                     } else {
                         assert.fail(nodes.length, 1, 'Wrong nodes count');
                     }
