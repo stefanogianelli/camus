@@ -76,23 +76,40 @@ contextManager.prototype.getParameterNodes = function getParameterNodes (context
             var params = [];
             _.forEach(context, function (item) {
                 if (_.has(item, 'for')) {
-                    if (item['for'] === 'parameter' || item['for'] === 'filter|parameter')
-                        if (!_.has(item, 'search')) {
-                            params.push({
-                                dimension: item.dimension,
-                                value: item.value
-                            });
+                    if (item['for'] === 'parameter' || item['for'] === 'filter|parameter') {
+                        var obj = {
+                            dimension: item.dimension,
+                            value: item.value
+                        };
+                        if (_.has(item, 'transformFunction')) {
+                            obj['transformFunction'] = item.transformFunction;
                         }
+                        params.push(obj);
+                    }
                 } else {
                     reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
                 }
-
             });
             resolve(params);
         } else {
             reject('No context selected');
         }
     });
+};
+
+/**
+ * Search the selected interest topic
+ * @param context The current context
+ */
+contextManager.prototype.getInterestTopic = function getInterestTopic (context) {
+    if (context !== null && context.length > 0) {
+        var r = _.find(context, {dimension: 'InterestTopic'});
+        if (r !== null && r !== 'undefined') {
+            return r.value;
+        }
+    } else {
+        throw new Error('No context selected');
+    }
 };
 
 module.exports = new contextManager();

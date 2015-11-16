@@ -27,11 +27,10 @@ describe('Component: QueryHandler', function () {
             return serviceManager
                 .selectServices(mockData.context(idCDT))
                 .then(function(services) {
-                    queryHandler
-                        .executeQueries(services)
-                        .then(function () {
-                            console.log('end');
-                        })
+                    return queryHandler.executeQueries(services, mockData.context(idCDT).context);
+                })
+                .then(function (serviceDescriptions) {
+                    console.log(serviceDescriptions);
                 })
                 .catch(function (e) {
                     console.log(e);

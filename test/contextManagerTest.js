@@ -93,13 +93,17 @@ describe('Component: ContextManager', function() {
             return contextManager
                 .getParameterNodes(mockData.context(idCDT).context)
                 .then(function (nodes) {
-                    if (nodes.length === 2) {
-                        assert.equal(nodes[0].dimension, 'Guests');
-                        assert.equal(nodes[0].value, 4);
-                        assert.equal(nodes[1].dimension, 'Budget');
-                        assert.equal(nodes[1].value, 'Low');
+                    if (nodes.length === 4) {
+                        assert.equal(nodes[0].dimension, 'Location');
+                        assert.equal(nodes[0].value, 'Milan');
+                        assert.equal(nodes[1].dimension, 'Guests');
+                        assert.equal(nodes[1].value, 4);
+                        assert.equal(nodes[2].dimension, 'Budget');
+                        assert.equal(nodes[2].value, 'Low');
+                        assert.equal(nodes[3].dimension, 'search_key');
+                        assert.equal(nodes[3].value, 'restaurantinnewyork');
                     } else {
-                        assert.fail(nodes.length, 2, 'Wrong nodes count');
+                        assert.fail(nodes.length, 4, 'Wrong nodes count');
                     }
                 });
         });

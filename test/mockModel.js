@@ -22,12 +22,18 @@ var context = function(idCDT) {
             {
                 dimension: 'Budget',
                 value: 'Low',
-                for: 'filter|parameter'
+                for: 'filter|parameter',
+                transformFunction: 'translateBudget'
             },
             {
                 dimension: 'Tipology',
                 value: 'DinnerWithFriends',
                 for: 'filter'
+            },
+            {
+                "dimension" : "search_key",
+                "value" : "restaurantinnewyork",
+                "for" : "parameter"
             }
         ]
     }
