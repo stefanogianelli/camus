@@ -125,7 +125,7 @@ function executeModules (nodes, data, callback) {
                 var module = require('../searchPlugins/' + n.search + ".js");
                 Interface.ensureImplements(module, searchPluginInterface);
                 var Module = new module(filter);
-                Module.search(function (results) {
+                Module.search(n.value, function (results) {
                     if (results !== null && results !== 'undefined') {
                         if (_.isArray(results) && results.length > 0) {
                             services = services.concat(results);

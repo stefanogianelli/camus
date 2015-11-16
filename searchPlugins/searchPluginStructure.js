@@ -17,9 +17,10 @@ var searchPluginStructure = function (data) {
  *   ranking: Number,
  *   weight: Number
  * }
+ * @param data The data associated with the node
  * @param callback The callback function called at the end, with the list of services founded
  */
-searchPluginStructure.prototype.search = function (callback) {
+searchPluginStructure.prototype.search = function (data, callback) {
     //add code below
 };
 
