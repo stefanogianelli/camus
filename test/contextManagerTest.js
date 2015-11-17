@@ -57,7 +57,7 @@ describe('Component: ContextManager', function() {
                 .then(function (nodes) {
                     if (nodes.length === 1) {
                         assert.equal(nodes[0].dimension, 'Location');
-                        assert.equal(nodes[0].value, 'Milan');
+                        assert.equal(nodes[0].value, 'newyork');
                         assert.equal(nodes[0].search, 'testCustomSearch');
                     } else {
                         assert.fail(nodes.length, 1, 'Wrong nodes count');
@@ -95,7 +95,7 @@ describe('Component: ContextManager', function() {
                 .then(function (nodes) {
                     if (nodes.length === 4) {
                         assert.equal(nodes[0].dimension, 'Location');
-                        assert.equal(nodes[0].value, 'Milan');
+                        assert.equal(nodes[0].value, 'newyork');
                         assert.equal(nodes[1].dimension, 'Guests');
                         assert.equal(nodes[1].value, 4);
                         assert.equal(nodes[2].dimension, 'Budget');

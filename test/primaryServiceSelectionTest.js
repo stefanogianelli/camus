@@ -1,10 +1,13 @@
 var assert = require('assert');
 var mongoose = require('mongoose');
 var async = require('async');
+var Promise = require('bluebird');
 var ServiceModel = require('../models/serviceDescription.js');
 var serviceManager = require('../components/primaryServiceSelection.js');
 var mockData = require('./mockModel.js');
 var mockDatabase = require('./mockDatabaseCreator.js');
+
+Promise.promisifyAll(ServiceModel);
 
 var db = mongoose.connection;
 var idCDT = new mongoose.Types.ObjectId();
@@ -69,40 +72,24 @@ describe('Component: PrimaryServiceSelection', function() {
     });
 
     describe('#selectServices()', function() {
-        it('check if correct services are selected', function(done) {
-            serviceManager
+        it('check if correct services are selected', function() {
+            return serviceManager
                 .selectServices(mockData.context(idCDT))
                 .then(function(services) {
                     assert.notEqual(services, null);
                     assert.equal(services.length, 2);
-                    async.parallel({
-                        one: function (callback) {
-                            assert.equal(services[0].rank, 6);
-                            ServiceModel.findByOperationId(services[0]._idOperation, function (err, data) {
-                                assert.equal(err, null);
-                                assert.equal(data.name, 'GooglePlaces');
-                                assert.equal(data.operations[0].name, 'placeTextSearch');
-                                callback(null, 'done');
-                            });
-                        },
-                        two: function (callback) {
-                            assert.equal(services[1].rank, 1);
-                            ServiceModel.findByOperationId(services[1]._idOperation, function (err, data) {
-                                assert.equal(err, null);
-                                assert.equal(data.name, 'eventful');
-                                assert.equal(data.operations[0].name, 'eventSearch');
-                                callback(null, 'done');
-                            });
-                        }
-                    },
-                    function (err) {
-                        assert.equal(err, null);
-                        done();
-                    });
+                    assert.equal(services[0].rank, 6);
+                    return [services, ServiceModel.findByOperationIdAsync(services[0]._idOperation)];
                 })
-                .catch(function (e) {
-                    console.log(e);
-                    done();
+                .spread(function (services, data) {
+                    assert.equal(data.name, 'GooglePlaces');
+                    assert.equal(data.operations[0].name, 'placeTextSearch');
+                    assert.equal(services[1].rank, 1);
+                    return ServiceModel.findByOperationIdAsync(services[1]._idOperation);
+                })
+                .then(function (data) {
+                    assert.equal(data.name, 'eventful');
+                    assert.equal(data.operations[0].name, 'eventSearch');
                 });
         });
         it('check error when no context selected', function() {

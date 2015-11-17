@@ -10,7 +10,7 @@ var context = function(idCDT) {
             },
             {
                 dimension: 'Location',
-                value: 'Milan',
+                value: 'newyork',
                 for: 'filter|parameter',
                 search: 'testCustomSearch'
             },
@@ -200,7 +200,7 @@ var eventful = {
                     required: false,
                     default: 'chicago',
                     mappingCDT: [
-                        'location'
+                        'Location'
                     ]
                 }
             ],

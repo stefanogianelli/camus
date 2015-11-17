@@ -8,7 +8,6 @@ var Interface = require('./interfaceChecker.js');
 var searchPluginInterface = new Interface('searchPluginInterface', ['search']);
 
 Promise.promisifyAll(Service);
-Promise.promisifyAll(Service.prototype);
 
 //number of services to keep
 var N = 3;
@@ -61,8 +60,7 @@ function searchServices (filterNodes, idCDT) {
             };
             whereClause.$or.push(obj);
         });
-        return Service
-            .findAsync(whereClause, {_idOperation:1, ranking:1, weight: 1, _id: 0});
+        return Service.findAsync(whereClause, {_idOperation:1, ranking:1, weight: 1, _id: 0});
     } else {
         throw new Error('No filter nodes selected!');
     }

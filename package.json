@@ -22,7 +22,8 @@
     "bluebird": "^3.0.5",
     "hapi": "^11.1.0",
     "lodash": "^3.10.1",
-    "mongoose": "^4.2.5"
+    "mongoose": "^4.2.5",
+    "superagent": "^1.4.0"
   },
   "devDependencies": {
     "mocha": "^2.3.3"

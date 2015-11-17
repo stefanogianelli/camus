@@ -30,7 +30,7 @@ describe('Component: QueryHandler', function () {
                     return queryHandler.executeQueries(services, mockData.context(idCDT).context);
                 })
                 .then(function (serviceDescriptions) {
-                    console.log(serviceDescriptions);
+                    //console.log(serviceDescriptions);
                 })
                 .catch(function (e) {
                     console.log(e);

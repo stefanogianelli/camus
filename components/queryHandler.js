@@ -6,7 +6,6 @@ var translator = require('./translationManager.js');
 var Interface = require('./interfaceChecker.js');
 
 Promise.promisifyAll(ServiceModel);
-Promise.promisifyAll(ServiceModel.prototype);
 
 var bridgeFolder = '../bridges/';
 var bridgeInterface = new Interface('bridgeInterface', ['executeQuery', 'convertResponse']);
@@ -38,7 +37,6 @@ queryHandler.prototype.executeQueries = function executeQueries (services, conte
                 return callServices(serviceDescriptions, params);
             })
             .then(function (data) {
-                console.log(data);
                 resolve(serviceDescriptions);
             })
             .catch(function (e) {
