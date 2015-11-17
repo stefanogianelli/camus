@@ -94,7 +94,8 @@ var googlePlaces = {
                 {
                     name: 'key',
                     required: true,
-                    default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio'
+                    default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio',
+                    mappingCDT: []
                 }
             ],
             responseMapping: {
@@ -136,12 +137,14 @@ var googlePlaces = {
                 {
                     name: 'radius',
                     required: true,
-                    default: '500'
+                    default: '500',
+                    mappingCDT: []
                 },
                 {
                     name: 'key',
                     required: true,
-                    default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio'
+                    default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio',
+                    mappingCDT: []
                 }
             ],
             responseMapping: {
@@ -185,7 +188,8 @@ var eventful = {
                 {
                     name: 'app_key',
                     required: true,
-                    default: 'cpxgqQcFnbVSmvc2'
+                    default: 'cpxgqQcFnbVSmvc2',
+                    mappingCDT: []
                 },
                 {
                     name: 'keywords',

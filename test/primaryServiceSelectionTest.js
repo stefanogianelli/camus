@@ -1,6 +1,5 @@
 var assert = require('assert');
 var mongoose = require('mongoose');
-var async = require('async');
 var Promise = require('bluebird');
 var ServiceModel = require('../models/serviceDescription.js');
 var serviceManager = require('../components/primaryServiceSelection.js');

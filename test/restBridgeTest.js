@@ -63,7 +63,8 @@ var noDefaultParameterService = {
             parameters: [
                 {
                     name: 'app_key',
-                    required: true
+                    required: true,
+                    mappingCDT: []
                 },
                 {
                     name: 'keywords',
@@ -120,7 +121,8 @@ var noValueParameterService = {
                 {
                     name: 'app_key',
                     required: true,
-                    default: 'cpxgqQcFnbVSmvc2'
+                    default: 'cpxgqQcFnbVSmvc2',
+                    mappingCDT: []
                 },
                 {
                     name: 'keywords',
@@ -177,7 +179,8 @@ var wrongBasePath = {
                 {
                     name: 'app_key',
                     required: true,
-                    default: 'cpxgqQcFnbVSmvc2'
+                    default: 'cpxgqQcFnbVSmvc2',
+                    mappingCDT: []
                 },
                 {
                     name: 'keywords',

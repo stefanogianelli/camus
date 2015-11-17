@@ -4,6 +4,7 @@ var ServiceModel = require('../models/serviceDescription.js');
 var ContextManager = require('./contextManager.js');
 var translator = require('./translationManager.js');
 var Interface = require('./interfaceChecker.js');
+var restBridge = require('../bridges/restBridge.js');
 
 Promise.promisifyAll(ServiceModel);
 
@@ -36,8 +37,8 @@ queryHandler.prototype.executeQueries = function executeQueries (services, conte
             .then(function (params) {
                 return callServices(serviceDescriptions, params);
             })
-            .then(function (data) {
-                resolve(serviceDescriptions);
+            .then(function (responses) {
+                resolve(responses);
             })
             .catch(function (e) {
                 reject(e);
@@ -46,7 +47,7 @@ queryHandler.prototype.executeQueries = function executeQueries (services, conte
 };
 
 /**
- * Translate some parameters to a value usefull for the service invocation
+ * Translate some parameters to a value useful for the service invocation
  * @param params The selected parameters
  * @param context The current context
  * @returns {bluebird|exports|module.exports} The list of parameters with the translated values
@@ -91,9 +92,20 @@ function callServices (services, params) {
     return new Promise(function (resolve, reject) {
         var responses = [];
         var servicesPromises = [];
-        _.forEach(services, function (s) {
+        _.forEach(services, function (s, index) {
             if (s.protocol === 'rest' || s.protocol === 'query') {
                 //use the rest bridge
+                servicesPromises.push(
+                    restBridge
+                        .executeQuery(s, params)
+                        .then(function (response) {
+                            responses.splice(index, 0, response);
+                        })
+                        .catch(function (e) {
+                            //console.log(e);
+                            console.log('Error during service \'' + s.name + '\' invocation');
+                        })
+                );
             } else {
                 //call the custom bridge
             }

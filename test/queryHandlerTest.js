@@ -29,11 +29,9 @@ describe('Component: QueryHandler', function () {
                 .then(function(services) {
                     return queryHandler.executeQueries(services, mockData.context(idCDT).context);
                 })
-                .then(function (serviceDescriptions) {
-                    //console.log(serviceDescriptions);
-                })
-                .catch(function (e) {
-                    console.log(e);
+                .then(function (responses) {
+                    assert.notEqual(responses, null);
+                    assert.equal(responses.length, 2);
                 });
         });
     });

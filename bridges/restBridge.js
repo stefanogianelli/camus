@@ -42,7 +42,7 @@ function parameterMapping (service, paramNodes) {
     return new Promise(function (resolve, reject) {
         var params = [];
         _.forEach(service.operations[0].parameters, function (p) {
-            if (!_.has(p, 'mappingCDT')) {
+            if (p.mappingCDT.length === 0) {
                 //use default value if the parameter is required and no mapping on the CDT was added
                 if (!_.isUndefined(p.default)) {
                     params.push({
