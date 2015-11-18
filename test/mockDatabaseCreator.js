@@ -59,6 +59,28 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                 function (err) {
                     callback(err, 'done');
                 });
+        },
+        three: function (callback) {
+            async.waterfall([
+                    function (callback) {
+                        var fakeService = new ServiceModel(mockData.fakeService);
+                        fakeService.save(function (err, service) {
+                            callback(err, service.operations[0].id);
+                        });
+                    },
+                    function (idOperation, callback) {
+                        _.forEach(mockData.fakeServiceAssociation(idOperation, _idCDT), function (a) {
+                            var associations = new PrimaryServiceModel(a);
+                            associations.save(function (err) {
+                                assert.equal(err, null);
+                            });
+                        });
+                        callback(null, 'done');
+                    }
+                ],
+                function (err) {
+                    callback(err, 'done');
+                });
         }
     },
     function (err) {

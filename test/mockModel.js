@@ -31,9 +31,9 @@ var context = function(idCDT) {
                 for: 'filter'
             },
             {
-                "dimension" : "search_key",
-                "value" : "restaurantinnewyork",
-                "for" : "parameter"
+                dimension : "search_key",
+                value : "restaurantinnewyork",
+                for : "parameter"
             }
         ]
     }
@@ -235,6 +235,67 @@ var eventful = {
 
 module.exports.eventful = eventful;
 
+//fake service with wrong URL
+var fakeService = {
+    name: 'fakeService',
+    type: 'primary',
+    protocol: 'rest',
+    basePath: 'http://localhost:3000/jsonn',
+    operations: [
+        {
+            name: 'eventSearch',
+            path: '/events/search',
+            parameters: [
+                {
+                    name: 'app_key',
+                    required: true,
+                    default: 'cpxgqQcFnbVSmvc2',
+                    mappingCDT: []
+                },
+                {
+                    name: 'keywords',
+                    required: false,
+                    default: 'restaurant',
+                    mappingCDT: [
+                        'search_key'
+                    ]
+                },
+                {
+                    name: 'location',
+                    required: false,
+                    default: 'chicago',
+                    mappingCDT: [
+                        'Location'
+                    ]
+                }
+            ],
+            responseMapping: {
+                list: 'events.event',
+                items: [
+                    {
+                        termName: 'title',
+                        path: 'title'
+                    },
+                    {
+                        termName: 'venue_address',
+                        path: 'address'
+                    },
+                    {
+                        termName: 'latitude',
+                        path: 'latitude'
+                    },
+                    {
+                        termName: 'longitude',
+                        path: 'longitude'
+                    }
+                ]
+            }
+        }
+    ]
+};
+
+module.exports.fakeService = fakeService;
+
 //googlePlaces associations
 var googlePlacesAssociations = function (idOperation, idCDT) {
     return [
@@ -282,3 +343,19 @@ var eventfulAssociations = function (idOperation, idCDT) {
 };
 
 module.exports.eventfulAssociations = eventfulAssociations;
+
+//fake service associations
+var fakeServiceAssociation = function (idOperation, idCDT) {
+    return [
+        {
+            _idOperation: idOperation,
+            dimension: 'TestServizio',
+            value: 'TestSenzaRisposta',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idCDT
+        }
+    ];
+};
+
+module.exports.fakeServiceAssociation = fakeServiceAssociation;

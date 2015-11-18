@@ -34,6 +34,17 @@ describe('Component: QueryHandler', function () {
                     assert.equal(responses.length, 2);
                 });
         });
+        it('check array composition when one service does not respond to a query', function () {
+            return serviceManager
+                .selectServices(contextForFakeService)
+                .then(function(services) {
+                    return queryHandler.executeQueries(services, contextForFakeService.context);
+                })
+                .then(function (responses) {
+                    assert.notEqual(responses, null);
+                    assert.equal(responses.length, 2);
+                });
+        });
     });
 
     after(function (done) {
@@ -44,3 +55,47 @@ describe('Component: QueryHandler', function () {
     });
 
 });
+
+//Context that involve the fake service
+var contextForFakeService = {
+    _id: idCDT,
+    context: [
+        {
+            dimension: 'InterestTopic',
+            value: 'Restaurant',
+            for: 'filter'
+        },
+        {
+            dimension: 'Location',
+            value: 'newyork',
+            for: 'filter|parameter',
+            search: 'testCustomSearch'
+        },
+        {
+            dimension: 'Guests',
+            value: '4',
+            for: 'parameter'
+        },
+        {
+            dimension: 'Budget',
+            value: 'Low',
+            for: 'filter|parameter',
+            transformFunction: 'translateBudget'
+        },
+        {
+            dimension: 'Tipology',
+            value: 'DinnerWithFriends',
+            for: 'filter'
+        },
+        {
+            dimension : "search_key",
+            value : "restaurantinnewyork",
+            for : "parameter"
+        },
+        {
+            dimension: 'TestServizio',
+            value: 'TestSenzaRisposta',
+            for: 'filter'
+        }
+    ]
+};
