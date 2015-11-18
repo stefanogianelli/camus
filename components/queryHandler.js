@@ -9,7 +9,7 @@ var restBridge = require('../bridges/restBridge.js');
 Promise.promisifyAll(ServiceModel);
 
 var bridgeFolder = '../bridges/';
-var bridgeInterface = new Interface('bridgeInterface', ['executeQuery', 'convertResponse']);
+var bridgeInterface = new Interface('bridgeInterface', ['executeQuery']);
 
 var queryHandler = function () { };
 
@@ -70,7 +70,7 @@ function translateParameters (params, context) {
                             })
                     );
                 } else {
-                    console.log('function not exists');
+                    console.log('ERROR: translation function \'' + p.transformFunction + '\' not exists');
                 }
             }
         });
@@ -102,12 +102,33 @@ function callServices (services, params) {
                             responses.splice(index, 0, response);
                         })
                         .catch(function (e) {
-                            //console.log(e);
-                            console.log('Error during service \'' + s.name + '\' invocation');
+                            console.log('ERROR: Error during service \'' + s.name + '\' invocation');
                         })
                 );
-            } else {
+            } else if (s.protocol === 'custom') {
                 //call the custom bridge
+                if (_.has(s, 'bridgeName') && !_.isEmpty(s.bridgeName)) {
+                    try {
+                        var module = require(bridgeFolder + s.bridgeName);
+                        Interface.ensureImplements(module, bridgeInterface);
+                        servicesPromises.push(
+                            module
+                                .executeQuery(params)
+                                .then(function (response) {
+                                    if (response !== null && response !== 'undefined' && _.isObject(response)) {
+                                        responses.splice(index, 0, response);
+                                    }
+                                })
+                                .catch(function (e) {
+                                    console.log('ERROR: Error during service \'' + s.name + '\' invocation');
+                                })
+                        );
+                    } catch (e) {
+                        console.log(e.message);
+                    }
+                } else {
+                    console.log('ERROR: The service \'' + s.name + '\' must define a custom bridge');
+                }
             }
         });
         Promise
