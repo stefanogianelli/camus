@@ -81,7 +81,7 @@ var responseSchema = new Schema({
         required: true
     },
     items: [itemSchema],
-    operate: [operateSchema]
+    functions: [operateSchema]
 });
 
 /**

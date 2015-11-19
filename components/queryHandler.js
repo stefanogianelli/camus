@@ -156,6 +156,7 @@ function transformResponse (mapping, response) {
             var transformedResponse = _.map(getItemValue(response, mapping.list), function (i) {
                 return transformItem(i, mapping);
             });
+            transformedResponse = executeFunctions(transformedResponse, mapping);
             resolve(transformedResponse);
         } else {
             reject('ERROR: wrong response type or empty response');
@@ -199,12 +200,12 @@ function getItemValue (item, key) {
 /**
  * Tranform a single item in the new representation
  * @param item The original item
- * @param mappping The mapping rules
+ * @param mapping The mapping rules
  * @returns {{}} The transformed object
  */
-function transformItem (item, mappping) {
+function transformItem (item, mapping) {
     var obj = {};
-    _.forEach(mappping.items, function (m) {
+    _.forEach(mapping.items, function (m) {
         if (typeof m.path === 'string' && !_.isEmpty(m.path)) {
             var v = getItemValue(item, m.path);
             if (!_.isUndefined(v)) {
@@ -213,6 +214,31 @@ function transformItem (item, mappping) {
         }
     });
     return obj;
+}
+
+/**
+ * Execute custom function on attributes
+ * @param items The list of transformed items
+ * @param mapping The mapping rules
+ * @returns {*} The modified list of items
+ */
+function executeFunctions (items, mapping) {
+    _.forEach(mapping.functions, function (f) {
+        _.forEach(items, function (i) {
+            if (_.has(i, f.onAttribute)) {
+                try {
+                    var fn = new Function('value', f.run);
+                    var value = fn(i[f.onAttribute]);
+                    if (!_.isEmpty(value) && !_.isUndefined(value)) {
+                        i[f.onAttribute] = fn(i[f.onAttribute]);
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+        });
+    });
+    return items;
 }
 
 module.exports = new queryHandler();

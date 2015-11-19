@@ -324,6 +324,12 @@ var testBridge = {
                         termName: 'longitude',
                         path: 'geometry.location.lng'
                     }
+                ],
+                functions: [
+                    {
+                        run: 'return \'Restaurant \' + value;',
+                        onAttribute: 'title'
+                    }
                 ]
             }
         }

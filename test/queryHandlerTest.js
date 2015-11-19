@@ -56,6 +56,19 @@ describe('Component: QueryHandler', function () {
                     assert.equal(responses.length, 1);
                 });
         });
+        it('check correct execution of custom function on attributes', function () {
+            return serviceManager
+                .selectServices(testBridgeContext)
+                .then(function(services) {
+                    return queryHandler.executeQueries(services, testBridgeContext.context);
+                })
+                .then(function (responses) {
+                    assert.notEqual(responses, null);
+                    assert.equal(responses.length, 1);
+                    assert.equal(responses[0][0].title, 'Restaurant Girl & the Goat');
+                    assert.equal(responses[0][1].title, 'Restaurant The Purple Pig');
+                });
+        });
     });
 
     after(function (done) {
