@@ -5,7 +5,10 @@ var responseAggregator = function () { };
 
 responseAggregator.prototype.prepareResponse = function (responses, supportServices) {
     return new Promise (function (resolve, reject) {
-        resolve(_.flatten(responses));
+        var response = {};
+        response['data'] =_.flatten(responses);
+        response['support'] = [];
+        resolve(response);
     });
 };
 

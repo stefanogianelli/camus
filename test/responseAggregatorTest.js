@@ -9,7 +9,7 @@ describe('Component: ResponseAggregator', function () {
                 .prepareResponse(testResponses, null)
                 .then(function (response) {
                     assert.notEqual(response, null);
-                    console.log(response);
+                    //console.log(response);
                 })
         });
     });

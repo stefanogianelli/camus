@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
 /**
- * Schema for the primary services associations with the CDT nodes
+ * Schema for primary services associations with the CDT nodes
  */
 var primaryServiceSchema = new Schema ({
     _idOperation: {
