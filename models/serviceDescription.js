@@ -80,7 +80,7 @@ var responseSchema = new Schema({
         type: String,
         required: true
     },
-    item: [itemSchema],
+    items: [itemSchema],
     operate: [operateSchema]
 });
 

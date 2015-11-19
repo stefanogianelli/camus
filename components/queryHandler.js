@@ -99,6 +99,9 @@ function callServices (services, params) {
                     restBridge
                         .executeQuery(s, params)
                         .then(function (response) {
+                            return transformResponse(s.operations[0].responseMapping, response)
+                        })
+                        .then(function (response) {
                             responses.splice(index, 0, response);
                         })
                         .catch(function (e) {
@@ -109,15 +112,16 @@ function callServices (services, params) {
                 //call the custom bridge
                 if (_.has(s, 'bridgeName') && !_.isEmpty(s.bridgeName)) {
                     try {
-                        var module = require(bridgeFolder + s.bridgeName);
+                        var module = require(bridgeFolder + s.operations[0].bridgeName);
                         Interface.ensureImplements(module, bridgeInterface);
                         servicesPromises.push(
                             module
                                 .executeQuery(params)
                                 .then(function (response) {
-                                    if (response !== null && response !== 'undefined' && _.isObject(response)) {
-                                        responses.splice(index, 0, response);
-                                    }
+                                    return transformResponse(s.operations[0].responseMapping, response)
+                                })
+                                .then(function (response) {
+                                    responses.splice(index, 0, response);
                                 })
                                 .catch(function (e) {
                                     console.log('ERROR: Error during service \'' + s.name + '\' invocation');
@@ -137,6 +141,77 @@ function callServices (services, params) {
                 resolve(_.compact(responses));
             });
     });
+}
+
+/**
+ * It transforms the response of the service to make it in internal representation
+ * @param mapping The mapping rules for the specific service
+ * @param response The response from the service
+ * @returns {bluebird|exports|module.exports}
+ */
+function transformResponse (mapping, response) {
+    return new Promise (function (resolve, reject) {
+        if (response !== null && response !== 'undefined' && _.isObject(response)) {
+            var transformedResponse = _.map(getItemValue(response, mapping.list), function (i) {
+                return transformItem(i, mapping);
+            });
+            resolve(transformedResponse);
+        } else {
+            reject('ERROR: wrong response type or empty response');
+        }
+    })
+}
+
+/**
+ * Retrieve the value associated to a key
+ * The key must be written in dot notation
+ * Es.:
+ * {
+ *   'a': {
+ *     'b': 'test'
+ *   }
+ * }
+ * key = a.b --> test
+ * @param item The item where to search the key
+ * @param key The key to be searched. Write it in dot notation
+ * @returns {*} The value found or null
+ */
+function getItemValue (item, key) {
+    if (_.isUndefined(item)) {
+        return null;
+    }
+    if (_.isEmpty(key) || _.isUndefined(key)) {
+        return null;
+    }
+    var keys = key.split('.');
+    var value = item;
+    _.forEach(keys, function (k) {
+        if (!_.isUndefined(value)) {
+            value = value[k];
+        } else {
+            return null;
+        }
+    });
+    return value;
+}
+
+/**
+ * Tranform a single item in the new representation
+ * @param item The original item
+ * @param mappping The mapping rules
+ * @returns {{}} The transformed object
+ */
+function transformItem (item, mappping) {
+    var obj = {};
+    _.forEach(mappping.items, function (m) {
+        if (typeof m.path === 'string' && !_.isEmpty(m.path)) {
+            var v = getItemValue(item, m.path);
+            if (!_.isUndefined(v)) {
+                obj[m.termName] = v;
+            }
+        }
+    });
+    return obj;
 }
 
 module.exports = new queryHandler();

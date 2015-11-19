@@ -216,8 +216,8 @@ var eventful = {
                         path: 'title'
                     },
                     {
-                        termName: 'venue_address',
-                        path: 'address'
+                        termName: 'address',
+                        path: 'venue_address'
                     },
                     {
                         termName: 'latitude',

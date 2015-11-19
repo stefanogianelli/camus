@@ -23,7 +23,6 @@
     "hapi": "^11.1.0",
     "lodash": "^3.10.1",
     "mongoose": "^4.2.5",
-    "mongoose-function": "^0.1.0",
     "superagent": "^1.4.0"
   },
   "devDependencies": {
