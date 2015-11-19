@@ -296,6 +296,42 @@ var fakeService = {
 
 module.exports.fakeService = fakeService;
 
+//service created for custom bridge testing
+var testBridge = {
+    name: 'testBridge',
+    type: 'primary',
+    protocol: 'custom',
+    operations: [
+        {
+            name: 'placeTextSearch',
+            bridgeName: 'testBridge',
+            responseMapping: {
+                list: 'results',
+                items: [
+                    {
+                        termName: 'title',
+                        path: 'name'
+                    },
+                    {
+                        termName: 'address',
+                        path: 'formatted_address'
+                    },
+                    {
+                        termName: 'latitude',
+                        path: 'geometry.location.lat'
+                    },
+                    {
+                        termName: 'longitude',
+                        path: 'geometry.location.lng'
+                    }
+                ]
+            }
+        }
+    ]
+};
+
+module.exports.testBridge = testBridge;
+
 //googlePlaces associations
 var googlePlacesAssociations = function (idOperation, idCDT) {
     return [
@@ -359,3 +395,19 @@ var fakeServiceAssociation = function (idOperation, idCDT) {
 };
 
 module.exports.fakeServiceAssociation = fakeServiceAssociation;
+
+//test bridge service associations
+var testBridgeAssociation = function (idOperation, idCDT) {
+    return [
+        {
+            _idOperation: idOperation,
+            dimension: 'TestBridge',
+            value: 'TestBridge',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idCDT
+        }
+    ];
+};
+
+module.exports.testBridgeAssociation = testBridgeAssociation;

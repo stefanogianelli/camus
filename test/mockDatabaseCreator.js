@@ -81,6 +81,28 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                 function (err) {
                     callback(err, 'done');
                 });
+        },
+        four: function (callback) {
+            async.waterfall([
+                    function (callback) {
+                        var testBridgeService = new ServiceModel(mockData.testBridge);
+                        testBridgeService.save(function (err, service) {
+                            callback(err, service.operations[0].id);
+                        });
+                    },
+                    function (idOperation, callback) {
+                        _.forEach(mockData.testBridgeAssociation(idOperation, _idCDT), function (a) {
+                            var associations = new PrimaryServiceModel(a);
+                            associations.save(function (err) {
+                                assert.equal(err, null);
+                            });
+                        });
+                        callback(null, 'done');
+                    }
+                ],
+                function (err) {
+                    callback(err, 'done');
+                });
         }
     },
     function (err) {

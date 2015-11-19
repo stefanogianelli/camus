@@ -45,6 +45,17 @@ describe('Component: QueryHandler', function () {
                     assert.equal(responses.length, 2);
                 });
         });
+        it('check correct execution of custom bridge', function () {
+            return serviceManager
+                .selectServices(testBridgeContext)
+                .then(function(services) {
+                    return queryHandler.executeQueries(services, testBridgeContext.context);
+                })
+                .then(function (responses) {
+                    assert.notEqual(responses, null);
+                    assert.equal(responses.length, 1);
+                });
+        });
     });
 
     after(function (done) {
@@ -95,6 +106,22 @@ var contextForFakeService = {
         {
             dimension: 'TestServizio',
             value: 'TestSenzaRisposta',
+            for: 'filter'
+        }
+    ]
+};
+
+var testBridgeContext = {
+    _id: idCDT,
+    context: [
+        {
+            dimension: 'InterestTopic',
+            value: 'Bridge',
+            for: 'filter'
+        },
+        {
+            dimension: 'TestBridge',
+            value: 'TestBridge',
             for: 'filter'
         }
     ]

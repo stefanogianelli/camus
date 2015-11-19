@@ -18,4 +18,4 @@ bridgeStructure.prototype.executeQuery = function (parameterNodes) {
   });
 };
 
-module.exports = new bridgeStructure();
+module.exports = bridgeStructure;

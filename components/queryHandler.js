@@ -110,12 +110,13 @@ function callServices (services, params) {
                 );
             } else if (s.protocol === 'custom') {
                 //call the custom bridge
-                if (_.has(s, 'bridgeName') && !_.isEmpty(s.bridgeName)) {
+                var bridgeName = s.operations[0].bridgeName;
+                if (!_.isEmpty(bridgeName) && !_.isUndefined(bridgeName)) {
                     try {
-                        var module = require(bridgeFolder + s.operations[0].bridgeName);
+                        var module = require(bridgeFolder + bridgeName + '.js');
                         Interface.ensureImplements(module, bridgeInterface);
                         servicesPromises.push(
-                            module
+                            new module()
                                 .executeQuery(params)
                                 .then(function (response) {
                                     return transformResponse(s.operations[0].responseMapping, response)
