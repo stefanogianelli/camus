@@ -52,6 +52,11 @@ supportServiceSelection.prototype.selectServices = function (context) {
     });
 };
 
+/**
+ * Compose the query of services from a list of operation ids
+ * @param idOperations The list of operation ids
+ * @returns {bluebird|exports|module.exports} The list of service object, composed by the service name and the query associated
+ */
 function selectServicesFromName (idOperations) {
     return new Promise (function (resolve, reject) {
         ServiceModel

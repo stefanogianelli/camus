@@ -4,6 +4,7 @@ var assert = require('assert');
 var mockData = require('./mockModel.js');
 var ServiceModel = require('../models/serviceDescription.js');
 var PrimaryServiceModel = require('../models/primaryServiceAssociation.js');
+var SupportServiceModel = require('../models/supportServiceAssociation.js');
 
 var mockDatabaseCreator = function (idCDT) {
     this._idCDT = idCDT;
@@ -113,6 +114,116 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                             _idWikipedia = service.operations[0].id;
                             callback(err, 'done');
                         });
+                    }
+                ],
+                function (err) {
+                    callback(err, 'done');
+                });
+        },
+        six: function (callback) {
+            async.waterfall([
+                    function (callback) {
+                        var googleMapsService = new ServiceModel(mockData.googleMaps);
+                        googleMapsService.save(function (err, service) {
+                            callback(err, service.operations[0].id);
+                        });
+                    },
+                    function (idOperation, callback) {
+                        _.forEach(mockData.googleMapsAssociation(idOperation, _idCDT), function (a) {
+                            var associations = new SupportServiceModel(a);
+                            associations.save(function (err) {
+                                assert.equal(err, null);
+                            });
+                        });
+                        callback(null, 'done');
+                    }
+                ],
+                function (err) {
+                    callback(err, 'done');
+                });
+        },
+        seven: function (callback) {
+            async.waterfall([
+                    function (callback) {
+                        var atmService = new ServiceModel(mockData.atm);
+                        atmService.save(function (err, service) {
+                            callback(err, service.operations[0].id);
+                        });
+                    },
+                    function (idOperation, callback) {
+                        _.forEach(mockData.atmAssociation(idOperation, _idCDT), function (a) {
+                            var associations = new SupportServiceModel(a);
+                            associations.save(function (err) {
+                                assert.equal(err, null);
+                            });
+                        });
+                        callback(null, 'done');
+                    }
+                ],
+                function (err) {
+                    callback(err, 'done');
+                });
+        },
+        eight: function (callback) {
+            async.waterfall([
+                    function (callback) {
+                        var atacService = new ServiceModel(mockData.atac);
+                        atacService.save(function (err, service) {
+                            callback(err, service.operations[0].id);
+                        });
+                    },
+                    function (idOperation, callback) {
+                        _.forEach(mockData.atacAssociation(idOperation, _idCDT), function (a) {
+                            var associations = new SupportServiceModel(a);
+                            associations.save(function (err) {
+                                assert.equal(err, null);
+                            });
+                        });
+                        callback(null, 'done');
+                    }
+                ],
+                function (err) {
+                    callback(err, 'done');
+                });
+        },
+        nine: function (callback) {
+            async.waterfall([
+                    function (callback) {
+                        var fsService = new ServiceModel(mockData.fs);
+                        fsService.save(function (err, service) {
+                            callback(err, service.operations[0].id);
+                        });
+                    },
+                    function (idOperation, callback) {
+                        _.forEach(mockData.fsAssociation(idOperation, _idCDT), function (a) {
+                            var associations = new SupportServiceModel(a);
+                            associations.save(function (err) {
+                                assert.equal(err, null);
+                            });
+                        });
+                        callback(null, 'done');
+                    }
+                ],
+                function (err) {
+                    callback(err, 'done');
+                });
+        },
+        ten: function (callback) {
+            async.waterfall([
+                    function (callback) {
+                        var trenordService = new ServiceModel(mockData.trenord);
+                        trenordService.save(function (err, service) {
+                            callback(err, service.operations[0].id);
+                        });
+                    },
+                    function (idOperation, callback) {
+                        _.forEach(mockData.trenordAssociation(idOperation, _idCDT), function (a) {
+                            var associations = new SupportServiceModel(a);
+                            associations.save(function (err) {
+                                assert.equal(err, null);
+                            });
+                        });
+                        callback(null, 'done');
                     }
                 ],
                 function (err) {

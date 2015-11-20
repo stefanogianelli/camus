@@ -361,6 +361,7 @@ module.exports.testBridge = testBridge;
 var wikipedia = {
     name: 'Wikipedia',
     type: 'support',
+    protocol: 'query',
     basePath: 'https://en.wikipedia.org/w',
     operations: [
         {
@@ -410,6 +411,76 @@ var wikipedia = {
 };
 
 module.exports.wikipedia = wikipedia;
+
+//google maps support service
+var googleMaps = {
+    name: 'GoogleMaps',
+    type: 'support',
+    protocol: 'query',
+    operations: [
+        {
+            name: 'searchAddress'
+        }
+    ]
+};
+
+module.exports.googleMaps = googleMaps;
+
+//ATM support service
+var atm = {
+    name: 'ATM',
+    type: 'support',
+    protocol: 'query',
+    operations: [
+        {
+            name: 'searchAddress'
+        }
+    ]
+};
+
+module.exports.atm = atm;
+
+//ATAC support service
+var atac = {
+    name: 'ATAC',
+    type: 'support',
+    protocol: 'query',
+    operations: [
+        {
+            name: 'searchAddress'
+        }
+    ]
+};
+
+module.exports.atac = atac;
+
+//FS support service
+var fs = {
+    name: 'FS',
+    type: 'support',
+    protocol: 'query',
+    operations: [
+        {
+            name: 'searchAddress'
+        }
+    ]
+};
+
+module.exports.fs = fs;
+
+//Trenord support service
+var trenord = {
+    name: 'Trenord',
+    type: 'support',
+    protocol: 'query',
+    operations: [
+        {
+            name: 'searchAddress'
+        }
+    ]
+};
+
+module.exports.trenord = trenord;
 
 //googlePlaces associations
 var googlePlacesAssociations = function (idOperation, idCDT) {
@@ -490,3 +561,103 @@ var testBridgeAssociation = function (idOperation, idCDT) {
 };
 
 module.exports.testBridgeAssociation = testBridgeAssociation;
+
+//google maps service associations
+var googleMapsAssociation = function (idOperation, idCDT) {
+    return [
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            dimension: 'Transport',
+            value: 'WithCar',
+            _idCDT: idCDT
+        }
+    ];
+};
+
+module.exports.googleMapsAssociation = googleMapsAssociation;
+
+//ATM service associations
+var atmAssociation = function (idOperation, idCDT) {
+    return [
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            dimension: 'Tipology',
+            value: 'Bus',
+            require: 'Location',
+            _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            dimension: 'Location',
+            value: 'Milan',
+            _idCDT: idCDT
+        }
+    ];
+};
+
+module.exports.atmAssociation = atmAssociation;
+
+//ATAC service associations
+var atacAssociation = function (idOperation, idCDT) {
+    return [
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            dimension: 'Tipology',
+            value: 'Bus',
+            require: 'Location',
+            _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            dimension: 'Location',
+            value: 'Rome',
+            _idCDT: idCDT
+        }
+    ];
+};
+
+module.exports.atacAssociation = atacAssociation;
+
+//FS service associations
+var fsAssociation = function (idOperation, idCDT) {
+    return [
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            dimension: 'Tipology',
+            value: 'Train',
+            require: '',
+            _idCDT: idCDT
+        }
+    ];
+};
+
+module.exports.fsAssociation = fsAssociation;
+
+//Trenord service associations
+var trenordAssociation = function (idOperation, idCDT) {
+    return [
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            dimension: 'Tipology',
+            value: 'Train',
+            require: 'Location',
+            _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            dimension: 'Location',
+            value: 'Milan',
+            _idCDT: idCDT
+        }
+    ];
+};
+
+module.exports.trenordAssociation = trenordAssociation;
