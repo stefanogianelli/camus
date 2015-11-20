@@ -23,12 +23,12 @@ primaryServiceSelection.prototype.selectServices = function selectServices (cont
     return new Promise(function (resolve, reject) {
         if (context !== null && _.has(context, 'context')) {
             contextManager
-                .getFilterNodes(context.context)
+                .getFilterNodes(context)
                 .then(function (filterNodes) {
                     return searchServices(filterNodes, context._id);
                 })
                 .then(function (services) {
-                    return loadSearchPlugins(context._id, services, context.context);
+                    return loadSearchPlugins(context._id, services, context);
                 })
                 .then(function (services) {
                     resolve(calculateRanking(services));

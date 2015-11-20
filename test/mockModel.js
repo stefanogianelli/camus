@@ -34,6 +34,23 @@ var context = function(idCDT) {
                 dimension : "search_key",
                 value : "restaurantinnewyork",
                 for : "parameter"
+            },
+            {
+                "dimension": "Transport",
+                "value": "PublicTransport",
+                "supportCategory": "transport",
+                "for": "filter"
+            }
+        ],
+        support: [
+            {
+                category: 'transport'
+            },
+            {
+                category: 'sport'
+            },
+            {
+                name: 'wikipedia'
             }
         ]
     }

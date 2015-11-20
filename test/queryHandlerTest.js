@@ -27,7 +27,7 @@ describe('Component: QueryHandler', function () {
             return serviceManager
                 .selectServices(mockData.context(idCDT))
                 .then(function(services) {
-                    return queryHandler.executeQueries(services, mockData.context(idCDT).context);
+                    return queryHandler.executeQueries(services, mockData.context(idCDT));
                 })
                 .then(function (responses) {
                     assert.notEqual(responses, null);
@@ -38,7 +38,7 @@ describe('Component: QueryHandler', function () {
             return serviceManager
                 .selectServices(contextForFakeService)
                 .then(function(services) {
-                    return queryHandler.executeQueries(services, contextForFakeService.context);
+                    return queryHandler.executeQueries(services, contextForFakeService);
                 })
                 .then(function (responses) {
                     assert.notEqual(responses, null);
@@ -49,7 +49,7 @@ describe('Component: QueryHandler', function () {
             return serviceManager
                 .selectServices(testBridgeContext)
                 .then(function(services) {
-                    return queryHandler.executeQueries(services, testBridgeContext.context);
+                    return queryHandler.executeQueries(services, testBridgeContext);
                 })
                 .then(function (responses) {
                     assert.notEqual(responses, null);
@@ -60,7 +60,7 @@ describe('Component: QueryHandler', function () {
             return serviceManager
                 .selectServices(testBridgeContext)
                 .then(function(services) {
-                    return queryHandler.executeQueries(services, testBridgeContext.context);
+                    return queryHandler.executeQueries(services, testBridgeContext);
                 })
                 .then(function (responses) {
                     assert.notEqual(responses, null);
