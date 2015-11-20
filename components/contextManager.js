@@ -162,6 +162,32 @@ contextManager.prototype.getSupportServiceCategories = function getSupportServic
 };
 
 /**
+ * Return the support service names
+ * @param contextFile The current context
+ * @returns {bluebird|exports|module.exports} The list of services
+ */
+contextManager.prototype.getSupportServiceNames = function getSupportServiceNames (contextFile) {
+    return new Promise (function (resolve, reject) {
+        if (!_.isUndefined(contextFile) && !_.isNull(contextFile) && _.has(contextFile, 'support')) {
+            var support = contextFile.support;
+            if (!_.isEmpty(support)) {
+                var names = [];
+                _.forEach(support, function (s) {
+                    if (_.has(s, 'name')) {
+                        names.push(s.name);
+                    }
+                });
+                resolve(names);
+            } else {
+                reject('No support services defined');
+            }
+        } else {
+            reject('No context selected');
+        }
+    });
+};
+
+/**
  * Search the dimension node that is the primary dimension for the support service category specified
  * @param category The support service category
  * @param contextFile The current context

@@ -15,6 +15,7 @@ var mockDatabaseCreator = function (idCDT) {
  */
 mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback) {
     var _idCDT = this._idCDT;
+    var _idWikipedia;
     async.parallel({
         one: function (callback) {
             async.waterfall([
@@ -103,10 +104,24 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                 function (err) {
                     callback(err, 'done');
                 });
+        },
+        five: function (callback) {
+            async.waterfall([
+                    function (callback) {
+                        var wikipediaService = new ServiceModel(mockData.wikipedia);
+                        wikipediaService.save(function (err, service) {
+                            _idWikipedia = service.operations[0].id;
+                            callback(err, 'done');
+                        });
+                    }
+                ],
+                function (err) {
+                    callback(err, 'done');
+                });
         }
     },
     function (err) {
-        callback(err, 'done');
+        callback(err, mockData.context(_idCDT, _idWikipedia));
     });
 };
 

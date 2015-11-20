@@ -231,7 +231,7 @@ describe('Component: ContextManager', function() {
         });
         it('check error when sending empty context', function () {
             return contextManager
-                .getSupportServicePrimaryDimension('transport', emptyContext)
+                .getSupportServicePrimaryDimension('transport', emptySupport)
                 .catch(function (e) {
                     assert.equal(e, 'No context selected');
                 });
@@ -262,6 +262,39 @@ describe('Component: ContextManager', function() {
                 .getSupportServicePrimaryDimension('', mockData.context(idCDT))
                 .catch(function (e) {
                     assert.equal(e, 'No category selected');
+                });
+        });
+    });
+
+    describe('#getSupportServiceNames()', function () {
+        it('check if correct names are returned', function () {
+            return contextManager
+                .getSupportServiceNames(mockData.context(idCDT, '564f397c30c6e9bc05ba363d'))
+                .then(function (names) {
+                    assert.notEqual(names, null);
+                    assert.equal(names.length, 1);
+                    assert.equal(names[0], '564f397c30c6e9bc05ba363d');
+                });
+        });
+        it('check error when sending empty context', function () {
+            return contextManager
+                .getSupportServiceNames(emptySupport)
+                .catch(function (e) {
+                    assert.equal(e, 'No support services defined');
+                });
+        });
+        it('check error when sending null context', function () {
+            return contextManager
+                .getSupportServiceNames(null)
+                .catch(function (e) {
+                    assert.equal(e, 'No context selected');
+                });
+        });
+        it('check error when sending empty object', function () {
+            return contextManager
+                .getSupportServiceNames({ })
+                .catch(function (e) {
+                    assert.equal(e, 'No context selected');
                 });
         });
     });

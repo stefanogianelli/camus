@@ -1,5 +1,7 @@
+var mongoose = require('mongoose');
+
 //contex
-var context = function(idCDT) {
+var context = function(idCDT, idWikipedia) {
     return {
         _id: idCDT,
         context: [
@@ -50,7 +52,7 @@ var context = function(idCDT) {
                 category: 'sport'
             },
             {
-                name: 'wikipedia'
+                name: mongoose.Types.ObjectId(idWikipedia)
             }
         ]
     }
@@ -354,6 +356,60 @@ var testBridge = {
 };
 
 module.exports.testBridge = testBridge;
+
+//wikipedia support service
+var wikipedia = {
+    name: 'Wikipedia',
+    type: 'support',
+    basePath: 'https://en.wikipedia.org/w',
+    operations: [
+        {
+            name: 'search',
+            path: '/api.php',
+            parameters: [
+                {
+                    name: 'action',
+                    required: true,
+                    default: 'query',
+                    mappingCDT: [],
+                    mappingTerm: []
+                },
+                {
+                    name: 'titles',
+                    required: true,
+                    default: 'Italy',
+                    mappingCDT: [],
+                    mappingTerm: [
+                        'search_key'
+                    ]
+                },
+                {
+                    name: 'prop',
+                    required: true,
+                    default: 'revisions',
+                    mappingCDT: [],
+                    mappingTerm: []
+                },
+                {
+                    name: 'rvprop',
+                    required: true,
+                    default: 'content',
+                    mappingCDT: [],
+                    mappingTerm: []
+                },
+                {
+                    name: 'format',
+                    required: true,
+                    default: 'json',
+                    mappingCDT: [],
+                    mappingTerm: []
+                }
+            ]
+        }
+    ]
+};
+
+module.exports.wikipedia = wikipedia;
 
 //googlePlaces associations
 var googlePlacesAssociations = function (idOperation, idCDT) {

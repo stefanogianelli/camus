@@ -21,7 +21,7 @@ var primaryServiceSelection = function () { };
  */
 primaryServiceSelection.prototype.selectServices = function selectServices (context) {
     return new Promise(function (resolve, reject) {
-        if (context !== null && _.has(context, 'context')) {
+        if (!_.isUndefined(context) && !_.isNull(context) && _.has(context, 'context')) {
             contextManager
                 .getFilterNodes(context)
                 .then(function (filterNodes) {
@@ -119,12 +119,12 @@ function executeModules (nodes, data, callback) {
     async.each(nodes, function (n, callback) {
         try {
             var filter = _.filter(data, {dimension: n.dimension});
-            if (filter.length > 0) {
+            if (!_.isEmpty(filter)) {
                 var module = require('../searchPlugins/' + n.search + ".js");
                 Interface.ensureImplements(module, searchPluginInterface);
                 var Module = new module(filter);
                 Module.search(n.value, function (results) {
-                    if (results !== null && results !== 'undefined') {
+                    if (!_.isUndefined(results) && !_.isNull(results)) {
                         if (_.isArray(results) && results.length > 0) {
                             services = services.concat(results);
                         }
