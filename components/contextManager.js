@@ -164,7 +164,7 @@ contextManager.prototype.getSupportServiceCategories = function getSupportServic
 /**
  * Return the support service names
  * @param contextFile The current context
- * @returns {bluebird|exports|module.exports} The list of services
+ * @returns {bluebird|exports|module.exports} The list of services name and operation
  */
 contextManager.prototype.getSupportServiceNames = function getSupportServiceNames (contextFile) {
     return new Promise (function (resolve, reject) {
@@ -173,8 +173,8 @@ contextManager.prototype.getSupportServiceNames = function getSupportServiceName
             if (!_.isEmpty(support)) {
                 var names = [];
                 _.forEach(support, function (s) {
-                    if (_.has(s, 'name')) {
-                        names.push(s.name);
+                    if (_.has(s, 'name') && _.has(s, 'operation') ) {
+                        names.push(s);
                     }
                 });
                 resolve(names);

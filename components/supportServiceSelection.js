@@ -2,8 +2,10 @@ var _ = require('lodash');
 var Promise = require('bluebird');
 var contextManager = require('./contextManager.js');
 var ServiceModel = require('../models/serviceDescription.js');
+var serviceAssociation = require('../models/supportServiceAssociation.js');
 
 Promise.promisifyAll(ServiceModel);
+Promise.promisifyAll(serviceAssociation);
 
 var supportServiceSelection = function () { };
 
@@ -54,13 +56,24 @@ supportServiceSelection.prototype.selectServices = function (context) {
 
 /**
  * Compose the query of services from a list of operation ids
- * @param idOperations The list of operation ids
+ * @param serviceNames The list of services name and operation
  * @returns {bluebird|exports|module.exports} The list of service object, composed by the service name and the query associated
  */
-function selectServicesFromName (idOperations) {
+function selectServicesFromName (serviceNames) {
     return new Promise (function (resolve, reject) {
+        var whereClause = {
+            $or: []
+        };
+        _.forEach(serviceNames, function (s) {
+            whereClause.$or.push({
+                $and: [{
+                    name: s.name,
+                    'operations.name': s.operation
+                }]
+            });
+        });
         ServiceModel
-            .findByOperationIdsAsync(idOperations)
+            .findAsync(whereClause)
             .then(function (services) {
                 //compose the queries of each service
                 var serviceNamesResponse = [];
@@ -119,7 +132,31 @@ function selectServicesFromName (idOperations) {
 
 function selectServiceFromCategory (categories, context) {
     return new Promise (function (resolve, reject) {
-        resolve();
+        Promise
+            .map(categories, function (c) {
+                return contextManager
+                    .getSupportServicePrimaryDimension(c, context)
+                    .then(function (node) {
+                        var whereClause = {
+                            _idCDT: context._id,
+                            category: c,
+                            dimension: node.dimension,
+                            value: node.value
+                        };
+                        console.log(whereClause);
+                        return serviceAssociation
+                            .findAsync(whereClause);
+                    })
+                    .then(function (baseServices) {
+                        console.log(baseServices);
+                    })
+                    .catch(function (e) {
+                        console.log(e);
+                    });
+            })
+            .then(function () {
+                resolve();
+            });
     });
 }
 

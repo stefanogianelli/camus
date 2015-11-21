@@ -5,19 +5,24 @@ var mockData = require('./mockModel.js');
 var ServiceModel = require('../models/serviceDescription.js');
 var PrimaryServiceModel = require('../models/primaryServiceAssociation.js');
 var SupportServiceModel = require('../models/supportServiceAssociation.js');
+var cdtModel = require('../models/cdtDescription.js');
 
-var mockDatabaseCreator = function (idCDT) {
-    this._idCDT = idCDT;
-};
+var mockDatabaseCreator = function () { };
 
 /**
  * Create a mock database for testing purposes
  * @param callback The callback function
  */
 mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback) {
-    var _idCDT = this._idCDT;
-    var _idWikipedia;
-    async.parallel({
+    var _idCDT;
+    async.series({
+        zero: function (callback) {
+            var cdt = new cdtModel(mockData.cdt);
+            cdt.save(function (err, cdt) {
+                _idCDT = cdt._id;
+                callback(err, 'done');
+            });
+        },
         one: function (callback) {
             async.waterfall([
                     function (callback) {
@@ -232,7 +237,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
         }
     },
     function (err) {
-        callback(err, mockData.context(_idCDT, _idWikipedia));
+        callback(err, _idCDT);
     });
 };
 
@@ -243,6 +248,11 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
  */
 mockDatabaseCreator.prototype.deleteDatabase = function deleteDatabase (callback) {
     async.parallel({
+            zero: function (callback) {
+                cdtModel.remove({}, function(err) {
+                    callback(err, 'done');
+                })
+            },
             one: function (callback) {
                 PrimaryServiceModel.remove({}, function(err) {
                     callback(err, 'done');
@@ -252,6 +262,11 @@ mockDatabaseCreator.prototype.deleteDatabase = function deleteDatabase (callback
                 ServiceModel.remove({}, function(err) {
                     callback(err, 'done');
                 })
+            },
+            three: function (callback) {
+                SupportServiceModel.remove({}, function(err) {
+                    callback(err, 'done');
+                })
             }
         },
         function (err) {
@@ -259,4 +274,4 @@ mockDatabaseCreator.prototype.deleteDatabase = function deleteDatabase (callback
         });
 };
 
-module.exports = mockDatabaseCreator;
+module.exports = new mockDatabaseCreator();

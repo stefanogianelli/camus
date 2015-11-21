@@ -1,9 +1,8 @@
 var assert = require('assert');
-var mongoose = require('mongoose');
 var contextManager = require('../components/contextManager.js');
 var mockData = require('./mockModel.js');
 
-var idCDT = new mongoose.Types.ObjectId();
+var idCDT;
 
 describe('Component: ContextManager', function() {
 
@@ -192,8 +191,8 @@ describe('Component: ContextManager', function() {
                 .getSupportServiceCategories(mockData.context(idCDT))
                 .then(function (categories) {
                     assert.equal(categories.length, 2);
-                    assert.equal(categories[0], 'transport');
-                    assert.equal(categories[1], 'sport');
+                    assert.equal(categories[0], 'Transport');
+                    assert.equal(categories[1], 'Sport');
                 });
         });
         it('check error when sending empty context', function () {
@@ -222,7 +221,7 @@ describe('Component: ContextManager', function() {
     describe('#getSupportServicePrimaryDimension()', function () {
         it('check if correct node is returned', function () {
            return contextManager
-               .getSupportServicePrimaryDimension('transport', mockData.context(idCDT))
+               .getSupportServicePrimaryDimension('Transport', mockData.context(idCDT))
                .then(function (node) {
                    assert.notEqual(node, null);
                    assert.equal(node.dimension, 'Transport');
@@ -231,30 +230,30 @@ describe('Component: ContextManager', function() {
         });
         it('check error when sending empty context', function () {
             return contextManager
-                .getSupportServicePrimaryDimension('transport', emptySupport)
+                .getSupportServicePrimaryDimension('Transport', emptySupport)
                 .catch(function (e) {
                     assert.equal(e, 'No context selected');
                 });
         });
         it('check error when sending null context', function () {
             return contextManager
-                .getSupportServicePrimaryDimension('transport', null)
+                .getSupportServicePrimaryDimension('Transport', null)
                 .catch(function (e) {
                     assert.equal(e, 'No context selected');
                 });
         });
         it('check error when sending empty object', function () {
             return contextManager
-                .getSupportServicePrimaryDimension('transport', { })
+                .getSupportServicePrimaryDimension('Transport', { })
                 .catch(function (e) {
                     assert.equal(e, 'No context selected');
                 });
         });
         it('check error when sending context without primary dimension specified', function () {
             return contextManager
-                .getSupportServicePrimaryDimension('transport', noInterestTopicContext)
+                .getSupportServicePrimaryDimension('Transport', noInterestTopicContext)
                 .catch(function (e) {
-                    assert.equal(e, 'Primary dimension for category \'transport\' not found');
+                    assert.equal(e, 'Primary dimension for category \'Transport\' not found');
                 });
         });
         it('check error when sending null category name', function () {
@@ -269,11 +268,12 @@ describe('Component: ContextManager', function() {
     describe('#getSupportServiceNames()', function () {
         it('check if correct names are returned', function () {
             return contextManager
-                .getSupportServiceNames(mockData.context(idCDT, '564f397c30c6e9bc05ba363d'))
+                .getSupportServiceNames(mockData.context(idCDT))
                 .then(function (names) {
                     assert.notEqual(names, null);
                     assert.equal(names.length, 1);
-                    assert.equal(names[0], '564f397c30c6e9bc05ba363d');
+                    assert.equal(names[0].name, 'Wikipedia');
+                    assert.equal(names[0].operation, 'search');
                 });
         });
         it('check error when sending empty context', function () {

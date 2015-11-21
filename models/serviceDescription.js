@@ -151,32 +151,6 @@ serviceDescriptionSchema.static('findByOperationId', function (idOperation, call
         }, callback);
 });
 
-/**
- * Define the 'findByOperationIds' method
- */
-serviceDescriptionSchema.static('findByOperationIds', function (idOperations, callback) {
-    this
-        .find({
-                'operations._id': {
-                    $in: idOperations
-                }
-            },
-            {
-                name: 1,
-                type: 1,
-                protocol: 1,
-                category: 1,
-                basePath: 1,
-                operations: {
-                    $elemMatch: {
-                        '_id': {
-                            $in: idOperations
-                        }
-                    }
-                }
-            }, callback);
-});
-
 var serviceDescription = mongoose.model('service_description', serviceDescriptionSchema);
 
 module.exports = serviceDescription;

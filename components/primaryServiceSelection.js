@@ -78,7 +78,7 @@ function loadSearchPlugins (idCDT, services, context) {
         contextManager
             .getSpecificNodes(context)
             .then(function (nodes) {
-                if (nodes.length > 0) {
+                if (!_.isEmpty(nodes)) {
                     var whereClause = {
                         _idCDT: idCDT,
                         $or: []

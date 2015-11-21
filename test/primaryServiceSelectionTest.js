@@ -4,50 +4,51 @@ var Promise = require('bluebird');
 var ServiceModel = require('../models/serviceDescription.js');
 var serviceManager = require('../components/primaryServiceSelection.js');
 var mockData = require('./mockModel.js');
-var mockDatabase = require('./mockDatabaseCreator.js');
+var MockDatabase = require('./mockDatabaseCreator.js');
 
 Promise.promisifyAll(ServiceModel);
 
 var db = mongoose.connection;
-var idCDT = new mongoose.Types.ObjectId();
-var MockDatabase = new mockDatabase(idCDT);
+var _idCDT;
 
 //contex with wrong search module name
-var context1 = {
-    _id: idCDT,
-    context: [
-        {
-            dimension: 'InterestTopic',
-            value: 'Restaurant',
-            for: 'filter'
-        },
-        {
-            dimension: 'Location',
-            value: 'Milan',
-            for: 'filter|parameter',
-            search: 'wrongName'
-        },
-        {
-            dimension: 'Guests',
-            value: '4',
-            for: 'parameter'
-        },
-        {
-            dimension: 'Budget',
-            value: 'Low',
-            for: 'filter|parameter'
-        },
-        {
-            dimension: 'Tipology',
-            value: 'DinnerWithFriends',
-            for: 'filter'
-        }
-    ]
+var context1 = function (idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant',
+                for: 'filter'
+            },
+            {
+                dimension: 'Location',
+                value: 'Milan',
+                for: 'filter|parameter',
+                search: 'wrongName'
+            },
+            {
+                dimension: 'Guests',
+                value: '4',
+                for: 'parameter'
+            },
+            {
+                dimension: 'Budget',
+                value: 'Low',
+                for: 'filter|parameter'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'DinnerWithFriends',
+                for: 'filter'
+            }
+        ]
+    }
 };
 
 //contex with no associated services
 var context2 = {
-    _id: idCDT,
+    _id: _idCDT,
     context: [
         {
             dimension: 'SportType',
@@ -64,8 +65,9 @@ describe('Component: PrimaryServiceSelection', function() {
             mongoose.connect('mongodb://localhost/camus_test');
             db.on('error', console.error.bind(console, 'connection error:'));
         }
-        MockDatabase.createDatabase(function (err) {
+        MockDatabase.createDatabase(function (err, idCDT) {
             assert.equal(err, null);
+            _idCDT = idCDT;
             done();
         });
     });
@@ -73,7 +75,7 @@ describe('Component: PrimaryServiceSelection', function() {
     describe('#selectServices()', function() {
         it('check if correct services are selected', function() {
             return serviceManager
-                .selectServices(mockData.context(idCDT))
+                .selectServices(mockData.context(_idCDT))
                 .then(function(services) {
                     assert.notEqual(services, null);
                     assert.equal(services.length, 2);
@@ -100,7 +102,7 @@ describe('Component: PrimaryServiceSelection', function() {
         });
         it('check error when no filter nodes selected', function() {
             return serviceManager
-                .selectServices(mockData.parameterContext(idCDT))
+                .selectServices(mockData.parameterContext(_idCDT))
                 .catch(function (e) {
                     assert.equal(e, 'No filter nodes selected!');
                 });
@@ -117,7 +119,7 @@ describe('Component: PrimaryServiceSelection', function() {
         });
         it('check correct execution when specified a wrong specific module name', function() {
             return serviceManager
-                .selectServices(context1)
+                .selectServices(context1(_idCDT))
                 .then(function(services) {
                     assert.equal(services[0].rank, 4);
                     assert.equal(services[1].rank, 1);

@@ -2,12 +2,10 @@ var assert = require('assert');
 var mongoose = require('mongoose');
 var supportServiceSelection = require('../components/supportServiceSelection.js');
 var mockData = require('./mockModel.js');
-var mockDatabase = require('./mockDatabaseCreator.js');
+var MockDatabase = require('./mockDatabaseCreator.js');
 
 var db = mongoose.connection;
-var idCDT = new mongoose.Types.ObjectId();
-var MockDatabase = new mockDatabase(idCDT);
-var Context;
+var _idCDT;
 
 describe('Component: SupportServiceSelection', function () {
 
@@ -16,9 +14,9 @@ describe('Component: SupportServiceSelection', function () {
             mongoose.connect('mongodb://localhost/camus_test');
             db.on('error', console.error.bind(console, 'connection error:'));
         }
-        MockDatabase.createDatabase(function (err, context) {
+        MockDatabase.createDatabase(function (err, idCDT) {
             assert.equal(err, null);
-            Context = context;
+            _idCDT = idCDT;
             done();
         });
     });
@@ -26,7 +24,7 @@ describe('Component: SupportServiceSelection', function () {
     describe('#selectServices()', function () {
         it('check if correct services are selected', function () {
             return supportServiceSelection
-                .selectServices(Context)
+                .selectServices(mockData.context(_idCDT))
                 .then(function (data) {
                     console.log(data);
                 });

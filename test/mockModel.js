@@ -1,7 +1,91 @@
-var mongoose = require('mongoose');
+//cdt
+var cdt = {
+    _userId: 1,
+    context: [
+        {
+            name: 'InterestTopic',
+            for: 'filter',
+            values: [
+                'Restaurant',
+                'Hotel'
+            ]
+        },
+        {
+            name: 'Location',
+            for: 'filter|parameter',
+            params: [
+                {
+                    name: 'city',
+                    type: 'gps',
+                    searchFunction: 'testCustomSearch'
+                }
+            ]
+        },
+        {
+            name: 'Guests',
+            for: 'parameter',
+            params: [
+                {
+                    name: 'number',
+                    type: 'integer'
+                }
+            ]
+        },
+        {
+            name: 'Budget',
+            for: 'filter|parameter',
+            transformFunction: 'translateBudget',
+            values: [
+                'Low',
+                'Medium',
+                'High'
+            ]
+        },
+        {
+            name: 'Tipology',
+            for: 'filter',
+            values: [
+                'DinnerWithFriends'
+            ]
+        },
+        {
+            name: 'keyword',
+            for: 'parameter',
+            params: [
+                {
+                    name: 'search_key',
+                    type: 'String'
+                }
+            ]
+        },
+        {
+            name: 'Transport',
+            for: 'filter',
+            supportCategory: 'Transport',
+            values: [
+                'PublicTransport',
+                'WithCar'
+            ]
+        },
+        {
+            name: 'Tipology',
+            for: 'filter',
+            values: [
+                'Bus',
+                'Train'
+            ],
+            path: [
+                'Transport',
+                'PublicTransport'
+            ]
+        }
+    ]
+};
+
+module.exports.cdt = cdt;
 
 //contex
-var context = function(idCDT, idWikipedia) {
+var context = function(idCDT) {
     return {
         _id: idCDT,
         context: [
@@ -33,26 +117,27 @@ var context = function(idCDT, idWikipedia) {
                 for: 'filter'
             },
             {
-                dimension : "search_key",
-                value : "restaurantinnewyork",
-                for : "parameter"
+                dimension : 'search_key',
+                value : 'restaurantinnewyork',
+                for : 'parameter'
             },
             {
-                "dimension": "Transport",
-                "value": "PublicTransport",
-                "supportCategory": "transport",
-                "for": "filter"
+                "dimension": 'Transport',
+                "value": 'PublicTransport',
+                "supportCategory": 'Transport',
+                "for": 'filter'
             }
         ],
         support: [
             {
-                category: 'transport'
+                category: 'Transport'
             },
             {
-                category: 'sport'
+                category: 'Sport'
             },
             {
-                name: mongoose.Types.ObjectId(idWikipedia)
+                name: 'Wikipedia',
+                operation: 'search'
             }
         ]
     }
