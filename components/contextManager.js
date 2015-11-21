@@ -1,6 +1,9 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
 var util = require('util');
+var cdtModel = require('../models/cdtDescription.js');
+
+Promise.promisifyAll(cdtModel);
 
 var contextManager = function () { };
 
@@ -215,6 +218,68 @@ contextManager.prototype.getSupportServicePrimaryDimension = function getSupport
             reject('No context selected');
         }
     });
+};
+
+/**
+ * Search all the son nodes of the specified node
+ * @param idCDT The CDT identifier
+ * @param nodeName The parent node name
+ * @returns {*} The list of son nodes, formatted in dimension and value
+ */
+contextManager.prototype.getDescendants = function getDescendants (idCDT, nodeName) {
+    return new Promise (function (resolve, reject) {
+        if (!_.isUndefined(idCDT)) {
+            if (!_.isUndefined(nodeName) && _.isString(nodeName)) {
+                cdtModel
+                    .findAsync(
+                        {_id: idCDT, 'context.parents': nodeName},
+                        {context: {$elemMatch: {parents: nodeName}}}
+                    )
+                    .then(function (nodes) {
+                        var output = [];
+                        _.forEach(nodes[0].context, function (c) {
+                            _.forEach(c.values, function (v) {
+                                output.push({
+                                    dimension: c.name,
+                                    value: v
+                                });
+                            });
+                        });
+                        resolve(output);
+                    })
+                    .catch(function (e) {
+                        reject(e);
+                    });
+
+            } else {
+                reject('Empty or wrong node name');
+            }
+        } else {
+            reject('Specify a CDT identifier');
+        }
+    });
+};
+
+/**
+ * Check if a specified dimension is defined in the context
+ * @param dimensionName The dimension name to be searched
+ * @param contextFile The current context object
+ * @returns {boolean} Return true if the dimension is defined, false otherwise
+ */
+contextManager.prototype.isDefined = function isDefined (dimensionName, contextFile) {
+    if (!_.isUndefined(dimensionName) && _.isString(dimensionName)) {
+        if (!_.isUndefined(contextFile) && !_.isNull(contextFile) && _.has(contextFile, 'context')) {
+            if(_.findIndex(contextFile.context, {dimension: dimensionName}) !== -1) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            throw new Error('No context selected');
+        }
+    } else {
+        throw new Error('Empty or wrong dimension name');
+    }
 };
 
 module.exports = new contextManager();

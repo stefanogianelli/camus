@@ -11,53 +11,6 @@ Promise.promisifyAll(ServiceModel);
 var db = mongoose.connection;
 var _idCDT;
 
-//contex with wrong search module name
-var context1 = function (idCDT) {
-    return {
-        _id: idCDT,
-        context: [
-            {
-                dimension: 'InterestTopic',
-                value: 'Restaurant',
-                for: 'filter'
-            },
-            {
-                dimension: 'Location',
-                value: 'Milan',
-                for: 'filter|parameter',
-                search: 'wrongName'
-            },
-            {
-                dimension: 'Guests',
-                value: '4',
-                for: 'parameter'
-            },
-            {
-                dimension: 'Budget',
-                value: 'Low',
-                for: 'filter|parameter'
-            },
-            {
-                dimension: 'Tipology',
-                value: 'DinnerWithFriends',
-                for: 'filter'
-            }
-        ]
-    }
-};
-
-//contex with no associated services
-var context2 = {
-    _id: _idCDT,
-    context: [
-        {
-            dimension: 'SportType',
-            value: 'Tennis',
-            for: 'filter'
-        }
-    ]
-};
-
 describe('Component: PrimaryServiceSelection', function() {
 
     before(function(done) {
@@ -109,7 +62,7 @@ describe('Component: PrimaryServiceSelection', function() {
         });
         it('check error when no services found', function() {
             return serviceManager
-                .selectServices(context2)
+                .selectServices(context2(_idCDT))
                 .then(function (services) {
                     assert.equal(services.length, 0);
                 })
@@ -137,3 +90,52 @@ describe('Component: PrimaryServiceSelection', function() {
         });
     });
 });
+
+//contex with wrong search module name
+var context1 = function (idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant',
+                for: 'filter'
+            },
+            {
+                dimension: 'Location',
+                value: 'Milan',
+                for: 'filter|parameter',
+                search: 'wrongName'
+            },
+            {
+                dimension: 'Guests',
+                value: '4',
+                for: 'parameter'
+            },
+            {
+                dimension: 'Budget',
+                value: 'Low',
+                for: 'filter|parameter'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'DinnerWithFriends',
+                for: 'filter'
+            }
+        ]
+    }
+};
+
+//contex with no associated services
+var context2 = function (idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'SportType',
+                value: 'Tennis',
+                for: 'filter'
+            }
+        ]
+    }
+};

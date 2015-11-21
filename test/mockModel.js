@@ -74,7 +74,7 @@ var cdt = {
                 'Bus',
                 'Train'
             ],
-            path: [
+            parents: [
                 'Transport',
                 'PublicTransport'
             ]

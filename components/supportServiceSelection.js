@@ -134,16 +134,24 @@ function selectServiceFromCategory (categories, context) {
     return new Promise (function (resolve, reject) {
         Promise
             .map(categories, function (c) {
+                var whereClause = {
+                    _idCDT: context._id,
+                    category: c,
+                    $or: []
+                };
                 return contextManager
                     .getSupportServicePrimaryDimension(c, context)
                     .then(function (node) {
-                        var whereClause = {
-                            _idCDT: context._id,
-                            category: c,
+                        whereClause.$or.push({
                             dimension: node.dimension,
                             value: node.value
-                        };
-                        console.log(whereClause);
+                        });
+                        //get the son node
+                        return contextManager
+                            .getDescendants(context._id, node.value);
+                    })
+                    .then(function (nodes) {
+                        whereClause.$or = _.union(whereClause.$or, nodes);
                         return serviceAssociation
                             .findAsync(whereClause);
                     })
