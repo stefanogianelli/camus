@@ -96,6 +96,11 @@ var context = function(idCDT) {
             },
             {
                 dimension: 'Location',
+                value: 'Milan',
+                for: 'filter'
+            },
+            {
+                dimension: 'Location',
                 value: 'newyork',
                 for: 'filter|parameter',
                 search: 'testCustomSearch'
@@ -516,9 +521,11 @@ var atm = {
     name: 'ATM',
     type: 'support',
     protocol: 'query',
+    basePath: 'http://api.atm-mi.it',
     operations: [
         {
-            name: 'searchAddress'
+            name: 'searchAddress',
+            path: '/searchAddress'
         }
     ]
 };
@@ -589,7 +596,7 @@ var googlePlacesAssociations = function (idOperation, idCDT) {
         {
             _idOperation: idOperation,
             dimension: 'Location',
-            value: 'Milan',
+            value: 'Rome',
             ranking: 1,
             weight: 2,
             _idCDT: idCDT

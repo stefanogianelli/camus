@@ -27,15 +27,17 @@ describe('Component: ContextManager', function() {
             return contextManager
                 .getFilterNodes(mockData.context(_idCDT))
                 .then(function (nodes) {
-                    if (nodes.length === 3) {
+                    if (nodes.length === 4) {
                         assert.equal(nodes[0].dimension, 'InterestTopic');
                         assert.equal(nodes[0].value, 'Restaurant');
-                        assert.equal(nodes[1].dimension, 'Budget');
-                        assert.equal(nodes[1].value, 'Low');
-                        assert.equal(nodes[2].dimension, 'Tipology');
-                        assert.equal(nodes[2].value, 'DinnerWithFriends');
+                        assert.equal(nodes[1].dimension, 'Location');
+                        assert.equal(nodes[1].value, 'Milan');
+                        assert.equal(nodes[2].dimension, 'Budget');
+                        assert.equal(nodes[2].value, 'Low');
+                        assert.equal(nodes[3].dimension, 'Tipology');
+                        assert.equal(nodes[3].value, 'DinnerWithFriends');
                     } else {
-                        assert.fail(nodes.length, 3, 'Wrong nodes count');
+                        assert.fail(nodes.length, 4, 'Wrong nodes count');
                     }
                 }).catch(function (e) {
                     assert.equal(e, null);
@@ -318,7 +320,7 @@ describe('Component: ContextManager', function() {
     describe('#getDescendants()', function () {
         it('check if correct descendats are returned', function () {
             return contextManager
-                .getDescendants(_idCDT, 'PublicTransport')
+                .getDescendants(_idCDT, {value: 'PublicTransport'})
                 .then(function (nodes) {
                     assert.notEqual(nodes, null);
                     assert.equal(nodes.length, 2);

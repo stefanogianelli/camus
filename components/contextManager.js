@@ -223,34 +223,64 @@ contextManager.prototype.getSupportServicePrimaryDimension = function getSupport
 /**
  * Search all the son nodes of the specified node
  * @param idCDT The CDT identifier
- * @param nodeName The parent node name
+ * @param node The parent node(s)
  * @returns {*} The list of son nodes, formatted in dimension and value
  */
-contextManager.prototype.getDescendants = function getDescendants (idCDT, nodeName) {
+contextManager.prototype.getDescendants = function getDescendants (idCDT, node) {
     return new Promise (function (resolve, reject) {
         if (!_.isUndefined(idCDT)) {
-            if (!_.isUndefined(nodeName) && _.isString(nodeName)) {
+            if (!_.isUndefined(node)) {
+                var whereClause = {};
+                var projectClause = {};
+                if (_.isArray(node)) {
+                    var values = _.pluck(node, 'value');
+                    whereClause = {
+                        _id: idCDT,
+                        'context.parents': {
+                            $in: values
+                        }
+                    };
+                    projectClause = {
+                        context: {
+                            $elemMatch: {
+                                parents: {
+                                    $in: values
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    whereClause = {
+                        _id: idCDT,
+                        'context.parents': node.value
+                    };
+                    projectClause = {
+                        context: {
+                            $elemMatch: {
+                                parents: node.value
+                            }
+                        }
+                    }
+                }
                 cdtModel
-                    .findAsync(
-                        {_id: idCDT, 'context.parents': nodeName},
-                        {context: {$elemMatch: {parents: nodeName}}}
-                    )
+                    .findAsync(whereClause, projectClause)
                     .then(function (nodes) {
                         var output = [];
-                        _.forEach(nodes[0].context, function (c) {
-                            _.forEach(c.values, function (v) {
-                                output.push({
-                                    dimension: c.name,
-                                    value: v
+                        if(!_.isUndefined(nodes) && !_.isEmpty(nodes)) {
+                            _.forEach(nodes[0].context, function (c) {
+                                _.forEach(c.values, function (v) {
+                                    output.push({
+                                        dimension: c.name,
+                                        value: v
+                                    });
                                 });
                             });
-                        });
+                        }
                         resolve(output);
                     })
                     .catch(function (e) {
                         reject(e);
                     });
-
             } else {
                 reject('Empty or wrong node name');
             }
@@ -269,11 +299,7 @@ contextManager.prototype.getDescendants = function getDescendants (idCDT, nodeNa
 contextManager.prototype.isDefined = function isDefined (dimensionName, contextFile) {
     if (!_.isUndefined(dimensionName) && _.isString(dimensionName)) {
         if (!_.isUndefined(contextFile) && !_.isNull(contextFile) && _.has(contextFile, 'context')) {
-            if(_.findIndex(contextFile.context, {dimension: dimensionName}) !== -1) {
-                return true;
-            } else {
-                return false;
-            }
+            return _.findIndex(contextFile.context, {dimension: dimensionName}) !== -1;
         } else {
             throw new Error('No context selected');
         }

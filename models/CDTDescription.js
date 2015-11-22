@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var ObjectId = Schema.Types.ObjectId;
+
+var forEnum = 'filter parameter filter|parameter'.split(' ');
 
 /**
  * Parameter schema
@@ -26,13 +27,15 @@ NodeSchema.add({
     },
     for: {
         type: String,
+        enum: forEnum,
         required: true
     },
     transformFunction: String,
     supportDimension: String,
-    nodes: [NodeSchema],
+    values: [String],
     params: [ParamSchema],
-    forbidden: [String]
+    forbidden: [String],
+    parents: [String]
 });
 
 /**
