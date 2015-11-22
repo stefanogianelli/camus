@@ -44,18 +44,18 @@ supportServiceSelection.prototype.selectServices = function (context) {
                 })
                 .then(function (services) {
                     if (!_.isUndefined(services) && !_.isEmpty(services)) {
-                        response.push(services);
+                        response = response.concat(services);
                     }
                     return selectServiceFromCategory(serviceCategories, context);
                 })
                 .then(function (services) {
                     if (!_.isUndefined(services) && !_.isEmpty(services)) {
-                        response.push(services);
+                        response = response.concat(services);
                     }
-                    resolve(_.flatten(response));
+                    resolve(response);
                 })
                 .catch(function (e) {
-                    console.log(e);
+                    reject(e);
                 });
         } else {
             reject('No context selected');
@@ -70,25 +70,30 @@ supportServiceSelection.prototype.selectServices = function (context) {
  */
 function selectServicesFromName (serviceNames) {
     return new Promise (function (resolve, reject) {
-        var whereClause = {
-            $or: []
-        };
-        _.forEach(serviceNames, function (s) {
-            whereClause.$or.push({
-                $and: [{
-                    name: s.name,
-                    'operations.name': s.operation
-                }]
+        if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
+            var whereClause = {
+                $or: []
+            };
+            _.forEach(serviceNames, function (s) {
+                whereClause.$or.push({
+                    $and: [{
+                        name: s.name,
+                        'operations.name': s.operation
+                    }]
+                });
             });
-        });
-        ServiceModel
-            .findAsync(whereClause)
-            .then(function (services) {
-                resolve(composeQuery(services));
-            })
-            .catch(function (e) {
-                reject(e);
-            });
+            ServiceModel
+                .findAsync(whereClause)
+                .then(function (services) {
+                    resolve(composeQuery(services));
+                })
+                .catch(function (e) {
+                    console.log(e);
+                    resolve();
+                });
+        } else {
+            resolve();
+        }
     });
 }
 
@@ -100,34 +105,92 @@ function selectServicesFromName (serviceNames) {
  */
 function selectServiceFromCategory (categories, context) {
     return new Promise (function (resolve, reject) {
-        var response = [];
+        var output = [];
         Promise
             .map(categories, function (c) {
                 return Promise
                     .props({
+                        noConstraintServices: getNoConstraintServices(c, context),
                         baseServices: getBaseServices(c, context),
                         filterServices: getFilterServices(c, context)
                     })
                     .then(function (result) {
-                        var response = intersect(result.baseServices, result.filterServices);
+                        var response = [];
+                        if (!_.isUndefined(result.baseServices) && !_.isEmpty(result.baseServices) &&
+                                !_.isUndefined(result.filterServices) && !_.isEmpty(result.filterServices)) {
+                            response = intersect(result.baseServices, result.filterServices);
+                        }
+                        if (!_.isUndefined(result.noConstraintServices) && !_.isEmpty(result.noConstraintServices)) {
+                            response = response.concat(result.noConstraintServices);
+                        }
                         return ServiceModel
                             .findByOperationIdsAsync(response);
                     })
                     .then(function (services) {
-                        resolve(composeQuery(services));
+                        output = output.concat(composeQuery(services, c));
                     })
                     .catch(function (e) {
                         console.log(e);
                     });
             })
             .then(function () {
+                resolve(output);
+            });
+    });
+}
+
+/**
+ * Retrieve the support services associated to the primary dimension of the current category, that not expose any constraint
+ * @param category The current service category
+ * @param context The current context
+ * @returns {bluebird|exports|module.exports} The list of services retrieved
+ */
+function getNoConstraintServices (category, context) {
+    return new Promise(function (resolve, reject) {
+        var selectedServices = [];
+        var whereClause = {
+            _idCDT: context._id,
+            category: category,
+            $or: [],
+            require: {
+                $eq: null
+            }
+        };
+        contextManager
+            .getSupportServicePrimaryDimension(category, context)
+            .then(function (node) {
+                whereClause.$or.push({
+                    dimension: node.dimension,
+                    value: node.value
+                });
+                //get the son node
+                return contextManager
+                    .getDescendants(context._id, node);
+            })
+            .then(function (nodes) {
+                if (!_.isUndefined(nodes) && !_.isEmpty(nodes)) {
+                    whereClause.$or = _.union(whereClause.$or, nodes);
+                }
+                return serviceAssociation
+                    .findAsync(whereClause);
+            })
+            .then(function (services) {
+                _.forEach(services, function (s) {
+                    if(_.indexOf(selectedServices, s._idOperation) === -1) {
+                        selectedServices.push(s._idOperation);
+                    }
+                });
+                resolve(selectedServices);
+            })
+            .catch(function (e) {
+                console.log(e);
                 resolve();
             });
     });
 }
 
 /**
- * Retrieve the support services associated to the primary dimension of the current category
+ * Retrieve the support services associated to the primary dimension of the current category, that have a dimension constraint
  * @param category The current service category
  * @param context The current context
  * @returns {bluebird|exports|module.exports} The list of services retrieved
@@ -138,7 +201,10 @@ function getBaseServices (category, context) {
         var whereClause = {
             _idCDT: context._id,
             category: category,
-            $or: []
+            $or: [],
+            require: {
+                $ne: null
+            }
         };
         contextManager
             .getSupportServicePrimaryDimension(category, context)
@@ -158,14 +224,8 @@ function getBaseServices (category, context) {
             })
             .then(function (services) {
                 _.forEach(services, function (s) {
-                    if (!_.isEmpty(s.require)) {
-                        if(contextManager.isDefined(s.require, context)) {
-                            if(!exists(baseServices, s)) {
-                                baseServices.push(s._idOperation);
-                            }
-                        }
-                    } else {
-                        if(_.indexOf(baseServices, s._idOperation) === -1) {
+                    if(contextManager.isDefined(s.require, context)) {
+                        if (!exists(baseServices, s)) {
                             baseServices.push(s._idOperation);
                         }
                     }
@@ -173,7 +233,8 @@ function getBaseServices (category, context) {
                 resolve(baseServices);
             })
             .catch(function (e) {
-                reject(e);
+                console.log(e);
+                resolve();
             });
     });
 }
@@ -227,7 +288,8 @@ function getFilterServices (category, context) {
                 resolve(filterServices);
             })
             .catch(function (e) {
-                reject(e);
+                console.log(e);
+                resolve();
             });
     });
 }
@@ -318,6 +380,7 @@ function composeQuery (services, category) {
         if (!_.isUndefined(category) && !_.isEmpty(category)) {
             serviceQueries.push({
                 category: category,
+                service: s.name,
                 url: address
             });
         } else {

@@ -116,7 +116,6 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     function (callback) {
                         var wikipediaService = new ServiceModel(mockData.wikipedia);
                         wikipediaService.save(function (err, service) {
-                            _idWikipedia = service.operations[0].id;
                             callback(err, 'done');
                         });
                     }
@@ -223,6 +222,28 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     },
                     function (idOperation, callback) {
                         _.forEach(mockData.trenordAssociation(idOperation, _idCDT), function (a) {
+                            var associations = new SupportServiceModel(a);
+                            associations.save(function (err) {
+                                assert.equal(err, null);
+                            });
+                        });
+                        callback(null, 'done');
+                    }
+                ],
+                function (err) {
+                    callback(err, 'done');
+                });
+        },
+        eleven: function (callback) {
+            async.waterfall([
+                    function (callback) {
+                        var flickrService = new ServiceModel(mockData.flickr);
+                        flickrService.save(function (err, service) {
+                            callback(err, service.operations[0].id);
+                        });
+                    },
+                    function (idOperation, callback) {
+                        _.forEach(mockData.flickrAssociation(idOperation, _idCDT), function (a) {
                             var associations = new SupportServiceModel(a);
                             associations.save(function (err) {
                                 assert.equal(err, null);

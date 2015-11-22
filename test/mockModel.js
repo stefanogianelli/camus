@@ -44,6 +44,7 @@ var cdt = {
         {
             name: 'Tipology',
             for: 'filter',
+            supportCategory: 'Photo',
             values: [
                 'DinnerWithFriends'
             ]
@@ -503,6 +504,20 @@ var wikipedia = {
 module.exports.wikipedia = wikipedia;
 
 //google maps support service
+var flickr = {
+    name: 'Flickr',
+    type: 'support',
+    protocol: 'query',
+    operations: [
+        {
+            name: 'searchPhoto'
+        }
+    ]
+};
+
+module.exports.flickr = flickr;
+
+//google maps support service
 var googleMaps = {
     name: 'GoogleMaps',
     type: 'support',
@@ -753,3 +768,18 @@ var trenordAssociation = function (idOperation, idCDT) {
 };
 
 module.exports.trenordAssociation = trenordAssociation;
+
+//Flickr service associations
+var flickrAssociation = function (idOperation, idCDT) {
+    return [
+        {
+            _idOperation: idOperation,
+            category: 'Photo',
+            dimension: 'Tipology',
+            value: 'DinnerWithFriends',
+            _idCDT: idCDT
+        }
+    ];
+};
+
+module.exports.flickrAssociation = flickrAssociation;
