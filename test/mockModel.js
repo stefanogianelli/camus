@@ -15,7 +15,7 @@ var cdt = {
             for: 'filter|parameter',
             params: [
                 {
-                    name: 'city',
+                    name: 'City',
                     type: 'gps',
                     searchFunction: 'testCustomSearch'
                 }
@@ -26,8 +26,8 @@ var cdt = {
             for: 'parameter',
             params: [
                 {
-                    name: 'number',
-                    type: 'integer'
+                    name: 'Number',
+                    type: 'Integer'
                 }
             ]
         },
@@ -42,7 +42,7 @@ var cdt = {
             ]
         },
         {
-            name: 'Tipology',
+            name: 'RestaurantTipology',
             for: 'filter',
             supportCategory: 'Photo',
             values: [
@@ -50,7 +50,7 @@ var cdt = {
             ]
         },
         {
-            name: 'keyword',
+            name: 'Keyword',
             for: 'parameter',
             params: [
                 {

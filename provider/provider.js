@@ -57,6 +57,12 @@ provider.prototype.getCdt = function getCdt (idCDT) {
     return cdtModel.findAsync({_id: idCDT});
 };
 
+/**
+ * Find the correct CDT and returns only the specified dimensions
+ * @param idCDT The CDT identifier
+ * @param dimensions The interested dimensions
+ * @returns {*} The CDT with selected dimensions
+ */
 provider.prototype.getCdtDimensions = function getCdtDimensions (idCDT, dimensions) {
     return cdtModel
         .aggregateAsync(

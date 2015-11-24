@@ -28,7 +28,7 @@ describe('Component: ContextManager', function() {
                     assert.equal(data.context[0].value, 'Restaurant');
                     assert.equal(data.context[1].dimension, 'Location');
                     assert.equal(data.context[1].value, 'Milan');
-                    assert.equal(data.context[1].params[0].name, 'city');
+                    assert.equal(data.context[1].params[0].name, 'City');
                     assert.equal(data.context[1].params[0].value, 'prova');
                 });
         });
@@ -421,6 +421,7 @@ var noInterestTopicContext = function (idCDT) {
     }
 };
 
+//context used to test the decoration function
 var decoratedContext = function (idCDT) {
     return {
         _id: _idCDT,
@@ -430,7 +431,7 @@ var decoratedContext = function (idCDT) {
                 value: 'Milan',
                 params: [
                     {
-                        name: 'city',
+                        name: 'City',
                         value: 'prova'
                     },
                     {

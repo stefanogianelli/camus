@@ -5,6 +5,11 @@ var provider = require('../provider/provider.js');
 
 var contextManager = function () { };
 
+/**
+ * Find the current CDT, filter out the needed dimensions and add the values for the dimension and parameters node from the user context
+ * @param context The user context
+ * @returns {bluebird|exports|module.exports} The decorated CDT
+ */
 contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
     return new Promise (function (resolve, reject) {
         provider
