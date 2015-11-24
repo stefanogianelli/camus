@@ -11,7 +11,7 @@ describe('Component: ResponseAggregator', function () {
                     assert.notEqual(response, null);
                     assert.equal(response.data.length, 3);
                     assert.equal(response.support.length, 3);
-Im                })
+                });
         });
     });
 

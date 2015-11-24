@@ -25,7 +25,7 @@ responseAggregator.prototype.prepareResponse = function (responses, supportServi
 };
 
 /**
- * Check if different arrays contains the same item.
+ * Check if different arrays contain the same item.
  * When a similar pair is found, the two items are merged and the second instance is removed.
  * @param responses The array that contains all the responses
  * @returns {*} The responses list without duplicate items
