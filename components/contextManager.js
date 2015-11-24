@@ -5,6 +5,32 @@ var provider = require('../provider/provider.js');
 
 var contextManager = function () { };
 
+contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
+    return new Promise (function (resolve, reject) {
+        provider
+            .getCdtDimensions(context._id, _.pluck(context.context, 'dimension'))
+            .then(function (data) {
+                _.forEach(data[0].context, function (cdt, index) {
+                    _.forEach(context.context, function (c) {
+                        if (cdt.dimension === c.dimension) {
+                            if (!_.isEmpty(cdt.params) && !_.isEmpty(c.params)) {
+                                _.forEach(cdt.params, function (p1, index) {
+                                    _.forEach(c.params, function (p2) {
+                                       if (p1.name === p2.name) {
+                                           cdt.params[index] = _.assign(p2, p1);
+                                       }
+                                    });
+                                });
+                            }
+                            data[0].context[index] = _.assign(c, cdt);
+                        }
+                    });
+                });
+                resolve(data[0]);
+            });
+    });
+};
+
 /**
  * Retrieve the nodes of the CDT that are used for Service selection
  * @param contextFile The current context

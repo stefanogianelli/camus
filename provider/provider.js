@@ -57,6 +57,33 @@ provider.prototype.getCdt = function getCdt (idCDT) {
     return cdtModel.findAsync({_id: idCDT});
 };
 
+provider.prototype.getCdtDimensions = function getCdtDimensions (idCDT, dimensions) {
+    return cdtModel
+        .aggregateAsync(
+            {$match: {_id: idCDT}},
+            {$unwind: '$context'},
+            {$match: {'context.name': {$in: dimensions}}},
+            {$group: {
+                _id: '$_id',
+                context: {
+                    $push: {
+                        dimension: '$context.name',
+                        for: '$context.for',
+                        transformFunction: '$context.transformFunction',
+                        supportDimension: '$context.supportDimension',
+                        params: '$context.params'
+                    }
+                }
+            }}
+        );
+};
+
+/**
+ * Create the list of descendant nodes of the node(s) specified
+ * @param idCDT The CDT identifier
+ * @param nodes The node or the list of nodes
+ * @returns {*} The list of sons
+ */
 provider.prototype.getNodeDescendants = function getNodeDescendants (idCDT, nodes) {
     var whereClause = {};
     var projectClause = {};

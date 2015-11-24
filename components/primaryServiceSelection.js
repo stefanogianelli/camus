@@ -90,7 +90,7 @@ function executeModules (nodes, data, callback) {
                 var Module = new module(filter);
                 Module.search(n.value, function (results) {
                     if (!_.isUndefined(results) && !_.isNull(results)) {
-                        if (_.isArray(results) && results.length > 0) {
+                        if (_.isArray(results) && !_.isEmpty(results)) {
                             services = services.concat(results);
                         }
                     }

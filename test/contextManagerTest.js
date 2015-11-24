@@ -3,6 +3,7 @@ var contextManager = require('../components/contextManager.js');
 var mockData = require('./mockModel.js');
 var MockDatabase = require('./mockDatabaseCreator.js');
 var provider = require('../provider/provider.js');
+var util = require('util');
 
 var _idCDT;
 
@@ -14,6 +15,22 @@ describe('Component: ContextManager', function() {
             assert.equal(err, null);
             _idCDT = idCDT;
             done();
+        });
+    });
+
+    describe('#getDecoratedCdt()', function () {
+        it('check if a CDT and a context are correctly merged', function () {
+            return contextManager
+                .getDecoratedCdt(decoratedContext(_idCDT))
+                .then(function (data) {
+                    console.log(util.inspect(data, false, null));
+                    assert.equal(data.context[0].dimension, 'InterestTopic');
+                    assert.equal(data.context[0].value, 'Restaurant');
+                    assert.equal(data.context[1].dimension, 'Location');
+                    assert.equal(data.context[1].value, 'Milan');
+                    assert.equal(data.context[1].params[0].name, 'city');
+                    assert.equal(data.context[1].params[0].value, 'prova');
+                });
         });
     });
 
@@ -400,6 +417,37 @@ var noInterestTopicContext = function (idCDT) {
                 for: 'filter|parameter',
                 search: 'testCustomSearch'
             }
+        ]
+    }
+};
+
+var decoratedContext = function (idCDT) {
+    return {
+        _id: _idCDT,
+        context: [
+            {
+                dimension: 'Location',
+                value: 'Milan',
+                params: [
+                    {
+                        name: 'city',
+                        value: 'prova'
+                    },
+                    {
+                        name: 'caso',
+                        value: 'caso'
+                    }
+                ]
+            },
+            {
+                name: 'test',
+                value: 'test'
+            },
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant'
+            }
+
         ]
     }
 };
