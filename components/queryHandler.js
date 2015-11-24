@@ -1,12 +1,11 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
-var ServiceModel = require('../models/serviceDescription.js');
 var ContextManager = require('./contextManager.js');
 var translator = require('./translationManager.js');
 var Interface = require('./interfaceChecker.js');
 var restBridge = require('../bridges/restBridge.js');
+var provider = require('../provider/provider.js');
 
-Promise.promisifyAll(ServiceModel);
 
 var bridgeFolder = '../bridges/';
 var bridgeInterface = new Interface('bridgeInterface', ['executeQuery']);
@@ -19,8 +18,8 @@ queryHandler.prototype.executeQueries = function executeQueries (services, conte
         var servicePromises = [];
         _.forEach(services, function (s, index) {
             servicePromises.push(
-                ServiceModel
-                    .findByOperationIdAsync(s._idOperation)
+                provider
+                    .getServiceByOperationId(s._idOperation)
                     .then(function (serviceData) {
                         serviceDescriptions.splice(index, 0, serviceData);
                     })

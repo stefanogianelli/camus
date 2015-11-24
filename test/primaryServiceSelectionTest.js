@@ -1,23 +1,15 @@
 var assert = require('assert');
-var mongoose = require('mongoose');
-var Promise = require('bluebird');
-var ServiceModel = require('../models/serviceDescription.js');
 var serviceManager = require('../components/primaryServiceSelection.js');
 var mockData = require('./mockModel.js');
 var MockDatabase = require('./mockDatabaseCreator.js');
+var provider = require('../provider/provider.js');
 
-Promise.promisifyAll(ServiceModel);
-
-var db = mongoose.connection;
 var _idCDT;
 
 describe('Component: PrimaryServiceSelection', function() {
 
     before(function(done) {
-        if (!db.db) {
-            mongoose.connect('mongodb://localhost/camus_test');
-            db.on('error', console.error.bind(console, 'connection error:'));
-        }
+        provider.createConnection('mongodb://localhost/camus_test');
         MockDatabase.createDatabase(function (err, idCDT) {
             assert.equal(err, null);
             _idCDT = idCDT;
@@ -33,13 +25,13 @@ describe('Component: PrimaryServiceSelection', function() {
                     assert.notEqual(services, null);
                     assert.equal(services.length, 2);
                     assert.equal(services[0].rank, 6);
-                    return [services, ServiceModel.findByOperationIdAsync(services[0]._idOperation)];
+                    return [services, provider.getServiceByOperationId(services[0]._idOperation)];
                 })
                 .spread(function (services, data) {
                     assert.equal(data.name, 'GooglePlaces');
                     assert.equal(data.operations[0].name, 'placeTextSearch');
                     assert.equal(services[1].rank, 1);
-                    return ServiceModel.findByOperationIdAsync(services[1]._idOperation);
+                    return provider.getServiceByOperationId(services[1]._idOperation);
                 })
                 .then(function (data) {
                     assert.equal(data.name, 'eventful');
@@ -65,9 +57,6 @@ describe('Component: PrimaryServiceSelection', function() {
                 .selectServices(context2(_idCDT))
                 .then(function (services) {
                     assert.equal(services.length, 0);
-                })
-                .catch(function (e) {
-                    assert.equal(e, null);
                 });
         });
         it('check correct execution when specified a wrong specific module name', function() {
@@ -86,6 +75,7 @@ describe('Component: PrimaryServiceSelection', function() {
     after(function (done) {
         MockDatabase.deleteDatabase(function (err) {
             assert.equal(err, null);
+            provider.closeConnection();
             done();
         });
     });

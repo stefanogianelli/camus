@@ -1,20 +1,15 @@
 var assert = require('assert');
-var mongoose = require('mongoose');
 var contextManager = require('../components/contextManager.js');
 var mockData = require('./mockModel.js');
 var MockDatabase = require('./mockDatabaseCreator.js');
-
-var db = mongoose.connection;
+var provider = require('../provider/provider.js');
 
 var _idCDT;
 
 describe('Component: ContextManager', function() {
 
     before(function(done) {
-        if (!db.db) {
-            mongoose.connect('mongodb://localhost/camus_test');
-            db.on('error', console.error.bind(console, 'connection error:'));
-        }
+        provider.createConnection('mongodb://localhost/camus_test');
         MockDatabase.createDatabase(function (err, idCDT) {
             assert.equal(err, null);
             _idCDT = idCDT;
@@ -372,6 +367,7 @@ describe('Component: ContextManager', function() {
     after(function (done) {
         MockDatabase.deleteDatabase(function (err) {
             assert.equal(err, null);
+            provider.closeConnection();
             done();
         });
     });

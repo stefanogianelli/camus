@@ -1,9 +1,7 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
 var util = require('util');
-var cdtModel = require('../models/cdtDescription.js');
-
-Promise.promisifyAll(cdtModel);
+var provider = require('../provider/provider.js');
 
 var contextManager = function () { };
 
@@ -230,40 +228,8 @@ contextManager.prototype.getDescendants = function getDescendants (idCDT, node) 
     return new Promise (function (resolve, reject) {
         if (!_.isUndefined(idCDT)) {
             if (!_.isUndefined(node)) {
-                var whereClause = {};
-                var projectClause = {};
-                if (_.isArray(node)) {
-                    var values = _.pluck(node, 'value');
-                    whereClause = {
-                        _id: idCDT,
-                        'context.parents': {
-                            $in: values
-                        }
-                    };
-                    projectClause = {
-                        context: {
-                            $elemMatch: {
-                                parents: {
-                                    $in: values
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    whereClause = {
-                        _id: idCDT,
-                        'context.parents': node.value
-                    };
-                    projectClause = {
-                        context: {
-                            $elemMatch: {
-                                parents: node.value
-                            }
-                        }
-                    }
-                }
-                cdtModel
-                    .findAsync(whereClause, projectClause)
+                provider
+                    .getNodeDescendants(idCDT, node)
                     .then(function (nodes) {
                         var output = [];
                         if(!_.isUndefined(nodes) && !_.isEmpty(nodes)) {

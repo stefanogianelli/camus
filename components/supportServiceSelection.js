@@ -1,11 +1,7 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
 var contextManager = require('./contextManager.js');
-var ServiceModel = require('../models/serviceDescription.js');
-var serviceAssociation = require('../models/supportServiceAssociation.js');
-
-Promise.promisifyAll(ServiceModel);
-Promise.promisifyAll(serviceAssociation);
+var provider = require('../provider/provider.js');
 
 var supportServiceSelection = function () { };
 
@@ -71,19 +67,8 @@ supportServiceSelection.prototype.selectServices = function (context) {
 function selectServicesFromName (serviceNames) {
     return new Promise (function (resolve, reject) {
         if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
-            var whereClause = {
-                $or: []
-            };
-            _.forEach(serviceNames, function (s) {
-                whereClause.$or.push({
-                    $and: [{
-                        name: s.name,
-                        'operations.name': s.operation
-                    }]
-                });
-            });
-            ServiceModel
-                .findAsync(whereClause)
+            provider
+                .getServicesByNames(serviceNames)
                 .then(function (services) {
                     resolve(composeQuery(services));
                 })
@@ -123,8 +108,7 @@ function selectServiceFromCategory (categories, context) {
                         if (!_.isUndefined(result.noConstraintServices) && !_.isEmpty(result.noConstraintServices)) {
                             response = response.concat(result.noConstraintServices);
                         }
-                        return ServiceModel
-                            .findByOperationIdsAsync(response);
+                        return provider.getServicesByOperationIds(response);
                     })
                     .then(function (services) {
                         output = output.concat(composeQuery(services, c));
@@ -148,31 +132,19 @@ function selectServiceFromCategory (categories, context) {
 function getNoConstraintServices (category, context) {
     return new Promise(function (resolve, reject) {
         var selectedServices = [];
-        var whereClause = {
-            _idCDT: context._id,
-            category: category,
-            $or: [],
-            require: {
-                $eq: null
-            }
-        };
         contextManager
             .getSupportServicePrimaryDimension(category, context)
             .then(function (node) {
-                whereClause.$or.push({
-                    dimension: node.dimension,
-                    value: node.value
-                });
                 //get the son node
-                return contextManager
-                    .getDescendants(context._id, node);
+                return [node, contextManager.getDescendants(context._id, node)];
             })
-            .then(function (nodes) {
+            .spread(function (baseNode, nodes) {
                 if (!_.isUndefined(nodes) && !_.isEmpty(nodes)) {
-                    whereClause.$or = _.union(whereClause.$or, nodes);
+                    nodes.push(baseNode);
+                    return provider.filterSupportServices(context._id, category, nodes);
+                } else {
+                    return provider.filterSupportServices(context._id, category, baseNode);
                 }
-                return serviceAssociation
-                    .findAsync(whereClause);
             })
             .then(function (services) {
                 _.forEach(services, function (s) {
@@ -198,29 +170,19 @@ function getNoConstraintServices (category, context) {
 function getBaseServices (category, context) {
     return new Promise(function (resolve, reject) {
         var baseServices = [];
-        var whereClause = {
-            _idCDT: context._id,
-            category: category,
-            $or: [],
-            require: {
-                $ne: null
-            }
-        };
         contextManager
             .getSupportServicePrimaryDimension(category, context)
             .then(function (node) {
-                whereClause.$or.push({
-                    dimension: node.dimension,
-                    value: node.value
-                });
                 //get the son node
-                return contextManager
-                    .getDescendants(context._id, node);
+                return [node, contextManager.getDescendants(context._id, node)];
             })
-            .then(function (nodes) {
-                whereClause.$or = _.union(whereClause.$or, nodes);
-                return serviceAssociation
-                    .findAsync(whereClause);
+            .spread(function (baseNode, nodes) {
+                if (!_.isUndefined(nodes) && !_.isEmpty(nodes)) {
+                    nodes.push(baseNode);
+                    return provider.filterSupportServices(context._id, category, nodes, true);
+                } else {
+                    return provider.filterSupportServices(context._id, category, baseNode, true);
+                }
             })
             .then(function (services) {
                 _.forEach(services, function (s) {
@@ -248,28 +210,18 @@ function getBaseServices (category, context) {
 function getFilterServices (category, context) {
     return new Promise(function (resolve, reject) {
         var filterServices = [];
-        var whereClause = {
-            _idCDT: context._id,
-            category: category,
-            $or: []
-        };
         contextManager
             .getFilterNodes(context)
             .then(function (nodes) {
-                _.forEach(nodes, function (n) {
-                    whereClause.$or.push({
-                        dimension: n.dimension,
-                        value: n.value
-                    });
-                });
                 //get the son node
-                return contextManager
-                    .getDescendants(context._id, nodes);
+                return [nodes, contextManager.getDescendants(context._id, nodes)];
             })
-            .then(function (nodes) {
-                whereClause.$or = _.union(whereClause.$or, nodes);
-                return serviceAssociation
-                    .findAsync(whereClause);
+            .spread(function (baseNodes, nodes) {
+                if (!_.isUndefined(nodes) && !_.isEmpty(nodes)) {
+                    return provider.filterSupportServices(context._id, category, _.union(baseNodes, nodes));
+                } else {
+                    return provider.filterSupportServices(context._id, category, baseNodes);
+                }
             })
             .then(function (services) {
                 _.forEach(services, function (s) {

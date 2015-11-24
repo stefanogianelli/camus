@@ -1,20 +1,16 @@
-var mongoose = require('mongoose');
 var assert = require('assert');
 var MockDatabase = require('./mockDatabaseCreator.js');
 var mockData = require('./mockModel.js');
 var serviceManager = require('../components/primaryServiceSelection.js');
 var queryHandler = require('../components/queryHandler.js');
+var provider = require('../provider/provider.js');
 
-var db = mongoose.connection;
 var _idCDT;
 
 describe('Component: QueryHandler', function () {
 
     before(function(done) {
-        if (!db.db) {
-            mongoose.connect('mongodb://localhost/camus_test');
-            db.on('error', console.error.bind(console, 'connection error:'));
-        }
+        provider.createConnection('mongodb://localhost/camus_test');
         MockDatabase.createDatabase(function (err, idCDT) {
             assert.equal(err, null);
             _idCDT = idCDT;
@@ -74,6 +70,7 @@ describe('Component: QueryHandler', function () {
     after(function (done) {
         MockDatabase.deleteDatabase(function (err) {
             assert.equal(err, null);
+            provider.closeConnection();
             done();
         });
     });

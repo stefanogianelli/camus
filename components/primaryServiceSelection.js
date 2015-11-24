@@ -1,13 +1,11 @@
 var _ = require('lodash');
 var async = require('async');
 var Promise = require('bluebird');
-var Service = require('../models/primaryServiceAssociation.js');
 var contextManager = require('./contextManager.js');
 var Interface = require('./interfaceChecker.js');
+var provider = require('../provider/provider.js');
 
 var searchPluginInterface = new Interface('searchPluginInterface', ['search']);
-
-Promise.promisifyAll(Service);
 
 //number of services to keep
 var N = 3;
@@ -25,7 +23,7 @@ primaryServiceSelection.prototype.selectServices = function selectServices (cont
             contextManager
                 .getFilterNodes(context)
                 .then(function (filterNodes) {
-                    return searchServices(filterNodes, context._id);
+                    return provider.filterPrimaryServices(filterNodes, context._id);
                 })
                 .then(function (services) {
                     return loadSearchPlugins(context._id, services, context);
@@ -43,30 +41,6 @@ primaryServiceSelection.prototype.selectServices = function selectServices (cont
 };
 
 /**
- * Search the services associated with the filter nodes of the current context
- * @param filterNodes The list of filter nodes selected
- * @param idCDT The id of the CDT
- * @returns {*} The list of operation id, with ranking and weight, of the found services
- */
-function searchServices (filterNodes, idCDT) {
-    if (filterNodes.length > 0) {
-        var whereClause = {
-            _idCDT: idCDT,
-            $or: []
-        };
-        _.forEach(filterNodes, function (n) {
-            var obj = {
-                $and: [n]
-            };
-            whereClause.$or.push(obj);
-        });
-        return Service.findAsync(whereClause, {_idOperation:1, ranking:1, weight: 1, _id: 0});
-    } else {
-        throw new Error('No filter nodes selected!');
-    }
-}
-
-/**
  * Search for the CDT nodes that need a specific search function and execute it
  * @param idCDT The id of the CDT
  * @param services The list of services retrieved by the standard search function
@@ -79,17 +53,8 @@ function loadSearchPlugins (idCDT, services, context) {
             .getSpecificNodes(context)
             .then(function (nodes) {
                 if (!_.isEmpty(nodes)) {
-                    var whereClause = {
-                        _idCDT: idCDT,
-                        $or: []
-                    };
-                    _.forEach(nodes, function (n) {
-                        whereClause.$or.push({
-                            dimension: n.dimension
-                        });
-                    });
-                    Service
-                        .findAsync(whereClause, {_idCDT: 0, _id: 0, __v: 0})
+                    provider
+                        .filterPrimaryServices(nodes, idCDT, true)
                         .then(function (data) {
                             executeModules(nodes, data, function (results) {
                                 if (results !== null && results !== 'undefined') {
