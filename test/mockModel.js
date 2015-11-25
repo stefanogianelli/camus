@@ -143,6 +143,18 @@ var decoratedCdt = function (idCDT) {
                 value: 'DinnerWithFriends',
                 for: 'filter'
             }
+        ],
+        support: [
+            {
+                category: 'Transport'
+            },
+            {
+                category: 'Sport'
+            },
+            {
+                name: 'Wikipedia',
+                operation: 'search'
+            }
         ]
     }
 };
@@ -201,6 +213,9 @@ var newContext = function(idCDT) {
         support: [
             {
                 category: 'Transport'
+            },
+            {
+                category: 'Sport'
             },
             {
                 name: 'Wikipedia',

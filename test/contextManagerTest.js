@@ -160,7 +160,7 @@ describe('Component: ContextManager', function() {
 
     describe('#getInterestTopic()', function () {
         it('check if correct interest topic are returned', function () {
-            var interestTopic = contextManager.getInterestTopic(mockData.context(_idCDT));
+            var interestTopic = contextManager.getInterestTopic(mockData.decoratedCdt(_idCDT));
             assert.equal(interestTopic, 'Restaurant');
         });
         it('check error when sending empty context', function () {
@@ -189,7 +189,7 @@ describe('Component: ContextManager', function() {
     describe('#getSupportServiceCategories()', function () {
         it('check if correct categories are returned', function () {
             return contextManager
-                .getSupportServiceCategories(mockData.context(_idCDT))
+                .getSupportServiceCategories(mockData.decoratedCdt(_idCDT))
                 .then(function (categories) {
                     assert.equal(categories.length, 2);
                     assert.equal(categories[0], 'Transport');
@@ -215,7 +215,7 @@ describe('Component: ContextManager', function() {
     describe('#getSupportServiceNames()', function () {
         it('check if correct names are returned', function () {
             return contextManager
-                .getSupportServiceNames(mockData.context(_idCDT))
+                .getSupportServiceNames(mockData.decoratedCdt(_idCDT))
                 .then(function (names) {
                     assert.notEqual(names, null);
                     assert.equal(names.length, 1);
@@ -242,7 +242,7 @@ describe('Component: ContextManager', function() {
     describe('#getSupportServicePrimaryDimension()', function () {
         it('check if correct node is returned', function () {
             return contextManager
-                .getSupportServicePrimaryDimension('Transport', mockData.context(_idCDT))
+                .getSupportServicePrimaryDimension('Transport', mockData.decoratedCdt(_idCDT))
                 .then(function (node) {
                     assert.notEqual(node, null);
                     assert.equal(node.dimension, 'Transport');
@@ -272,7 +272,7 @@ describe('Component: ContextManager', function() {
         });
         it('check error when sending null category name', function () {
             return contextManager
-                .getSupportServicePrimaryDimension('', mockData.context(_idCDT))
+                .getSupportServicePrimaryDimension('', mockData.decoratedCdt(_idCDT))
                 .catch(function (e) {
                     assert.equal(e, 'Primary dimension for category \'\' not found');
                 });
@@ -310,10 +310,10 @@ describe('Component: ContextManager', function() {
 
     describe('#isDefined()', function () {
         it('check if return true when dimension exists', function () {
-            assert.equal(contextManager.isDefined('Location', mockData.context(_idCDT)), true);
+            assert.equal(contextManager.isDefined('Location', mockData.decoratedCdt(_idCDT)), true);
         });
         it('check if return false when dimension not exists', function () {
-            assert.equal(contextManager.isDefined('Age', mockData.context(_idCDT)), false);
+            assert.equal(contextManager.isDefined('Age', mockData.decoratedCdt(_idCDT)), false);
         });
     });
 

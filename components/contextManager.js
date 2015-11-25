@@ -15,23 +15,28 @@ contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
         provider
             .getCdtDimensions(context._id, _.pluck(context.context, 'dimension'))
             .then(function (data) {
-                _.forEach(data[0].context, function (cdt, index) {
-                    _.forEach(context.context, function (c) {
-                        if (cdt.dimension === c.dimension) {
-                            if (!_.isEmpty(cdt.params) && !_.isEmpty(c.params)) {
-                                _.forEach(cdt.params, function (p1, index) {
-                                    _.forEach(c.params, function (p2) {
-                                       if (p1.name === p2.name) {
-                                           cdt.params[index] = _.assign(p2, p1);
-                                       }
-                                    });
-                                });
-                            }
-                            data[0].context[index] = _.assign(c, cdt);
-                        }
-                    });
+                var decoratedCdt = _.map(data[0].context, function (cdt) {
+                    var c = _.find(context.context, 'dimension', cdt.dimension);
+                    if (!_.isEmpty(cdt.params) && !_.isEmpty(c.params)) {
+                        cdt['params'] = _.map(cdt.params, function (p1) {
+                            var p2 = _.find(c.params, 'name', p1.name);
+                            return _.assign(p2, p1);
+                        });
+                    }
+                    return _.assign(c, cdt);
                 });
-                resolve(data[0]);
+                if (_.has(context, 'support')) {
+                    resolve({
+                        _id: data[0]._id,
+                        context: decoratedCdt,
+                        support: context.support
+                    });
+                } else {
+                    resolve({
+                        _id: data[0]._id,
+                        context: decoratedCdt
+                    });
+                }
             });
     });
 };
@@ -182,7 +187,7 @@ contextManager.prototype.getInterestTopic = function getInterestTopic (decorated
     var context = decoratedCdt.context;
     if (!_.isEmpty(context)) {
         var r = _.find(context, {dimension: 'InterestTopic'});
-        if (!_.isUndefined(r) && !_.isNull(r)) {
+        if (!_.isUndefined(r)) {
             return r.value;
         } else {
             throw new Error('No interest topic selected');
@@ -201,11 +206,8 @@ contextManager.prototype.getSupportServiceCategories = function getSupportServic
     return new Promise (function (resolve, reject) {
         var support = decoratedCdt.support;
         if (!_.isEmpty(support)) {
-            var categories = [];
-            _.forEach(support, function (s) {
-               if (_.has(s, 'category')) {
-                   categories.push(s.category);
-               }
+            var categories = _.map(_.filter(support, 'category'), function (s) {
+                return s.category;
             });
             resolve(categories);
         } else {
@@ -223,11 +225,8 @@ contextManager.prototype.getSupportServiceNames = function getSupportServiceName
     return new Promise (function (resolve, reject) {
         var support = decoratedCdt.support;
         if (!_.isEmpty(support)) {
-            var names = [];
-            _.forEach(support, function (s) {
-                if (_.has(s, 'name') && _.has(s, 'operation') ) {
-                    names.push(s);
-                }
+            var names = _.map(_.filter(support, 'name' && 'operation'), function (s) {
+               return s;
             });
             resolve(names);
         } else {
