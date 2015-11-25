@@ -46,44 +46,40 @@ contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
  */
 contextManager.prototype.getFilterNodes = function getFilterNodes (decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
-            var context = decoratedCdt.context;
-            if (!_.isEmpty(context)) {
-                var params = [];
-                _.forEach(context, function (item) {
-                    if (_.has(item, 'for')) {
-                        if (item['for'] === 'filter' || item['for'] === 'filter|parameter') {
-                            //the filter nodes that are the base for a support category are evaluated in another function
-                            if (!_.has(item, 'supportCategory')) {
-                                //the parameters are mapped as dimension and value, instead of name and value
-                                if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
-                                    _.forEach(item.params, function (p) {
-                                        //parameter that needs a custom search function are evaluated in another function
-                                        if (!_.has(p, 'searchFunction')) {
-                                            params.push({
-                                                dimension: p.name,
-                                                value: p.value
-                                            });
-                                        }
-                                    });
-                                }
-                                //if the node has a value it's considered
-                                if (_.has(item, 'value')) {
-                                    params.push({
-                                        dimension: item.dimension,
-                                        value: item.value
-                                    });
-                                }
+        var context = decoratedCdt.context;
+        if (!_.isEmpty(context)) {
+            var params = [];
+            _.forEach(context, function (item) {
+                if (_.has(item, 'for')) {
+                    if (item['for'] === 'filter' || item['for'] === 'filter|parameter') {
+                        //the filter nodes that are the base for a support category are evaluated in another function
+                        if (!_.has(item, 'supportCategory')) {
+                            //the parameters are mapped as dimension and value, instead of name and value
+                            if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
+                                _.forEach(item.params, function (p) {
+                                    //parameter that needs a custom search function are evaluated in another function
+                                    if (!_.has(p, 'searchFunction')) {
+                                        params.push({
+                                            dimension: p.name,
+                                            value: p.value
+                                        });
+                                    }
+                                });
+                            }
+                            //if the node has a value it's considered
+                            if (_.has(item, 'value')) {
+                                params.push({
+                                    dimension: item.dimension,
+                                    value: item.value
+                                });
                             }
                         }
-                    } else {
-                        reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
                     }
-                });
-                resolve(params);
-            } else {
-                reject('No context selected');
-            }
+                } else {
+                    reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
+                }
+            });
+            resolve(params);
         } else {
             reject('No context selected');
         }
@@ -97,39 +93,35 @@ contextManager.prototype.getFilterNodes = function getFilterNodes (decoratedCdt)
  */
 contextManager.prototype.getSpecificNodes = function getSpecificNodes (decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
-            var context = decoratedCdt.context;
-            if (!_.isEmpty(context)) {
-                var params = [];
-                _.forEach(context, function (item) {
-                    if (_.has(item, 'for')) {
-                        if (item['for'] === 'filter' || item['for'] === 'filter|parameter') {
-                            //the filter nodes that are the base for a support category are evaluated in another function
-                            if (!_.has(item, 'supportCategory')) {
-                                //the parameters are mapped as dimension and value, instead of name and value
-                                if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
-                                    _.forEach(item.params, function (p) {
-                                        //are considered only the parameters that have a custom serch function specified
-                                        if (_.has(p, 'searchFunction')) {
-                                            params.push({
-                                                dimension: p.name,
-                                                value: p.value,
-                                                searchFunction: p.searchFunction
-                                            });
-                                        }
-                                    });
-                                }
+        var context = decoratedCdt.context;
+        if (!_.isEmpty(context)) {
+            var params = [];
+            _.forEach(context, function (item) {
+                if (_.has(item, 'for')) {
+                    if (item['for'] === 'filter' || item['for'] === 'filter|parameter') {
+                        //the filter nodes that are the base for a support category are evaluated in another function
+                        if (!_.has(item, 'supportCategory')) {
+                            //the parameters are mapped as dimension and value, instead of name and value
+                            if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
+                                _.forEach(item.params, function (p) {
+                                    //are considered only the parameters that have a custom serch function specified
+                                    if (_.has(p, 'searchFunction')) {
+                                        params.push({
+                                            dimension: p.name,
+                                            value: p.value,
+                                            searchFunction: p.searchFunction
+                                        });
+                                    }
+                                });
                             }
                         }
-                    } else {
-                        reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
                     }
+                } else {
+                    reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
+                }
 
-                });
-                resolve(params);
-            } else {
-                reject('No context selected');
-            }
+            });
+            resolve(params);
         } else {
             reject('No context selected');
         }
@@ -143,42 +135,38 @@ contextManager.prototype.getSpecificNodes = function getSpecificNodes (decorated
  */
 contextManager.prototype.getParameterNodes = function getParameterNodes (decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
-            var context = decoratedCdt.context;
-            if (!_.isEmpty(context)) {
-                var params = [];
-                _.forEach(context, function (item) {
-                    if (_.has(item, 'for')) {
-                        if (item['for'] === 'parameter' || item['for'] === 'filter|parameter') {
-                            if (!_.has(item, 'supportCategory')) {
-                                if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
-                                    _.forEach(item.params, function (p) {
-                                        params.push({
-                                            dimension: p.name,
-                                            value: p.value
-                                        });
+        var context = decoratedCdt.context;
+        if (!_.isEmpty(context)) {
+            var params = [];
+            _.forEach(context, function (item) {
+                if (_.has(item, 'for')) {
+                    if (item['for'] === 'parameter' || item['for'] === 'filter|parameter') {
+                        if (!_.has(item, 'supportCategory')) {
+                            if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
+                                _.forEach(item.params, function (p) {
+                                    params.push({
+                                        dimension: p.name,
+                                        value: p.value
                                     });
+                                });
+                            }
+                            if(_.has(item, 'value')) {
+                                var obj = {
+                                    dimension: item.dimension,
+                                    value: item.value
+                                };
+                                if (_.has(item, 'transformFunction')) {
+                                    obj['transformFunction'] = item.transformFunction;
                                 }
-                                if(_.has(item, 'value')) {
-                                    var obj = {
-                                        dimension: item.dimension,
-                                        value: item.value
-                                    };
-                                    if (_.has(item, 'transformFunction')) {
-                                        obj['transformFunction'] = item.transformFunction;
-                                    }
-                                    params.push(obj);
-                                }
+                                params.push(obj);
                             }
                         }
-                    } else {
-                        reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
                     }
-                });
-                resolve(params);
-            } else {
-                reject('No context selected');
-            }
+                } else {
+                    reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
+                }
+            });
+            resolve(params);
         } else {
             reject('No context selected');
         }
@@ -191,17 +179,13 @@ contextManager.prototype.getParameterNodes = function getParameterNodes (decorat
  * @returns The interest topic name
  */
 contextManager.prototype.getInterestTopic = function getInterestTopic (decoratedCdt) {
-    if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
-        var context = decoratedCdt.context;
-        if (!_.isEmpty(context)) {
-            var r = _.find(context, {dimension: 'InterestTopic'});
-            if (!_.isUndefined(r) && !_.isNull(r)) {
-                return r.value;
-            } else {
-                throw new Error('No interest topic selected');
-            }
+    var context = decoratedCdt.context;
+    if (!_.isEmpty(context)) {
+        var r = _.find(context, {dimension: 'InterestTopic'});
+        if (!_.isUndefined(r) && !_.isNull(r)) {
+            return r.value;
         } else {
-            throw new Error('No context selected');
+            throw new Error('No interest topic selected');
         }
     } else {
         throw new Error('No context selected');
@@ -215,21 +199,17 @@ contextManager.prototype.getInterestTopic = function getInterestTopic (decorated
  */
 contextManager.prototype.getSupportServiceCategories = function getSupportServiceCategories (decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'support')) {
-            var support = decoratedCdt.support;
-            if (!_.isEmpty(support)) {
-                var categories = [];
-                _.forEach(support, function (s) {
-                   if (_.has(s, 'category')) {
-                       categories.push(s.category);
-                   }
-                });
-                resolve(categories);
-            } else {
-                reject('No support services defined');
-            }
+        var support = decoratedCdt.support;
+        if (!_.isEmpty(support)) {
+            var categories = [];
+            _.forEach(support, function (s) {
+               if (_.has(s, 'category')) {
+                   categories.push(s.category);
+               }
+            });
+            resolve(categories);
         } else {
-            reject('No context selected');
+            reject('No support services defined');
         }
     });
 };
@@ -241,21 +221,17 @@ contextManager.prototype.getSupportServiceCategories = function getSupportServic
  */
 contextManager.prototype.getSupportServiceNames = function getSupportServiceNames (decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'support')) {
-            var support = decoratedCdt.support;
-            if (!_.isEmpty(support)) {
-                var names = [];
-                _.forEach(support, function (s) {
-                    if (_.has(s, 'name') && _.has(s, 'operation') ) {
-                        names.push(s);
-                    }
-                });
-                resolve(names);
-            } else {
-                reject('No support services defined');
-            }
+        var support = decoratedCdt.support;
+        if (!_.isEmpty(support)) {
+            var names = [];
+            _.forEach(support, function (s) {
+                if (_.has(s, 'name') && _.has(s, 'operation') ) {
+                    names.push(s);
+                }
+            });
+            resolve(names);
         } else {
-            reject('No context selected');
+            reject('No support services defined');
         }
     });
 };
@@ -268,21 +244,13 @@ contextManager.prototype.getSupportServiceNames = function getSupportServiceName
  */
 contextManager.prototype.getSupportServicePrimaryDimension = function getSupportServicePrimaryDimension (category, decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
-            if (!_.isUndefined(category) && !_.isNull(category) && !_.isEmpty(category)) {
-                var context = decoratedCdt.context;
-                if (!_.isEmpty(context)) {
-                    var param = _.find(context, {supportCategory: category});
-                    if (!_.isUndefined(param)) {
-                        resolve(param);
-                    } else {
-                        reject('Primary dimension for category \'' + category + '\' not found');
-                    }
-                } else {
-                    reject('No context selected');
-                }
+        var context = decoratedCdt.context;
+        if (!_.isEmpty(context)) {
+            var param = _.find(context, {supportCategory: category});
+            if (!_.isUndefined(param)) {
+                resolve(param);
             } else {
-                reject('No category selected');
+                reject('Primary dimension for category \'' + category + '\' not found');
             }
         } else {
             reject('No context selected');
@@ -335,15 +303,7 @@ contextManager.prototype.getDescendants = function getDescendants (idCDT, node) 
  * @returns {boolean} Return true if the dimension is defined, false otherwise
  */
 contextManager.prototype.isDefined = function isDefined (dimensionName, decoratedCdt) {
-    if (!_.isUndefined(dimensionName) && _.isString(dimensionName)) {
-        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
-            return _.findIndex(decoratedCdt.context, {dimension: dimensionName}) !== -1;
-        } else {
-            throw new Error('No context selected');
-        }
-    } else {
-        throw new Error('Empty or wrong dimension name');
-    }
+    return _.findIndex(decoratedCdt.context, {dimension: dimensionName}) !== -1;
 };
 
 module.exports = new contextManager();

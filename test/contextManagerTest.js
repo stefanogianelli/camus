@@ -23,7 +23,6 @@ describe('Component: ContextManager', function() {
             return contextManager
                 .getDecoratedCdt(decoratedContext(_idCDT))
                 .then(function (data) {
-                    //console.log(util.inspect(data, false, null));
                     assert.equal(data.context[0].dimension, 'InterestTopic');
                     assert.equal(data.context[0].value, 'Restaurant');
                     assert.equal(data.context[1].dimension, 'Location');
@@ -55,13 +54,6 @@ describe('Component: ContextManager', function() {
                     assert.equal(e, null);
                 });
 
-        });
-        it('check error when no context specified', function () {
-            return contextManager
-                .getFilterNodes(null)
-                .catch(function (e) {
-                   assert.equal(e, 'No context selected');
-                });
         });
         it('check error when empty context specified', function () {
             return contextManager
@@ -100,13 +92,6 @@ describe('Component: ContextManager', function() {
                     }
                 });
 
-        });
-        it('check error when no context specified', function () {
-            return contextManager
-                .getSpecificNodes(null)
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
         });
         it('check error when empty context specified', function () {
             return contextManager
@@ -150,13 +135,6 @@ describe('Component: ContextManager', function() {
                     }
                 });
         });
-        it('check error when no context specified', function () {
-            return contextManager
-                .getParameterNodes(null)
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
         it('check error when empty context specified', function () {
             return contextManager
                 .getParameterNodes(emptyContext(_idCDT))
@@ -188,13 +166,6 @@ describe('Component: ContextManager', function() {
         it('check error when sending empty context', function () {
             try {
                 contextManager.getInterestTopic(emptyContext(_idCDT));
-            } catch (e) {
-                assert.equal(e.message, 'No context selected');
-            }
-        });
-        it('check error when sending null context', function () {
-            try {
-                contextManager.getInterestTopic(null);
             } catch (e) {
                 assert.equal(e.message, 'No context selected');
             }
@@ -232,65 +203,11 @@ describe('Component: ContextManager', function() {
                     assert.equal(e, 'No support services defined');
                 });
         });
-        it('check error when sending null context', function () {
-            return contextManager
-                .getSupportServiceCategories(null)
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
         it('check error when sending empty object', function () {
             return contextManager
                 .getSupportServiceCategories({ })
                 .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
-    });
-
-    describe('#getSupportServicePrimaryDimension()', function () {
-        it('check if correct node is returned', function () {
-           return contextManager
-               .getSupportServicePrimaryDimension('Transport', mockData.context(_idCDT))
-               .then(function (node) {
-                   assert.notEqual(node, null);
-                   assert.equal(node.dimension, 'Transport');
-                   assert.equal(node.value, 'PublicTransport');
-               });
-        });
-        it('check error when sending empty context', function () {
-            return contextManager
-                .getSupportServicePrimaryDimension('Transport', emptySupport(_idCDT))
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
-        it('check error when sending null context', function () {
-            return contextManager
-                .getSupportServicePrimaryDimension('Transport', null)
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
-        it('check error when sending empty object', function () {
-            return contextManager
-                .getSupportServicePrimaryDimension('Transport', { })
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
-        it('check error when sending context without primary dimension specified', function () {
-            return contextManager
-                .getSupportServicePrimaryDimension('Transport', noInterestTopicContext(_idCDT))
-                .catch(function (e) {
-                    assert.equal(e, 'Primary dimension for category \'Transport\' not found');
-                });
-        });
-        it('check error when sending null category name', function () {
-            return contextManager
-                .getSupportServicePrimaryDimension('', mockData.context(_idCDT))
-                .catch(function (e) {
-                    assert.equal(e, 'No category selected');
+                    assert.equal(e, 'No support services defined');
                 });
         });
     });
@@ -313,18 +230,51 @@ describe('Component: ContextManager', function() {
                     assert.equal(e, 'No support services defined');
                 });
         });
-        it('check error when sending null context', function () {
+        it('check error when sending empty object', function () {
             return contextManager
-                .getSupportServiceNames(null)
+                .getSupportServiceNames({ })
+                .catch(function (e) {
+                    assert.equal(e, 'No support services defined');
+                });
+        });
+    });
+
+    describe('#getSupportServicePrimaryDimension()', function () {
+        it('check if correct node is returned', function () {
+            return contextManager
+                .getSupportServicePrimaryDimension('Transport', mockData.context(_idCDT))
+                .then(function (node) {
+                    assert.notEqual(node, null);
+                    assert.equal(node.dimension, 'Transport');
+                    assert.equal(node.value, 'PublicTransport');
+                });
+        });
+        it('check error when sending empty context', function () {
+            return contextManager
+                .getSupportServicePrimaryDimension('Transport', emptySupport(_idCDT))
                 .catch(function (e) {
                     assert.equal(e, 'No context selected');
                 });
         });
         it('check error when sending empty object', function () {
             return contextManager
-                .getSupportServiceNames({ })
+                .getSupportServicePrimaryDimension('Transport', { })
                 .catch(function (e) {
                     assert.equal(e, 'No context selected');
+                });
+        });
+        it('check error when sending context without primary dimension specified', function () {
+            return contextManager
+                .getSupportServicePrimaryDimension('Transport', noInterestTopicContext(_idCDT))
+                .catch(function (e) {
+                    assert.equal(e, 'Primary dimension for category \'Transport\' not found');
+                });
+        });
+        it('check error when sending null category name', function () {
+            return contextManager
+                .getSupportServicePrimaryDimension('', mockData.context(_idCDT))
+                .catch(function (e) {
+                    assert.equal(e, 'Primary dimension for category \'\' not found');
                 });
         });
     });
@@ -364,20 +314,6 @@ describe('Component: ContextManager', function() {
         });
         it('check if return false when dimension not exists', function () {
             assert.equal(contextManager.isDefined('Age', mockData.context(_idCDT)), false);
-        });
-        it('check error when no context is provided', function () {
-            try {
-                contextManager.isDefined('Test');
-            } catch (e) {
-                assert.equal(e, 'Error: No context selected');
-            }
-        });
-        it('check error when no dimension name is provided', function () {
-            try {
-                contextManager.isDefined();
-            } catch (e) {
-                assert.equal(e, 'Error: Empty or wrong dimension name');
-            }
         });
     });
 

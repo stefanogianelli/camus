@@ -187,7 +187,7 @@ provider.prototype.getServicesByNames = function getServicesByNames (serviceName
  * { dimension: 'dimension name', value: 'associated value' }
  * @param attributes The list of filter nodes selected
  * @param idCDT The CDT identifier
- * @param onlyDimensions (optional) If it's true it consider only the dimensions name (default false)
+ * @param onlyDimensions (optional) If it's true it considers only the dimensions name (default false)
  * @returns {*} The list of operation id, with ranking and weight, of the found services
  */
 provider.prototype.filterPrimaryServices = function filterPrimaryServices (attributes, idCDT, onlyDimensions) {
