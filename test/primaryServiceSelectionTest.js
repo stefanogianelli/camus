@@ -20,7 +20,7 @@ describe('Component: PrimaryServiceSelection', function() {
     describe('#selectServices()', function() {
         it('check if correct services are selected', function() {
             return serviceManager
-                .selectServices(mockData.context(_idCDT))
+                .selectServices(mockData.decoratedCdt(_idCDT))
                 .then(function(services) {
                     assert.notEqual(services, null);
                     assert.equal(services.length, 2);
@@ -47,7 +47,7 @@ describe('Component: PrimaryServiceSelection', function() {
         });
         it('check error when no filter nodes selected', function() {
             return serviceManager
-                .selectServices(mockData.parameterContext(_idCDT))
+                .selectServices(parameterContext(_idCDT))
                 .catch(function (e) {
                     assert.equal(e, 'No filter nodes selected!');
                 });
@@ -125,6 +125,20 @@ var context2 = function (idCDT) {
                 dimension: 'SportType',
                 value: 'Tennis',
                 for: 'filter'
+            }
+        ]
+    }
+};
+
+//context with only parameter attribues
+var parameterContext = function(idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'Guests',
+                value: '4',
+                for: 'parameter'
             }
         ]
     }

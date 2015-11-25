@@ -71,7 +71,7 @@ describe('Component: ContextManager', function() {
         });
         it('check error when context have a wrong format', function () {
             return contextManager
-                .getFilterNodes(mockData.wrongContext(_idCDT))
+                .getFilterNodes(wrongContext(_idCDT))
                 .catch(function (e) {
                     assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'InterestTopic\', value: \'Restaurant\' }');
                 });
@@ -109,7 +109,7 @@ describe('Component: ContextManager', function() {
         });
         it('check error when context have a wrong format', function () {
             return contextManager
-                .getSpecificNodes(mockData.wrongContext(_idCDT))
+                .getSpecificNodes(wrongContext(_idCDT))
                 .catch(function (e) {
                     assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'InterestTopic\', value: \'Restaurant\' }');
                 });
@@ -151,7 +151,7 @@ describe('Component: ContextManager', function() {
         });
         it('check error when context have a wrong format', function () {
             return contextManager
-                .getParameterNodes(mockData.wrongContext(_idCDT))
+                .getParameterNodes(wrongContext(_idCDT))
                 .catch(function (e) {
                     assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'InterestTopic\', value: \'Restaurant\' }');
                 });
@@ -325,6 +325,19 @@ describe('Component: ContextManager', function() {
         });
     });
 });
+
+//wrong context
+var wrongContext = function(idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant'
+            }
+        ]
+    }
+};
 
 //context with no dimensions selected
 var emptyContext = function (idCDT) {

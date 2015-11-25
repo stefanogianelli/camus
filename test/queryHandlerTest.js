@@ -21,9 +21,9 @@ describe('Component: QueryHandler', function () {
     describe('#executeQueries()', function () {
         it('check if correct data are retrieved', function () {
             return serviceManager
-                .selectServices(mockData.context(_idCDT))
+                .selectServices(mockData.decoratedCdt(_idCDT))
                 .then(function(services) {
-                    return queryHandler.executeQueries(services, mockData.context(_idCDT));
+                    return queryHandler.executeQueries(services, mockData.decoratedCdt(_idCDT));
                 })
                 .then(function (responses) {
                     assert.notEqual(responses, null);
@@ -88,8 +88,8 @@ var contextForFakeService = function (idCDT) {
                 for: 'filter'
             },
             {
-                dimension: 'Location',
-                value: 'newyork',
+                dimension: 'City',
+                value: 'Milan',
                 for: 'filter|parameter',
                 search: 'testCustomSearch'
             },

@@ -161,8 +161,8 @@ var decoratedCdt = function (idCDT) {
 
 module.exports.decoratedCdt = decoratedCdt;
 
-//new context
-var newContext = function(idCDT) {
+//context
+var context = function(idCDT) {
     return {
         _id: idCDT,
         context: [
@@ -225,104 +225,7 @@ var newContext = function(idCDT) {
     }
 };
 
-module.exports.newContext = newContext;
-
-//contex
-var context = function(idCDT) {
-    return {
-        _id: idCDT,
-        context: [
-            {
-                dimension: 'InterestTopic',
-                value: 'Restaurant',
-                for: 'filter'
-            },
-            {
-                dimension: 'Location',
-                value: 'Milan',
-                for: 'filter'
-            },
-            {
-                dimension: 'Location',
-                value: 'newyork',
-                for: 'filter|parameter',
-                search: 'testCustomSearch'
-            },
-            {
-                dimension: 'Guests',
-                value: '4',
-                for: 'parameter'
-            },
-            {
-                dimension: 'Budget',
-                value: 'Low',
-                for: 'filter|parameter',
-                transformFunction: 'translateBudget'
-            },
-            {
-                dimension: 'Tipology',
-                value: 'DinnerWithFriends',
-                for: 'filter'
-            },
-            {
-                dimension : 'search_key',
-                value : 'restaurantinnewyork',
-                for : 'parameter'
-            },
-            {
-                "dimension": 'Transport',
-                "value": 'PublicTransport',
-                "supportCategory": 'Transport',
-                "for": 'filter'
-            }
-        ],
-        support: [
-            {
-                category: 'Transport'
-            },
-            {
-                category: 'Sport'
-            },
-            {
-                name: 'Wikipedia',
-                operation: 'search'
-            }
-        ]
-    }
-};
-
 module.exports.context = context;
-
-//wrong context
-var wrongContext = function(idCDT) {
-    return {
-        _id: idCDT,
-        context: [
-            {
-                dimension: 'InterestTopic',
-                value: 'Restaurant'
-            }
-        ]
-    }
-};
-
-module.exports.wrongContext = wrongContext;
-
-//context with only parameter attribues
-var parameterContext = function(idCDT) {
-    return {
-        _id: idCDT,
-        context: [
-            {
-                dimension: 'Guests',
-                value: '4',
-                for: 'parameter'
-            }
-        ]
-    }
-};
-
-module.exports.parameterContext = parameterContext;
 
 //googlePlaces service
 var googlePlaces = {
@@ -456,7 +359,7 @@ var eventful = {
                     required: false,
                     default: 'chicago',
                     mappingCDT: [
-                        'Location'
+                        'City'
                     ]
                 }
             ],
@@ -517,7 +420,7 @@ var fakeService = {
                     required: false,
                     default: 'chicago',
                     mappingCDT: [
-                        'Location'
+                        'City'
                     ]
                 }
             ],
@@ -752,7 +655,7 @@ var googlePlacesAssociations = function (idOperation, idCDT) {
         },
         {
             _idOperation: idOperation,
-            dimension: 'Location',
+            dimension: 'City',
             value: 'Rome',
             ranking: 1,
             weight: 2,
@@ -840,7 +743,7 @@ var atmAssociation = function (idOperation, idCDT) {
         {
             _idOperation: idOperation,
             category: 'Transport',
-            dimension: 'Location',
+            dimension: 'City',
             value: 'Milan',
             _idCDT: idCDT
         }
@@ -863,7 +766,7 @@ var atacAssociation = function (idOperation, idCDT) {
         {
             _idOperation: idOperation,
             category: 'Transport',
-            dimension: 'Location',
+            dimension: 'City',
             value: 'Rome',
             _idCDT: idCDT
         }
@@ -902,7 +805,7 @@ var trenordAssociation = function (idOperation, idCDT) {
         {
             _idOperation: idOperation,
             category: 'Transport',
-            dimension: 'Location',
+            dimension: 'City',
             value: 'Milan',
             _idCDT: idCDT
         }

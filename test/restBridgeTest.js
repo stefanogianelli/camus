@@ -8,7 +8,7 @@ describe('Component: RestBridge', function () {
     describe('#executeQuery()', function () {
         it('check that correct response is returned', function () {
             return contextManager
-                .getParameterNodes(mockModel.context(1))
+                .getParameterNodes(mockModel.decoratedCdt(1))
                 .then(function (params) {
                     return restBridge.executeQuery(mockModel.eventful, params)
                 })
@@ -19,7 +19,7 @@ describe('Component: RestBridge', function () {
         });
         it('check error when a required default parameter is not defined', function () {
             return contextManager
-                .getParameterNodes(mockModel.context(1))
+                .getParameterNodes(mockModel.decoratedCdt(1))
                 .then(function (params) {
                     return restBridge.executeQuery(noDefaultParameterService, params)
                 })
@@ -29,7 +29,7 @@ describe('Component: RestBridge', function () {
         });
         it('check error when a required parameter has no value in the CDT', function () {
             return contextManager
-                .getParameterNodes(mockModel.context(1))
+                .getParameterNodes(mockModel.decoratedCdt(1))
                 .then(function (params) {
                     return restBridge.executeQuery(noValueParameterService, params)
                 })
@@ -39,7 +39,7 @@ describe('Component: RestBridge', function () {
         });
         it('check error when the service does not respond', function () {
             return contextManager
-                .getParameterNodes(mockModel.context(1))
+                .getParameterNodes(mockModel.decoratedCdt(1))
                 .then(function (params) {
                     return restBridge.executeQuery(wrongBasePath, params)
                 })

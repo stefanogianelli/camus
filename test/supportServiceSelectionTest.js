@@ -20,7 +20,7 @@ describe('Component: SupportServiceSelection', function () {
     describe('#selectServices()', function () {
         it('check if correct services are selected', function () {
             return supportServiceSelection
-                .selectServices(mockData.context(_idCDT))
+                .selectServices(mockData.decoratedCdt(_idCDT))
                 .then(function (data) {
                     assert.notEqual(data, null);
                     assert.equal(data.length, 3);
@@ -116,8 +116,13 @@ var contextNoSupportName = function(idCDT) {
         context: [
             {
                 dimension: 'Location',
-                value: 'Milan',
-                for: 'filter'
+                for: 'filter',
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Milan'
+                    }
+                ]
             },
             {
                 "dimension": 'Transport',
