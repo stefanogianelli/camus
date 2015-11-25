@@ -1,6 +1,5 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
-var util = require('util');
 var provider = require('../provider/provider.js');
 
 var contextManager = function () { };
@@ -53,38 +52,52 @@ contextManager.prototype.getFilterNodes = function getFilterNodes (decoratedCdt)
     return new Promise (function (resolve, reject) {
         var context = decoratedCdt.context;
         if (!_.isEmpty(context)) {
-            var params = [];
-            _.forEach(context, function (item) {
-                if (_.has(item, 'for')) {
-                    if (item['for'] === 'filter' || item['for'] === 'filter|parameter') {
-                        //the filter nodes that are the base for a support category are evaluated in another function
-                        if (!_.has(item, 'supportCategory')) {
-                            //the parameters are mapped as dimension and value, instead of name and value
-                            if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
-                                _.forEach(item.params, function (p) {
-                                    //parameter that needs a custom search function are evaluated in another function
-                                    if (!_.has(p, 'searchFunction')) {
-                                        params.push({
-                                            dimension: p.name,
-                                            value: p.value
-                                        });
-                                    }
-                                });
-                            }
-                            //if the node has a value it's considered
-                            if (_.has(item, 'value')) {
-                                params.push({
-                                    dimension: item.dimension,
-                                    value: item.value
-                                });
-                            }
-                        }
-                    }
-                } else {
-                    reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
-                }
-            });
-            resolve(params);
+            //gets the pairs dimension and value from the decorated CDT
+            var filterValues = _(context)
+                //consider only the filter nodes (also includes filter and parameter nodes)
+                .filter(function (item) {
+                    return item.for === 'filter' || item.for === 'filter|parameter';
+                })
+                //deletes the nodes that are base dimensions for a support service category.
+                //deletes also all the nodes that have parameters associated
+                .reject(function (item) {
+                    return _.has(item, 'supportCategory') || !_.isEmpty(item.params);
+                })
+                .map(function (item) {
+                    return {
+                        dimension: item.dimension,
+                        value:item.value
+                    };
+                })
+                .value();
+            //map also the values of the parameters inside nodes
+            var filterParams = _(context)
+                //consider only the filter nodes (also includes filter and parameter nodes) that have at least one parameter defined
+                .filter(function (item) {
+                    return (item.for === 'filter' || item.for === 'filter|parameter') && !_.isEmpty(item.params);
+                })
+                //deletes the nodes that are base dimensions for a support service category
+                .reject(function (item) {
+                    return _.has(item, 'supportCategory');
+                })
+                .map(function (item) {
+                    return _(item.params)
+                        //remove parameters that need a custom search function
+                        .reject(function (item) {
+                            return _.has(item, 'searchFunction');
+                        })
+                        .map(function (param) {
+                            return {
+                                dimension: param.name,
+                                value: param.value
+                            };
+                        })
+                        .value();
+                })
+                .flatten()
+                .value();
+            //return in output the union of the two previous arrays
+            resolve(_.union(filterValues,filterParams));
         } else {
             reject('No context selected');
         }
@@ -92,7 +105,7 @@ contextManager.prototype.getFilterNodes = function getFilterNodes (decoratedCdt)
 };
 
 /**
- * Similar to {@link contextManager#getFilterNodes()}, but it take into account only the parameters that need a custom search function.
+ * Similar to {@link contextManager#getFilterNodes()}, but it takes into account only the parameters that need a custom search function.
  * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The list of nodes
  */
@@ -100,32 +113,32 @@ contextManager.prototype.getSpecificNodes = function getSpecificNodes (decorated
     return new Promise (function (resolve, reject) {
         var context = decoratedCdt.context;
         if (!_.isEmpty(context)) {
-            var params = [];
-            _.forEach(context, function (item) {
-                if (_.has(item, 'for')) {
-                    if (item['for'] === 'filter' || item['for'] === 'filter|parameter') {
-                        //the filter nodes that are the base for a support category are evaluated in another function
-                        if (!_.has(item, 'supportCategory')) {
-                            //the parameters are mapped as dimension and value, instead of name and value
-                            if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
-                                _.forEach(item.params, function (p) {
-                                    //are considered only the parameters that have a custom serch function specified
-                                    if (_.has(p, 'searchFunction')) {
-                                        params.push({
-                                            dimension: p.name,
-                                            value: p.value,
-                                            searchFunction: p.searchFunction
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    }
-                } else {
-                    reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
-                }
-
-            });
+            var params = _(context)
+                //consider only the filter nodes (also includes filter and parameter nodes) with non-empty parameters list
+                .filter(function (item) {
+                    return (item.for === 'filter' || item.for === 'filter|parameter')  && !_.isEmpty(item.params);
+                })
+                //deletes the nodes that are base dimensions for a support service category
+                .reject(function (item) {
+                    return _.has(item, 'supportCategory');
+                })
+                .map(function (item) {
+                    return _(item.params)
+                        //take into account only the parameters that have associated a custom search function
+                        .filter(function (item) {
+                            return _.has(item, 'searchFunction');
+                        })
+                        .map(function (param) {
+                            return {
+                                dimension: param.name,
+                                value: param.value,
+                                searchFunction: param.searchFunction
+                            };
+                        })
+                        .value();
+                })
+                .flatten()
+                .value();
             resolve(params);
         } else {
             reject('No context selected');
@@ -142,36 +155,58 @@ contextManager.prototype.getParameterNodes = function getParameterNodes (decorat
     return new Promise (function (resolve, reject) {
         var context = decoratedCdt.context;
         if (!_.isEmpty(context)) {
-            var params = [];
-            _.forEach(context, function (item) {
-                if (_.has(item, 'for')) {
-                    if (item['for'] === 'parameter' || item['for'] === 'filter|parameter') {
-                        if (!_.has(item, 'supportCategory')) {
-                            if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
-                                _.forEach(item.params, function (p) {
-                                    params.push({
-                                        dimension: p.name,
-                                        value: p.value
-                                    });
-                                });
-                            }
-                            if(_.has(item, 'value')) {
-                                var obj = {
-                                    dimension: item.dimension,
-                                    value: item.value
-                                };
-                                if (_.has(item, 'transformFunction')) {
-                                    obj['transformFunction'] = item.transformFunction;
-                                }
-                                params.push(obj);
-                            }
-                        }
+            //gets the pairs dimension and value from the decorated CDT
+            var paramValues = _(context)
+            //consider only the parameter nodes (also includes filter and parameter nodes)
+                .filter(function (item) {
+                    return item.for === 'parameter' || item.for === 'filter|parameter';
+                })
+                //deletes the nodes that are base dimensions for a support service category.
+                //deletes also all the nodes that have parameters associated
+                .reject(function (item) {
+                    return _.has(item, 'supportCategory') || !_.isEmpty(item.params);
+                })
+                .map(function (item) {
+                    //add information about the translation function, if exists
+                    if (_.has(item, 'transformFunction')) {
+                        return {
+                            dimension: item.dimension,
+                            value: item.value,
+                            transformFunction: item.transformFunction
+                        };
+                    } else {
+                        return {
+                            dimension: item.dimension,
+                            value: item.value
+                        };
                     }
-                } else {
-                    reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
-                }
-            });
-            resolve(params);
+                })
+                .value();
+            //map also the values of the parameters inside nodes
+            var parameters = _(context)
+            //consider only the parameter nodes (also includes filter and parameter nodes) that have at least one parameter defined
+                .filter(function (item) {
+                    return (item.for === 'parameter' || item.for === 'filter|parameter') && !_.isEmpty(item.params);
+                })
+                //deletes the nodes that are base dimensions for a support service category
+                .reject(function (item) {
+                    return _.has(item, 'supportCategory');
+                })
+                .map(function (item) {
+                    return _(item.params)
+                        .map(function (param) {
+                            return {
+                                dimension: param.name,
+                                value: param.value
+                            };
+                        })
+                        .value();
+                })
+                .flatten()
+                .value();
+
+            //return in output the union of the two previous arrays
+            resolve(_.union(paramValues, parameters));
         } else {
             reject('No context selected');
         }

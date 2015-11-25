@@ -41,12 +41,12 @@ describe('Component: ContextManager', function() {
                     if (nodes.length === 4) {
                         assert.equal(nodes[0].dimension, 'InterestTopic');
                         assert.equal(nodes[0].value, 'Restaurant');
-                        assert.equal(nodes[1].dimension, 'City');
-                        assert.equal(nodes[1].value, 'Milan');
-                        assert.equal(nodes[2].dimension, 'Budget');
-                        assert.equal(nodes[2].value, 'Low');
-                        assert.equal(nodes[3].dimension, 'Tipology');
-                        assert.equal(nodes[3].value, 'DinnerWithFriends');
+                        assert.equal(nodes[1].dimension, 'Budget');
+                        assert.equal(nodes[1].value, 'Low');
+                        assert.equal(nodes[2].dimension, 'Tipology');
+                        assert.equal(nodes[2].value, 'DinnerWithFriends');
+                        assert.equal(nodes[3].dimension, 'City');
+                        assert.equal(nodes[3].value, 'Milan');
                     } else {
                         assert.fail(nodes.length, 4, 'Wrong nodes count');
                     }
@@ -122,12 +122,12 @@ describe('Component: ContextManager', function() {
                 .getParameterNodes(mockData.decoratedCdt(_idCDT))
                 .then(function (nodes) {
                     if (nodes.length === 4) {
-                        assert.equal(nodes[0].dimension, 'City');
-                        assert.equal(nodes[0].value, 'Milan');
-                        assert.equal(nodes[1].dimension, 'Number');
-                        assert.equal(nodes[1].value, 4);
-                        assert.equal(nodes[2].dimension, 'Budget');
-                        assert.equal(nodes[2].value, 'Low');
+                        assert.equal(nodes[0].dimension, 'Budget');
+                        assert.equal(nodes[0].value, 'Low');
+                        assert.equal(nodes[1].dimension, 'City');
+                        assert.equal(nodes[1].value, 'Milan');
+                        assert.equal(nodes[2].dimension, 'Number');
+                        assert.equal(nodes[2].value, 4);
                         assert.equal(nodes[3].dimension, 'search_key');
                         assert.equal(nodes[3].value, 'restaurantinnewyork');
                     } else {
