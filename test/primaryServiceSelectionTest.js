@@ -24,7 +24,7 @@ describe('Component: PrimaryServiceSelection', function() {
                 .then(function(services) {
                     assert.notEqual(services, null);
                     assert.equal(services.length, 2);
-                    assert.equal(services[0].rank, 6);
+                    assert.equal(services[0].rank, 4);
                     return [services, provider.getServiceByOperationId(services[0]._idOperation)];
                 })
                 .spread(function (services, data) {

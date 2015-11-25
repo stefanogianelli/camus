@@ -76,7 +76,7 @@ provider.prototype.getCdtDimensions = function getCdtDimensions (idCDT, dimensio
                         dimension: '$context.name',
                         for: '$context.for',
                         transformFunction: '$context.transformFunction',
-                        supportDimension: '$context.supportDimension',
+                        supportCategory: '$context.supportCategory',
                         params: '$context.params'
                     }
                 }

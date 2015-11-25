@@ -31,7 +31,7 @@ NodeSchema.add({
         required: true
     },
     transformFunction: String,
-    supportDimension: String,
+    supportCategory: String,
     values: [String],
     params: [ParamSchema],
     forbidden: [String],

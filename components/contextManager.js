@@ -37,29 +37,48 @@ contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
 };
 
 /**
- * Retrieve the nodes of the CDT that are used for Service selection
- * @param contextFile The current context
+ * Retrieve the nodes of the CDT that are used for Service selection.
+ * The nodes that are the base dimension for a support service category are not taken into account by this function.
+ * Are also considered the parameters associated to a node, except for that ones need a custom search function.
+ * The parameter are translated as dimension and value.
+ * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The list of nodes
  */
-contextManager.prototype.getFilterNodes = function getFilterNodes (contextFile) {
+contextManager.prototype.getFilterNodes = function getFilterNodes (decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(contextFile) && !_.isNull(contextFile) && _.has(contextFile, 'context')) {
-            var context = contextFile.context;
+        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
+            var context = decoratedCdt.context;
             if (!_.isEmpty(context)) {
                 var params = [];
                 _.forEach(context, function (item) {
                     if (_.has(item, 'for')) {
-                        if (item['for'] === 'filter' || item['for'] === 'filter|parameter')
-                            if (!_.has(item, 'search') && !_.has(item, 'supportCategory')) {
-                                params.push({
-                                    dimension: item.dimension,
-                                    value: item.value
-                                });
+                        if (item['for'] === 'filter' || item['for'] === 'filter|parameter') {
+                            //the filter nodes that are the base for a support category are evaluated in another function
+                            if (!_.has(item, 'supportCategory')) {
+                                //the parameters are mapped as dimension and value, instead of name and value
+                                if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
+                                    _.forEach(item.params, function (p) {
+                                        //parameter that needs a custom search function are evaluated in another function
+                                        if (!_.has(p, 'searchFunction')) {
+                                            params.push({
+                                                dimension: p.name,
+                                                value: p.value
+                                            });
+                                        }
+                                    });
+                                }
+                                //if the node has a value it's considered
+                                if (_.has(item, 'value')) {
+                                    params.push({
+                                        dimension: item.dimension,
+                                        value: item.value
+                                    });
+                                }
                             }
+                        }
                     } else {
                         reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
                     }
-
                 });
                 resolve(params);
             } else {
@@ -72,26 +91,36 @@ contextManager.prototype.getFilterNodes = function getFilterNodes (contextFile) 
 };
 
 /**
- * Retrieve the CDT nodes that uses a specific method for Service selection
- * @param contextFile The current context
+ * Similar to {@link contextManager#getFilterNodes()}, but it take into account only the parameters that need a custom search function.
+ * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The list of nodes
  */
-contextManager.prototype.getSpecificNodes = function getSpecificNodes (contextFile) {
+contextManager.prototype.getSpecificNodes = function getSpecificNodes (decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(contextFile) && !_.isNull(contextFile) && _.has(contextFile, 'context')) {
-            var context = contextFile.context;
+        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
+            var context = decoratedCdt.context;
             if (!_.isEmpty(context)) {
                 var params = [];
                 _.forEach(context, function (item) {
                     if (_.has(item, 'for')) {
-                        if (item['for'] === 'filter' || item['for'] === 'filter|parameter')
-                            if (_.has(item, 'search') && !_.has(item, 'supportCategory')) {
-                                params.push({
-                                    dimension: item.dimension,
-                                    value: item.value,
-                                    search: item.search
-                                });
+                        if (item['for'] === 'filter' || item['for'] === 'filter|parameter') {
+                            //the filter nodes that are the base for a support category are evaluated in another function
+                            if (!_.has(item, 'supportCategory')) {
+                                //the parameters are mapped as dimension and value, instead of name and value
+                                if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
+                                    _.forEach(item.params, function (p) {
+                                        //are considered only the parameters that have a custom serch function specified
+                                        if (_.has(p, 'searchFunction')) {
+                                            params.push({
+                                                dimension: p.name,
+                                                value: p.value,
+                                                searchFunction: p.searchFunction
+                                            });
+                                        }
+                                    });
+                                }
                             }
+                        }
                     } else {
                         reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
                     }
@@ -109,26 +138,38 @@ contextManager.prototype.getSpecificNodes = function getSpecificNodes (contextFi
 
 /**
  * Retrieve the nodes of the CDT that are used for query composition
- * @param contextFile The current context
+ * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The list of nodes
  */
-contextManager.prototype.getParameterNodes = function getParameterNodes (contextFile) {
+contextManager.prototype.getParameterNodes = function getParameterNodes (decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(contextFile) && !_.isNull(contextFile) && _.has(contextFile, 'context')) {
-            var context = contextFile.context;
+        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
+            var context = decoratedCdt.context;
             if (!_.isEmpty(context)) {
                 var params = [];
                 _.forEach(context, function (item) {
                     if (_.has(item, 'for')) {
                         if (item['for'] === 'parameter' || item['for'] === 'filter|parameter') {
-                            var obj = {
-                                dimension: item.dimension,
-                                value: item.value
-                            };
-                            if (_.has(item, 'transformFunction')) {
-                                obj['transformFunction'] = item.transformFunction;
+                            if (!_.has(item, 'supportCategory')) {
+                                if (_.has(item, 'params') && !_.isEmpty(item['params'])) {
+                                    _.forEach(item.params, function (p) {
+                                        params.push({
+                                            dimension: p.name,
+                                            value: p.value
+                                        });
+                                    });
+                                }
+                                if(_.has(item, 'value')) {
+                                    var obj = {
+                                        dimension: item.dimension,
+                                        value: item.value
+                                    };
+                                    if (_.has(item, 'transformFunction')) {
+                                        obj['transformFunction'] = item.transformFunction;
+                                    }
+                                    params.push(obj);
+                                }
                             }
-                            params.push(obj);
                         }
                     } else {
                         reject('Lack of attribute \'for\' in item ' + util.inspect(item, false, null));
@@ -146,12 +187,12 @@ contextManager.prototype.getParameterNodes = function getParameterNodes (context
 
 /**
  * Search the selected interest topic
- * @param contextFile The current context
+ * @param decoratedCdt The decorated CDT
  * @returns The interest topic name
  */
-contextManager.prototype.getInterestTopic = function getInterestTopic (contextFile) {
-    if (!_.isUndefined(contextFile) && !_.isNull(contextFile) && _.has(contextFile, 'context')) {
-        var context = contextFile.context;
+contextManager.prototype.getInterestTopic = function getInterestTopic (decoratedCdt) {
+    if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
+        var context = decoratedCdt.context;
         if (!_.isEmpty(context)) {
             var r = _.find(context, {dimension: 'InterestTopic'});
             if (!_.isUndefined(r) && !_.isNull(r)) {
@@ -169,13 +210,13 @@ contextManager.prototype.getInterestTopic = function getInterestTopic (contextFi
 
 /**
  * Return the support service categories to be researched
- * @param contextFile The current context
+ * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The list of categories
  */
-contextManager.prototype.getSupportServiceCategories = function getSupportServiceCategories (contextFile) {
+contextManager.prototype.getSupportServiceCategories = function getSupportServiceCategories (decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(contextFile) && !_.isNull(contextFile) && _.has(contextFile, 'support')) {
-            var support = contextFile.support;
+        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'support')) {
+            var support = decoratedCdt.support;
             if (!_.isEmpty(support)) {
                 var categories = [];
                 _.forEach(support, function (s) {
@@ -195,13 +236,13 @@ contextManager.prototype.getSupportServiceCategories = function getSupportServic
 
 /**
  * Return the support service names
- * @param contextFile The current context
+ * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The list of services name and operation
  */
-contextManager.prototype.getSupportServiceNames = function getSupportServiceNames (contextFile) {
+contextManager.prototype.getSupportServiceNames = function getSupportServiceNames (decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(contextFile) && !_.isNull(contextFile) && _.has(contextFile, 'support')) {
-            var support = contextFile.support;
+        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'support')) {
+            var support = decoratedCdt.support;
             if (!_.isEmpty(support)) {
                 var names = [];
                 _.forEach(support, function (s) {
@@ -222,14 +263,14 @@ contextManager.prototype.getSupportServiceNames = function getSupportServiceName
 /**
  * Search the dimension node that is the primary dimension for the support service category specified
  * @param category The support service category
- * @param contextFile The current context
+ * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The dimension and value of the node
  */
-contextManager.prototype.getSupportServicePrimaryDimension = function getSupportServicePrimaryDimension (category, contextFile) {
+contextManager.prototype.getSupportServicePrimaryDimension = function getSupportServicePrimaryDimension (category, decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(contextFile) && !_.isNull(contextFile) && _.has(contextFile, 'context')) {
+        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
             if (!_.isUndefined(category) && !_.isNull(category) && !_.isEmpty(category)) {
-                var context = contextFile.context;
+                var context = decoratedCdt.context;
                 if (!_.isEmpty(context)) {
                     var param = _.find(context, {supportCategory: category});
                     if (!_.isUndefined(param)) {
@@ -290,13 +331,13 @@ contextManager.prototype.getDescendants = function getDescendants (idCDT, node) 
 /**
  * Check if a specified dimension is defined in the context
  * @param dimensionName The dimension name to be searched
- * @param contextFile The current context object
+ * @param decoratedCdt The decorated CDT
  * @returns {boolean} Return true if the dimension is defined, false otherwise
  */
-contextManager.prototype.isDefined = function isDefined (dimensionName, contextFile) {
+contextManager.prototype.isDefined = function isDefined (dimensionName, decoratedCdt) {
     if (!_.isUndefined(dimensionName) && _.isString(dimensionName)) {
-        if (!_.isUndefined(contextFile) && !_.isNull(contextFile) && _.has(contextFile, 'context')) {
-            return _.findIndex(contextFile.context, {dimension: dimensionName}) !== -1;
+        if (!_.isUndefined(decoratedCdt) && !_.isNull(decoratedCdt) && _.has(decoratedCdt, 'context')) {
+            return _.findIndex(decoratedCdt.context, {dimension: dimensionName}) !== -1;
         } else {
             throw new Error('No context selected');
         }

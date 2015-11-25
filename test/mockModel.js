@@ -16,18 +16,18 @@ var cdt = {
             params: [
                 {
                     name: 'City',
-                    type: 'gps',
-                    searchFunction: 'testCustomSearch'
+                    type: 'gps'
                 }
             ]
         },
         {
             name: 'Guests',
-            for: 'parameter',
+            for: 'filter|parameter',
             params: [
                 {
                     name: 'Number',
-                    type: 'Integer'
+                    type: 'Integer',
+                    searchFunction: 'testCustomSearch'
                 }
             ]
         },
@@ -84,6 +84,133 @@ var cdt = {
 };
 
 module.exports.cdt = cdt;
+
+//sample decorated CDT
+var decoratedCdt = function (idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant',
+                for: 'filter'
+            },
+            {
+                dimension: 'Location',
+                for: 'filter|parameter',
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Milan'
+                    }
+                ]
+            },
+            {
+                dimension: 'Guests',
+                for: 'filter|parameter',
+                params: [
+                    {
+                        name: 'Number',
+                        value: '4',
+                        searchFunction: 'testCustomSearch'
+                    }
+                ]
+            },
+            {
+                dimension: 'Budget',
+                value: 'Low',
+                for: 'filter|parameter',
+                transformFunction: 'translateBudget'
+            },
+            {
+                dimension: 'Keyword',
+                for: 'parameter',
+                params: [
+                    {
+                        name: 'search_key',
+                        value: 'restaurantinnewyork'
+                    }
+                ]
+            },
+            {
+                dimension: 'Transport',
+                value: 'PublicTransport',
+                for: 'filter',
+                supportCategory: 'Transport'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'DinnerWithFriends',
+                for: 'filter'
+            }
+        ]
+    }
+};
+
+module.exports.decoratedCdt = decoratedCdt;
+
+//new context
+var newContext = function(idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant'
+            },
+            {
+                dimension: 'Location',
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Milan'
+                    }
+                ]
+            },
+            {
+                dimension: 'Guests',
+                params: [
+                    {
+                        name: 'Number',
+                        value: '4'
+                    }
+                ]
+            },
+            {
+                dimension: 'Budget',
+                value: 'Low'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'DinnerWithFriends'
+            },
+            {
+                dimension: 'Keyword',
+                params: [
+                    {
+                        name: 'search_key',
+                        value: 'restaurantinnewyork'
+                    }
+                ]
+            },
+            {
+                "dimension": 'Transport',
+                "value": 'PublicTransport'
+            }
+        ],
+        support: [
+            {
+                category: 'Transport'
+            },
+            {
+                name: 'Wikipedia',
+                operation: 'search'
+            }
+        ]
+    }
+};
+
+module.exports.newContext = newContext;
 
 //contex
 var context = function(idCDT) {
