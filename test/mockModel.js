@@ -76,7 +76,6 @@ var cdt = {
                 'Train'
             ],
             parents: [
-                'Transport',
                 'PublicTransport'
             ]
         }
@@ -84,6 +83,85 @@ var cdt = {
 };
 
 module.exports.cdt = cdt;
+
+//CDT with nested sons
+var nestedCdt = {
+    _userId: 1,
+    context: [
+        {
+            name: 'a',
+            for: 'filter',
+            values: [
+                'b', 'c'
+            ]
+        },
+        {
+            name: 'd',
+            for: 'filter',
+            values: [
+                'e', 'f'
+            ],
+            parents: [
+                'b'
+            ]
+        },
+        {
+            name: 'g',
+            for: 'filter',
+            values: [
+                'h', 'i'
+            ],
+            parents: [
+                'f', 'b'
+            ]
+        }
+    ]
+};
+
+module.exports.nestedCdt = nestedCdt;
+
+//CDT with multiple sons
+var multipleSonsCdt = {
+    _userId: 1,
+    context: [
+        {
+            name: 'a',
+            for: 'filter',
+            values: [
+                'c', 'd'
+            ]
+        },
+        {
+            name: 'b',
+            for: 'filter',
+            values: [
+                'e', 'f'
+            ]
+        },
+        {
+            name: 'g',
+            for: 'filter',
+            values: [
+                'i', 'l'
+            ],
+            parents: [
+                'd'
+            ]
+        },
+        {
+            name: 'h',
+            for: 'filter',
+            values: [
+                'm', 'n'
+            ],
+            parents: [
+                'e'
+            ]
+        }
+    ]
+};
+
+module.exports.multipleSonsCdt = multipleSonsCdt;
 
 //sample decorated CDT
 var decoratedCdt = function (idCDT) {
@@ -635,7 +713,7 @@ var trenord = {
 module.exports.trenord = trenord;
 
 //googlePlaces associations
-var googlePlacesAssociations = function (idOperation, idCDT) {
+var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) {
     return [
         {
             _idOperation: idOperation,
@@ -660,6 +738,22 @@ var googlePlacesAssociations = function (idOperation, idCDT) {
             ranking: 1,
             weight: 2,
             _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
+            dimension: 'd',
+            value: 'e',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idNestedCDT
+        },
+        {
+            _idOperation: idOperation,
+            dimension: 'g',
+            value: 'i',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idMultipleSonCDT
         }
     ];
 };
@@ -667,7 +761,7 @@ var googlePlacesAssociations = function (idOperation, idCDT) {
 module.exports.googlePlacesAssociations = googlePlacesAssociations;
 
 //eventful associations
-var eventfulAssociations = function (idOperation, idCDT) {
+var eventfulAssociations = function (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) {
     return [
         {
             _idOperation: idOperation,
@@ -676,6 +770,22 @@ var eventfulAssociations = function (idOperation, idCDT) {
             ranking: 2,
             weight: 2,
             _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
+            dimension: 'g',
+            value: 'h',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idNestedCDT
+        },
+        {
+            _idOperation: idOperation,
+            dimension: 'g',
+            value: 'l',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idMultipleSonCDT
         }
     ];
 };
@@ -683,7 +793,7 @@ var eventfulAssociations = function (idOperation, idCDT) {
 module.exports.eventfulAssociations = eventfulAssociations;
 
 //fake service associations
-var fakeServiceAssociation = function (idOperation, idCDT) {
+var fakeServiceAssociation = function (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) {
     return [
         {
             _idOperation: idOperation,
@@ -692,6 +802,22 @@ var fakeServiceAssociation = function (idOperation, idCDT) {
             ranking: 1,
             weight: 2,
             _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
+            dimension: 'g',
+            value: 'i',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idNestedCDT
+        },
+        {
+            _idOperation: idOperation,
+            dimension: 'h',
+            value: 'n',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idMultipleSonCDT
         }
     ];
 };

@@ -85,45 +85,36 @@ provider.prototype.getCdtDimensions = function getCdtDimensions (idCDT, dimensio
 };
 
 /**
- * Create the list of descendant nodes of the node(s) specified
+ * Create the list of descendant nodes of the specified nodes.
+ * These nodes must have the 'value' attribute defined
  * @param idCDT The CDT identifier
  * @param nodes The node or the list of nodes
- * @returns {*} The list of sons
+ * @returns {*} The list of son nodes
  */
 provider.prototype.getNodeDescendants = function getNodeDescendants (idCDT, nodes) {
-    var whereClause = {};
-    var projectClause = {};
-    if (_.isArray(nodes)) {
-        var values = _.pluck(nodes, 'value');
-        whereClause = {
-            _id: idCDT,
-            'context.parents': {
-                $in: values
-            }
-        };
-        projectClause = {
-            context: {
-                $elemMatch: {
-                    parents: {
-                        $in: values
+    //adapt the inputs for the search
+    if(!_.isArray(nodes)) {
+        nodes = _.toArray(nodes);
+    } else {
+        nodes = _.pluck(nodes, 'value');
+    }
+    return cdtModel
+        .aggregateAsync(
+            {$match: {_id: idCDT}},
+            {$unwind: '$context'},
+            {$match: {'context.parents': {$in: nodes}}},
+            {
+                $group: {
+                    _id: '$_id',
+                    context: {
+                        $push: {
+                            dimension: '$context.name',
+                            values: '$context.values'
+                        }
                     }
                 }
             }
-        }
-    } else {
-        whereClause = {
-            _id: idCDT,
-            'context.parents': nodes.value
-        };
-        projectClause = {
-            context: {
-                $elemMatch: {
-                    parents: nodes.value
-                }
-            }
-        }
-    }
-    return cdtModel.findAsync(whereClause, projectClause)
+        );
 };
 
 /**

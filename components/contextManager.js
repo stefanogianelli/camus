@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
 var provider = require('../provider/provider.js');
+var util = require('util');
 
 var contextManager = function () { };
 
@@ -293,39 +294,37 @@ contextManager.prototype.getSupportServicePrimaryDimension = function getSupport
 };
 
 /**
- * Search all the son nodes of the specified node
+ * Search all the son nodes of the specified nodes.
+ * These nodes must have at least the 'value' attribute defined.
  * @param idCDT The CDT identifier
- * @param node The parent node(s)
+ * @param nodes The parent nodes
  * @returns {*} The list of son nodes, formatted in dimension and value
  */
-contextManager.prototype.getDescendants = function getDescendants (idCDT, node) {
+contextManager.prototype.getDescendants = function getDescendants (idCDT, nodes) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(idCDT)) {
-            if (!_.isUndefined(node)) {
-                provider
-                    .getNodeDescendants(idCDT, node)
-                    .then(function (nodes) {
-                        var output = [];
-                        if(!_.isUndefined(nodes) && !_.isEmpty(nodes)) {
-                            _.forEach(nodes[0].context, function (c) {
-                                _.forEach(c.values, function (v) {
-                                    output.push({
-                                        dimension: c.name,
-                                        value: v
-                                    });
+        //start the searching only if at least one node is specified
+        if (!_.isUndefined(nodes) && !_.isEmpty(nodes)) {
+            provider
+                .getNodeDescendants(idCDT, nodes)
+                .then(function (results) {
+                    var output = [];
+                    if (!_.isUndefined(results) && !_.isEmpty(results)) {
+                        _.forEach(results[0].context, function (c) {
+                            _.forEach(c.values, function (v) {
+                                output.push({
+                                    dimension: c.dimension,
+                                    value: v
                                 });
                             });
-                        }
-                        resolve(output);
-                    })
-                    .catch(function (e) {
-                        reject(e);
-                    });
-            } else {
-                reject('Empty or wrong node name');
-            }
+                        });
+                    }
+                    resolve(output);
+                })
+                .catch(function (e) {
+                    reject(e);
+                });
         } else {
-            reject('Specify a CDT identifier');
+            resolve();
         }
     });
 };

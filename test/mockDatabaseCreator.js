@@ -15,15 +15,31 @@ var mockDatabaseCreator = function () { };
  */
 mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback) {
     var _idCDT;
+    var _idNestedCdt;
+    var _idMultipleSonsCdt;
     async.series({
-        zero: function (callback) {
+        one: function (callback) {
             var cdt = new cdtModel(mockData.cdt);
             cdt.save(function (err, cdt) {
                 _idCDT = cdt._id;
                 callback(err, 'done');
             });
         },
-        one: function (callback) {
+        two: function (callback) {
+            var cdt = new cdtModel(mockData.nestedCdt);
+            cdt.save(function (err, cdt) {
+                _idNestedCdt = cdt._id;
+                callback(err, 'done');
+            });
+        },
+        three: function (callback) {
+            var cdt = new cdtModel(mockData.multipleSonsCdt);
+            cdt.save(function (err, cdt) {
+                _idMultipleSonsCdt = cdt._id;
+                callback(err, 'done');
+            });
+        },
+        four: function (callback) {
             async.waterfall([
                     function (callback) {
                         var googlePlaces = new ServiceModel(mockData.googlePlaces);
@@ -32,7 +48,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                         });
                     },
                     function (idOperation, callback) {
-                        _.forEach(mockData.googlePlacesAssociations(idOperation, _idCDT), function (a) {
+                        _.forEach(mockData.googlePlacesAssociations(idOperation, _idCDT, _idNestedCdt, _idMultipleSonsCdt), function (a) {
                             var associations = new PrimaryServiceModel(a);
                             associations.save(function (err) {
                                 assert.equal(err, null);
@@ -45,7 +61,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     callback(err, 'done');
                 });
         },
-        two: function (callback) {
+        five: function (callback) {
             async.waterfall([
                     function (callback) {
                         var eventful = new ServiceModel(mockData.eventful);
@@ -54,7 +70,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                         });
                     },
                     function (idOperation, callback) {
-                        _.forEach(mockData.eventfulAssociations(idOperation, _idCDT), function (a) {
+                        _.forEach(mockData.eventfulAssociations(idOperation, _idCDT, _idNestedCdt, _idMultipleSonsCdt), function (a) {
                             var associations = new PrimaryServiceModel(a);
                             associations.save(function (err) {
                                 assert.equal(err, null);
@@ -67,7 +83,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     callback(err, 'done');
                 });
         },
-        three: function (callback) {
+        six: function (callback) {
             async.waterfall([
                     function (callback) {
                         var fakeService = new ServiceModel(mockData.fakeService);
@@ -76,7 +92,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                         });
                     },
                     function (idOperation, callback) {
-                        _.forEach(mockData.fakeServiceAssociation(idOperation, _idCDT), function (a) {
+                        _.forEach(mockData.fakeServiceAssociation(idOperation, _idCDT, _idNestedCdt, _idMultipleSonsCdt), function (a) {
                             var associations = new PrimaryServiceModel(a);
                             associations.save(function (err) {
                                 assert.equal(err, null);
@@ -89,7 +105,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     callback(err, 'done');
                 });
         },
-        four: function (callback) {
+        seven: function (callback) {
             async.waterfall([
                     function (callback) {
                         var testBridgeService = new ServiceModel(mockData.testBridge);
@@ -111,7 +127,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     callback(err, 'done');
                 });
         },
-        five: function (callback) {
+        eight: function (callback) {
             async.waterfall([
                     function (callback) {
                         var wikipediaService = new ServiceModel(mockData.wikipedia);
@@ -124,7 +140,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     callback(err, 'done');
                 });
         },
-        six: function (callback) {
+        nine: function (callback) {
             async.waterfall([
                     function (callback) {
                         var googleMapsService = new ServiceModel(mockData.googleMaps);
@@ -146,7 +162,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     callback(err, 'done');
                 });
         },
-        seven: function (callback) {
+        ten: function (callback) {
             async.waterfall([
                     function (callback) {
                         var atmService = new ServiceModel(mockData.atm);
@@ -168,7 +184,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     callback(err, 'done');
                 });
         },
-        eight: function (callback) {
+        eleven: function (callback) {
             async.waterfall([
                     function (callback) {
                         var atacService = new ServiceModel(mockData.atac);
@@ -190,7 +206,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     callback(err, 'done');
                 });
         },
-        nine: function (callback) {
+        twelve: function (callback) {
             async.waterfall([
                     function (callback) {
                         var fsService = new ServiceModel(mockData.fs);
@@ -212,7 +228,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     callback(err, 'done');
                 });
         },
-        ten: function (callback) {
+        thirteen: function (callback) {
             async.waterfall([
                     function (callback) {
                         var trenordService = new ServiceModel(mockData.trenord);
@@ -234,7 +250,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
                     callback(err, 'done');
                 });
         },
-        eleven: function (callback) {
+        fourteen: function (callback) {
             async.waterfall([
                     function (callback) {
                         var flickrService = new ServiceModel(mockData.flickr);
@@ -258,7 +274,7 @@ mockDatabaseCreator.prototype.createDatabase = function createDatabase (callback
         }
     },
     function (err) {
-        callback(err, _idCDT);
+        callback(err, _idCDT, _idNestedCdt, _idMultipleSonsCdt);
     });
 };
 

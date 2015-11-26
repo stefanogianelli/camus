@@ -19,24 +19,28 @@ var primaryServiceSelection = function () { };
  */
 primaryServiceSelection.prototype.selectServices = function selectServices (context) {
     return new Promise(function (resolve, reject) {
-        if (!_.isUndefined(context) && !_.isNull(context) && _.has(context, 'context')) {
-            contextManager
-                .getFilterNodes(context)
-                .then(function (filterNodes) {
-                    return provider.filterPrimaryServices(filterNodes, context._id);
-                })
-                .then(function (services) {
-                    return loadSearchPlugins(context._id, services, context);
-                })
-                .then(function (services) {
-                    resolve(calculateRanking(services));
-                })
-                .catch(function (e) {
-                    reject(e.message);
-                });
-        } else {
-            reject('No context selected');
-        }
+        contextManager
+            .getFilterNodes(context)
+            .then(function (nodes) {
+                //get the son node
+                return [nodes, contextManager.getDescendants(context._id, nodes)];
+            })
+            .spread(function (baseNodes, sonNodes) {
+                if (!_.isUndefined(sonNodes) && !_.isEmpty(sonNodes)) {
+                    return provider.filterPrimaryServices(_.union(baseNodes, sonNodes), context._id);
+                } else {
+                    return provider.filterPrimaryServices(baseNodes, context._id);
+                }
+            })
+            .then(function (services) {
+                return loadSearchPlugins(context._id, services, context);
+            })
+            .then(function (services) {
+                resolve(calculateRanking(services));
+            })
+            .catch(function (e) {
+                reject(e.message);
+            });
     })
 };
 

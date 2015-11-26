@@ -5,14 +5,18 @@ var MockDatabase = require('./mockDatabaseCreator.js');
 var provider = require('../provider/provider.js');
 
 var _idCDT;
+var _idNestedCDT;
+var _idMultipleSonCDT;
 
 describe('Component: PrimaryServiceSelection', function() {
 
     before(function(done) {
         provider.createConnection('mongodb://localhost/camus_test');
-        MockDatabase.createDatabase(function (err, idCDT) {
+        MockDatabase.createDatabase(function (err, idCDT, idNestedCDT, idMultipleSonCDT) {
             assert.equal(err, null);
             _idCDT = idCDT;
+            _idNestedCDT = idNestedCDT;
+            _idMultipleSonCDT = idMultipleSonCDT;
             done();
         });
     });
@@ -22,7 +26,6 @@ describe('Component: PrimaryServiceSelection', function() {
             return serviceManager
                 .selectServices(mockData.decoratedCdt(_idCDT))
                 .then(function(services) {
-                    assert.notEqual(services, null);
                     assert.equal(services.length, 2);
                     assert.equal(services[0].rank, 4);
                     return [services, provider.getServiceByOperationId(services[0]._idOperation)];
@@ -38,11 +41,54 @@ describe('Component: PrimaryServiceSelection', function() {
                     assert.equal(data.operations[0].name, 'eventSearch');
                 });
         });
-        it('check error when no context selected', function() {
+        it('check if correct services are selected for nested CDT dimensions', function() {
             return serviceManager
-                .selectServices({ })
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
+                .selectServices(nestedContext(_idNestedCDT))
+                .then(function(services) {
+                    assert.equal(services.length, 3);
+                    return [services, provider.getServiceByOperationId(services[0]._idOperation)];
+                })
+                .spread(function (services, data) {
+                    assert.equal(services[0].rank, 2);
+                    assert.equal(data.name, 'GooglePlaces');
+                    assert.equal(data.operations[0].name, 'placeTextSearch');
+                    return [services, provider.getServiceByOperationId(services[1]._idOperation)];
+                })
+                .spread(function (services, data) {
+                    assert.equal(services[1].rank, 2);
+                    assert.equal(data.name, 'eventful');
+                    assert.equal(data.operations[0].name, 'eventSearch');
+                    return [services, provider.getServiceByOperationId(services[2]._idOperation)];
+                })
+                .spread(function (services, data) {
+                    assert.equal(services[2].rank, 2);
+                    assert.equal(data.name, 'fakeService');
+                    assert.equal(data.operations[0].name, 'eventSearch');
+                });
+        });
+        it('check if correct services are selected for multiple son CDT dimensions', function() {
+            return serviceManager
+                .selectServices(multipleSonContext(_idMultipleSonCDT))
+                .then(function(services) {
+                    assert.equal(services.length, 3);
+                    return [services, provider.getServiceByOperationId(services[0]._idOperation)];
+                })
+                .spread(function (services, data) {
+                    assert.equal(services[0].rank, 2);
+                    assert.equal(data.name, 'GooglePlaces');
+                    assert.equal(data.operations[0].name, 'placeTextSearch');
+                    return [services, provider.getServiceByOperationId(services[1]._idOperation)];
+                })
+                .spread(function (services, data) {
+                    assert.equal(services[1].rank, 2);
+                    assert.equal(data.name, 'eventful');
+                    assert.equal(data.operations[0].name, 'eventSearch');
+                    return [services, provider.getServiceByOperationId(services[2]._idOperation)];
+                })
+                .spread(function (services, data) {
+                    assert.equal(services[2].rank, 2);
+                    assert.equal(data.name, 'fakeService');
+                    assert.equal(data.operations[0].name, 'eventSearch');
                 });
         });
         it('check error when no filter nodes selected', function() {
@@ -52,7 +98,7 @@ describe('Component: PrimaryServiceSelection', function() {
                     assert.equal(e, 'No filter nodes selected!');
                 });
         });
-        it('check error when no services found', function() {
+        it('check if an empty list is produced when no services found', function() {
             return serviceManager
                 .selectServices(context2(_idCDT))
                 .then(function (services) {
@@ -65,9 +111,6 @@ describe('Component: PrimaryServiceSelection', function() {
                 .then(function(services) {
                     assert.equal(services[0].rank, 4);
                     assert.equal(services[1].rank, 1);
-                })
-                .catch(function (e) {
-                    assert.equal(e, null);
                 });
         });
     });
@@ -142,4 +185,37 @@ var parameterContext = function(idCDT) {
             }
         ]
     }
+};
+
+//decorated context for test nested service selection
+var nestedContext = function (idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'a',
+                value: 'b',
+                for: 'filter'
+            }
+        ]
+    };
+};
+
+//decorated context for test multiple son service selection
+var multipleSonContext = function (idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'a',
+                value: 'd',
+                for: 'filter'
+            },
+            {
+                dimension: 'b',
+                value: 'e',
+                for: 'filter'
+            }
+        ]
+    };
 };

@@ -3,17 +3,20 @@ var contextManager = require('../components/contextManager.js');
 var mockData = require('./mockModel.js');
 var MockDatabase = require('./mockDatabaseCreator.js');
 var provider = require('../provider/provider.js');
-var util = require('util');
 
 var _idCDT;
+var _nestedCDT;
+var _multipleSonsCDT;
 
 describe('Component: ContextManager', function() {
 
     before(function(done) {
         provider.createConnection('mongodb://localhost/camus_test');
-        MockDatabase.createDatabase(function (err, idCDT) {
+        MockDatabase.createDatabase(function (err, idCDT, nestedCDT, multipleSonsCDT) {
             assert.equal(err, null);
             _idCDT = idCDT;
+            _nestedCDT = nestedCDT;
+            _multipleSonsCDT = multipleSonsCDT;
             done();
         });
     });
@@ -280,7 +283,7 @@ describe('Component: ContextManager', function() {
     });
 
     describe('#getDescendants()', function () {
-        it('check if correct descendats are returned', function () {
+        it('check if correct descendants are returned', function () {
             return contextManager
                 .getDescendants(_idCDT, {value: 'PublicTransport'})
                 .then(function (nodes) {
@@ -290,6 +293,34 @@ describe('Component: ContextManager', function() {
                     assert.equal(nodes[0].value, 'Bus');
                     assert.equal(nodes[1].dimension, 'Tipology');
                     assert.equal(nodes[1].value, 'Train');
+                });
+        });
+        it('check if correct nested descendants are returned', function () {
+            return contextManager
+                .getDescendants(_nestedCDT, {value: 'b'})
+                .then(function (nodes) {
+                    assert.equal(nodes[0].dimension, 'd');
+                    assert.equal(nodes[0].value, 'e');
+                    assert.equal(nodes[1].dimension, 'd');
+                    assert.equal(nodes[1].value, 'f');
+                    assert.equal(nodes[2].dimension, 'g');
+                    assert.equal(nodes[2].value, 'h');
+                    assert.equal(nodes[3].dimension, 'g');
+                    assert.equal(nodes[3].value, 'i');
+                });
+        });
+        it('check if correct multiple descendants are returned', function () {
+            return contextManager
+                .getDescendants(_multipleSonsCDT, [{value: 'd'}, {value: 'e'}])
+                .then(function (nodes) {
+                    assert.equal(nodes[0].dimension, 'g');
+                    assert.equal(nodes[0].value, 'i');
+                    assert.equal(nodes[1].dimension, 'g');
+                    assert.equal(nodes[1].value, 'l');
+                    assert.equal(nodes[2].dimension, 'h');
+                    assert.equal(nodes[2].value, 'm');
+                    assert.equal(nodes[3].dimension, 'h');
+                    assert.equal(nodes[3].value, 'n');
                 });
         });
         it('check error with empty node name', function () {
