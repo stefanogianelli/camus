@@ -1,11 +1,9 @@
+var Promise = require('bluebird');
+
 /**
  * Constructor of the module
- * It initialize the list of service associations needed by the search function
- * @param data The list of service associations
  */
-var searchPluginStructure = function (data) {
-    this.data = data;
-};
+var searchPluginStructure = function () { };
 
 /**
  * The main search function
@@ -17,11 +15,14 @@ var searchPluginStructure = function (data) {
  *   ranking: Number,
  *   weight: Number
  * }
- * @param data The data associated with the node
- * @param callback The callback function called at the end, with the list of services founded
+ * You can return an array by using resolve(array) or return an error by reject('error message')
+ * @param data The association data for the current dimension
+ * @param value The value obtained from the context
  */
-searchPluginStructure.prototype.search = function (data, callback) {
-    //add code below
+searchPluginStructure.prototype.search = function (data, value) {
+    return new Promise(function (resolve, reject) {
+        //add code below
+    });
 };
 
 module.exports = searchPluginStructure;

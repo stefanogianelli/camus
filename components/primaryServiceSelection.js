@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var async = require('async');
 var Promise = require('bluebird');
 var contextManager = require('./contextManager.js');
 var Interface = require('./interfaceChecker.js');
@@ -72,10 +71,11 @@ function loadSearchPlugins (decoratedCdt) {
             })
             .spread(function (nodes, data) {
                 //call the function that takes care to execute the search functions
-                executeModules(nodes, data, function (results) {
-                    //return the services found
-                    resolve(results);
-                });
+                return executeModules(nodes, data);
+            })
+            .then(function (results) {
+                //return the services found
+                resolve(results);
             })
             .catch(function (e) {
                 reject(e);
@@ -87,36 +87,45 @@ function loadSearchPlugins (decoratedCdt) {
  * Executes all the specific search modules
  * @param nodes The list of nodes that need a specific search function
  * @param data The service association list for the current CDT
- * @param callback The callback function
  */
-function executeModules (nodes, data, callback) {
-    var services = [];
-    async.each(nodes, function (n, callback) {
-        try {
-            //select the association data associated to the currently analyzed dimension
-            var filter = _.filter(data, {dimension: n.dimension});
-            if (!_.isEmpty(filter)) {
-                //load the module
-                var module = require('../searchPlugins/' + n.searchFunction + ".js");
-                //check that the module implements the search plugin interface
-                Interface.ensureImplements(module, searchPluginInterface);
-                //initialize the module with the correct data
-                var Module = new module(filter);
-                //launch the search function with the value obtained by the decorated CDT
-                Module.search(n.value, function (results) {
-                    if (!_.isUndefined(results) && _.isArray(results) && !_.isEmpty(results)) {
-                        services = _.union(services, results);
-                    }
-                });
+function executeModules (nodes, data) {
+    return new Promise(function (resolve, reject) {
+        var services = [];
+        var promises = [];
+        _.forEach(nodes, function (n) {
+            try {
+                //select the association data associated to the currently analyzed dimension
+                var filter = _.filter(data, {dimension: n.dimension});
+                if (!_.isEmpty(filter)) {
+                    //load the module
+                    var module = require('../searchPlugins/' + n.searchFunction + ".js");
+                    //check that the module implements the search plugin interface
+                    Interface.ensureImplements(module, searchPluginInterface);
+                    //initialize the module
+                    var Module = new module();
+                    //launch the search function with the associated data and the value obtained by the decorated CDT
+                    promises.push(
+                        Module
+                            .search(filter, n.value)
+                            .then(function (results) {
+                                if (!_.isUndefined(results) && _.isArray(results) && !_.isEmpty(results)) {
+                                    services = _.union(services, results);
+                                }
+                            })
+                    );
+                }
+            } catch (e) {
+                reject(e.message);
             }
-        } catch (e) {
-            console.log(e.message);
-        } finally {
-            callback();
-        }
-    },
-    function () {
-        callback(services);
+        });
+        Promise
+            .all(promises)
+            .then(function () {
+                resolve(services);
+            })
+            .catch(function (e) {
+                reject(e);
+            });
     });
 }
 

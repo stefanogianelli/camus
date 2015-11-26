@@ -1,10 +1,12 @@
-var testCustomSearch = function (data) {
-    this.data = data;
-};
+var Promise = require('bluebird');
 
-testCustomSearch.prototype.search = function (data, callback) {
-    //add code below
-    callback([this.data[0]]);
+var testCustomSearch = function () { };
+
+testCustomSearch.prototype.search = function (data, value) {
+    return new Promise(function (resolve, reject) {
+        //add code below
+        resolve([data[0]]);
+    });
 };
 
 module.exports = testCustomSearch;
