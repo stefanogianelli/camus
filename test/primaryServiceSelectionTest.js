@@ -91,6 +91,25 @@ describe('Component: PrimaryServiceSelection', function() {
                     assert.equal(data.operations[0].name, 'eventSearch');
                 });
         });
+        it('check correct execution of custom search function', function () {
+            return serviceManager
+                .selectServices(testCustomSearchFunctionContext(_idCDT))
+                .then(function (services) {
+                    assert.equal(services.length, 2);
+                    return [services, provider.getServiceByOperationId(services[0]._idOperation)];
+                })
+                .spread(function (services, data) {
+                    assert.equal(services[0].rank, 4);
+                    assert.equal(data.name, 'GooglePlaces');
+                    assert.equal(data.operations[0].name, 'placeTextSearch');
+                    return [services, provider.getServiceByOperationId(services[1]._idOperation)];
+                })
+                .spread(function (services, data) {
+                    assert.equal(services[1].rank, 1);
+                    assert.equal(data.name, 'eventful');
+                    assert.equal(data.operations[0].name, 'eventSearch');
+                });
+        });
         it('check error when no filter nodes selected', function() {
             return serviceManager
                 .selectServices(parameterContext(_idCDT))
@@ -215,6 +234,31 @@ var multipleSonContext = function (idCDT) {
                 dimension: 'b',
                 value: 'e',
                 for: 'filter'
+            }
+        ]
+    };
+};
+
+//context used to test custom search function
+var testCustomSearchFunctionContext = function (idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant',
+                for: 'filter'
+            },
+            {
+                dimension: 'Location',
+                for: 'filter|parameter',
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Rome',
+                        searchFunction: 'testCustomSearch'
+                    }
+                ]
             }
         ]
     };

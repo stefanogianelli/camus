@@ -1,7 +1,6 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
 var provider = require('../provider/provider.js');
-var util = require('util');
 
 var contextManager = function () { };
 
