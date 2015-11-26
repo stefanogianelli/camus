@@ -6,75 +6,79 @@ var Interface = require('./interfaceChecker.js');
 var restBridge = require('../bridges/restBridge.js');
 var provider = require('../provider/provider.js');
 
-
 var bridgeFolder = '../bridges/';
+//every bridge must implement the 'executeQuery' method
 var bridgeInterface = new Interface('bridgeInterface', ['executeQuery']);
 
 var queryHandler = function () { };
 
-queryHandler.prototype.executeQueries = function executeQueries (services, context) {
+/**
+ * It receives a list of services, then translate the parameters (if needed) and prepare the bridges for service calls.
+ * When all responses are returned there are translated in the internal format based on response mapping in the service description.
+ * @param services The list of operation identifiers in ascending order of priority
+ * @param decoratedCdt The decorated CDT
+ * @returns {bluebird|exports|module.exports} The list of responses received by the services, already transformed in internal representation
+ */
+queryHandler.prototype.executeQueries = function executeQueries (services, decoratedCdt) {
     return new Promise(function (resolve, reject) {
-        var serviceDescriptions = [];
-        var servicePromises = [];
-        _.forEach(services, function (s, index) {
-            servicePromises.push(
-                provider
-                    .getServiceByOperationId(s._idOperation)
-                    .then(function (serviceData) {
-                        serviceDescriptions.splice(index, 0, serviceData);
-                    })
-            );
-        });
-        Promise
-            .all(servicePromises)
-            .then(function () {
-                return ContextManager.getParameterNodes(context);
-            })
-            .then(function (params) {
-                return translateParameters(params, context);
-            })
-            .then(function (params) {
-                return callServices(serviceDescriptions, params);
-            })
-            .then(function (responses) {
-                resolve(responses);
-            })
-            .catch(function (e) {
-                reject(e);
-            });
+        if (!_.isEmpty(services)) {
+            Promise
+                .map(services, function (s) {
+                    //for each operation identifier retrieve the respective service description
+                    return provider.getServiceByOperationId(s._idOperation);
+                })
+                .then(function (serviceDescriptions) {
+                    //acquire the parameter nodes defined in the decorated CDT
+                    return [serviceDescriptions, ContextManager.getParameterNodes(decoratedCdt)];
+                })
+                .spread(function (serviceDescriptions, params) {
+                    //check if some parameters need translation
+                    return [serviceDescriptions, translateParameters(params, decoratedCdt)];
+                })
+                .spread(function (serviceDescriptions, params) {
+                    //execute the queries toward web services
+                    return callServices(serviceDescriptions, params);
+                })
+                .then(function (responses) {
+                    resolve(responses);
+                })
+                .catch(function (e) {
+                    reject(e);
+                });
+        } else {
+            resolve();
+        }
     });
 };
 
 /**
- * Translate some parameters to a value useful for the service invocation
+ * Translate the parameters to a value useful for the service invocation
  * @param params The selected parameters
- * @param context The current context
+ * @param decoratedCdt The current context
  * @returns {bluebird|exports|module.exports} The list of parameters with the translated values
  */
-function translateParameters (params, context) {
+function translateParameters (params, decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        var interestTopic = ContextManager.getInterestTopic(context);
-        var translationPromises = [];
-        _.forEach(params, function (p) {
-            if (_.has(p, 'transformFunction')) {
+        //get the selected interest topic
+        var interestTopic = ContextManager.getInterestTopic(decoratedCdt);
+        Promise
+            //take only the parameters that have specified a translation function
+            .map(_.filter(params, 'transformFunction'), function (p) {
                 //check if the translation function is defined
                 if (typeof translator[p.transformFunction] == 'function') {
-                    translationPromises.push(
-                        translator[p.transformFunction](interestTopic, p.value)
-                            .then(function (value) {
-                                p.value = value;
-                            })
-                            .catch(function (e) {
-                                console.log(e);
-                            })
-                    );
+                    //call the function to retrieve the translated value
+                    return translator[p.transformFunction](interestTopic, p.value)
+                        .then(function (value) {
+                            //modify the value with the translated one
+                            p.value = value;
+                        })
+                        .catch(function (e) {
+                            console.log(e);
+                        })
                 } else {
                     console.log('ERROR: translation function \'' + p.transformFunction + '\' not exists');
                 }
-            }
-        });
-        Promise
-            .all(translationPromises)
+            })
             .then(function () {
                 resolve(params);
             });

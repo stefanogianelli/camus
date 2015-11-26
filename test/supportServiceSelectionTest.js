@@ -92,10 +92,10 @@ describe('Component: SupportServiceSelection', function () {
                 .then(function (data) {
                     assert.notEqual(data, null);
                     assert.equal(data.length, 2);
-                    assert.equal(data[0].category, 'Transport');
-                    assert.equal(data[0].service, 'GoogleMaps');
-                    assert.equal(data[1].category, 'Photo');
-                    assert.equal(data[1].service, 'Flickr');
+                    assert.equal(data[0].category, 'Photo');
+                    assert.equal(data[0].service, 'Flickr');
+                    assert.equal(data[1].category, 'Transport');
+                    assert.equal(data[1].service, 'GoogleMaps');
                 });
         });
     });

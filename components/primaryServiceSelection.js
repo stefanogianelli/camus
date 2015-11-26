@@ -4,6 +4,7 @@ var contextManager = require('./contextManager.js');
 var Interface = require('./interfaceChecker.js');
 var provider = require('../provider/provider.js');
 
+//every search plugin must implement the method 'search'
 var searchPluginInterface = new Interface('searchPluginInterface', ['search']);
 
 //number of services to keep

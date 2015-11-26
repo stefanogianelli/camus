@@ -65,6 +65,26 @@ describe('Component: QueryHandler', function () {
                     assert.equal(responses[0][1].title, 'Restaurant The Purple Pig');
                 });
         });
+        it('check error when an non existent translation function is called', function () {
+            return serviceManager
+                .selectServices(invalidTranslationFunction(_idCDT))
+                .then(function(services) {
+                    return queryHandler.executeQueries(services, invalidTranslationFunction(_idCDT));
+                })
+                .then(function (responses) {
+                    assert.notEqual(responses, 'undefined');
+                });
+        });
+        it('check error when a translation function receive an unrecognized parameter', function () {
+            return serviceManager
+                .selectServices(mockData.decoratedCdt(_idCDT))
+                .then(function(services) {
+                    return queryHandler.executeQueries(services, invalidInterestTopic(_idCDT));
+                })
+                .then(function (responses) {
+                    assert.notEqual(responses, 'undefined');
+                });
+        });
     });
 
     after(function (done) {
@@ -123,6 +143,7 @@ var contextForFakeService = function (idCDT) {
     }
 };
 
+//context for test the correct execution of custom bridge
 var testBridgeContext = function (idCDT) {
     return {
         _id: _idCDT,
@@ -136,6 +157,51 @@ var testBridgeContext = function (idCDT) {
                 dimension: 'TestBridge',
                 value: 'TestBridge',
                 for: 'filter'
+            }
+        ]
+    }
+};
+
+//context for testing the behavior when non existent translation function is called
+var invalidTranslationFunction = function (idCDT) {
+    return {
+        _id: _idCDT,
+        context: [
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant',
+                for: 'filter'
+            },
+            {
+                dimension: "search_key",
+                value: "restaurantinnewyork",
+                for: "parameter"
+            },
+            {
+                dimension: 'Budget',
+                value: 'Low',
+                for: 'filter|parameter',
+                transformFunction: 'translateBudgets'
+            }
+        ]
+    }
+};
+
+//context for testing the behavior when the translation function receive an unrecognized parameter
+var invalidInterestTopic = function (idCDT) {
+    return {
+        _id: _idCDT,
+        context: [
+            {
+                dimension: 'InterestTopic',
+                value: 'Sport',
+                for: 'filter'
+            },
+            {
+                dimension: 'Budget',
+                value: 'Low',
+                for: 'filter|parameter',
+                transformFunction: 'translateBudget'
             }
         ]
     }
