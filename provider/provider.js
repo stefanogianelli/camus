@@ -154,13 +154,13 @@ provider.prototype.getServicesByNames = function getServicesByNames (serviceName
         var whereClause = {
             $or: []
         };
-        _.forEach(serviceNames, function (s) {
-            whereClause.$or.push({
+        whereClause.$or = _.map(serviceNames, function (s) {
+            return {
                 $and: [{
                     name: s.name,
                     'operations.name': s.operation
                 }]
-            });
+            };
         });
         return serviceModel.findAsync(whereClause);
     }
@@ -190,22 +190,24 @@ provider.prototype.filterPrimaryServices = function filterPrimaryServices (attri
             _idCDT: idCDT,
             $or: []
         };
-        _.forEach(attributes, function (n) {
+        whereClause.$or = _.map(attributes, function (a) {
             if (onlyDimensions) {
-                whereClause.$or.push({
-                    dimension: n.dimension
-                });
+                return {
+                    dimension: a.dimension
+                };
             } else {
-                whereClause.$or.push({
-                    $and: [n]
-                });
+                return {
+                    $and: [a]
+                };
             }
         });
+        var projection = {};
         if (onlyDimensions) {
-            return primaryServiceModel.findAsync(whereClause, {_idCDT: 0, _id: 0, __v: 0});
+            projection = {_idCDT: 0, _id: 0, __v: 0};
         } else {
-            return primaryServiceModel.findAsync(whereClause, {_idOperation: 1, ranking: 1, weight: 1, _id: 0});
+            projection = {_idOperation: 1, ranking: 1, weight: 1, _id: 0};
         }
+        return primaryServiceModel.findAsync(whereClause, projection);
     } else {
         throw Error('No filter nodes selected!');
     }
@@ -226,10 +228,11 @@ provider.prototype.filterPrimaryServices = function filterPrimaryServices (attri
  * @returns {*} The list of services found
  */
 provider.prototype.filterSupportServices = function filterSupportServices (idCDT, category, attributes, withRequire) {
-    var whereClause;
+
     if(_.isUndefined(withRequire)) {
         withRequire = false;
     }
+    var whereClause = {};
     if (withRequire) {
         whereClause = {
             _idCDT: idCDT,
