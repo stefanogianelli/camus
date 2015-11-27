@@ -12,64 +12,48 @@ var supportServiceSelection = function () { };
  */
 supportServiceSelection.prototype.selectServices = function (context) {
     return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(context) && !_.isNull(context)) {
-            var promises = [];
-            var serviceNames = [];
-            var serviceCategories = [];
-            var response = [];
-            //acquire support services names
-            promises.push(
-                contextManager
+        Promise
+            .props({
+                //acquire the URLs for the services requested by name and operation
+                servicesByName: contextManager
+                    //obtain the names of the services
                     .getSupportServiceNames(context)
-                    .then(function (names) {
-                        serviceNames = names;
-                    })
-            );
-            //acquire the support service categories
-            promises.push(
-                contextManager
+                    .then(function (serviceNames) {
+                        //compose the URL for the services found
+                        return selectServicesFromName(serviceNames);
+                    }),
+                //acquire the URLs for the services requested by categories
+                serviceByCategory: contextManager
+                    //obtain the categories requested in the context
                     .getSupportServiceCategories(context)
-                    .then(function (categories) {
-                        serviceCategories = categories;
+                    .then(function (serviceCategories) {
+                        //compose the URL for the services found
+                        return selectServiceFromCategory(serviceCategories, context);
                     })
-            );
-            Promise
-                .all(promises)
-                .then(function () {
-                    return selectServicesFromName(serviceNames);
-                })
-                .then(function (services) {
-                    if (!_.isUndefined(services) && !_.isEmpty(services)) {
-                        response = response.concat(services);
-                    }
-                    return selectServiceFromCategory(serviceCategories, context);
-                })
-                .then(function (services) {
-                    if (!_.isUndefined(services) && !_.isEmpty(services)) {
-                        response = response.concat(services);
-                    }
-                    resolve(response);
-                })
-                .catch(function (e) {
-                    reject(e);
-                });
-        } else {
-            reject('No context selected');
-        }
+            })
+            .then(function (result) {
+                //return the union of the two lists
+                resolve(_.union(result.servicesByName, result.serviceByCategory));
+            })
+            .catch(function (e) {
+                reject(e);
+            });
     });
 };
 
 /**
- * Compose the query of services from a list of operation ids
+ * Compose the queries of services from a list of operation ids
  * @param serviceNames The list of services name and operation
- * @returns {bluebird|exports|module.exports} The list of service object, composed by the service name and the query associated
+ * @returns {bluebird|exports|module.exports} The list of service objects, composed by the service name and the query associated
  */
 function selectServicesFromName (serviceNames) {
     return new Promise (function (resolve, reject) {
         if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
             provider
+                //retrieve the service descriptions
                 .getServicesByNames(serviceNames)
                 .then(function (services) {
+                    //compose the queries
                     resolve(composeQuery(services));
                 })
                 .catch(function (e) {
@@ -86,39 +70,36 @@ function selectServicesFromName (serviceNames) {
  * Select the services associated to a category
  * @param categories The list of categories
  * @param context The current context
- * @returns {bluebird|exports|module.exports} The list of service object, composed by the service name and the query associated
+ * @returns {bluebird|exports|module.exports} The list of service objects, composed by the service name and the query associated
  */
 function selectServiceFromCategory (categories, context) {
     return new Promise (function (resolve, reject) {
-        var output = [];
         Promise
             .map(categories, function (c) {
                 return Promise
                     .props({
+                        //retrieve the services that haven't a constraint defined
                         noConstraintServices: getNoConstraintServices(c, context),
+                        //retrieve the services from the primary dimension for the current category
                         baseServices: getBaseServices(c, context),
+                        //retrieve the services with constraints
                         filterServices: getFilterServices(c, context)
                     })
                     .then(function (result) {
-                        var response = [];
-                        if (!_.isUndefined(result.baseServices) && !_.isEmpty(result.baseServices) &&
-                                !_.isUndefined(result.filterServices) && !_.isEmpty(result.filterServices)) {
-                            response = intersect(result.baseServices, result.filterServices);
-                        }
-                        if (!_.isUndefined(result.noConstraintServices) && !_.isEmpty(result.noConstraintServices)) {
-                            response = response.concat(result.noConstraintServices);
-                        }
-                        return provider.getServicesByOperationIds(response);
+                        //the interested services are the intersection between the base services and the filter services plus the unconstrained
+                        return provider
+                            .getServicesByOperationIds(_.union(result.noConstraintServices, intersect(result.baseServices, result.filterServices)));
                     })
                     .then(function (services) {
-                        output = output.concat(composeQuery(services, c));
+                        //compose the queries
+                        return composeQuery(services, c);
                     })
                     .catch(function (e) {
                         console.log(e);
                     });
             })
-            .then(function () {
-                resolve(output);
+            .then(function (output) {
+                resolve(_.flatten(output));
             });
     });
 }
@@ -131,24 +112,22 @@ function selectServiceFromCategory (categories, context) {
  */
 function getNoConstraintServices (category, context) {
     return new Promise(function (resolve, reject) {
-        var selectedServices = [];
         contextManager
+            //get the node associated to the primary dimension for the current category
             .getSupportServicePrimaryDimension(category, context)
             .then(function (node) {
                 //get the son node
                 return [node, contextManager.getDescendants(context._id, node)];
             })
             .spread(function (baseNode, nodes) {
-                if (!_.isUndefined(nodes) && !_.isEmpty(nodes)) {
-                    nodes.push(baseNode);
-                    return provider.filterSupportServices(context._id, category, nodes);
-                } else {
-                    return provider.filterSupportServices(context._id, category, baseNode);
-                }
+                //search the services without constraints associated to the nodes
+                return provider
+                    .filterSupportServices(context._id, category, _(nodes).concat(_.pick(baseNode, ['dimension', 'value'])).value());
             })
             .then(function (services) {
+                var selectedServices = [];
                 _.forEach(services, function (s) {
-                    if(_.indexOf(selectedServices, s._idOperation) === -1) {
+                    if(!exists(selectedServices, s)) {
                         selectedServices.push(s._idOperation);
                     }
                 });
@@ -169,23 +148,22 @@ function getNoConstraintServices (category, context) {
  */
 function getBaseServices (category, context) {
     return new Promise(function (resolve, reject) {
-        var baseServices = [];
         contextManager
+            //get the node associated to the primary dimension for the current category
             .getSupportServicePrimaryDimension(category, context)
             .then(function (node) {
                 //get the son node
                 return [node, contextManager.getDescendants(context._id, node)];
             })
             .spread(function (baseNode, nodes) {
-                if (!_.isUndefined(nodes) && !_.isEmpty(nodes)) {
-                    nodes.push(baseNode);
-                    return provider.filterSupportServices(context._id, category, nodes, true);
-                } else {
-                    return provider.filterSupportServices(context._id, category, baseNode, true);
-                }
+                //search the services with constraints associated to the nodes
+                return provider
+                    .filterSupportServices(context._id, category, _(nodes).concat(_.pick(baseNode, ['dimension', 'value'])).value(), true);
             })
             .then(function (services) {
+                var baseServices = [];
                 _.forEach(services, function (s) {
+                    //check if the required dimension is defined in the context
                     if(contextManager.isDefined(s.require, context)) {
                         if (!exists(baseServices, s)) {
                             baseServices.push(s._idOperation);
@@ -209,30 +187,29 @@ function getBaseServices (category, context) {
  */
 function getFilterServices (category, context) {
     return new Promise(function (resolve, reject) {
-        var filterServices = [];
         contextManager
+            //get the filter nodes defined in the context
             .getFilterNodes(context)
             .then(function (nodes) {
                 //get the son node
                 return [nodes, contextManager.getDescendants(context._id, nodes)];
             })
             .spread(function (baseNodes, nodes) {
-                if (!_.isUndefined(nodes) && !_.isEmpty(nodes)) {
-                    return provider.filterSupportServices(context._id, category, _.union(baseNodes, nodes));
-                } else {
-                    return provider.filterSupportServices(context._id, category, baseNodes);
-                }
+                //search the services associated to the nodes
+                return provider.filterSupportServices(context._id, category, _.union(baseNodes, nodes));
             })
             .then(function (services) {
+                var filterServices = [];
                 _.forEach(services, function (s) {
                     if (!_.isEmpty(s.require)) {
+                        //if the service exposes a constraint, check if it respected
                         if(contextManager.isDefined(s.require, context)) {
                             if(!exists(filterServices, s)) {
                                 filterServices.push(s._idOperation);
                             }
                         }
                     } else {
-                        if(_.indexOf(filterServices, s._idOperation) === -1) {
+                        if(!exists(filterServices, s)) {
                             filterServices.push(s._idOperation);
                         }
                     }
@@ -266,19 +243,21 @@ function exists (array, item) {
  */
 function intersect (array1, array2) {
     var first, second;
-    if (array1.length < array2.length) {
-        first = array1;
-        second = array2;
-    } else {
-        first = array2;
-        second = array1;
-    }
-    return _.filter(first, function (i) {
-        var index = _.findIndex(second, function (s) {
-            return s.equals(i);
+    if (!_.isUndefined(array1) && !_.isUndefined(array2)) {
+        if (array1.length < array2.length) {
+            first = array1;
+            second = array2;
+        } else {
+            first = array2;
+            second = array1;
+        }
+        return _.filter(first, function (i) {
+            var index = _.findIndex(second, function (s) {
+                return s.equals(i);
+            });
+            return index !== -1;
         });
-        return index !== -1;
-    });
+    }
 }
 
 /**

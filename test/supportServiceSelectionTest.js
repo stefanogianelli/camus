@@ -77,8 +77,8 @@ describe('Component: SupportServiceSelection', function () {
                 .selectServices(contextMultipleSupportServiceNames(_idCDT))
                 .then(function (data) {
                     assert.equal(data.length, 2);
-                    assert.equal(data[0].name, 'Flickr');
-                    assert.equal(data[1].name, 'Wikipedia');
+                    assert.equal(data[0].name, 'Wikipedia');
+                    assert.equal(data[1].name, 'Flickr');
                 });
         });
         it('check response when multiple service categories are provided', function () {
