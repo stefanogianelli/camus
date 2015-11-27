@@ -26,8 +26,9 @@ describe('Component: QueryHandler', function () {
                     return queryHandler.executeQueries(services, mockData.decoratedCdt(_idCDT));
                 })
                 .then(function (responses) {
-                    assert.notEqual(responses, null);
                     assert.equal(responses.length, 2);
+                    assert.equal(responses[0][0].title, 'Bouley');
+                    assert.equal(responses[1][0].title, 'International Restaurant & Foodservice Show-New York');
                 });
         });
         it('check array composition when one service does not respond to a query', function () {
@@ -37,8 +38,9 @@ describe('Component: QueryHandler', function () {
                     return queryHandler.executeQueries(services, contextForFakeService(_idCDT));
                 })
                 .then(function (responses) {
-                    assert.notEqual(responses, null);
                     assert.equal(responses.length, 2);
+                    assert.equal(responses[0][0].title, 'Bouley');
+                    assert.equal(responses[1][0].title, 'International Restaurant & Foodservice Show-New York');
                 });
         });
         it('check correct execution of custom bridge', function () {
@@ -48,8 +50,9 @@ describe('Component: QueryHandler', function () {
                     return queryHandler.executeQueries(services, testBridgeContext(_idCDT));
                 })
                 .then(function (responses) {
-                    assert.notEqual(responses, null);
                     assert.equal(responses.length, 1);
+                    assert.equal(responses[0][0].title, 'Restaurant Girl & the Goat');
+                    assert.equal(responses[0][1].title, 'Restaurant The Purple Pig');
                 });
         });
         it('check correct execution of custom function on attributes', function () {
@@ -59,7 +62,6 @@ describe('Component: QueryHandler', function () {
                     return queryHandler.executeQueries(services, testBridgeContext(_idCDT));
                 })
                 .then(function (responses) {
-                    assert.notEqual(responses, null);
                     assert.equal(responses.length, 1);
                     assert.equal(responses[0][0].title, 'Restaurant Girl & the Goat');
                     assert.equal(responses[0][1].title, 'Restaurant The Purple Pig');
@@ -72,7 +74,7 @@ describe('Component: QueryHandler', function () {
                     return queryHandler.executeQueries(services, invalidTranslationFunction(_idCDT));
                 })
                 .then(function (responses) {
-                    assert.notEqual(responses, 'undefined');
+                    assert.equal(responses[0][0].title, 'Bouley');
                 });
         });
         it('check error when a translation function receive an unrecognized parameter', function () {

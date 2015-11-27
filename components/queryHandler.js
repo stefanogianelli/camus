@@ -88,61 +88,49 @@ function translateParameters (params, decoratedCdt) {
 /**
  * Call the service bridges and collect the responses
  * @param services The list of services to be queried
- * @param params The list of paramaters from the CDT
+ * @param params The list of parameters from the CDT
  * @returns {bluebird|exports|module.exports} The list of the responses, in order of service ranking
  */
 function callServices (services, params) {
     return new Promise(function (resolve, reject) {
-        var responses = [];
-        var servicesPromises = [];
-        _.forEach(services, function (s, index) {
-            if (s.protocol === 'rest' || s.protocol === 'query') {
-                //use the rest bridge
-                servicesPromises.push(
-                    restBridge
-                        .executeQuery(s, params)
-                        .then(function (response) {
-                            return transformResponse(s.operations[0].responseMapping, response)
-                        })
-                        .then(function (response) {
-                            responses.splice(index, 0, response);
-                        })
-                        .catch(function (e) {
-                            console.log('ERROR: Error during service \'' + s.name + '\' invocation');
-                        })
-                );
-            } else if (s.protocol === 'custom') {
-                //call the custom bridge
-                var bridgeName = s.operations[0].bridgeName;
-                if (!_.isEmpty(bridgeName) && !_.isUndefined(bridgeName)) {
-                    try {
-                        var module = require(bridgeFolder + bridgeName + '.js');
-                        Interface.ensureImplements(module, bridgeInterface);
-                        servicesPromises.push(
-                            new module()
-                                .executeQuery(params)
-                                .then(function (response) {
-                                    return transformResponse(s.operations[0].responseMapping, response)
-                                })
-                                .then(function (response) {
-                                    responses.splice(index, 0, response);
-                                })
-                                .catch(function (e) {
-                                    console.log('ERROR: Error during service \'' + s.name + '\' invocation');
-                                })
-                        );
-                    } catch (e) {
-                        console.log(e.message);
-                    }
-                } else {
-                    console.log('ERROR: The service \'' + s.name + '\' must define a custom bridge');
-                }
-            }
-        });
         Promise
-            .all(servicesPromises)
-            .then(function () {
-                resolve(_.compact(responses));
+            .mapSeries(services, function (s) {
+                var promise;
+                //check if the protocol of the current service is 'rest' o 'query'
+                if (s.protocol === 'rest' || s.protocol === 'query') {
+                    //use the rest bridge
+                    promise = restBridge.executeQuery(s, params);
+                } else if (s.protocol === 'custom') {
+                    //call the custom bridge
+                    var bridgeName = s.operations[0].bridgeName;
+                    //check if a bridge name is defined
+                    if (!_.isEmpty(bridgeName) && !_.isUndefined(bridgeName)) {
+                        //load the module
+                        var module = require(bridgeFolder + bridgeName + '.js');
+                        //check if the module implements the bridge interface
+                        Interface.ensureImplements(module, bridgeInterface);
+                        promise = new module().executeQuery(params);
+                    } else {
+                        console.log('ERROR: The service \'' + s.name + '\' must define a custom bridge');
+                    }
+                }
+                return promise
+                    .then(function (response) {
+                        //transform the response
+                        return transformResponse(s.operations[0].responseMapping, response)
+                    })
+                    .catch(function (e) {
+                        console.log('[' + s.name + '] ERROR: ' + e.message);
+                    });
+            })
+            .then(function (responses) {
+                //leave the undefined responses
+                responses = _(responses)
+                    .filter(function (item) {
+                        return !_.isUndefined(item);
+                    })
+                    .value();
+                resolve(responses);
             });
     });
 }
@@ -155,7 +143,7 @@ function callServices (services, params) {
  */
 function transformResponse (mapping, response) {
     return new Promise (function (resolve, reject) {
-        if (response !== null && response !== 'undefined' && _.isObject(response)) {
+        if (!_.isUndefined(response) && _.isObject(response)) {
             var transformedResponse = _.map(getItemValue(response, mapping.list), function (i) {
                 return transformItem(i, mapping);
             });

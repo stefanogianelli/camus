@@ -22,7 +22,6 @@ describe('Component: SupportServiceSelection', function () {
             return supportServiceSelection
                 .selectServices(mockData.decoratedCdt(_idCDT))
                 .then(function (data) {
-                    assert.notEqual(data, null);
                     assert.equal(data.length, 3);
                     assert.equal(data[0].name, 'Wikipedia');
                     assert.equal(data[1].category, 'Transport');
@@ -35,7 +34,6 @@ describe('Component: SupportServiceSelection', function () {
             return supportServiceSelection
                 .selectServices(contextNoSupportName(_idCDT))
                 .then(function (data) {
-                    assert.notEqual(data, null);
                     assert.equal(data.length, 2);
                     assert.equal(data[0].category, 'Transport');
                     assert.equal(data[0].service, 'ATM');
@@ -47,7 +45,6 @@ describe('Component: SupportServiceSelection', function () {
             return supportServiceSelection
                 .selectServices(contextNoSupportCategory(_idCDT))
                 .then(function (data) {
-                    assert.notEqual(data, null);
                     assert.equal(data.length, 1);
                     assert.equal(data[0].name, 'Wikipedia');
                 });
@@ -56,7 +53,6 @@ describe('Component: SupportServiceSelection', function () {
             return supportServiceSelection
                 .selectServices(contextUnconstrainedCategory(_idCDT))
                 .then(function (data) {
-                    assert.notEqual(data, null);
                     assert.equal(data.length, 1);
                     assert.equal(data[0].category, 'Transport');
                     assert.equal(data[0].service, 'GoogleMaps');
@@ -80,7 +76,6 @@ describe('Component: SupportServiceSelection', function () {
             return supportServiceSelection
                 .selectServices(contextMultipleSupportServiceNames(_idCDT))
                 .then(function (data) {
-                    assert.notEqual(data, null);
                     assert.equal(data.length, 2);
                     assert.equal(data[0].name, 'Flickr');
                     assert.equal(data[1].name, 'Wikipedia');
@@ -90,12 +85,11 @@ describe('Component: SupportServiceSelection', function () {
             return supportServiceSelection
                 .selectServices(contextMultipleSupportServiceCategories(_idCDT))
                 .then(function (data) {
-                    assert.notEqual(data, null);
                     assert.equal(data.length, 2);
-                    assert.equal(data[0].category, 'Photo');
-                    assert.equal(data[0].service, 'Flickr');
-                    assert.equal(data[1].category, 'Transport');
-                    assert.equal(data[1].service, 'GoogleMaps');
+                    assert.equal(data[0].category, 'Transport');
+                    assert.equal(data[0].service, 'GoogleMaps');
+                    assert.equal(data[1].category, 'Photo');
+                    assert.equal(data[1].service, 'Flickr');
                 });
         });
     });
