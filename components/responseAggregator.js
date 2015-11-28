@@ -32,16 +32,23 @@ responseAggregator.prototype.prepareResponse = function (responses, supportServi
  */
 responseAggregator.prototype.findSimilarities = function findSimilarities (responses) {
     if (!_.isUndefined(responses) && !_.isEmpty(responses)) {
+        //analyze all pairs of responses
         for(var i = 0; i < responses.length - 1; i++) {
             for (var j = i + 1; j < responses.length; j++) {
-                _.forEach(responses[i], function(obj1, index) {
-                    _.forEach(responses[j], function (obj2) {
-                        if (responseAggregator.prototype.calculateObjectSimilarity(obj1, obj2)) {
-                            responses[i][index] = _.assign(obj2, obj1);
-                            _.remove(responses[j], obj2);
+                //compare every items
+                for(var a = 0; a < responses[i].length; a++) {
+                    for(var b = 0; b < responses[j].length; b++) {
+                        //calculate a similarity index
+                        if (responseAggregator.prototype.calculateObjectSimilarity(responses[i][a], responses[j][b])) {
+                            //merge the two items
+                            responses[i][a] = _.assign(responses[j][b], responses[i][a]);
+                            //delete the item from the second array
+                            responses[j].splice(b, 1);
+                            //if I found a similar item I skip the analysis of the rest of array
+                            break;
                         }
-                    })
-                });
+                    }
+                }
             }
         }
         return responses;
@@ -60,15 +67,21 @@ responseAggregator.prototype.findSimilarities = function findSimilarities (respo
  * @returns {boolean} True if the two objects are similar, false otherwise
  */
 responseAggregator.prototype.calculateObjectSimilarity = function calculateObjectSimilarity (obj1, obj2) {
-    var similarities = [];
+    //take into account only the attributes in common for both the objects
     var intersect = _.intersection(_.keysIn(obj1), _.keysIn(obj2));
-    _.forEach(intersect, function(i) {
+    var count = 0;
+    var similaritySum = _.reduce(intersect, function(sum, i) {
+        //consider only string values
         if (_.isString(obj1[i]) && _.isString(obj2[i])) {
-            similarities.push(similarityUtils.metrics.jaccard(obj1[i].replace(regexp), obj2[i].replace(regexp)));
+            count++;
+            //calculate the similarity index for the attribute's pair and sum to the accumulator
+            return sum + similarityUtils.metrics.jaccard(obj1[i].replace(regexp), obj2[i].replace(regexp));
+        } else {
+            return sum;
         }
-    });
-    var similarity = _.sum(similarities)/similarities.length;
-    return similarity <= threshold;
+    }, 0);
+    //return true if the average similarity is less than the threshold value
+    return similaritySum / count <= threshold;
 };
 
 module.exports = new responseAggregator();

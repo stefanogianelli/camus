@@ -28,11 +28,7 @@ primaryServiceSelection.prototype.selectServices = function selectServices (deco
             })
             .spread(function (baseNodes, sonNodes) {
                 //obtain the list of services associated to the nodes selected
-                if (!_.isUndefined(sonNodes) && !_.isEmpty(sonNodes)) {
-                    return provider.filterPrimaryServices(_.union(baseNodes, sonNodes), decoratedCdt._id);
-                } else {
-                    return provider.filterPrimaryServices(baseNodes, decoratedCdt._id);
-                }
+                return provider.filterPrimaryServices(_.union(baseNodes, sonNodes), decoratedCdt._id);
             })
             .then(function (services) {
                 //check if some services need a custom search function and execute it

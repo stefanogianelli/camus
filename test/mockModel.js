@@ -71,6 +71,7 @@ var cdt = {
         {
             name: 'Tipology',
             for: 'filter',
+            supportCategory: 'Transport',
             values: [
                 'Bus',
                 'Train'
