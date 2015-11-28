@@ -24,10 +24,13 @@ describe('Component: SupportServiceSelection', function () {
                 .then(function (data) {
                     assert.equal(data.length, 3);
                     assert.equal(data[0].name, 'Wikipedia');
+                    assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={search_key}&prop=revisions&rvprop=content&format=json');
                     assert.equal(data[1].category, 'Transport');
                     assert.equal(data[1].service, 'ATM');
+                    assert.equal(data[1].url, 'http://api.atm-mi.it/searchAddress?from={latitude|longitude}&to={latitude|longitude}&key=abc123');
                     assert.equal(data[2].category, 'Transport');
                     assert.equal(data[2].service, 'Trenord');
+                    assert.equal(data[2].url, 'http://api.trenord.it/searchStation/fromStation/{startStationName}/toStation/{endStationName}');
                 });
         });
         it('check response when no support service name is provided', function () {
@@ -37,8 +40,10 @@ describe('Component: SupportServiceSelection', function () {
                     assert.equal(data.length, 2);
                     assert.equal(data[0].category, 'Transport');
                     assert.equal(data[0].service, 'ATM');
+                    assert.equal(data[0].url, 'http://api.atm-mi.it/searchAddress?from={latitude|longitude}&to={latitude|longitude}&key=abc123');
                     assert.equal(data[1].category, 'Transport');
                     assert.equal(data[1].service, 'Trenord');
+                    assert.equal(data[1].url, 'http://api.trenord.it/searchStation/fromStation/{startStationName}/toStation/{endStationName}');
                 });
         });
         it('check response when no support category is provided', function () {
@@ -47,6 +52,7 @@ describe('Component: SupportServiceSelection', function () {
                 .then(function (data) {
                     assert.equal(data.length, 1);
                     assert.equal(data[0].name, 'Wikipedia');
+                    assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={search_key}&prop=revisions&rvprop=content&format=json');
                 });
         });
         it('check response when the support category has no constraint', function () {
@@ -56,6 +62,7 @@ describe('Component: SupportServiceSelection', function () {
                     assert.equal(data.length, 1);
                     assert.equal(data[0].category, 'Transport');
                     assert.equal(data[0].service, 'GoogleMaps');
+                    assert.equal(data[0].url, 'https://maps.googleapis.com/maps/api/distancematrix/json?origins={startCity}&destinations={endCity}&mode=bus');
                 });
         });
         it('check response when the specified service name does not exists', function () {
@@ -78,7 +85,9 @@ describe('Component: SupportServiceSelection', function () {
                 .then(function (data) {
                     assert.equal(data.length, 2);
                     assert.equal(data[0].name, 'Wikipedia');
+                    assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={search_key}&prop=revisions&rvprop=content&format=json');
                     assert.equal(data[1].name, 'Flickr');
+                    assert.equal(data[1].url, 'http://api.flickr.com/photos/tag/{tag}');
                 });
         });
         it('check response when multiple service categories are provided', function () {
@@ -88,8 +97,10 @@ describe('Component: SupportServiceSelection', function () {
                     assert.equal(data.length, 2);
                     assert.equal(data[0].category, 'Transport');
                     assert.equal(data[0].service, 'GoogleMaps');
+                    assert.equal(data[0].url, 'https://maps.googleapis.com/maps/api/distancematrix/json?origins={startCity}&destinations={endCity}&mode=bus');
                     assert.equal(data[1].category, 'Photo');
                     assert.equal(data[1].service, 'Flickr');
+                    assert.equal(data[1].url, 'http://api.flickr.com/photos/tag/{tag}');
                 });
         });
     });

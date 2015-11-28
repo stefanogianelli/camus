@@ -630,10 +630,20 @@ module.exports.wikipedia = wikipedia;
 var flickr = {
     name: 'Flickr',
     type: 'support',
-    protocol: 'query',
+    protocol: 'rest',
+    basePath: 'http://api.flickr.com',
     operations: [
         {
-            name: 'searchPhoto'
+            name: 'searchPhoto',
+            path: '/photos',
+            parameters: [
+                {
+                    name: 'tag',
+                    mappingTerm: [
+                        'tag'
+                    ]
+                }
+            ]
         }
     ]
 };
@@ -645,9 +655,29 @@ var googleMaps = {
     name: 'GoogleMaps',
     type: 'support',
     protocol: 'query',
+    basePath: 'https://maps.googleapis.com/maps/api',
     operations: [
         {
-            name: 'searchAddress'
+            name: 'distanceMatrix',
+            path: '/distancematrix/json',
+            parameters: [
+                {
+                    name: 'origins',
+                    mappingTerm: [
+                        'startCity'
+                    ]
+                },
+                {
+                    name: 'destinations',
+                    mappingTerm: [
+                        'endCity'
+                    ]
+                },
+                {
+                    name: 'mode',
+                    default: 'bus'
+                }
+            ]
         }
     ]
 };
@@ -663,7 +693,29 @@ var atm = {
     operations: [
         {
             name: 'searchAddress',
-            path: '/searchAddress'
+            path: '/searchAddress',
+            parameters: [
+                {
+                    name: 'from',
+                    collectionFormat: 'pipes',
+                    mappingTerm: [
+                        'latitude',
+                        'longitude'
+                    ]
+                },
+                {
+                    name: 'to',
+                    collectionFormat: 'pipes',
+                    mappingTerm: [
+                        'latitude',
+                        'longitude'
+                    ]
+                },
+                {
+                    name: 'key',
+                    default: 'abc123'
+                }
+            ]
         }
     ]
 };
@@ -702,10 +754,26 @@ module.exports.fs = fs;
 var trenord = {
     name: 'Trenord',
     type: 'support',
-    protocol: 'query',
+    protocol: 'rest',
+    basePath: 'http://api.trenord.it',
     operations: [
         {
-            name: 'searchAddress'
+            name: 'searchStation',
+            path: '/searchStation',
+            parameters: [
+                {
+                    name: 'fromStation',
+                    mappingTerm: [
+                        'startStationName'
+                    ]
+                },
+                {
+                    name: 'toStation',
+                    mappingTerm: [
+                        'endStationName'
+                    ]
+                }
+            ]
         }
     ]
 };

@@ -267,61 +267,72 @@ function intersect (array1, array2) {
  * @returns {Array} The list of services with the composed queries
  */
 function composeQuery (services, category) {
-    var serviceQueries = [];
-    _.forEach(services, function (s) {
-        var address = s.basePath + s.operations[0].path;
-        _.forEach(s.operations[0].parameters, function (p, index) {
-            if (index === 0) {
-                address += '?';
-            } else {
-                address += '&';
-            }
+    return _.map(services, function (s) {
+        //configure parameters (the default ones are useful for standard query composition)
+        var start = '?';
+        var assign = '=';
+        var separator = '&';
+        //change parameter value if the service is REST
+        if (s.protocol === 'rest') {
+            start = assign = separator = '/';
+        }
+        //add the base path and the operation path to the address
+        var address = s.basePath + s.operations[0].path + start;
+        //compose the parameters part of the query
+        var output = _.reduce(s.operations[0].parameters, function (output, p) {
+            var values;
             if (_.isEmpty(p.mappingTerm)) {
-                //use default value
-                address += p.name + '=' + p.default;
+                //if no term is associated use the default value
+                values = p.default;
             } else {
-                //associate a placeholder to the term value
-                address += p.name + '={';
-                var values;
-                var separator = ',';
+                // compose the values part of the parameter
+                var valueSeparator = ',';
+                //select the correct separator (the default one is the comma)
                 switch (p.collectionFormat) {
                     case 'csv':
-                        separator = ',';
+                        valueSeparator = ',';
                         break;
                     case 'ssv':
-                        separator = ' ';
+                        valueSeparator = ' ';
                         break;
                     case 'tsv':
-                        separator = '/';
+                        valueSeparator = '/';
                         break;
                     case 'pipes':
-                        separator = '|';
+                        valueSeparator = '|';
                         break;
                 }
-                _.forEach(p.mappingTerm, function (m) {
+                //concatenate one or more terms, separated by the symbol selected above
+                values = _.reduce(p.mappingTerm, function (values, m) {
                     if (_.isEmpty(values)) {
-                        values = m;
+                        return m;
                     } else {
-                        values = values.concat(separator + m);
+                        return values + valueSeparator + m;
                     }
-                });
-                address += values + '}';
+                }, '');
+                values = '{' + values + '}';
             }
-        });
+            //add the value(s) to the query
+            if (_.isEmpty(output)) {
+                return p.name + assign + values;
+            } else {
+                return output + separator + p.name + assign + values;
+            }
+        }, '');
+        //return the object
         if (!_.isUndefined(category) && !_.isEmpty(category)) {
-            serviceQueries.push({
+            return {
                 category: category,
                 service: s.name,
-                url: address
-            });
+                url: address + output
+            };
         } else {
-            serviceQueries.push({
+            return {
                 name: s.name,
-                url: address
-            });
+                url: address + output
+            };
         }
     });
-    return serviceQueries;
 }
 
 module.exports = new supportServiceSelection();
