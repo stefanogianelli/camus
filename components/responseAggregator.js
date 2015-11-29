@@ -2,8 +2,6 @@ var _ = require('lodash');
 var similarityUtils = require('clj-fuzzy');
 var Promise = require('bluebird');
 
-//regular expression used for delete all the special symbols from the string for the comparison
-var regexp = '/[^\w\s]/gi, \'\'';
 //this threshold is used for identify a pair of items as similar. Less value are better (0.1 means 90% similarity)
 var threshold = 0.1;
 
@@ -75,7 +73,7 @@ responseAggregator.prototype.calculateObjectSimilarity = function calculateObjec
         if (_.isString(obj1[i]) && _.isString(obj2[i])) {
             count++;
             //calculate the similarity index for the attribute's pair and sum to the accumulator
-            return sum + similarityUtils.metrics.jaccard(obj1[i].replace(regexp), obj2[i].replace(regexp));
+            return sum + similarityUtils.metrics.jaccard(obj1[i], obj2[i]);
         } else {
             return sum;
         }
