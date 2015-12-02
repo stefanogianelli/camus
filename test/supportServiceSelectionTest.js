@@ -125,14 +125,14 @@ var contextNoSupportName = function(idCDT) {
                 params: [
                     {
                         name: 'City',
-                        value: 'Milan'
+                        value: 'Milan',
+                        searchFunction: 'testCustomSearch'
                     }
                 ]
             },
             {
                 "dimension": 'Transport',
                 "value": 'PublicTransport',
-                "supportCategory": 'Transport',
                 "for": 'filter'
             }
         ],
@@ -151,13 +151,18 @@ var contextNoSupportCategory = function(idCDT) {
         context: [
             {
                 dimension: 'Location',
-                value: 'Milan',
-                for: 'filter'
+                for: 'filter',
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Milan',
+                        searchFunction: 'testCustomSearch'
+                    }
+                ]
             },
             {
                 "dimension": 'Transport',
                 "value": 'PublicTransport',
-                "supportCategory": 'Transport',
                 "for": 'filter'
             }
         ],
@@ -177,13 +182,18 @@ var contextUnconstrainedCategory = function(idCDT) {
         context: [
             {
                 dimension: 'Location',
-                value: 'Milan',
-                for: 'filter'
+                for: 'filter',
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Milan',
+                        searchFunction: 'testCustomSearch'
+                    }
+                ]
             },
             {
                 "dimension": 'Transport',
                 "value": 'WithCar',
-                "supportCategory": 'Transport',
                 "for": 'filter'
             }
         ],
@@ -202,13 +212,18 @@ var contextWithInexistentCategory = function(idCDT) {
         context: [
             {
                 dimension: 'Location',
-                value: 'Milan',
-                for: 'filter'
+                for: 'filter',
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Milan',
+                        searchFunction: 'testCustomSearch'
+                    }
+                ]
             },
             {
                 "dimension": 'Transport',
                 "value": 'WithCar',
-                "supportCategory": 'Transport',
                 "for": 'filter'
             }
         ],
@@ -227,13 +242,18 @@ var contextWithInexistentName = function(idCDT) {
         context: [
             {
                 dimension: 'Location',
-                value: 'Milan',
-                for: 'filter'
+                for: 'filter',
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Milan',
+                        searchFunction: 'testCustomSearch'
+                    }
+                ]
             },
             {
                 "dimension": 'Transport',
                 "value": 'WithCar',
-                "supportCategory": 'Transport',
                 "for": 'filter'
             }
         ],
@@ -252,13 +272,18 @@ var contextMultipleSupportServiceNames = function(idCDT) {
         context: [
             {
                 dimension: 'Location',
-                value: 'Milan',
-                for: 'filter'
+                for: 'filter',
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Milan',
+                        searchFunction: 'testCustomSearch'
+                    }
+                ]
             },
             {
                 "dimension": 'Transport',
                 "value": 'WithCar',
-                "supportCategory": 'Transport',
                 "for": 'filter'
             }
         ],
@@ -282,20 +307,24 @@ var contextMultipleSupportServiceCategories = function(idCDT) {
         context: [
             {
                 dimension: 'Location',
-                value: 'Milan',
-                for: 'filter'
+                for: 'filter',
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Milan',
+                        searchFunction: 'testCustomSearch'
+                    }
+                ]
             },
             {
                 "dimension": 'Transport',
                 "value": 'WithCar',
-                "supportCategory": 'Transport',
                 "for": 'filter'
             },
             {
                 dimension: 'Tipology',
                 value: 'DinnerWithFriends',
-                for: 'filter',
-                supportCategory: 'Photo'
+                for: 'filter'
             }
         ],
         support: [

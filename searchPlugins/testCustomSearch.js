@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var Promise = require('bluebird');
 
 var testCustomSearch = function () { };
@@ -5,7 +6,7 @@ var testCustomSearch = function () { };
 testCustomSearch.prototype.search = function (data, value) {
     return new Promise(function (resolve, reject) {
         //add code below
-        resolve([data[0]]);
+        resolve(_.filter(data, 'value', value));
     });
 };
 

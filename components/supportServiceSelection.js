@@ -2,22 +2,23 @@ var _ = require('lodash');
 var Promise = require('bluebird');
 var contextManager = require('./contextManager.js');
 var provider = require('../provider/provider.js');
+var pluginManager = require('./pluginManager.js');
 
 var supportServiceSelection = function () { };
 
 /**
  * Create the list of support services associated to the current context
- * @param context The current context
+ * @param decoratedCdt The current context
  * @returns {bluebird|exports|module.exports} The list of services, with the query associated
  */
-supportServiceSelection.prototype.selectServices = function (context) {
+supportServiceSelection.prototype.selectServices = function (decoratedCdt) {
     return new Promise (function (resolve, reject) {
         Promise
             .props({
                 //acquire the URLs for the services requested by name and operation
                 servicesByName: contextManager
                     //obtain the names of the services
-                    .getSupportServiceNames(context)
+                    .getSupportServiceNames(decoratedCdt)
                     .then(function (serviceNames) {
                         //compose the URL for the services found
                         return selectServicesFromName(serviceNames);
@@ -25,10 +26,10 @@ supportServiceSelection.prototype.selectServices = function (context) {
                 //acquire the URLs for the services requested by categories
                 serviceByCategory: contextManager
                     //obtain the categories requested in the context
-                    .getSupportServiceCategories(context)
+                    .getSupportServiceCategories(decoratedCdt)
                     .then(function (serviceCategories) {
                         //compose the URL for the services found
-                        return selectServiceFromCategory(serviceCategories, context);
+                        return selectServiceFromCategory(serviceCategories, decoratedCdt);
                     })
             })
             .then(function (result) {
@@ -69,26 +70,31 @@ function selectServicesFromName (serviceNames) {
 /**
  * Select the services associated to a category
  * @param categories The list of categories
- * @param context The current context
+ * @param decoratedCdt The current context
  * @returns {bluebird|exports|module.exports} The list of service objects, composed by the service name and the query associated
  */
-function selectServiceFromCategory (categories, context) {
+function selectServiceFromCategory (categories, decoratedCdt) {
     return new Promise (function (resolve, reject) {
         Promise
             .map(categories, function (c) {
-                return Promise
-                    .props({
-                        //retrieve the services that haven't a constraint defined
-                        noConstraintServices: getNoConstraintServices(c, context),
-                        //retrieve the services from the primary dimension for the current category
-                        baseServices: getBaseServices(c, context),
-                        //retrieve the services with constraints
-                        filterServices: getFilterServices(c, context)
+                return contextManager
+                    .getFilterNodes(decoratedCdt)
+                    .then(function (nodes) {
+                        //check if the retrieved nodes have descendants
+                        return [nodes, contextManager.getDescendants(decoratedCdt._id, nodes)];
                     })
-                    .then(function (result) {
-                        //the interested services are the intersection between the base services and the filter services plus the unconstrained
+                    .spread(function (nodes, descendants) {
+                        //retrieve the service associations for the nodes selected above
+                        return provider.filterSupportServices(decoratedCdt._id, c, _.union(nodes, descendants));
+                    })
+                    .then(function (services) {
+                        //execute the custom plugins for a subset of nodes
+                        return [services, loadSearchPlugins(decoratedCdt, c)];
+                    })
+                    .spread(function (filterServices, customServices) {
+                        //retrieve the service descriptions for the found operation identifiers
                         return provider
-                            .getServicesByOperationIds(_.union(result.noConstraintServices, intersect(result.baseServices, result.filterServices)));
+                            .getServicesByOperationIds(mergeResults(filterServices, customServices));
                     })
                     .then(function (services) {
                         //compose the queries
@@ -105,159 +111,70 @@ function selectServiceFromCategory (categories, context) {
 }
 
 /**
- * Retrieve the support services associated to the primary dimension of the current category, that not expose any constraint
- * @param category The current service category
- * @param context The current context
- * @returns {bluebird|exports|module.exports} The list of services retrieved
+ * Search for the CDT nodes that need a specific search function and execute it
+ * @param decoratedCdt The current decorated CDT
+ * @param category The support service category
+ * @returns {bluebird|exports|module.exports} The promise with the services found
  */
-function getNoConstraintServices (category, context) {
+function loadSearchPlugins (decoratedCdt, category) {
     return new Promise(function (resolve, reject) {
         contextManager
-            //get the node associated to the primary dimension for the current category
-            .getSupportServicePrimaryDimension(category, context)
-            .then(function (node) {
-                //get the son node
-                return [node, contextManager.getDescendants(context._id, node)];
-            })
-            .spread(function (baseNode, nodes) {
-                //search the services without constraints associated to the nodes
-                return provider
-                    .filterSupportServices(context._id, category, _(nodes).concat(_.pick(baseNode, ['dimension', 'value'])).value());
-            })
-            .then(function (services) {
-                var selectedServices = [];
-                _.forEach(services, function (s) {
-                    if(!exists(selectedServices, s)) {
-                        selectedServices.push(s._idOperation);
-                    }
-                });
-                resolve(selectedServices);
-            })
-            .catch(function (e) {
-                console.log(e);
-                resolve();
-            });
-    });
-}
-
-/**
- * Retrieve the support services associated to the primary dimension of the current category, that have a dimension constraint
- * @param category The current service category
- * @param context The current context
- * @returns {bluebird|exports|module.exports} The list of services retrieved
- */
-function getBaseServices (category, context) {
-    return new Promise(function (resolve, reject) {
-        contextManager
-            //get the node associated to the primary dimension for the current category
-            .getSupportServicePrimaryDimension(category, context)
-            .then(function (node) {
-                //get the son node
-                return [node, contextManager.getDescendants(context._id, node)];
-            })
-            .spread(function (baseNode, nodes) {
-                //search the services with constraints associated to the nodes
-                return provider
-                    .filterSupportServices(context._id, category, _(nodes).concat(_.pick(baseNode, ['dimension', 'value'])).value(), true);
-            })
-            .then(function (services) {
-                var baseServices = [];
-                _.forEach(services, function (s) {
-                    //check if the required dimension is defined in the context
-                    if(contextManager.isDefined(s.require, context)) {
-                        if (!exists(baseServices, s)) {
-                            baseServices.push(s._idOperation);
-                        }
-                    }
-                });
-                resolve(baseServices);
-            })
-            .catch(function (e) {
-                console.log(e);
-                resolve();
-            });
-    });
-}
-
-/**
- * Retrieve the support services associated to the filter dimensions of the current category
- * @param category The current service category
- * @param context The current context
- * @returns {bluebird|exports|module.exports} The list of services retrieved
- */
-function getFilterServices (category, context) {
-    return new Promise(function (resolve, reject) {
-        contextManager
-            //get the filter nodes defined in the context
-            .getFilterNodes(context)
+            //acquire the nodes that need a custom search function
+            .getSpecificNodes(decoratedCdt)
             .then(function (nodes) {
-                //get the son node
-                return [nodes, contextManager.getDescendants(context._id, nodes)];
+                if (!_.isEmpty(nodes)) {
+                    //retrieve the association data for the dimensions
+                    return [nodes, provider.filterSupportServices(decoratedCdt._id, category, nodes, true)];
+                } else {
+                    resolve();
+                }
             })
-            .spread(function (baseNodes, nodes) {
-                //search the services associated to the nodes
-                return provider.filterSupportServices(context._id, category, _.union(baseNodes, nodes));
+            .spread(function (nodes, data) {
+                //call the function that takes care to execute the search functions
+                return pluginManager.executeModules(nodes, data);
             })
-            .then(function (services) {
-                var filterServices = [];
-                _.forEach(services, function (s) {
-                    if (!_.isEmpty(s.require)) {
-                        //if the service exposes a constraint, check if it respected
-                        if(contextManager.isDefined(s.require, context)) {
-                            if(!exists(filterServices, s)) {
-                                filterServices.push(s._idOperation);
-                            }
-                        }
-                    } else {
-                        if(!exists(filterServices, s)) {
-                            filterServices.push(s._idOperation);
-                        }
-                    }
-                });
-                resolve(filterServices);
+            .then(function (results) {
+                //return the services found
+                resolve(results);
             })
             .catch(function (e) {
-                console.log(e);
-                resolve();
+                reject(e);
             });
     });
 }
 
 /**
- * Find if an ObjectId is already in the array
- * @param array The array where search
- * @param item The item to be searched
+ * Create the final list of support services selected for a specific category
+ * @param filterServices The services found by the standard search
+ * @param customServices The services found by the custom searches
+ * @returns {Array} The operation identifiers of the selected support services
  */
-function exists (array, item) {
-    var index = _.findIndex(array, function (i) {
-        return i.equals(item._idOperation);
-    });
-    return index !== -1;
-}
-
-/**
- * Return the intersection of two arrays
- * @param array1 The first array
- * @param array2 The second array
- * @returns {Array} The array intersection of the input ones
- */
-function intersect (array1, array2) {
-    var first, second;
-    if (!_.isUndefined(array1) && !_.isUndefined(array2)) {
-        if (array1.length < array2.length) {
-            first = array1;
-            second = array2;
-        } else {
-            first = array2;
-            second = array1;
-        }
-        return _.filter(first, function (i) {
-            var index = _.findIndex(second, function (s) {
-                return s.equals(i);
-            });
-            return index !== -1;
+function mergeResults (filterServices, customServices) {
+    var results = [];
+    _.forEach(_.union(filterServices, customServices), function (s) {
+        //search if the current operation already exists in the results collection
+        var index = _.findIndex(results, function (i) {
+            return i._idOperation.equals(s._idOperation);
         });
-    }
+        if (index === -1) {
+            //operation not found, so I create a new object
+            results.push({
+                _idOperation: s._idOperation,
+                constraintCount: s.constraintCount,
+                count: 1
+            });
+        } else {
+            //operation found, so I increase the counter
+            results[index].count += 1
+        }
+    });
+    //get the maximum value of the count attribute
+    var maxCount = _.max(_.pluck(results, 'count'));
+    //filter out the operations with the maximum count value and that respect their total constraint counter
+    results = _.filter(results, function (r) {
+        return r.count === maxCount && r.constraintCount === r.count;
+    });
+    return _.pluck(results, '_idOperation');
 }
 
 /**

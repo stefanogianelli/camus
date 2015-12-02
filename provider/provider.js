@@ -224,48 +224,84 @@ provider.prototype.filterPrimaryServices = function filterPrimaryServices (attri
  * @param idCDT The CDT identifier
  * @param category The service category
  * @param attributes The list of attributes
- * @param withRequire (optional) If true selects all the associations with a require. By default it's false
- * @returns {*} The list of services found
+ * @param onlyDimensions (optional) If it's true it considers only the dimensions name (default false)
+ * @returns {*} The list of services found, with the number of constraints defined for each operation and the count of constraint that are satisfied
  */
-provider.prototype.filterSupportServices = function filterSupportServices (idCDT, category, attributes, withRequire) {
-
-    if(_.isUndefined(withRequire)) {
-        withRequire = false;
+provider.prototype.filterSupportServices = function filterSupportServices (idCDT, category, attributes, onlyDimensions) {
+    if (_.isUndefined(onlyDimensions)) {
+        onlyDimensions = false;
     }
-    var whereClause = {};
-    if (withRequire) {
-        whereClause = {
-            _idCDT: idCDT,
-            category: category,
-            $or: [],
-            require: {
-                $ne: null
-            }
-        };
-    } else {
-        whereClause = {
-            _idCDT: idCDT,
-            category: category,
-            $or: [],
-            require: {
-                $eq: null
-            }
-        };
-    }
-    if (_.isArray(attributes)) {
-        _.forEach(attributes, function (n) {
-            whereClause.$or.push({
-                dimension: n.dimension,
-                value: n.value
+    if (!_.isEmpty(attributes)) {
+        var associations;
+        var clause;
+        if (onlyDimensions) {
+            associations = _.map(attributes, function (a) {
+                return {
+                    'associations.dimension': a.dimension
+                }
             });
-        });
+            clause = [
+                {
+                    $match: {
+                        _idCDT: idCDT,
+                        category: category
+                    }
+                },
+                {
+                    $unwind: '$associations'
+                },
+                {
+                    $match: {
+                        $or: associations
+                    }
+                },
+                {
+                    $project: {
+                        _idOperation: '$_idOperation',
+                        dimension: '$associations.dimension',
+                        value: '$associations.value',
+                        constraintCount: '$constraintCount',
+                        _id: 0
+                    }
+                }
+            ];
+        } else {
+            associations = _.map(attributes, function (a) {
+                return {
+                    'associations.dimension': a.dimension,
+                    'associations.value': a.value
+                }
+            });
+            clause = [
+                {
+                    $match: {
+                        _idCDT: idCDT,
+                        category: category
+                    }
+                },
+                {
+                    $unwind: '$associations'
+                },
+                {
+                    $match: {
+                        $or: associations
+                    }
+                },
+                {
+                    $project: {
+                        _idOperation: '$_idOperation',
+                        dimension: '$associations.dimension',
+                        value: '$associations.value',
+                        constraintCount: '$constraintCount',
+                        _id: 0
+                    }
+                }
+            ];
+        }
+        return supportServiceModel.aggregateAsync(clause);
     } else {
-        whereClause.$or.push({
-            dimension: attributes.dimension,
-            value: attributes.value
-        });
+        throw Error('No filter nodes selected!');
     }
-    return supportServiceModel.findAsync(whereClause);
 };
 
 module.exports = new provider();

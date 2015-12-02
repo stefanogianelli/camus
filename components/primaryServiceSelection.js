@@ -1,11 +1,8 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
 var contextManager = require('./contextManager.js');
-var Interface = require('./interfaceChecker.js');
 var provider = require('../provider/provider.js');
-
-//every search plugin must implement the method 'search'
-var searchPluginInterface = new Interface('searchPluginInterface', ['search']);
+var pluginManager = require('./pluginManager.js');
 
 //number of services to keep
 var N = 3;
@@ -36,11 +33,7 @@ primaryServiceSelection.prototype.selectServices = function selectServices (deco
             })
             .spread(function (filterServices, customSearchServices) {
                 //calculate the ranking and returns the list
-                if (!_.isUndefined(customSearchServices) && !_.isEmpty(customSearchServices)) {
-                    resolve(calculateRanking(_.union(filterServices, customSearchServices)));
-                } else {
-                    resolve(calculateRanking(filterServices));
-                }
+                resolve(calculateRanking(_.union(filterServices, customSearchServices)));
             })
             .catch(function (e) {
                 reject(e.message);
@@ -68,57 +61,11 @@ function loadSearchPlugins (decoratedCdt) {
             })
             .spread(function (nodes, data) {
                 //call the function that takes care to execute the search functions
-                return executeModules(nodes, data);
+                return pluginManager.executeModules(nodes, data);
             })
             .then(function (results) {
                 //return the services found
                 resolve(results);
-            })
-            .catch(function (e) {
-                reject(e);
-            });
-    });
-}
-
-/**
- * Executes all the specific search modules
- * @param nodes The list of nodes that need a specific search function
- * @param data The service association list for the current CDT
- */
-function executeModules (nodes, data) {
-    return new Promise(function (resolve, reject) {
-        var services = [];
-        var promises = [];
-        _.forEach(nodes, function (n) {
-            try {
-                //select the association data associated to the currently analyzed dimension
-                var filter = _.filter(data, {dimension: n.dimension});
-                if (!_.isEmpty(filter)) {
-                    //load the module
-                    var module = require('../searchPlugins/' + n.searchFunction + ".js");
-                    //check that the module implements the search plugin interface
-                    Interface.ensureImplements(module, searchPluginInterface);
-                    //initialize the module
-                    var Module = new module();
-                    //launch the search function with the associated data and the value obtained by the decorated CDT
-                    promises.push(
-                        Module
-                            .search(filter, n.value)
-                            .then(function (results) {
-                                if (!_.isUndefined(results) && _.isArray(results) && !_.isEmpty(results)) {
-                                    services = _.union(services, results);
-                                }
-                            })
-                    );
-                }
-            } catch (e) {
-                reject(e.message);
-            }
-        });
-        Promise
-            .all(promises)
-            .then(function () {
-                resolve(services);
             })
             .catch(function (e) {
                 reject(e);

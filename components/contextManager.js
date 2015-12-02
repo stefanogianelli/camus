@@ -42,7 +42,6 @@ contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
 
 /**
  * Retrieve the nodes of the CDT that are used for Service selection.
- * The nodes that are the base dimension for a support service category are not taken into account by this function.
  * Are also considered the parameters associated to a node, except for that ones need a custom search function.
  * The parameter are translated as dimension and value.
  * @param decoratedCdt The decorated CDT
@@ -55,13 +54,9 @@ contextManager.prototype.getFilterNodes = function getFilterNodes (decoratedCdt)
             //gets the pairs dimension and value from the decorated CDT
             var filterValues = _(context)
                 //consider only the filter nodes (also includes filter and parameter nodes)
-                .filter(function (item) {
-                    return item.for === 'filter' || item.for === 'filter|parameter';
-                })
-                //deletes the nodes that are base dimensions for a support service category.
                 //deletes also all the nodes that have parameters associated
-                .reject(function (item) {
-                    return _.has(item, 'supportCategory') || !_.isEmpty(item.params);
+                .filter(function (item) {
+                    return (item.for === 'filter' || item.for === 'filter|parameter') && _.isEmpty(item.params);
                 })
                 .map(function (item) {
                     return {
@@ -75,10 +70,6 @@ contextManager.prototype.getFilterNodes = function getFilterNodes (decoratedCdt)
                 //consider only the filter nodes (also includes filter and parameter nodes) that have at least one parameter defined
                 .filter(function (item) {
                     return (item.for === 'filter' || item.for === 'filter|parameter') && !_.isEmpty(item.params);
-                })
-                //deletes the nodes that are base dimensions for a support service category
-                .reject(function (item) {
-                    return _.has(item, 'supportCategory');
                 })
                 .map(function (item) {
                     return _(item.params)
@@ -118,10 +109,6 @@ contextManager.prototype.getSpecificNodes = function getSpecificNodes (decorated
                 .filter(function (item) {
                     return (item.for === 'filter' || item.for === 'filter|parameter')  && !_.isEmpty(item.params);
                 })
-                //deletes the nodes that are base dimensions for a support service category
-                .reject(function (item) {
-                    return _.has(item, 'supportCategory');
-                })
                 .map(function (item) {
                     return _(item.params)
                         //take into account only the parameters that have associated a custom search function
@@ -157,14 +144,10 @@ contextManager.prototype.getParameterNodes = function getParameterNodes (decorat
         if (!_.isEmpty(context)) {
             //gets the pairs dimension and value from the decorated CDT
             var paramValues = _(context)
-            //consider only the parameter nodes (also includes filter and parameter nodes)
-                .filter(function (item) {
-                    return item.for === 'parameter' || item.for === 'filter|parameter';
-                })
-                //deletes the nodes that are base dimensions for a support service category.
+                //consider only the parameter nodes (also includes filter and parameter nodes)
                 //deletes also all the nodes that have parameters associated
-                .reject(function (item) {
-                    return _.has(item, 'supportCategory') || !_.isEmpty(item.params);
+                .filter(function (item) {
+                    return (item.for === 'parameter' || item.for === 'filter|parameter') && _.isEmpty(item.params);
                 })
                 .map(function (item) {
                     //add information about the translation function, if exists
@@ -184,13 +167,9 @@ contextManager.prototype.getParameterNodes = function getParameterNodes (decorat
                 .value();
             //map also the values of the parameters inside nodes
             var parameters = _(context)
-            //consider only the parameter nodes (also includes filter and parameter nodes) that have at least one parameter defined
+                //consider only the parameter nodes (also includes filter and parameter nodes) that have at least one parameter defined
                 .filter(function (item) {
                     return (item.for === 'parameter' || item.for === 'filter|parameter') && !_.isEmpty(item.params);
-                })
-                //deletes the nodes that are base dimensions for a support service category
-                .reject(function (item) {
-                    return _.has(item, 'supportCategory');
                 })
                 .map(function (item) {
                     return _(item.params)
@@ -266,28 +245,6 @@ contextManager.prototype.getSupportServiceNames = function getSupportServiceName
             resolve(names);
         } else {
             reject('No support services defined');
-        }
-    });
-};
-
-/**
- * Search the dimension node that is the primary dimension for the support service category specified
- * @param category The support service category
- * @param decoratedCdt The decorated CDT
- * @returns {bluebird|exports|module.exports} The dimension and value of the node
- */
-contextManager.prototype.getSupportServicePrimaryDimension = function getSupportServicePrimaryDimension (category, decoratedCdt) {
-    return new Promise (function (resolve, reject) {
-        var context = decoratedCdt.context;
-        if (!_.isEmpty(context)) {
-            var param = _.find(context, {supportCategory: category});
-            if (!_.isUndefined(param)) {
-                resolve(param);
-            } else {
-                reject('Primary dimension for category \'' + category + '\' not found');
-            }
-        } else {
-            reject('No context selected');
         }
     });
 };

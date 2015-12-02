@@ -155,14 +155,24 @@ var context1 = function (idCDT) {
             },
             {
                 dimension: 'Location',
-                value: 'Milan',
                 for: 'filter|parameter',
-                search: 'wrongName'
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Milan',
+                        searchFunction: 'wrongName'
+                    }
+                ]
             },
             {
                 dimension: 'Guests',
-                value: '4',
-                for: 'parameter'
+                for: 'filter|parameter',
+                params: [
+                    {
+                        name: 'Number',
+                        value: '4'
+                    }
+                ]
             },
             {
                 dimension: 'Budget',
@@ -199,8 +209,13 @@ var parameterContext = function(idCDT) {
         context: [
             {
                 dimension: 'Guests',
-                value: '4',
-                for: 'parameter'
+                for: 'parameter',
+                params: [
+                    {
+                        name: 'Number',
+                        value: '4'
+                    }
+                ]
             }
         ]
     }

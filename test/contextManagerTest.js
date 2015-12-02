@@ -41,17 +41,19 @@ describe('Component: ContextManager', function() {
             return contextManager
                 .getFilterNodes(mockData.decoratedCdt(_idCDT))
                 .then(function (nodes) {
-                    if (nodes.length === 4) {
+                    if (nodes.length === 5) {
                         assert.equal(nodes[0].dimension, 'InterestTopic');
                         assert.equal(nodes[0].value, 'Restaurant');
                         assert.equal(nodes[1].dimension, 'Budget');
                         assert.equal(nodes[1].value, 'Low');
-                        assert.equal(nodes[2].dimension, 'Tipology');
-                        assert.equal(nodes[2].value, 'DinnerWithFriends');
-                        assert.equal(nodes[3].dimension, 'City');
-                        assert.equal(nodes[3].value, 'Milan');
+                        assert.equal(nodes[2].dimension, 'Transport');
+                        assert.equal(nodes[2].value, 'PublicTransport');
+                        assert.equal(nodes[3].dimension, 'Tipology');
+                        assert.equal(nodes[3].value, 'DinnerWithFriends');
+                        assert.equal(nodes[4].dimension, 'Number');
+                        assert.equal(nodes[4].value, 4);
                     } else {
-                        assert.fail(nodes.length, 4, 'Wrong nodes count');
+                        assert.fail(nodes.length, 5, 'Wrong nodes count');
                     }
                 }).catch(function (e) {
                     assert.equal(e, null);
@@ -87,8 +89,8 @@ describe('Component: ContextManager', function() {
                 .getSpecificNodes(mockData.decoratedCdt(_idCDT))
                 .then(function (nodes) {
                     if (nodes.length === 1) {
-                        assert.equal(nodes[0].dimension, 'Number');
-                        assert.equal(nodes[0].value, 4);
+                        assert.equal(nodes[0].dimension, 'City');
+                        assert.equal(nodes[0].value, 'Milan');
                         assert.equal(nodes[0].searchFunction, 'testCustomSearch');
                     } else {
                         assert.fail(nodes.length, 1, 'Wrong nodes count');
@@ -238,46 +240,6 @@ describe('Component: ContextManager', function() {
                 .getSupportServiceNames({ })
                 .catch(function (e) {
                     assert.equal(e, 'No support services defined');
-                });
-        });
-    });
-
-    describe('#getSupportServicePrimaryDimension()', function () {
-        it('check if correct node is returned', function () {
-            return contextManager
-                .getSupportServicePrimaryDimension('Transport', mockData.decoratedCdt(_idCDT))
-                .then(function (node) {
-                    assert.notEqual(node, null);
-                    assert.equal(node.dimension, 'Transport');
-                    assert.equal(node.value, 'PublicTransport');
-                });
-        });
-        it('check error when sending empty context', function () {
-            return contextManager
-                .getSupportServicePrimaryDimension('Transport', emptySupport(_idCDT))
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
-        it('check error when sending empty object', function () {
-            return contextManager
-                .getSupportServicePrimaryDimension('Transport', { })
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
-        it('check error when sending context without primary dimension specified', function () {
-            return contextManager
-                .getSupportServicePrimaryDimension('Transport', noInterestTopicContext(_idCDT))
-                .catch(function (e) {
-                    assert.equal(e, 'Primary dimension for category \'Transport\' not found');
-                });
-        });
-        it('check error when sending null category name', function () {
-            return contextManager
-                .getSupportServicePrimaryDimension('', mockData.decoratedCdt(_idCDT))
-                .catch(function (e) {
-                    assert.equal(e, 'Primary dimension for category \'\' not found');
                 });
         });
     });

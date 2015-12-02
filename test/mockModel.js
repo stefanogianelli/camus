@@ -16,7 +16,8 @@ var cdt = {
             params: [
                 {
                     name: 'City',
-                    type: 'gps'
+                    type: 'gps',
+                    searchFunction: 'testCustomSearch'
                 }
             ]
         },
@@ -26,8 +27,7 @@ var cdt = {
             params: [
                 {
                     name: 'Number',
-                    type: 'Integer',
-                    searchFunction: 'testCustomSearch'
+                    type: 'Integer'
                 }
             ]
         },
@@ -44,7 +44,6 @@ var cdt = {
         {
             name: 'RestaurantTipology',
             for: 'filter',
-            supportCategory: 'Photo',
             values: [
                 'DinnerWithFriends'
             ]
@@ -62,7 +61,6 @@ var cdt = {
         {
             name: 'Transport',
             for: 'filter',
-            supportCategory: 'Transport',
             values: [
                 'PublicTransport',
                 'WithCar'
@@ -71,7 +69,6 @@ var cdt = {
         {
             name: 'Tipology',
             for: 'filter',
-            supportCategory: 'Transport',
             values: [
                 'Bus',
                 'Train'
@@ -180,7 +177,8 @@ var decoratedCdt = function (idCDT) {
                 params: [
                     {
                         name: 'City',
-                        value: 'Milan'
+                        value: 'Milan',
+                        searchFunction: 'testCustomSearch'
                     }
                 ]
             },
@@ -190,8 +188,7 @@ var decoratedCdt = function (idCDT) {
                 params: [
                     {
                         name: 'Number',
-                        value: '4',
-                        searchFunction: 'testCustomSearch'
+                        value: '4'
                     }
                 ]
             },
@@ -214,8 +211,7 @@ var decoratedCdt = function (idCDT) {
             {
                 dimension: 'Transport',
                 value: 'PublicTransport',
-                for: 'filter',
-                supportCategory: 'Transport'
+                for: 'filter'
             },
             {
                 dimension: 'Tipology',
@@ -254,7 +250,8 @@ var context = function(idCDT) {
                 params: [
                     {
                         name: 'City',
-                        value: 'Milan'
+                        value: 'Milan',
+                        searchFunction: 'testCustomSearch'
                     }
                 ]
             },
@@ -915,9 +912,14 @@ var googleMapsAssociation = function (idOperation, idCDT) {
         {
             _idOperation: idOperation,
             category: 'Transport',
-            dimension: 'Transport',
-            value: 'WithCar',
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            constraintCount: 1,
+            associations: [
+                {
+                    dimension: 'Transport',
+                    value: 'WithCar'
+                }
+            ]
         }
     ];
 };
@@ -930,17 +932,18 @@ var atmAssociation = function (idOperation, idCDT) {
         {
             _idOperation: idOperation,
             category: 'Transport',
-            dimension: 'Tipology',
-            value: 'Bus',
-            require: 'Location',
-            _idCDT: idCDT
-        },
-        {
-            _idOperation: idOperation,
-            category: 'Transport',
-            dimension: 'City',
-            value: 'Milan',
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            constraintCount: 2,
+            associations: [
+                {
+                    dimension: 'Tipology',
+                    value: 'Bus'
+                },
+                {
+                    dimension: 'City',
+                    value: 'Milan'
+                }
+            ]
         }
     ];
 };
@@ -953,17 +956,18 @@ var atacAssociation = function (idOperation, idCDT) {
         {
             _idOperation: idOperation,
             category: 'Transport',
-            dimension: 'Tipology',
-            value: 'Bus',
-            require: 'Location',
-            _idCDT: idCDT
-        },
-        {
-            _idOperation: idOperation,
-            category: 'Transport',
-            dimension: 'City',
-            value: 'Rome',
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            constraintCount: 2,
+            associations: [
+                {
+                    dimension: 'Tipology',
+                    value: 'Bus'
+                },
+                {
+                    dimension: 'City',
+                    value: 'Rome'
+                }
+            ]
         }
     ];
 };
@@ -976,10 +980,15 @@ var fsAssociation = function (idOperation, idCDT) {
         {
             _idOperation: idOperation,
             category: 'Transport',
-            dimension: 'Tipology',
-            value: 'Train',
             require: '',
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            constraintCount: 1,
+            associations: [
+                {
+                    dimension: 'Tipology',
+                    value: 'Train'
+                }
+            ]
         }
     ];
 };
@@ -992,17 +1001,18 @@ var trenordAssociation = function (idOperation, idCDT) {
         {
             _idOperation: idOperation,
             category: 'Transport',
-            dimension: 'Tipology',
-            value: 'Train',
-            require: 'Location',
-            _idCDT: idCDT
-        },
-        {
-            _idOperation: idOperation,
-            category: 'Transport',
-            dimension: 'City',
-            value: 'Milan',
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            constraintCount: 2,
+            associations: [
+                {
+                    dimension: 'Tipology',
+                    value: 'Train'
+                },
+                {
+                    dimension: 'City',
+                    value: 'Milan'
+                }
+            ]
         }
     ];
 };
@@ -1015,9 +1025,14 @@ var flickrAssociation = function (idOperation, idCDT) {
         {
             _idOperation: idOperation,
             category: 'Photo',
-            dimension: 'Tipology',
-            value: 'DinnerWithFriends',
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            constraintCount: 1,
+            associations: [
+                {
+                    dimension: 'Tipology',
+                    value: 'DinnerWithFriends'
+                }
+            ]
         }
     ];
 };
