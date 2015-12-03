@@ -55,7 +55,7 @@ function selectServicesFromName (serviceNames) {
                 .getServicesByNames(serviceNames)
                 .then(function (services) {
                     //compose the queries
-                    resolve(composeQuery(services));
+                    resolve(composeQueries(services));
                 })
                 .catch(function (e) {
                     console.log(e);
@@ -98,7 +98,7 @@ function selectServiceFromCategory (categories, decoratedCdt) {
                     })
                     .then(function (services) {
                         //compose the queries
-                        return composeQuery(services, c);
+                        return composeQueries(services, c);
                     })
                     .catch(function (e) {
                         console.log(e);
@@ -183,7 +183,7 @@ function mergeResults (filterServices, customServices) {
  * @param category (optional) The service category
  * @returns {Array} The list of services with the composed queries
  */
-function composeQuery (services, category) {
+function composeQueries (services, category) {
     return _.map(services, function (s) {
         //configure parameters (the default ones are useful for standard query composition)
         var start = '?';

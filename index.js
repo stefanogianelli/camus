@@ -8,9 +8,7 @@ var primaryService = require('./components/primaryServiceSelection.js');
 var queryHandler = require('./components/queryHandler.js');
 var supportService = require('./components/supportServiceSelection.js');
 var responseAggregator = require('./components/responseAggregator.js');
-
-//for testing purpose
-var mockDatabase = require('./test/mockDatabaseCreator.js');
+var databaseHelper = require('./databaseHelper.js');
 
 var app = new hapi.Server();
 
@@ -68,20 +66,19 @@ app.route({
     method: 'GET',
     path: '/createDatabase',
     handler: function (req, reply) {
-        //first I clean the existing database
-        mockDatabase.deleteDatabase(function (err) {
-            if (err) {
-                reply(err);
-            }
+        databaseHelper
+            //first I clean the existing database
+            .deleteDatabase()
             //recreate the database
-            mockDatabase.createDatabase(function (err, idCDT, idNestedCdt, idMultipleSonsCdt) {
-                if (err) {
-                    reply(err);
-                }
-                //return also the CDT identifier to allow interrogations
+            .then(function () {
+                return databaseHelper.createDatabase();
+            })
+            .then(function (idCDT) {
                 reply('Database created!<br/>idCDT: ' + idCDT);
             })
-        })
+            .catch(function (e) {
+                reply(e);
+            });
     }
 });
 

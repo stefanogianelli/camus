@@ -14,27 +14,32 @@ contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
         provider
             .getCdtDimensions(context._id, _.pluck(context.context, 'dimension'))
             .then(function (data) {
-                var decoratedCdt = _.map(data[0].context, function (cdt) {
-                    var c = _.find(context.context, 'dimension', cdt.dimension);
-                    if (!_.isEmpty(cdt.params) && !_.isEmpty(c.params)) {
-                        cdt['params'] = _.map(cdt.params, function (p1) {
-                            var p2 = _.find(c.params, 'name', p1.name);
-                            return _.assign(p2, p1);
+                if (!_.isUndefined(data) && !_.isEmpty(data)) {
+                    var decoratedCdt = _.map(data[0].context, function (cdt) {
+                        var c = _.find(context.context, 'dimension', cdt.dimension);
+                        if (!_.isEmpty(cdt.params) && !_.isEmpty(c.params)) {
+                            cdt['params'] = _.map(cdt.params, function (p1) {
+                                var p2 = _.find(c.params, 'name', p1.name);
+                                return _.assign(p2, p1);
+                            });
+                        }
+                        return _.assign(c, cdt);
+                    });
+                    if (_.has(context, 'support')) {
+                        resolve({
+                            _id: data[0]._id,
+                            context: decoratedCdt,
+                            support: context.support
+                        });
+                    } else {
+                        resolve({
+                            _id: data[0]._id,
+                            context: decoratedCdt
                         });
                     }
-                    return _.assign(c, cdt);
-                });
-                if (_.has(context, 'support')) {
-                    resolve({
-                        _id: data[0]._id,
-                        context: decoratedCdt,
-                        support: context.support
-                    });
                 } else {
-                    resolve({
-                        _id: data[0]._id,
-                        context: decoratedCdt
-                    });
+                    //no data found
+                    resolve();
                 }
             });
     });
