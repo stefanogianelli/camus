@@ -29,9 +29,9 @@ describe('Component: ContextManager', function() {
                     assert.equal(data.context[0].dimension, 'InterestTopic');
                     assert.equal(data.context[0].value, 'Restaurant');
                     assert.equal(data.context[1].dimension, 'Location');
-                    assert.equal(data.context[1].value, 'Milan');
                     assert.equal(data.context[1].params[0].name, 'City');
-                    assert.equal(data.context[1].params[0].value, 'prova');
+                    assert.equal(data.context[1].params[0].value, 'Milan');
+                    assert.equal(data.context[1].params[0].searchFunction, 'testCustomSearch');
                 });
         });
     });
@@ -370,11 +370,10 @@ var decoratedContext = function (idCDT) {
         context: [
             {
                 dimension: 'Location',
-                value: 'Milan',
                 params: [
                     {
                         name: 'City',
-                        value: 'prova'
+                        value: 'Milan'
                     },
                     {
                         name: 'caso',
@@ -383,14 +382,13 @@ var decoratedContext = function (idCDT) {
                 ]
             },
             {
-                name: 'test',
+                dimension: 'test',
                 value: 'test'
             },
             {
                 dimension: 'InterestTopic',
                 value: 'Restaurant'
             }
-
         ]
     }
 };

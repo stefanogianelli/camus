@@ -9,6 +9,9 @@ var queryHandler = require('./components/queryHandler.js');
 var supportService = require('./components/supportServiceSelection.js');
 var responseAggregator = require('./components/responseAggregator.js');
 
+//for testing purpose
+var mockDatabase = require('./test/mockDatabaseCreator.js');
+
 var app = new hapi.Server();
 
 app.connection({
@@ -50,12 +53,35 @@ app.route({
                     });
             })
             .then(function (result) {
-                return responseAggregator
-                    .prepareResponse(result.primary, result.support);
+                return responseAggregator.prepareResponse(result.primary, result.support);
             })
             .then(function (response) {
                 reply(response);
             });
+    }
+});
+
+/**
+ * Route used for testing purpose. It deletes and recreates the database from scratch
+ */
+app.route({
+    method: 'GET',
+    path: '/createDatabase',
+    handler: function (req, reply) {
+        //first I clean the existing database
+        mockDatabase.deleteDatabase(function (err) {
+            if (err) {
+                reply(err);
+            }
+            //recreate the database
+            mockDatabase.createDatabase(function (err, idCDT, idNestedCdt, idMultipleSonsCdt) {
+                if (err) {
+                    reply(err);
+                }
+                //return also the CDT identifier to allow interrogations
+                reply('Database created!<br/>idCDT: ' + idCDT);
+            })
+        })
     }
 });
 

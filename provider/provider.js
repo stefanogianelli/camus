@@ -66,7 +66,7 @@ provider.prototype.getCdt = function getCdt (idCDT) {
 provider.prototype.getCdtDimensions = function getCdtDimensions (idCDT, dimensions) {
     return cdtModel
         .aggregateAsync(
-            {$match: {_id: idCDT}},
+            {$match: {_id: mongoose.Types.ObjectId(idCDT)}},
             {$unwind: '$context'},
             {$match: {'context.name': {$in: dimensions}}},
             {$group: {
