@@ -142,6 +142,12 @@ function transformResponse (mapping, response) {
                     return transformItem(i, mapping);
                 });
                 transformedResponse = executeFunctions(transformedResponse, mapping);
+                //clean the response from empty objects
+                transformedResponse = _(transformedResponse)
+                    .filter(function (item) {
+                        return !_.isUndefined(item) && !_.isEmpty(item);
+                    })
+                    .value();
                 resolve(transformedResponse);
             } else {
                 reject('no mapping associated to the service');
