@@ -1,6 +1,5 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
-var ContextManager = require('./contextManager.js');
 var translator = require('./translationManager.js');
 var Interface = require('./interfaceChecker.js');
 var restBridge = require('../bridges/restBridge.js');
@@ -28,12 +27,8 @@ queryHandler.prototype.executeQueries = function executeQueries (services, decor
                     return provider.getServiceByOperationId(s._idOperation);
                 })
                 .then(function (serviceDescriptions) {
-                    //acquire the parameter nodes defined in the decorated CDT
-                    return [serviceDescriptions, ContextManager.getParameterNodes(decoratedCdt)];
-                })
-                .spread(function (serviceDescriptions, params) {
                     //check if some parameters need translation
-                    return [serviceDescriptions, translateParameters(params, decoratedCdt)];
+                    return [serviceDescriptions, translateParameters(decoratedCdt.parameterNodes, decoratedCdt)];
                 })
                 .spread(function (serviceDescriptions, params) {
                     //execute the queries toward web services
@@ -59,15 +54,13 @@ queryHandler.prototype.executeQueries = function executeQueries (services, decor
  */
 function translateParameters (params, decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        //get the selected interest topic
-        var interestTopic = ContextManager.getInterestTopic(decoratedCdt);
         Promise
             //take only the parameters that have specified a translation function
             .map(_.filter(params, 'transformFunction'), function (p) {
                 //check if the translation function is defined
                 if (typeof translator[p.transformFunction] == 'function') {
                     //call the function to retrieve the translated value
-                    return translator[p.transformFunction](interestTopic, p.value)
+                    return translator[p.transformFunction](decoratedCdt.interestTopic, p.value)
                         .then(function (value) {
                             //modify the value with the translated one
                             p.value = value;

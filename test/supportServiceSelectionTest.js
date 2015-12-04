@@ -55,16 +55,6 @@ describe('Component: SupportServiceSelection', function () {
                     assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={search_key}&prop=revisions&rvprop=content&format=json');
                 });
         });
-        it('check response when the support category has no constraint', function () {
-            return supportServiceSelection
-                .selectServices(contextUnconstrainedCategory(_idCDT))
-                .then(function (data) {
-                    assert.equal(data.length, 1);
-                    assert.equal(data[0].category, 'Transport');
-                    assert.equal(data[0].service, 'GoogleMaps');
-                    assert.equal(data[0].url, 'https://maps.googleapis.com/maps/api/distancematrix/json?origins={startCity}&destinations={endCity}&mode=bus');
-                });
-        });
         it('check response when the specified service name does not exists', function () {
             return supportServiceSelection
                 .selectServices(contextWithInexistentName(_idCDT))
@@ -118,29 +108,34 @@ describe('Component: SupportServiceSelection', function () {
 var contextNoSupportName = function(idCDT) {
     return {
         _id: idCDT,
-        context: [
+        filterNodes: [
             {
-                dimension: 'Location',
-                for: 'filter',
-                params: [
-                    {
-                        name: 'City',
-                        value: 'Milan',
-                        searchFunction: 'testCustomSearch'
-                    }
-                ]
+                dimension: 'Transport',
+                value: 'PublicTransport'
             },
             {
-                "dimension": 'Transport',
-                "value": 'PublicTransport',
-                "for": 'filter'
+                dimension: 'Tipology',
+                value: 'Bus'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'Train'
             }
         ],
-        support: [
+        specificNodes: [
             {
-                category: 'Transport'
+                dimension: 'City',
+                value: 'Milan',
+                searchFunction: 'testCustomSearch'
             }
-        ]
+        ],
+        parameterNodes: [
+            {
+                dimension: 'City',
+                value: 'Milan'
+            }
+        ],
+        supportServiceCategories: [ 'Transport']
     }
 };
 
@@ -148,58 +143,10 @@ var contextNoSupportName = function(idCDT) {
 var contextNoSupportCategory = function(idCDT) {
     return {
         _id: idCDT,
-        context: [
-            {
-                dimension: 'Location',
-                for: 'filter',
-                params: [
-                    {
-                        name: 'City',
-                        value: 'Milan',
-                        searchFunction: 'testCustomSearch'
-                    }
-                ]
-            },
-            {
-                "dimension": 'Transport',
-                "value": 'PublicTransport',
-                "for": 'filter'
-            }
-        ],
-        support: [
+        supportServiceNames: [
             {
                 name: 'Wikipedia',
                 operation: 'search'
-            }
-        ]
-    }
-};
-
-//context with unconstrained support category
-var contextUnconstrainedCategory = function(idCDT) {
-    return {
-        _id: idCDT,
-        context: [
-            {
-                dimension: 'Location',
-                for: 'filter',
-                params: [
-                    {
-                        name: 'City',
-                        value: 'Milan',
-                        searchFunction: 'testCustomSearch'
-                    }
-                ]
-            },
-            {
-                "dimension": 'Transport',
-                "value": 'WithCar',
-                "for": 'filter'
-            }
-        ],
-        support: [
-            {
-                category: 'Transport'
             }
         ]
     }
@@ -209,29 +156,7 @@ var contextUnconstrainedCategory = function(idCDT) {
 var contextWithInexistentCategory = function(idCDT) {
     return {
         _id: idCDT,
-        context: [
-            {
-                dimension: 'Location',
-                for: 'filter',
-                params: [
-                    {
-                        name: 'City',
-                        value: 'Milan',
-                        searchFunction: 'testCustomSearch'
-                    }
-                ]
-            },
-            {
-                "dimension": 'Transport',
-                "value": 'WithCar',
-                "for": 'filter'
-            }
-        ],
-        support: [
-            {
-                category: 'Sport'
-            }
-        ]
+        supportServiceCategories: [ 'Sport' ]
     }
 };
 
@@ -239,27 +164,10 @@ var contextWithInexistentCategory = function(idCDT) {
 var contextWithInexistentName = function(idCDT) {
     return {
         _id: idCDT,
-        context: [
+        supportServiceNames: [
             {
-                dimension: 'Location',
-                for: 'filter',
-                params: [
-                    {
-                        name: 'City',
-                        value: 'Milan',
-                        searchFunction: 'testCustomSearch'
-                    }
-                ]
-            },
-            {
-                "dimension": 'Transport',
-                "value": 'WithCar',
-                "for": 'filter'
-            }
-        ],
-        support: [
-            {
-                name: 'Yahoo'
+                name: 'Yahoo',
+                operation: 'search'
             }
         ]
     }
@@ -269,25 +177,7 @@ var contextWithInexistentName = function(idCDT) {
 var contextMultipleSupportServiceNames = function(idCDT) {
     return {
         _id: idCDT,
-        context: [
-            {
-                dimension: 'Location',
-                for: 'filter',
-                params: [
-                    {
-                        name: 'City',
-                        value: 'Milan',
-                        searchFunction: 'testCustomSearch'
-                    }
-                ]
-            },
-            {
-                "dimension": 'Transport',
-                "value": 'WithCar',
-                "for": 'filter'
-            }
-        ],
-        support: [
+        supportServiceNames: [
             {
                 name: 'Wikipedia',
                 operation: 'search'
@@ -304,36 +194,17 @@ var contextMultipleSupportServiceNames = function(idCDT) {
 var contextMultipleSupportServiceCategories = function(idCDT) {
     return {
         _id: idCDT,
-        context: [
+        interestTopic: 'Restaurant',
+        filterNodes: [
             {
-                dimension: 'Location',
-                for: 'filter',
-                params: [
-                    {
-                        name: 'City',
-                        value: 'Milan',
-                        searchFunction: 'testCustomSearch'
-                    }
-                ]
-            },
-            {
-                "dimension": 'Transport',
-                "value": 'WithCar',
-                "for": 'filter'
+                dimension: 'Transport',
+                value: 'WithCar'
             },
             {
                 dimension: 'Tipology',
-                value: 'DinnerWithFriends',
-                for: 'filter'
+                value: 'DinnerWithFriends'
             }
         ],
-        support: [
-            {
-                category: 'Transport'
-            },
-            {
-                category: 'Photo'
-            }
-        ]
+        supportServiceCategories: [ 'Transport', 'Photo' ]
     }
 };

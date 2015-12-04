@@ -732,6 +732,14 @@ var theaterStubAssociations = function (idOperation, idCDT) {
             ranking: 2,
             weight: 2,
             _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
+            dimension: 'City',
+            value: 'Milan',
+            ranking: 1,
+            weight: 4,
+            _idCDT: idCDT
         }
     ];
 };

@@ -1,6 +1,5 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
-var contextManager = require('./contextManager.js');
 var provider = require('../provider/provider.js');
 var pluginManager = require('./pluginManager.js');
 
@@ -8,7 +7,7 @@ var supportServiceSelection = function () { };
 
 /**
  * Create the list of support services associated to the current context
- * @param decoratedCdt The current context
+ * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The list of services, with the query associated
  */
 supportServiceSelection.prototype.selectServices = function (decoratedCdt) {
@@ -16,23 +15,9 @@ supportServiceSelection.prototype.selectServices = function (decoratedCdt) {
         Promise
             .props({
                 //acquire the URLs for the services requested by name and operation
-                servicesByName: contextManager
-                    //obtain the names of the services
-                    .getSupportServiceNames(decoratedCdt)
-                    .then(function (serviceNames) {
-                        //compose the URL for the services found
-                        return selectServicesFromName(serviceNames);
-                    }),
+                servicesByName: selectServicesFromName(decoratedCdt.supportServiceNames),
                 //acquire the URLs for the services requested by categories
-                serviceByCategory: contextManager
-                    //obtain the categories requested in the context
-                    .getSupportServiceCategories(decoratedCdt)
-                    .then(function (serviceCategories) {
-                        //compose the URL for the services found
-                        if (!_.isUndefined(serviceCategories) && !_.isEmpty(serviceCategories)) {
-                            return selectServiceFromCategory(serviceCategories, decoratedCdt);
-                        }
-                    })
+                serviceByCategory: selectServiceFromCategory(decoratedCdt.supportServiceCategories, decoratedCdt)
             })
             .then(function (result) {
                 //return the union of the two lists
@@ -72,76 +57,69 @@ function selectServicesFromName (serviceNames) {
 /**
  * Select the services associated to a category
  * @param categories The list of categories
- * @param decoratedCdt The current context
+ * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The list of service objects, composed by the service name and the query associated
  */
 function selectServiceFromCategory (categories, decoratedCdt) {
     return new Promise (function (resolve, reject) {
-        Promise
-            .map(categories, function (c) {
-                return contextManager
-                    .getFilterNodes(decoratedCdt)
-                    .then(function (nodes) {
-                        //check if the retrieved nodes have descendants
-                        return [nodes, contextManager.getDescendants(decoratedCdt._id, nodes)];
-                    })
-                    .spread(function (nodes, descendants) {
-                        //retrieve the service associations for the nodes selected above
-                        return provider.filterSupportServices(decoratedCdt._id, c, _.union(nodes, descendants));
-                    })
-                    .then(function (services) {
-                        //execute the custom plugins for a subset of nodes
-                        return [services, loadSearchPlugins(decoratedCdt, c)];
-                    })
-                    .spread(function (filterServices, customServices) {
-                        //retrieve the service descriptions for the found operation identifiers
-                        return provider
-                            .getServicesByOperationIds(mergeResults(filterServices, customServices));
-                    })
-                    .then(function (services) {
-                        //compose the queries
-                        return composeQueries(services, c);
-                    })
-                    .catch(function (e) {
-                        console.log(e);
-                    });
-            })
-            .then(function (output) {
-                resolve(_.flatten(output));
-            });
+        if (!_.isUndefined(categories) && !_.isEmpty(categories) && !_.isEmpty(decoratedCdt.filterNodes)) {
+            Promise
+                .map(categories, function (c) {
+                    return provider
+                        .filterSupportServices(decoratedCdt._id, c, decoratedCdt.filterNodes)
+                        .then(function (services) {
+                            //execute the custom plugins for a subset of nodes
+                            return [services, loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificNodes, c)];
+                        })
+                        .spread(function (filterServices, customServices) {
+                            //retrieve the service descriptions for the found operation identifiers
+                            return provider
+                                .getServicesByOperationIds(mergeResults(filterServices, customServices));
+                        })
+                        .then(function (services) {
+                            //compose the queries
+                            return composeQueries(services, c);
+                        })
+                        .catch(function (e) {
+                            console.log(e);
+                        });
+                })
+                .then(function (output) {
+                    resolve(_.flatten(output));
+                });
+        } else {
+            resolve();
+        }
     });
 }
 
 /**
  * Search for the CDT nodes that need a specific search function and execute it
- * @param decoratedCdt The current decorated CDT
+ * @param idCDT The CDT identifier
+ * @param specificNodes The specific nodes defined in the decorated CDT
  * @param category The support service category
  * @returns {bluebird|exports|module.exports} The promise with the services found
  */
-function loadSearchPlugins (decoratedCdt, category) {
+function loadSearchPlugins (idCDT, specificNodes, category) {
     return new Promise(function (resolve, reject) {
-        contextManager
-            //acquire the nodes that need a custom search function
-            .getSpecificNodes(decoratedCdt)
-            .then(function (nodes) {
-                if (!_.isEmpty(nodes)) {
-                    //retrieve the association data for the dimensions
-                    return [nodes, provider.filterSupportServices(decoratedCdt._id, category, nodes, true)];
-                } else {
-                    resolve();
-                }
-            })
-            .spread(function (nodes, data) {
-                //call the function that takes care to execute the search functions
-                return pluginManager.executeModules(nodes, data);
-            })
-            .then(function (results) {
-                //return the services found
-                resolve(results);
-            })
-            .catch(function (e) {
-                reject(e);
-            });
+        if (!_.isEmpty(specificNodes)) {
+            //retrieve the association data for the dimensions
+            provider
+                .filterSupportServices(idCDT, category, specificNodes, true)
+                .then(function (data) {
+                    //call the function that takes care to execute the search functions
+                    return pluginManager.executeModules(specificNodes, data);
+                })
+                .then(function (results) {
+                    //return the services found
+                    resolve(results);
+                })
+                .catch(function (e) {
+                    reject(e);
+                });
+        } else {
+            resolve();
+        }
     });
 }
 

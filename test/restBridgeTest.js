@@ -1,48 +1,35 @@
 var assert = require('assert');
 var restBridge = require('../bridges/restBridge.js');
 var mockModel = require('./mockModel.js');
-var contextManager = require('../components/contextManager.js');
 
 describe('Component: RestBridge', function () {
 
     describe('#executeQuery()', function () {
         it('check that correct response is returned', function () {
-            return contextManager
-                .getParameterNodes(mockModel.decoratedCdt(1))
-                .then(function (params) {
-                    return restBridge.executeQuery(mockModel.eventful, params)
-                })
+            return restBridge
+                .executeQuery(mockModel.eventful, mockModel.decoratedCdt(1).parameterNodes)
                 .then(function (data) {
                     assert.notEqual(data, null);
                     assert.equal(data.total_items, 134);
                 });
         });
         it('check error when a required default parameter is not defined', function () {
-            return contextManager
-                .getParameterNodes(mockModel.decoratedCdt(1))
-                .then(function (params) {
-                    return restBridge.executeQuery(noDefaultParameterService, params)
-                })
+            return restBridge
+                .executeQuery(noDefaultParameterService, mockModel.decoratedCdt(1).parameterNodes)
                 .catch(function (e) {
                     assert.equal(e, 'lack of required parameter \'app_key\'');
                 });
         });
         it('check error when a required parameter has no value in the CDT', function () {
-            return contextManager
-                .getParameterNodes(mockModel.decoratedCdt(1))
-                .then(function (params) {
-                    return restBridge.executeQuery(noValueParameterService, params)
-                })
+            return restBridge
+                .executeQuery(noValueParameterService, mockModel.decoratedCdt(1).parameterNodes)
                 .catch(function (e) {
                     assert.equal(e, 'lack of required parameter \'location\'');
                 });
         });
         it('check error when the service does not respond', function () {
-            return contextManager
-                .getParameterNodes(mockModel.decoratedCdt(1))
-                .then(function (params) {
-                    return restBridge.executeQuery(wrongBasePath, params)
-                })
+            return restBridge
+                .executeQuery(wrongBasePath, mockModel.decoratedCdt(1).parameterNodes)
                 .catch(function (e) {
                     assert.notEqual(e, null);
                 });

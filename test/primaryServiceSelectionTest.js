@@ -114,14 +114,7 @@ describe('Component: PrimaryServiceSelection', function() {
             return serviceManager
                 .selectServices(parameterContext(_idCDT))
                 .catch(function (e) {
-                    assert.equal(e, 'No filter nodes selected!');
-                });
-        });
-        it('check if an empty list is produced when no services found', function() {
-            return serviceManager
-                .selectServices(context2(_idCDT))
-                .then(function (services) {
-                    assert.equal(services.length, 0);
+                    assert.equal(e.message, 'No filter nodes selected!');
                 });
         });
         it('check correct execution when specified a wrong specific module name', function() {
@@ -147,56 +140,41 @@ describe('Component: PrimaryServiceSelection', function() {
 var context1 = function (idCDT) {
     return {
         _id: idCDT,
-        context: [
+        interestTopic: 'Restaurant',
+        filterNodes: [
             {
                 dimension: 'InterestTopic',
-                value: 'Restaurant',
-                for: 'filter'
-            },
-            {
-                dimension: 'Location',
-                for: 'filter|parameter',
-                params: [
-                    {
-                        name: 'City',
-                        value: 'Milan',
-                        searchFunction: 'wrongName'
-                    }
-                ]
-            },
-            {
-                dimension: 'Guests',
-                for: 'filter|parameter',
-                params: [
-                    {
-                        name: 'Number',
-                        value: '4'
-                    }
-                ]
+                value: 'Restaurant'
             },
             {
                 dimension: 'Budget',
-                value: 'Low',
-                for: 'filter|parameter'
+                value: 'Low'
             },
             {
                 dimension: 'Tipology',
-                value: 'DinnerWithFriends',
-                for: 'filter'
+                value: 'DinnerWithFriends'
             }
-        ]
-    }
-};
-
-//contex with no associated services
-var context2 = function (idCDT) {
-    return {
-        _id: idCDT,
-        context: [
+        ],
+        specificNodes: [
             {
-                dimension: 'SportType',
-                value: 'Tennis',
-                for: 'filter'
+                dimension: 'City',
+                value: 'Milan',
+                searchFunction: 'wrongName'
+            }
+        ],
+        parameterNodes: [
+            {
+                dimension: 'Budget',
+                value: 'Low',
+                transformFunction: 'translateBudget'
+            },
+            {
+                dimension: 'City',
+                value: 'Milan'
+            },
+            {
+                dimension: 'Number',
+                value: '4'
             }
         ]
     }
@@ -206,16 +184,12 @@ var context2 = function (idCDT) {
 var parameterContext = function(idCDT) {
     return {
         _id: idCDT,
-        context: [
+        filterNodes: [],
+        specificNodes: [],
+        parameterNodes: [
             {
-                dimension: 'Guests',
-                for: 'parameter',
-                params: [
-                    {
-                        name: 'Number',
-                        value: '4'
-                    }
-                ]
+                dimension: 'Number',
+                value: '4'
             }
         ]
     }
@@ -225,13 +199,29 @@ var parameterContext = function(idCDT) {
 var nestedContext = function (idCDT) {
     return {
         _id: idCDT,
-        context: [
+        filterNodes: [
             {
                 dimension: 'a',
-                value: 'b',
-                for: 'filter'
+                value: 'b'
+            },
+            {
+                dimension: 'd',
+                value: 'e'
+            },
+            {
+                dimension: 'd',
+                value: 'f'
+            },
+            {
+                dimension: 'g',
+                value: 'h'
+            },
+            {
+                dimension: 'g',
+                value: 'i'
             }
-        ]
+        ],
+        specificNodes: []
     };
 };
 
@@ -239,18 +229,33 @@ var nestedContext = function (idCDT) {
 var multipleSonContext = function (idCDT) {
     return {
         _id: idCDT,
-        context: [
+        filterNodes: [
             {
                 dimension: 'a',
-                value: 'd',
-                for: 'filter'
+                value: 'd'
             },
             {
                 dimension: 'b',
-                value: 'e',
-                for: 'filter'
+                value: 'e'
+            },
+            {
+                dimension: 'g',
+                value: 'i'
+            },
+            {
+                dimension: 'g',
+                value: 'l'
+            },
+            {
+                dimension: 'h',
+                value: 'm'
+            },
+            {
+                dimension: 'h',
+                value: 'n'
             }
-        ]
+        ],
+        specificNodes: []
     };
 };
 
@@ -258,22 +263,24 @@ var multipleSonContext = function (idCDT) {
 var testCustomSearchFunctionContext = function (idCDT) {
     return {
         _id: idCDT,
-        context: [
+        interestTopic: 'Restaurant',
+        filterNodes: [
             {
                 dimension: 'InterestTopic',
-                value: 'Restaurant',
-                for: 'filter'
-            },
+                value: 'Restaurant'
+            }
+        ],
+        specificNodes: [
             {
-                dimension: 'Location',
-                for: 'filter|parameter',
-                params: [
-                    {
-                        name: 'City',
-                        value: 'Rome',
-                        searchFunction: 'testCustomSearch'
-                    }
-                ]
+                dimension: 'City',
+                value: 'Rome',
+                searchFunction: 'testCustomSearch'
+            }
+        ],
+        parameterNodes: [
+            {
+                dimension: 'City',
+                value: 'Rome'
             }
         ]
     };

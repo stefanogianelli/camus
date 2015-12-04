@@ -5,25 +5,88 @@ var provider = require('../provider/provider.js');
 var contextManager = function () { };
 
 /**
- * Find the current CDT, filter out the needed dimensions and add the values for the dimension and parameters node from the user context
- * @param context The user context
+ * It takes as input the user's context and transform it into the decorated one.
+ * This context is first merged with the full CDT in the database.
+ * Decorated CDT mean an object composed in this way:
+ * - interestTopic: the interest topic selected
+ * - filterNodes: the list of filter nodes (includes also the descendants of each nodes)
+ * - specificNodes: the list of specific nodes
+ * - parametersNodes: the list of parameter nodes
+ * - supportServiceCategories: the list of categories for which retrieve the support services
+ * - supportServiceNames: the list of names and operations for selected the correct support services
+ * @param context The user's context
  * @returns {bluebird|exports|module.exports} The decorated CDT
  */
-contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
+contextManager.prototype.getDecoratedCdt = function (context) {
+    return new Promise(function (resolve, reject) {
+        contextManager.prototype
+            //merge the CDT full description with the values from the user's context
+            .mergeCdtAndContext(context)
+            .then(function (mergedCdt) {
+                //find the filter nodes (plus their respective descendants)
+                Promise
+                    .props({
+                        //get the interest topic
+                        interestTopic: contextManager.prototype.getInterestTopic(mergedCdt),
+                        //find the filter nodes (plus their respective descendants)
+                        filterNodes: contextManager.prototype.getFilterNodes(mergedCdt)
+                            .then(function (filter) {
+                                return [filter, contextManager.prototype.getDescendants(context._id, filter)];
+                            })
+                            .spread(function (filter, descendants) {
+                                return _.union(filter, descendants);
+                            }),
+                        //find the specific nodes (that nodes with custom search function associated)
+                        specificNodes: contextManager.prototype.getSpecificNodes(mergedCdt),
+                        //find the parameter nodes
+                        parameterNodes: contextManager.prototype.getParameterNodes(mergedCdt),
+                        //find the support service categories requested
+                        supportServiceCategories: contextManager.prototype.getSupportServiceCategories(mergedCdt),
+                        //find the support service names and operations requested
+                        supportServiceNames: contextManager.prototype.getSupportServiceNames(mergedCdt)
+                    })
+                    .then(function (results) {
+                        resolve(results);
+                    })
+                    .catch(function (e) {
+                        reject(e);
+                    });
+            });
+    });
+};
+
+/**
+ * Find the current CDT, filter out the needed dimensions and add the values for the dimension and parameters node from the user context
+ * @param context The user context
+ * @returns {bluebird|exports|module.exports} The merged CDT
+ */
+contextManager.prototype.mergeCdtAndContext = function getDecoratedCdt (context) {
     return new Promise (function (resolve, reject) {
         provider
             .getCdtDimensions(context._id, _.pluck(context.context, 'dimension'))
             .then(function (data) {
                 if (!_.isUndefined(data) && !_.isEmpty(data)) {
+                    //associate the values of nodes and parameter to the CDT retrieved
                     var decoratedCdt = _.map(data[0].context, function (cdt) {
+                        //find in the context the current dimension
                         var c = _.find(context.context, 'dimension', cdt.dimension);
+                        //add the value from the context to the decorated item
+                        cdt['value'] = c.value;
+                        //if the dimension have also some parameters I merge them
                         if (!_.isEmpty(cdt.params) && !_.isEmpty(c.params)) {
-                            cdt['params'] = _.map(c.params, function (p1) {
-                                var p2 = _.find(cdt.params, 'name', p1.name);
-                                return _.assign(p1, p2);
+                            var params = [];
+                            _.forEach(cdt.params, function (p1) {
+                                //search the corresponding parameter in the context
+                                var p2 = _.find(c.params, 'name', p1.name);
+                                //if the parameter is also set in the context I merge them
+                                if (!_.isUndefined(p2) && !_.isEmpty(p2)) {
+                                    p1['value'] = p2.value;
+                                    params.push(p1);
+                                }
                             });
+                            cdt['params'] = params;
                         }
-                        return _.assign(c, cdt);
+                        return cdt;
                     });
                     if (_.has(context, 'support')) {
                         resolve({
@@ -39,7 +102,7 @@ contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
                     }
                 } else {
                     //no data found
-                    resolve();
+                    reject('No context data found');
                 }
             });
     });
@@ -49,12 +112,12 @@ contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
  * Retrieve the nodes of the CDT that are used for Service selection.
  * Are also considered the parameters associated to a node, except for that ones need a custom search function.
  * The parameter are translated as dimension and value.
- * @param decoratedCdt The decorated CDT
+ * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of nodes
  */
-contextManager.prototype.getFilterNodes = function getFilterNodes (decoratedCdt) {
+contextManager.prototype.getFilterNodes = function getFilterNodes (mergedCdt) {
     return new Promise (function (resolve, reject) {
-        var context = decoratedCdt.context;
+        var context = mergedCdt.context;
         if (!_.isEmpty(context)) {
             //gets the pairs dimension and value from the decorated CDT
             var filterValues = _(context)
@@ -102,12 +165,12 @@ contextManager.prototype.getFilterNodes = function getFilterNodes (decoratedCdt)
 
 /**
  * Similar to {@link contextManager#getFilterNodes()}, but it takes into account only the parameters that need a custom search function.
- * @param decoratedCdt The decorated CDT
+ * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of nodes
  */
-contextManager.prototype.getSpecificNodes = function getSpecificNodes (decoratedCdt) {
+contextManager.prototype.getSpecificNodes = function getSpecificNodes (mergedCdt) {
     return new Promise (function (resolve, reject) {
-        var context = decoratedCdt.context;
+        var context = mergedCdt.context;
         if (!_.isEmpty(context)) {
             var params = _(context)
                 //consider only the filter nodes (also includes filter and parameter nodes) with non-empty parameters list
@@ -140,12 +203,12 @@ contextManager.prototype.getSpecificNodes = function getSpecificNodes (decorated
 
 /**
  * Retrieve the nodes of the CDT that are used for query composition
- * @param decoratedCdt The decorated CDT
+ * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of nodes
  */
-contextManager.prototype.getParameterNodes = function getParameterNodes (decoratedCdt) {
+contextManager.prototype.getParameterNodes = function getParameterNodes (mergedCdt) {
     return new Promise (function (resolve, reject) {
-        var context = decoratedCdt.context;
+        var context = mergedCdt.context;
         if (!_.isEmpty(context)) {
             //gets the pairs dimension and value from the decorated CDT
             var paramValues = _(context)
@@ -199,11 +262,11 @@ contextManager.prototype.getParameterNodes = function getParameterNodes (decorat
 
 /**
  * Search the selected interest topic
- * @param decoratedCdt The decorated CDT
+ * @param mergedCdt The merged CDT
  * @returns The interest topic name
  */
-contextManager.prototype.getInterestTopic = function getInterestTopic (decoratedCdt) {
-    var context = decoratedCdt.context;
+contextManager.prototype.getInterestTopic = function getInterestTopic (mergedCdt) {
+    var context = mergedCdt.context;
     if (!_.isEmpty(context)) {
         var r = _.find(context, {dimension: 'InterestTopic'});
         if (!_.isUndefined(r)) {
@@ -218,12 +281,12 @@ contextManager.prototype.getInterestTopic = function getInterestTopic (decorated
 
 /**
  * Return the support service categories to be researched
- * @param decoratedCdt The decorated CDT
+ * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of categories
  */
-contextManager.prototype.getSupportServiceCategories = function getSupportServiceCategories (decoratedCdt) {
+contextManager.prototype.getSupportServiceCategories = function getSupportServiceCategories (mergedCdt) {
     return new Promise (function (resolve, reject) {
-        var support = decoratedCdt.support;
+        var support = mergedCdt.support;
         if (!_.isEmpty(support)) {
             var categories = _.map(_.filter(support, 'category'), function (s) {
                 return s.category;
@@ -237,12 +300,12 @@ contextManager.prototype.getSupportServiceCategories = function getSupportServic
 
 /**
  * Return the support service names
- * @param decoratedCdt The decorated CDT
+ * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of services name and operation
  */
-contextManager.prototype.getSupportServiceNames = function getSupportServiceNames (decoratedCdt) {
+contextManager.prototype.getSupportServiceNames = function getSupportServiceNames (mergedCdt) {
     return new Promise (function (resolve, reject) {
-        var support = decoratedCdt.support;
+        var support = mergedCdt.support;
         if (!_.isEmpty(support)) {
             var names = _.map(_.filter(support, 'name' && 'operation'), function (s) {
                return s;
@@ -288,16 +351,6 @@ contextManager.prototype.getDescendants = function getDescendants (idCDT, nodes)
             resolve();
         }
     });
-};
-
-/**
- * Check if a specified dimension is defined in the context
- * @param dimensionName The dimension name to be searched
- * @param decoratedCdt The decorated CDT
- * @returns {boolean} Return true if the dimension is defined, false otherwise
- */
-contextManager.prototype.isDefined = function isDefined (dimensionName, decoratedCdt) {
-    return _.findIndex(decoratedCdt.context, {dimension: dimensionName}) !== -1;
 };
 
 module.exports = new contextManager();

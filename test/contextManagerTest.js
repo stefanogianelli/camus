@@ -22,9 +22,19 @@ describe('Component: ContextManager', function() {
     });
 
     describe('#getDecoratedCdt()', function () {
-        it('check if a CDT and a context are correctly merged', function () {
+        it('check if correct decorated CDT is generated', function () {
             return contextManager
                 .getDecoratedCdt(decoratedContext(_idCDT))
+                .then(function (data) {
+                    console.log(data);
+                });
+        });
+    });
+
+    describe('#mergeCdtAndContext()', function () {
+        it('check if a CDT and a context are correctly merged', function () {
+            return contextManager
+                .mergeCdtAndContext(mergedContext(_idCDT))
                 .then(function (data) {
                     assert.equal(data.context[0].dimension, 'InterestTopic');
                     assert.equal(data.context[0].value, 'Restaurant');
@@ -39,7 +49,7 @@ describe('Component: ContextManager', function() {
     describe('#getFilterNodes()', function () {
         it('check if correct filter nodes are returned', function () {
             return contextManager
-                .getFilterNodes(mockData.decoratedCdt(_idCDT))
+                .getFilterNodes(mockData.mergedCdt(_idCDT))
                 .then(function (nodes) {
                     if (nodes.length === 5) {
                         assert.equal(nodes[0].dimension, 'InterestTopic');
@@ -55,8 +65,6 @@ describe('Component: ContextManager', function() {
                     } else {
                         assert.fail(nodes.length, 5, 'Wrong nodes count');
                     }
-                }).catch(function (e) {
-                    assert.equal(e, null);
                 });
 
         });
@@ -86,7 +94,7 @@ describe('Component: ContextManager', function() {
     describe('#getSpecificNodes()', function () {
         it('check if correct specific nodes are returned', function () {
             return contextManager
-                .getSpecificNodes(mockData.decoratedCdt(_idCDT))
+                .getSpecificNodes(mockData.mergedCdt(_idCDT))
                 .then(function (nodes) {
                     if (nodes.length === 1) {
                         assert.equal(nodes[0].dimension, 'City');
@@ -124,7 +132,7 @@ describe('Component: ContextManager', function() {
     describe('#getParameterNodes()', function () {
         it('check if correct parameter nodes are returned', function () {
             return contextManager
-                .getParameterNodes(mockData.decoratedCdt(_idCDT))
+                .getParameterNodes(mockData.mergedCdt(_idCDT))
                 .then(function (nodes) {
                     if (nodes.length === 4) {
                         assert.equal(nodes[0].dimension, 'Budget');
@@ -165,7 +173,7 @@ describe('Component: ContextManager', function() {
 
     describe('#getInterestTopic()', function () {
         it('check if correct interest topic are returned', function () {
-            var interestTopic = contextManager.getInterestTopic(mockData.decoratedCdt(_idCDT));
+            var interestTopic = contextManager.getInterestTopic(mockData.mergedCdt(_idCDT));
             assert.equal(interestTopic, 'Restaurant');
         });
         it('check error when sending empty context', function () {
@@ -194,7 +202,7 @@ describe('Component: ContextManager', function() {
     describe('#getSupportServiceCategories()', function () {
         it('check if correct categories are returned', function () {
             return contextManager
-                .getSupportServiceCategories(mockData.decoratedCdt(_idCDT))
+                .getSupportServiceCategories(mockData.mergedCdt(_idCDT))
                 .then(function (categories) {
                     assert.equal(categories.length, 2);
                     assert.equal(categories[0], 'Transport');
@@ -220,7 +228,7 @@ describe('Component: ContextManager', function() {
     describe('#getSupportServiceNames()', function () {
         it('check if correct names are returned', function () {
             return contextManager
-                .getSupportServiceNames(mockData.decoratedCdt(_idCDT))
+                .getSupportServiceNames(mockData.mergedCdt(_idCDT))
                 .then(function (names) {
                     assert.notEqual(names, null);
                     assert.equal(names.length, 1);
@@ -301,15 +309,6 @@ describe('Component: ContextManager', function() {
         });
     });
 
-    describe('#isDefined()', function () {
-        it('check if return true when dimension exists', function () {
-            assert.equal(contextManager.isDefined('Location', mockData.decoratedCdt(_idCDT)), true);
-        });
-        it('check if return false when dimension not exists', function () {
-            assert.equal(contextManager.isDefined('Age', mockData.decoratedCdt(_idCDT)), false);
-        });
-    });
-
     after(function (done) {
         MockDatabase.deleteDatabase(function (err) {
             assert.equal(err, null);
@@ -335,7 +334,7 @@ var wrongContext = function(idCDT) {
 //context with no dimensions selected
 var emptyContext = function (idCDT) {
     return {
-        _id: _idCDT,
+        _id: idCDT,
         context: []
     }
 };
@@ -343,7 +342,7 @@ var emptyContext = function (idCDT) {
 //context with no support services selected
 var emptySupport = function (idCDT) {
     return {
-        _id: _idCDT,
+        _id: idCDT,
         support: []
     }
 };
@@ -351,22 +350,25 @@ var emptySupport = function (idCDT) {
 //context without interest topic
 var noInterestTopicContext = function (idCDT) {
     return {
-        _id: _idCDT,
+        _id: idCDT,
         context: [
             {
                 dimension: 'Location',
-                value: 'newyork',
-                for: 'filter|parameter',
-                search: 'testCustomSearch'
+                params: [
+                    {
+                        name: 'City',
+                        value: 'newyork'
+                    }
+                ]
             }
         ]
     }
 };
 
-//context used to test the decoration function
-var decoratedContext = function (idCDT) {
+//context used to test the merging function
+var mergedContext = function (idCDT) {
     return {
-        _id: _idCDT,
+        _id: idCDT,
         context: [
             {
                 dimension: 'Location',
@@ -388,6 +390,54 @@ var decoratedContext = function (idCDT) {
             {
                 dimension: 'InterestTopic',
                 value: 'Restaurant'
+            }
+        ]
+    }
+};
+
+//context used to test the decoration function
+var decoratedContext = function (idCDT) {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'Location',
+                params: [
+                    {
+                        name: 'City',
+                        value: 'Milan'
+                    }
+                ]
+            },
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant'
+            },
+            {
+                dimension: 'Guests',
+                params: [
+                    {
+                        name: 'Number',
+                        value: 4
+                    }
+                ]
+            },
+            {
+                dimension: 'Budget',
+                value: 'Low'
+            },
+            {
+                dimension: 'Transport',
+                value: 'PublicTransport'
+            }
+        ],
+        support: [
+            {
+                category: 'Transport'
+            },
+            {
+                name: 'Wikipedia',
+                operation: 'search'
             }
         ]
     }

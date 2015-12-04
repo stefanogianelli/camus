@@ -1,6 +1,5 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
-var contextManager = require('./contextManager.js');
 var provider = require('../provider/provider.js');
 var pluginManager = require('./pluginManager.js');
 
@@ -16,60 +15,48 @@ var primaryServiceSelection = function () { };
  */
 primaryServiceSelection.prototype.selectServices = function selectServices (decoratedCdt) {
     return new Promise(function (resolve, reject) {
-        contextManager
-            //acquire the filter nodes associated to the decorated CDT
-            .getFilterNodes(decoratedCdt)
-            .then(function (nodes) {
-                //check if the retrieved nodes have descendants
-                return [nodes, contextManager.getDescendants(decoratedCdt._id, nodes)];
-            })
-            .spread(function (baseNodes, sonNodes) {
-                //obtain the list of services associated to the nodes selected
-                return provider.filterPrimaryServices(_.union(baseNodes, sonNodes), decoratedCdt._id);
-            })
+        provider
+            .filterPrimaryServices(decoratedCdt.filterNodes, decoratedCdt._id)
             .then(function (services) {
                 //check if some services need a custom search function and execute it
-                return [services, loadSearchPlugins(decoratedCdt)];
+                return [services, loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificNodes)];
             })
             .spread(function (filterServices, customSearchServices) {
                 //calculate the ranking and returns the list
                 resolve(calculateRanking(_.union(filterServices, customSearchServices)));
             })
             .catch(function (e) {
-                reject(e.message);
+                reject(e);
             });
     })
 };
 
 /**
  * Search for the CDT nodes that need a specific search function and execute it
- * @param decoratedCdt The current decorated CDT
+ * @param idCDT The CDT identifier
+ * @param specificNodes The list of specific nodes
  * @returns {bluebird|exports|module.exports} The promise with the services found
  */
-function loadSearchPlugins (decoratedCdt) {
+function loadSearchPlugins (idCDT, specificNodes) {
     return new Promise(function (resolve, reject) {
-        contextManager
-            //acquire the nodes that need a custom search function
-            .getSpecificNodes(decoratedCdt)
-            .then(function (nodes) {
-                if (!_.isEmpty(nodes)) {
-                    //retrieve the association data for the dimensions
-                    return [nodes, provider.filterPrimaryServices(nodes, decoratedCdt._id, true)];
-                } else {
-                    resolve();
-                }
-            })
-            .spread(function (nodes, data) {
-                //call the function that takes care to execute the search functions
-                return pluginManager.executeModules(nodes, data);
-            })
-            .then(function (results) {
-                //return the services found
-                resolve(results);
-            })
-            .catch(function (e) {
-                reject(e);
-            });
+        if (!_.isUndefined(specificNodes) && !_.isEmpty(specificNodes)) {
+            provider
+                .filterPrimaryServices(specificNodes, idCDT, true)
+                .then(function (data) {
+                    //call the function that takes care to execute the search functions
+                    return pluginManager.executeModules(specificNodes, data);
+                })
+                .then(function (results) {
+                    //return the services found
+                    resolve(results);
+                })
+                .catch(function (e) {
+                    reject(e);
+                });
+        } else {
+            //no specific search needed
+            resolve();
+        }
     });
 }
 

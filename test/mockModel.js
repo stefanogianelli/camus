@@ -23,7 +23,7 @@ var cdt = {
         },
         {
             name: 'Guests',
-            for: 'filter|parameter',
+            for: 'parameter',
             params: [
                 {
                     name: 'Number',
@@ -165,6 +165,75 @@ module.exports.multipleSonsCdt = multipleSonsCdt;
 var decoratedCdt = function (idCDT) {
     return {
         _id: idCDT,
+        interestTopic: 'Restaurant',
+        filterNodes: [
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant'
+            },
+            {
+                dimension: 'Budget',
+                value: 'Low'
+            },
+            {
+                dimension: 'Transport',
+                value: 'PublicTransport'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'DinnerWithFriends'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'Bus'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'Train'
+            }
+        ],
+        specificNodes: [
+            {
+                dimension: 'City',
+                value: 'Milan',
+                searchFunction: 'testCustomSearch'
+            }
+        ],
+        parameterNodes: [
+            {
+                dimension: 'Budget',
+                value: 'Low',
+                transformFunction: 'translateBudget'
+            },
+            {
+                dimension: 'City',
+                value: 'Milan'
+            },
+            {
+                dimension: 'Number',
+                value: '4'
+            },
+            {
+                dimension: 'search_key',
+                value: 'restaurantinnewyork'
+            }
+        ],
+        supportServiceCategories: [ 'Transport', 'Sport' ],
+        supportServiceNames: [
+            {
+                name: 'Wikipedia',
+                operation: 'search'
+            }
+        ]
+    }
+};
+
+module.exports.decoratedCdt = decoratedCdt;
+
+//sample merged CDT
+var mergedCdt = function (idCDT) {
+    return {
+        _id: idCDT,
         context: [
             {
                 dimension: 'InterestTopic',
@@ -234,7 +303,7 @@ var decoratedCdt = function (idCDT) {
     }
 };
 
-module.exports.decoratedCdt = decoratedCdt;
+module.exports.mergedCdt = mergedCdt;
 
 //googlePlaces service
 var googlePlaces = {

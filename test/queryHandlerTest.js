@@ -102,44 +102,44 @@ describe('Component: QueryHandler', function () {
 //Context that involve the fake service
 var contextForFakeService = function (idCDT) {
     return {
-        _id: _idCDT,
-        context: [
+        _id: idCDT,
+        interestTopic: 'Restaurant',
+        filterNodes: [
             {
                 dimension: 'InterestTopic',
-                value: 'Restaurant',
-                for: 'filter'
-            },
-            {
-                dimension: 'City',
-                value: 'Milan',
-                for: 'filter|parameter',
-                search: 'testCustomSearch'
-            },
-            {
-                dimension: 'Guests',
-                value: '4',
-                for: 'parameter'
+                value: 'Restaurant'
             },
             {
                 dimension: 'Budget',
-                value: 'Low',
-                for: 'filter|parameter',
-                transformFunction: 'translateBudget'
+                value: 'Low'
             },
             {
                 dimension: 'Tipology',
-                value: 'DinnerWithFriends',
-                for: 'filter'
-            },
-            {
-                dimension: "search_key",
-                value: "restaurantinnewyork",
-                for: "parameter"
+                value: 'DinnerWithFriends'
             },
             {
                 dimension: 'TestServizio',
-                value: 'TestSenzaRisposta',
-                for: 'filter'
+                value: 'TestSenzaRisposta'
+            }
+        ],
+        specificNodes: [],
+        parameterNodes: [
+            {
+                dimension: 'Budget',
+                value: 'Low',
+                transformFunction: 'translateBudget'
+            },
+            {
+                dimension: 'City',
+                value: 'Milan'
+            },
+            {
+                dimension: 'Number',
+                value: '4'
+            },
+            {
+                dimension: 'search_key',
+                value: 'restaurantinnewyork'
             }
         ]
     }
@@ -148,42 +148,56 @@ var contextForFakeService = function (idCDT) {
 //context for test the correct execution of custom bridge
 var testBridgeContext = function (idCDT) {
     return {
-        _id: _idCDT,
-        context: [
-            {
-                dimension: 'InterestTopic',
-                value: 'Bridge',
-                for: 'filter'
-            },
+        _id: idCDT,
+        interestTopic: 'Restaurant',
+        filterNodes: [
             {
                 dimension: 'TestBridge',
-                value: 'TestBridge',
-                for: 'filter'
+                value: 'TestBridge'
             }
-        ]
+        ],
+        specificNodes: [],
+        parameterNodes: []
     }
 };
 
 //context for testing the behavior when non existent translation function is called
 var invalidTranslationFunction = function (idCDT) {
     return {
-        _id: _idCDT,
-        context: [
+        _id: idCDT,
+        interestTopic: 'Restaurant',
+        filterNodes: [
             {
                 dimension: 'InterestTopic',
-                value: 'Restaurant',
-                for: 'filter'
-            },
-            {
-                dimension: "search_key",
-                value: "restaurantinnewyork",
-                for: "parameter"
+                value: 'Restaurant'
             },
             {
                 dimension: 'Budget',
+                value: 'Low'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'DinnerWithFriends'
+            }
+        ],
+        specificNodes: [],
+        parameterNodes: [
+            {
+                dimension: 'Budget',
                 value: 'Low',
-                for: 'filter|parameter',
                 transformFunction: 'translateBudgets'
+            },
+            {
+                dimension: 'City',
+                value: 'Milan'
+            },
+            {
+                dimension: 'Number',
+                value: '4'
+            },
+            {
+                dimension: 'search_key',
+                value: 'restaurantinnewyork'
             }
         ]
     }
@@ -192,18 +206,58 @@ var invalidTranslationFunction = function (idCDT) {
 //context for testing the behavior when the translation function receive an unrecognized parameter
 var invalidInterestTopic = function (idCDT) {
     return {
-        _id: _idCDT,
-        context: [
+        _id: idCDT,
+        interestTopic: 'WrongName',
+        filterNodes: [
             {
                 dimension: 'InterestTopic',
-                value: 'Sport',
-                for: 'filter'
+                value: 'Restaurant'
             },
             {
                 dimension: 'Budget',
+                value: 'Low'
+            },
+            {
+                dimension: 'Transport',
+                value: 'PublicTransport'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'DinnerWithFriends'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'Bus'
+            },
+            {
+                dimension: 'Tipology',
+                value: 'Train'
+            }
+        ],
+        specificNodes: [
+            {
+                dimension: 'City',
+                value: 'Milan',
+                searchFunction: 'testCustomSearch'
+            }
+        ],
+        parameterNodes: [
+            {
+                dimension: 'Budget',
                 value: 'Low',
-                for: 'filter|parameter',
                 transformFunction: 'translateBudget'
+            },
+            {
+                dimension: 'City',
+                value: 'Milan'
+            },
+            {
+                dimension: 'Number',
+                value: '4'
+            },
+            {
+                dimension: 'search_key',
+                value: 'restaurantinnewyork'
             }
         ]
     }

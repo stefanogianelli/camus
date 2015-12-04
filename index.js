@@ -37,7 +37,7 @@ app.route({
     path: '/query',
     handler: function(req, reply) {
         contextManager
-            .getDecoratedCdt(req.payload)
+            .mergeCdtAndContext(req.payload)
             .then(function (decoratedCdt) {
                 return Promise
                     .props({
