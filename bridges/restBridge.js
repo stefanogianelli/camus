@@ -52,7 +52,7 @@ function parameterMapping (service, paramNodes) {
                 } else {
                     if (p.required) {
                         //the service cannot be invoked
-                        reject(service.name + ' - lack of required parameter \'' + p.name + '\'');
+                        reject('lack of required parameter \'' + p.name + '\'');
                     }
                 }
             } else {
@@ -91,7 +91,7 @@ function parameterMapping (service, paramNodes) {
                 } else {
                     if (p.required) {
                         //the service cannot be invoked
-                        reject(service.name + ' - lack of required parameter \'' + p.name + '\'');
+                        reject('lack of required parameter \'' + p.name + '\'');
                     }
                 }
             }

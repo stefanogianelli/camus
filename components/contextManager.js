@@ -230,7 +230,7 @@ contextManager.prototype.getSupportServiceCategories = function getSupportServic
             });
             resolve(categories);
         } else {
-            reject('No support services defined');
+            resolve();
         }
     });
 };
@@ -249,7 +249,7 @@ contextManager.prototype.getSupportServiceNames = function getSupportServiceName
             });
             resolve(names);
         } else {
-            reject('No support services defined');
+            resolve();
         }
     });
 };

@@ -29,7 +29,9 @@ supportServiceSelection.prototype.selectServices = function (decoratedCdt) {
                     .getSupportServiceCategories(decoratedCdt)
                     .then(function (serviceCategories) {
                         //compose the URL for the services found
-                        return selectServiceFromCategory(serviceCategories, decoratedCdt);
+                        if (!_.isUndefined(serviceCategories) && !_.isEmpty(serviceCategories)) {
+                            return selectServiceFromCategory(serviceCategories, decoratedCdt);
+                        }
                     })
             })
             .then(function (result) {

@@ -55,6 +55,9 @@ app.route({
             })
             .then(function (response) {
                 reply(response);
+            })
+            .catch(function (e) {
+                reply(e);
             });
     }
 });

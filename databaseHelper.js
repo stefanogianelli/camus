@@ -26,6 +26,9 @@ databaseHelper.prototype.createDatabase = function createDatabase () {
             function (idCdt, callback) {
                 //create the services and save their associations
                 async.parallel([
+                    /*
+                    ADD PRIMARY SERVICES BELOW
+                     */
                     function (callback) {
                         //save google places service
                         async.waterfall([
@@ -65,6 +68,28 @@ databaseHelper.prototype.createDatabase = function createDatabase () {
                         });
                     },
                     function (callback) {
+                        //save cinema stub
+                        async.waterfall([
+                            function (callback) {
+                                new ServiceModel(cinemaStub).save(function (err, service) {
+                                    callback(err, service.operations[0].id);
+                                });
+                            },
+                            function (idOperation, callback) {
+                                _.forEach(cinemaStubAssociations(idOperation, idCdt), function (a) {
+                                    new PrimaryServiceModel(a).save(function (err) {
+                                        callback(err, 'done');
+                                    });
+                                });
+                            }
+                        ], function (err) {
+                            callback(err, 'done');
+                        });
+                    },
+                    /*
+                    ADD SUPPORT SERVICES BELOW
+                     */
+                    function (callback) {
                         //save wikipedia service
                         new ServiceModel(wikipedia).save(function (err) {
                             callback(err, 'done');
@@ -89,6 +114,9 @@ databaseHelper.prototype.createDatabase = function createDatabase () {
                             callback(err, 'done');
                         });
                     }
+                    /*
+                    END SERVICE INSERTION
+                     */
                 ], function (err) {
                     callback(err, idCdt);
                 });
@@ -156,7 +184,7 @@ var cdt = {
             for: 'filter',
             values: [
                 'Restaurant',
-                'Hotel'
+                'Cinema'
             ]
         },
         {
@@ -363,7 +391,7 @@ var googlePlacesAssociations = function (idOperation, idCDT) {
 var eventful = {
     name: 'eventful',
     type: 'primary',
-    protocol: 'rest',
+    protocol: 'query',
     basePath: 'http://api.eventful.com//json',
     operations: [
         {
@@ -531,6 +559,72 @@ var googleMapsAssociation = function (idOperation, idCDT) {
                     value: 'WithCar'
                 }
             ]
+        }
+    ];
+};
+
+//cinema stub service
+var cinemaStub = {
+    name: 'cinemaStub',
+    type: 'primary',
+    protocol: 'query',
+    basePath: 'http://pedigree.deib.polimi.it/camus/stub/cinema/api/v1/queryDB',
+    operations: [
+        {
+            name: 'search',
+            path: '/',
+            parameters: [
+                {
+                    name: 'citta',
+                    required: true,
+                    default: 'milano',
+                    mappingCDT: [
+                        'City'
+                    ]
+                }
+            ],
+            responseMapping: {
+                items: [
+                    {
+                        termName: 'title',
+                        path: 'nome'
+                    },
+                    {
+                        termName: 'address',
+                        path: 'indirizzo'
+                    },
+                    {
+                        termName: 'telephone',
+                        path: 'telefono'
+                    },
+                    {
+                        termName: 'website',
+                        path: 'sito'
+                    },
+                    {
+                        termName: 'latitude',
+                        path: 'latitudine'
+                    },
+                    {
+                        termName: 'longitude',
+                        path: 'longitudine'
+                    }
+                ]
+            }
+        }
+    ]
+};
+
+//cinema stub associations
+var cinemaStubAssociations = function (idOperation, idCDT) {
+    return [
+        {
+            _idOperation: idOperation,
+            dimension: 'InterestTopic',
+            value: 'Cinema',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idCDT
         }
     ];
 };

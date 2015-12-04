@@ -24,7 +24,7 @@ describe('Component: RestBridge', function () {
                     return restBridge.executeQuery(noDefaultParameterService, params)
                 })
                 .catch(function (e) {
-                    assert.equal(e, 'eventful - lack of required parameter \'app_key\'');
+                    assert.equal(e, 'lack of required parameter \'app_key\'');
                 });
         });
         it('check error when a required parameter has no value in the CDT', function () {
@@ -34,7 +34,7 @@ describe('Component: RestBridge', function () {
                     return restBridge.executeQuery(noValueParameterService, params)
                 })
                 .catch(function (e) {
-                    assert.equal(e, 'eventful - lack of required parameter \'location\'');
+                    assert.equal(e, 'lack of required parameter \'location\'');
                 });
         });
         it('check error when the service does not respond', function () {

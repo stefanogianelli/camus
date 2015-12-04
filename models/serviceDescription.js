@@ -76,10 +76,7 @@ var operateSchema = new Schema({
  * Response schema
  */
 var responseSchema = new Schema({
-    list: {
-        type: String,
-        required: true
-    },
+    list: String,
     items: [itemSchema],
     functions: [operateSchema]
 });

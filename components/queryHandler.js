@@ -120,14 +120,14 @@ function callServices (services, params) {
                         return transformResponse(s.operations[0].responseMapping, response)
                     })
                     .catch(function (e) {
-                        console.log('[' + s.name + '] ERROR: ' + e.message);
+                        console.log('[' + s.name + '] ERROR: ' + e);
                     });
             })
             .then(function (responses) {
                 //leave the undefined responses
                 responses = _(responses)
                     .filter(function (item) {
-                        return !_.isUndefined(item);
+                        return !_.isUndefined(item) && !_.isEmpty(item);
                     })
                     .value();
                 resolve(responses);
@@ -144,15 +144,44 @@ function callServices (services, params) {
 function transformResponse (mapping, response) {
     return new Promise (function (resolve, reject) {
         if (!_.isUndefined(response) && _.isObject(response)) {
-            var transformedResponse = _.map(getItemValue(response, mapping.list), function (i) {
-                return transformItem(i, mapping);
-            });
-            transformedResponse = executeFunctions(transformedResponse, mapping);
-            resolve(transformedResponse);
+            if (!_.isUndefined(mapping)) {
+                var transformedResponse = _.map(retrieveListOfResults(response, mapping.list), function (i) {
+                    return transformItem(i, mapping);
+                });
+                transformedResponse = executeFunctions(transformedResponse, mapping);
+                resolve(transformedResponse);
+            } else {
+                reject('no mapping associated to the service');
+            }
         } else {
-            reject('ERROR: wrong response type or empty response');
+            reject('wrong response type or empty response');
         }
     })
+}
+
+/**
+ * It retrieve the base path where find the list of result items.
+ * If the specified path is not an array it converts it to an array.
+ * @param response The response received from the web service
+ * @param listItem The base path where find the items. If the root of the document if the base path leave this field empty
+ * @returns {Array} The array of items
+ */
+function retrieveListOfResults (response, listItem) {
+    var list = [];
+    if (!_.isUndefined(listItem) && !_.isEmpty(listItem)) {
+        //it was defined a base list item so consider it as root for the transformation
+        list = getItemValue(response, listItem);
+    } else {
+        //start at the root element
+        list = response;
+    }
+    //check if the current list is an array, otherwise I transform it in a list from the current set of objects
+    if (!_.isArray(list)) {
+        list = _.map(list, function(item) {
+            return item;
+        });
+    }
+    return list;
 }
 
 /**
@@ -199,7 +228,7 @@ function transformItem (item, mapping) {
     _.forEach(mapping.items, function (m) {
         if (typeof m.path === 'string' && !_.isEmpty(m.path)) {
             var v = getItemValue(item, m.path);
-            if (!_.isUndefined(v)) {
+            if (!_.isUndefined(v) && !_.isEmpty(v)) {
                 obj[m.termName] = v;
             }
         }
