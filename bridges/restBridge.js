@@ -42,7 +42,7 @@ function parameterMapping (service, paramNodes) {
     return new Promise(function (resolve, reject) {
         var params = [];
         _.forEach(service.operations[0].parameters, function (p) {
-            if (p.mappingCDT.length === 0) {
+            if (_.isEmpty(p.mappingCDT)) {
                 //use default value if the parameter is required and no mapping on the CDT was added
                 if (!_.isUndefined(p.default)) {
                     params.push({
@@ -110,6 +110,13 @@ function searchMapping (nodes, name) {
     return _.result(_.find(nodes, {dimension: name}), 'value')
 }
 
+/**
+ * Compose the address of the service, add the header informations and call the service.
+ * Then return the service response (parsed)
+ * @param service The service description
+ * @param params The parameters that will be used for query composition
+ * @returns {bluebird|exports|module.exports} The parsed response
+ */
 function invokeService (service, params) {
     return new Promise (function (resolve, reject) {
         var request;
@@ -136,7 +143,22 @@ function invokeService (service, params) {
         request
             .end(function (err, res) {
                 if (err) {
-                    reject(err);
+                    switch (err.status) {
+                        case 400:
+                            reject('bad request. Check the address and parameters (400)');
+                            break;
+                        case 401:
+                            reject('access to a restricted resource (401)');
+                            break;
+                        case 404:
+                            reject('service not found (404)');
+                            break;
+                        case 500:
+                            reject('server error (500)');
+                            break;
+                        default:
+                            reject(err);
+                    }
                 } else {
                     if (!_.isEmpty(res.body)) {
                         resolve(res.body);
