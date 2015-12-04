@@ -86,6 +86,25 @@ databaseHelper.prototype.createDatabase = function createDatabase () {
                             callback(err, 'done');
                         });
                     },
+                    function (callback) {
+                        //save theater stub
+                        async.waterfall([
+                            function (callback) {
+                                new ServiceModel(theaterStub).save(function (err, service) {
+                                    callback(err, service.operations[0].id);
+                                });
+                            },
+                            function (idOperation, callback) {
+                                _.forEach(theaterStubAssociations(idOperation, idCdt), function (a) {
+                                    new PrimaryServiceModel(a).save(function (err) {
+                                        callback(err, 'done');
+                                    });
+                                });
+                            }
+                        ], function (err) {
+                            callback(err, 'done');
+                        });
+                    },
                     /*
                     ADD SUPPORT SERVICES BELOW
                      */
@@ -184,7 +203,8 @@ var cdt = {
             for: 'filter',
             values: [
                 'Restaurant',
-                'Cinema'
+                'Cinema',
+                'Theater'
             ]
         },
         {
@@ -195,6 +215,12 @@ var cdt = {
                     name: 'City',
                     type: 'gps',
                     searchFunction: 'testCustomSearch'
+                },
+                {
+                    name: 'Latitude'
+                },
+                {
+                    name: 'Longitude'
                 }
             ]
         },
@@ -622,6 +648,81 @@ var cinemaStubAssociations = function (idOperation, idCDT) {
             _idOperation: idOperation,
             dimension: 'InterestTopic',
             value: 'Cinema',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idCDT
+        }
+    ];
+};
+
+//theater stub service
+var theaterStub = {
+    name: 'theaterStub',
+    type: 'primary',
+    protocol: 'query',
+    basePath: 'http://pedigree.deib.polimi.it/camus/stub/milanotheater',
+    operations: [
+        {
+            name: 'search',
+            path: '/rest.php',
+            parameters: [
+                {
+                    name: 'latitude',
+                    required: true,
+                    default: '45.46867',
+                    mappingCDT: [
+                        'Latitude'
+                    ]
+                },
+                {
+                    name: 'longitude',
+                    required: true,
+                    default: '9.11144',
+                    mappingCDT: [
+                        'Longitude'
+                    ]
+                }
+            ],
+            responseMapping: {
+                list: 'results',
+                items: [
+                    {
+                        termName: 'title',
+                        path: 'name'
+                    },
+                    {
+                        termName: 'address',
+                        path: 'address'
+                    },
+                    {
+                        termName: 'telephone',
+                        path: 'tel'
+                    },
+                    {
+                        termName: 'website',
+                        path: 'url'
+                    },
+                    {
+                        termName: 'latitude',
+                        path: 'latitude'
+                    },
+                    {
+                        termName: 'longitude',
+                        path: 'longitude'
+                    }
+                ]
+            }
+        }
+    ]
+};
+
+//theater stub associations
+var theaterStubAssociations = function (idOperation, idCDT) {
+    return [
+        {
+            _idOperation: idOperation,
+            dimension: 'InterestTopic',
+            value: 'Theater',
             ranking: 1,
             weight: 2,
             _idCDT: idCDT

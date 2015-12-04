@@ -18,9 +18,9 @@ contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
                     var decoratedCdt = _.map(data[0].context, function (cdt) {
                         var c = _.find(context.context, 'dimension', cdt.dimension);
                         if (!_.isEmpty(cdt.params) && !_.isEmpty(c.params)) {
-                            cdt['params'] = _.map(cdt.params, function (p1) {
-                                var p2 = _.find(c.params, 'name', p1.name);
-                                return _.assign(p2, p1);
+                            cdt['params'] = _.map(c.params, function (p1) {
+                                var p2 = _.find(cdt.params, 'name', p1.name);
+                                return _.assign(p1, p2);
                             });
                         }
                         return _.assign(c, cdt);
