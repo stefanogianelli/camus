@@ -46,6 +46,8 @@ contextManager.prototype.getDecoratedCdt = function (context) {
                         supportServiceNames: contextManager.prototype.getSupportServiceNames(mergedCdt)
                     })
                     .then(function (results) {
+                        //add in the output the CDT identifier
+                        results['_id'] = mergedCdt._id;
                         resolve(results);
                     })
                     .catch(function (e) {
