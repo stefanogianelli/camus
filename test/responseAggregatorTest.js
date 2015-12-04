@@ -8,10 +8,24 @@ describe('Component: ResponseAggregator', function () {
             return responseAggregator
                 .prepareResponse(testSuccessfulMerging, supportResponse)
                 .then(function (response) {
-                    assert.notEqual(response, null);
                     assert.equal(response.data.length, 3);
                     assert.equal(response.support.length, 3);
                 });
+        });
+        it('check correct response when no support services are found', function () {
+            return responseAggregator
+                .prepareResponse(testSuccessfulMerging, [])
+                .then(function (response) {
+                    assert.equal(response.data.length, 3);
+                    assert.equal(response.support.length, 0);
+                });
+        });
+        it('check error message when empty response list is sent', function () {
+           return responseAggregator
+               .prepareResponse([], [])
+               .catch(function (e) {
+                   assert.equal(e, 'No results');
+               })
         });
     });
 

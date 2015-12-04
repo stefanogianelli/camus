@@ -26,7 +26,30 @@ describe('Component: ContextManager', function() {
             return contextManager
                 .getDecoratedCdt(decoratedContext(_idCDT))
                 .then(function (data) {
-                    console.log(data);
+                    assert.equal(data.interestTopic, 'Restaurant');
+                    assert.equal(data.filterNodes[0].dimension, 'InterestTopic');
+                    assert.equal(data.filterNodes[0].value, 'Restaurant');
+                    assert.equal(data.filterNodes[1].dimension, 'Budget');
+                    assert.equal(data.filterNodes[1].value, 'Low');
+                    assert.equal(data.filterNodes[2].dimension, 'Transport');
+                    assert.equal(data.filterNodes[2].value, 'PublicTransport');
+                    assert.equal(data.filterNodes[3].dimension, 'Tipology');
+                    assert.equal(data.filterNodes[3].value, 'Bus');
+                    assert.equal(data.filterNodes[4].dimension, 'Tipology');
+                    assert.equal(data.filterNodes[4].value, 'Train');
+                    assert.equal(data.specificNodes[0].dimension, 'City');
+                    assert.equal(data.specificNodes[0].value, 'Milan');
+                    assert.equal(data.specificNodes[0].searchFunction, 'testCustomSearch');
+                    assert.equal(data.parameterNodes[0].dimension, 'Budget');
+                    assert.equal(data.parameterNodes[0].value, 'Low');
+                    assert.equal(data.parameterNodes[0].transformFunction, 'translateBudget');
+                    assert.equal(data.parameterNodes[1].dimension, 'City');
+                    assert.equal(data.parameterNodes[1].value, 'Milan');
+                    assert.equal(data.parameterNodes[2].dimension, 'Number');
+                    assert.equal(data.parameterNodes[2].value, 4);
+                    assert.equal(data.supportServiceCategories[0], 'Transport');
+                    assert.equal(data.supportServiceNames[0].name, 'Wikipedia');
+                    assert.equal(data.supportServiceNames[0].operation, 'search');
                 });
         });
     });

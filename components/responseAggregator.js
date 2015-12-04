@@ -15,10 +15,15 @@ var responseAggregator = function () { };
  */
 responseAggregator.prototype.prepareResponse = function (responses, supportServices) {
     return new Promise (function (resolve, reject) {
-        var response = {};
-        response['data'] = _.flatten(responseAggregator.prototype.findSimilarities(responses));
-        response['support'] = supportServices;
-        resolve(response);
+        if (!_.isUndefined(responses) && !_.isEmpty(responses)) {
+            var response = {};
+            response['data'] = _.flatten(responseAggregator.prototype.findSimilarities(responses));
+            response['support'] = supportServices;
+            resolve(response);
+        } else {
+            //nothing found
+            reject('No results');
+        }
     });
 };
 
@@ -29,30 +34,26 @@ responseAggregator.prototype.prepareResponse = function (responses, supportServi
  * @returns {*} The responses list without duplicate items
  */
 responseAggregator.prototype.findSimilarities = function findSimilarities (responses) {
-    if (!_.isUndefined(responses) && !_.isEmpty(responses)) {
-        //analyze all pairs of responses
-        for(var i = 0; i < responses.length - 1; i++) {
-            for (var j = i + 1; j < responses.length; j++) {
-                //compare every items
-                for(var a = 0; a < responses[i].length; a++) {
-                    for(var b = 0; b < responses[j].length; b++) {
-                        //calculate a similarity index
-                        if (responseAggregator.prototype.calculateObjectSimilarity(responses[i][a], responses[j][b])) {
-                            //merge the two items
-                            responses[i][a] = _.assign(responses[j][b], responses[i][a]);
-                            //delete the item from the second array
-                            responses[j].splice(b, 1);
-                            //if I found a similar item I skip the analysis of the rest of array
-                            break;
-                        }
+    //analyze all pairs of responses
+    for(var i = 0; i < responses.length - 1; i++) {
+        for (var j = i + 1; j < responses.length; j++) {
+            //compare every items
+            for(var a = 0; a < responses[i].length; a++) {
+                for(var b = 0; b < responses[j].length; b++) {
+                    //calculate a similarity index
+                    if (responseAggregator.prototype.calculateObjectSimilarity(responses[i][a], responses[j][b])) {
+                        //merge the two items
+                        responses[i][a] = _.assign(responses[j][b], responses[i][a]);
+                        //delete the item from the second array
+                        responses[j].splice(b, 1);
+                        //if I found a similar item I skip the analysis of the rest of array
+                        break;
                     }
                 }
             }
         }
-        return responses;
-    } else {
-        console.log('Responses array is empty');
     }
+    return responses;
 };
 
 /**
