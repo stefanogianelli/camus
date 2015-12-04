@@ -105,6 +105,25 @@ databaseHelper.prototype.createDatabase = function createDatabase () {
                             callback(err, 'done');
                         });
                     },
+                    function (callback) {
+                        //save merici stub
+                        async.waterfall([
+                            function (callback) {
+                                new ServiceModel(mericiPrimary).save(function (err, service) {
+                                    callback(err, service.operations[0].id, service.operations[1].id, service.operations[2].id, service.operations[3].id);
+                                });
+                            },
+                            function (idHotel, idFood, idTheater, idMuseum, callback) {
+                                _.forEach(mericiPrimaryAssociations(idCdt, idHotel, idFood, idTheater, idMuseum), function (a) {
+                                    new PrimaryServiceModel(a).save(function (err) {
+                                        callback(err, 'done');
+                                    });
+                                });
+                            }
+                        ], function (err) {
+                            callback(err, 'done');
+                        });
+                    },
                     /*
                     ADD SUPPORT SERVICES BELOW
                      */
@@ -124,6 +143,25 @@ databaseHelper.prototype.createDatabase = function createDatabase () {
                             },
                             function (idOperation, callback) {
                                 _.forEach(googleMapsAssociation(idOperation, idCdt), function (a) {
+                                    new SupportServiceModel(a).save(function (err) {
+                                        callback(err, 'done');
+                                    });
+                                });
+                            }
+                        ], function (err) {
+                            callback(err, 'done');
+                        });
+                    },
+                    function (callback) {
+                        //save merici support service
+                        async.waterfall([
+                            function (callback) {
+                                new ServiceModel(mericiSupport).save(function (err, service) {
+                                    callback(err, service.operations[0].id, service.operations[1].id, service.operations[2].id);
+                                });
+                            },
+                            function (idTaxi, idCarSharing, idDriver, callback) {
+                                _.forEach(mericiSupportAssociation(idCdt, idTaxi, idCarSharing, idDriver), function (a) {
                                     new SupportServiceModel(a).save(function (err) {
                                         callback(err, 'done');
                                     });
@@ -156,35 +194,34 @@ databaseHelper.prototype.createDatabase = function createDatabase () {
  */
 databaseHelper.prototype.deleteDatabase = function deleteDatabase () {
     return new Promise(function (resolve, reject) {
-        async.parallel({
-                zero: function (callback) {
-                    cdtModel.remove({}, function(err) {
-                        callback(err, 'done');
-                    })
-                },
-                one: function (callback) {
-                    PrimaryServiceModel.remove({}, function(err) {
-                        callback(err, 'done');
-                    })
-                },
-                two: function (callback) {
-                    ServiceModel.remove({}, function(err) {
-                        callback(err, 'done');
-                    })
-                },
-                three: function (callback) {
-                    SupportServiceModel.remove({}, function(err) {
-                        callback(err, 'done');
-                    })
-                }
+        async.parallel([
+            function (callback) {
+                cdtModel.remove({}, function(err) {
+                    callback(err, 'done');
+                })
             },
-            function (err) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
-            });
+            function (callback) {
+                PrimaryServiceModel.remove({}, function(err) {
+                    callback(err, 'done');
+                })
+            },
+            function (callback) {
+                ServiceModel.remove({}, function(err) {
+                    callback(err, 'done');
+                })
+            },
+            function (callback) {
+                SupportServiceModel.remove({}, function(err) {
+                    callback(err, 'done');
+                })
+            }
+        ], function (err) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        });
     });
 };
 
@@ -204,7 +241,8 @@ var cdt = {
             values: [
                 'Restaurant',
                 'Cinema',
-                'Theater'
+                'Theater',
+                'Hotel'
             ]
         },
         {
@@ -212,9 +250,7 @@ var cdt = {
             for: 'filter|parameter',
             params: [
                 {
-                    name: 'City',
-                    type: 'gps',
-                    searchFunction: 'testCustomSearch'
+                    name: 'City'
                 },
                 {
                     name: 'Latitude'
@@ -232,23 +268,6 @@ var cdt = {
                     name: 'Number',
                     type: 'Integer'
                 }
-            ]
-        },
-        {
-            name: 'Budget',
-            for: 'filter|parameter',
-            transformFunction: 'translateBudget',
-            values: [
-                'Low',
-                'Medium',
-                'High'
-            ]
-        },
-        {
-            name: 'RestaurantTipology',
-            for: 'filter',
-            values: [
-                'DinnerWithFriends'
             ]
         },
         {
@@ -274,7 +293,10 @@ var cdt = {
             for: 'filter',
             values: [
                 'Bus',
-                'Train'
+                'Train',
+                'Taxi',
+                'CarSharing',
+                'WithDriver'
             ],
             parents: [
                 'PublicTransport'
@@ -341,8 +363,8 @@ var googlePlaces = {
                     default: '-33.8670522,151.1957362',
                     collectionFormat: 'csv',
                     mappingCDT: [
-                        'latitude',
-                        'longitude'
+                        'Latitude',
+                        'Longitude'
                     ]
                 },
                 {
@@ -390,22 +412,6 @@ var googlePlacesAssociations = function (idOperation, idCDT) {
             _idOperation: idOperation,
             dimension: 'InterestTopic',
             value: 'Restaurant',
-            ranking: 1,
-            weight: 2,
-            _idCDT: idCDT
-        },
-        {
-            _idOperation: idOperation,
-            dimension: 'Tipology',
-            value: 'DinnerWithFriends',
-            ranking: 1,
-            weight: 2,
-            _idCDT: idCDT
-        },
-        {
-            _idOperation: idOperation,
-            dimension: 'City',
-            value: 'Rome',
             ranking: 1,
             weight: 2,
             _idCDT: idCDT
@@ -723,9 +729,478 @@ var theaterStubAssociations = function (idOperation, idCDT) {
             _idOperation: idOperation,
             dimension: 'InterestTopic',
             value: 'Theater',
+            ranking: 2,
+            weight: 2,
+            _idCDT: idCDT
+        }
+    ];
+};
+
+//merici primary service
+var mericiPrimary = {
+    name: 'mericiPrimary',
+    type: 'primary',
+    protocol: 'query',
+    basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici',
+    operations: [
+        {
+            name: 'searchHotel',
+            path: '/service_process.php',
+            parameters: [
+                {
+                    name: 'service',
+                    required: true,
+                    default: 'hotel'
+                },
+                {
+                    name: 'place',
+                    required: false,
+                    default: 'rome',
+                    mappingCDT: [
+                        'City'
+                    ]
+                },
+                {
+                    name: 'lat',
+                    required: false,
+                    default: '45.46867',
+                    mappingCDT: [
+                        'latitude'
+                    ]
+                },
+                {
+                    name: 'lon',
+                    required: false,
+                    default: '9.11144',
+                    mappingCDT: [
+                        'longitude'
+                    ]
+                }
+            ],
+            responseMapping: {
+                list: 'services',
+                items: [
+                    {
+                        termName: 'title',
+                        path: 'name'
+                    },
+                    {
+                        termName: 'address',
+                        path: 'route'
+                    },
+                    {
+                        termName: 'city',
+                        path: 'locality'
+                    },
+                    {
+                        termName: 'telephone',
+                        path: 'phone'
+                    },
+                    {
+                        termName: 'website',
+                        path: 'site'
+                    },
+                    {
+                        termName: 'email',
+                        path: 'email'
+                    },
+                    {
+                        termName: 'latitude',
+                        path: 'latitude'
+                    },
+                    {
+                        termName: 'longitude',
+                        path: 'longitude'
+                    }
+                ]
+            }
+        },
+        {
+            name: 'searchFood',
+            path: '/service_process.php',
+            parameters: [
+                {
+                    name: 'service',
+                    required: true,
+                    default: 'food'
+                },
+                {
+                    name: 'place',
+                    required: false,
+                    default: 'rome',
+                    mappingCDT: [
+                        'City'
+                    ]
+                },
+                {
+                    name: 'lat',
+                    required: false,
+                    default: '45.46867',
+                    mappingCDT: [
+                        'latitude'
+                    ]
+                },
+                {
+                    name: 'lon',
+                    required: false,
+                    default: '9.11144',
+                    mappingCDT: [
+                        'longitude'
+                    ]
+                }
+            ],
+            responseMapping: {
+                list: 'services',
+                items: [
+                    {
+                        termName: 'title',
+                        path: 'name'
+                    },
+                    {
+                        termName: 'address',
+                        path: 'route'
+                    },
+                    {
+                        termName: 'city',
+                        path: 'locality'
+                    },
+                    {
+                        termName: 'telephone',
+                        path: 'phone'
+                    },
+                    {
+                        termName: 'website',
+                        path: 'site'
+                    },
+                    {
+                        termName: 'email',
+                        path: 'email'
+                    },
+                    {
+                        termName: 'latitude',
+                        path: 'latitude'
+                    },
+                    {
+                        termName: 'longitude',
+                        path: 'longitude'
+                    }
+                ]
+            }
+        },
+        {
+            name: 'searchTheater',
+            path: '/service_process.php',
+            parameters: [
+                {
+                    name: 'service',
+                    required: true,
+                    default: 'theater'
+                },
+                {
+                    name: 'place',
+                    required: false,
+                    default: 'rome',
+                    mappingCDT: [
+                        'City'
+                    ]
+                },
+                {
+                    name: 'lat',
+                    required: false,
+                    default: '45.46867',
+                    mappingCDT: [
+                        'latitude'
+                    ]
+                },
+                {
+                    name: 'lon',
+                    required: false,
+                    default: '9.11144',
+                    mappingCDT: [
+                        'longitude'
+                    ]
+                }
+            ],
+            responseMapping: {
+                list: 'services',
+                items: [
+                    {
+                        termName: 'title',
+                        path: 'name'
+                    },
+                    {
+                        termName: 'address',
+                        path: 'route'
+                    },
+                    {
+                        termName: 'city',
+                        path: 'locality'
+                    },
+                    {
+                        termName: 'telephone',
+                        path: 'phone'
+                    },
+                    {
+                        termName: 'website',
+                        path: 'site'
+                    },
+                    {
+                        termName: 'email',
+                        path: 'email'
+                    },
+                    {
+                        termName: 'latitude',
+                        path: 'latitude'
+                    },
+                    {
+                        termName: 'longitude',
+                        path: 'longitude'
+                    }
+                ]
+            }
+        },
+        {
+            name: 'searchMuseum',
+            path: '/service_process.php',
+            parameters: [
+                {
+                    name: 'service',
+                    required: true,
+                    default: 'museum'
+                },
+                {
+                    name: 'place',
+                    required: false,
+                    default: 'rome',
+                    mappingCDT: [
+                        'City'
+                    ]
+                },
+                {
+                    name: 'lat',
+                    required: false,
+                    default: '45.46867',
+                    mappingCDT: [
+                        'latitude'
+                    ]
+                },
+                {
+                    name: 'lon',
+                    required: false,
+                    default: '9.11144',
+                    mappingCDT: [
+                        'longitude'
+                    ]
+                }
+            ],
+            responseMapping: {
+                list: 'services',
+                items: [
+                    {
+                        termName: 'title',
+                        path: 'name'
+                    },
+                    {
+                        termName: 'address',
+                        path: 'route'
+                    },
+                    {
+                        termName: 'city',
+                        path: 'locality'
+                    },
+                    {
+                        termName: 'telephone',
+                        path: 'phone'
+                    },
+                    {
+                        termName: 'website',
+                        path: 'site'
+                    },
+                    {
+                        termName: 'email',
+                        path: 'email'
+                    },
+                    {
+                        termName: 'latitude',
+                        path: 'latitude'
+                    },
+                    {
+                        termName: 'longitude',
+                        path: 'longitude'
+                    }
+                ]
+            }
+        }
+    ]
+};
+
+//merici primary service associations
+var mericiPrimaryAssociations = function (idCDT, idHotel, idFood, idTheater, idMuseum) {
+    return [
+        {
+            _idOperation: idHotel,
+            dimension: 'InterestTopic',
+            value: 'Hotel',
             ranking: 1,
             weight: 2,
             _idCDT: idCDT
+        },
+        {
+            _idOperation: idFood,
+            dimension: 'InterestTopic',
+            value: 'Restaurant',
+            ranking: 3,
+            weight: 2,
+            _idCDT: idCDT
+        },
+        {
+            _idOperation: idTheater,
+            dimension: 'InterestTopic',
+            value: 'Theater',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idCDT
+        },
+        {
+            _idOperation: idMuseum,
+            dimension: 'InterestTopic',
+            value: 'Museum',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idCDT
+        }
+    ];
+};
+
+//merici support service
+var mericiSupport = {
+    name: 'mericiSupport',
+    type: 'support',
+    protocol: 'query',
+    basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici',
+    operations: [
+        {
+            name: 'searchTaxi',
+            path: '/service_process.php',
+            parameters: [
+                {
+                    name: 'service',
+                    required: true,
+                    default: 'taxi'
+                },
+                {
+                    name: 'lat',
+                    required: false,
+                    default: '45.46867',
+                    mappingTerm: [
+                        'latitude'
+                    ]
+                },
+                {
+                    name: 'lon',
+                    required: false,
+                    default: '9.11144',
+                    mappingTerm: [
+                        'longitude'
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'searchCarSharing',
+            path: '/service_process.php',
+            parameters: [
+                {
+                    name: 'service',
+                    required: true,
+                    default: 'carsharing'
+                },
+                {
+                    name: 'lat',
+                    required: false,
+                    default: '45.46867',
+                    mappingTerm: [
+                        'latitude'
+                    ]
+                },
+                {
+                    name: 'lon',
+                    required: false,
+                    default: '9.11144',
+                    mappingTerm: [
+                        'longitude'
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'searchDriver',
+            path: '/service_process.php',
+            parameters: [
+                {
+                    name: 'service',
+                    required: true,
+                    default: 'driver'
+                },
+                {
+                    name: 'lat',
+                    required: false,
+                    default: '45.46867',
+                    mappingTerm: [
+                        'latitude'
+                    ]
+                },
+                {
+                    name: 'lon',
+                    required: false,
+                    default: '9.11144',
+                    mappingTerm: [
+                        'longitude'
+                    ]
+                }
+            ]
+        }
+    ]
+};
+
+//merici support service associations
+var mericiSupportAssociation = function (idCDT, idTaxi, idCarSharing, idDriver) {
+    return [
+        {
+            _idOperation: idTaxi,
+            category: 'Transport',
+            _idCDT: idCDT,
+            constraintCount: 1,
+            associations: [
+                {
+                    dimension: 'Tipology',
+                    value: 'Taxi'
+                }
+            ]
+        },
+        {
+            _idOperation: idCarSharing,
+            category: 'Transport',
+            _idCDT: idCDT,
+            constraintCount: 1,
+            associations: [
+                {
+                    dimension: 'Tipology',
+                    value: 'CarSharing'
+                }
+            ]
+        },
+        {
+            _idOperation: idDriver,
+            category: 'Transport',
+            _idCDT: idCDT,
+            constraintCount: 1,
+            associations: [
+                {
+                    dimension: 'Tipology',
+                    value: 'WithDriver'
+                }
+            ]
         }
     ];
 };
