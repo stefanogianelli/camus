@@ -5,6 +5,10 @@ var pluginManager = require('./pluginManager.js');
 
 //number of services to keep
 var N = 3;
+//filter nodes weight
+var filterWeight = 2;
+//ranking nodes weight
+var rankingWeight = 4;
 
 var primaryServiceSelection = function () { };
 
@@ -33,6 +37,13 @@ primaryServiceSelection.prototype.selectServices = function selectServices (deco
                 var ranking = _.union(results.rankingServices, results.rankingSpecific);
                 //discard the ranking nodes that haven't a correspondence in the filter nodes list
                 ranking = intersect(filter, ranking);
+                //add the weight values for each item
+                _.forEach(filter, function (i) {
+                    i['weight'] = filterWeight;
+                });
+                _.forEach(ranking, function (i) {
+                    i['weight'] = rankingWeight;
+                });
                 //calculate the ranking of the merged list
                 resolve(calculateRanking(_.union(filter, ranking)));
             })
@@ -62,7 +73,6 @@ function loadSearchPlugins (idCDT, specificNodes) {
                     //clean the results
                     results = _.map(results, function (r) {
                         return {
-                            weight: r.weight,
                             ranking: r.ranking,
                             _idOperation: r._idOperation
                         };

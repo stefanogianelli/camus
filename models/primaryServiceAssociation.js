@@ -23,11 +23,6 @@ var primaryServiceSchema = new Schema ({
         min: 1,
         required: true
     },
-    weight: {
-        type: Number,
-        min: 1,
-        required: true
-    },
     _idCDT: {
         type: ObjectId,
         required: true

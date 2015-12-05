@@ -831,7 +831,6 @@ var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMult
             dimension: 'InterestTopic',
             value: 'Restaurant',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -839,7 +838,6 @@ var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMult
             dimension: 'Tipology',
             value: 'DinnerWithFriends',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -847,7 +845,6 @@ var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMult
             dimension: 'Ora',
             value: '20:00',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -855,7 +852,6 @@ var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMult
             dimension: 'City',
             value: 'Milan',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -863,7 +859,6 @@ var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMult
             dimension: 'd',
             value: 'e',
             ranking: 1,
-            weight: 2,
             _idCDT: idNestedCDT
         },
         {
@@ -871,7 +866,6 @@ var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMult
             dimension: 'g',
             value: 'i',
             ranking: 1,
-            weight: 2,
             _idCDT: idMultipleSonCDT
         }
     ];
@@ -887,7 +881,6 @@ var eventfulAssociations = function (idOperation, idCDT, idNestedCDT, idMultiple
             dimension: 'InterestTopic',
             value: 'Restaurant',
             ranking: 2,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -895,7 +888,6 @@ var eventfulAssociations = function (idOperation, idCDT, idNestedCDT, idMultiple
             dimension: 'Festivita',
             value: 'Capodanno',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -903,7 +895,6 @@ var eventfulAssociations = function (idOperation, idCDT, idNestedCDT, idMultiple
             dimension: 'g',
             value: 'h',
             ranking: 1,
-            weight: 2,
             _idCDT: idNestedCDT
         },
         {
@@ -911,7 +902,6 @@ var eventfulAssociations = function (idOperation, idCDT, idNestedCDT, idMultiple
             dimension: 'g',
             value: 'l',
             ranking: 1,
-            weight: 2,
             _idCDT: idMultipleSonCDT
         }
     ];
@@ -927,7 +917,6 @@ var fakeServiceAssociation = function (idOperation, idCDT, idNestedCDT, idMultip
             dimension: 'TestServizio',
             value: 'TestSenzaRisposta',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -935,7 +924,6 @@ var fakeServiceAssociation = function (idOperation, idCDT, idNestedCDT, idMultip
             dimension: 'Festivita',
             value: 'Capodanno',
             ranking: 2,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -943,7 +931,6 @@ var fakeServiceAssociation = function (idOperation, idCDT, idNestedCDT, idMultip
             dimension: 'g',
             value: 'i',
             ranking: 1,
-            weight: 2,
             _idCDT: idNestedCDT
         },
         {
@@ -951,7 +938,6 @@ var fakeServiceAssociation = function (idOperation, idCDT, idNestedCDT, idMultip
             dimension: 'h',
             value: 'n',
             ranking: 1,
-            weight: 2,
             _idCDT: idMultipleSonCDT
         }
     ];
@@ -967,7 +953,6 @@ var testBridgeAssociation = function (idOperation, idCDT) {
             dimension: 'TestBridge',
             value: 'TestBridge',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         }
     ];

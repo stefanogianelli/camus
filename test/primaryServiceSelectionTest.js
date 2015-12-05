@@ -27,13 +27,13 @@ describe('Component: PrimaryServiceSelection', function() {
                 .selectServices(decoratedCdt(_idCDT))
                 .then(function(services) {
                     assert.equal(services.length, 2);
-                    assert.equal(services[0].rank, 6);
+                    assert.equal(services[0].rank, 8);
                     return [services, provider.getServiceByOperationId(services[0]._idOperation)];
                 })
                 .spread(function (services, data) {
                     assert.equal(data.name, 'GooglePlaces');
                     assert.equal(data.operations[0].name, 'placeTextSearch');
-                    assert.equal(services[1].rank, 3);
+                    assert.equal(services[1].rank, 5);
                     return provider.getServiceByOperationId(services[1]._idOperation);
                 })
                 .then(function (data) {

@@ -413,7 +413,6 @@ var googlePlacesAssociations = function (idOperation, idCDT) {
             dimension: 'InterestTopic',
             value: 'Restaurant',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         }
     ];
@@ -486,7 +485,6 @@ var eventfulAssociations = function (idOperation, idCDT) {
             dimension: 'InterestTopic',
             value: 'Restaurant',
             ranking: 2,
-            weight: 2,
             _idCDT: idCDT
         }
     ];
@@ -655,7 +653,6 @@ var cinemaStubAssociations = function (idOperation, idCDT) {
             dimension: 'InterestTopic',
             value: 'Cinema',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         }
     ];
@@ -730,7 +727,6 @@ var theaterStubAssociations = function (idOperation, idCDT) {
             dimension: 'InterestTopic',
             value: 'Theater',
             ranking: 2,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -738,7 +734,6 @@ var theaterStubAssociations = function (idOperation, idCDT) {
             dimension: 'City',
             value: 'Milan',
             ranking: 1,
-            weight: 4,
             _idCDT: idCDT
         }
     ];
@@ -1050,7 +1045,6 @@ var mericiPrimaryAssociations = function (idCDT, idHotel, idFood, idTheater, idM
             dimension: 'InterestTopic',
             value: 'Hotel',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -1058,7 +1052,6 @@ var mericiPrimaryAssociations = function (idCDT, idHotel, idFood, idTheater, idM
             dimension: 'InterestTopic',
             value: 'Restaurant',
             ranking: 3,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -1066,7 +1059,6 @@ var mericiPrimaryAssociations = function (idCDT, idHotel, idFood, idTheater, idM
             dimension: 'InterestTopic',
             value: 'Theater',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         },
         {
@@ -1074,7 +1066,6 @@ var mericiPrimaryAssociations = function (idCDT, idHotel, idFood, idTheater, idM
             dimension: 'InterestTopic',
             value: 'Museum',
             ranking: 1,
-            weight: 2,
             _idCDT: idCDT
         }
     ];
