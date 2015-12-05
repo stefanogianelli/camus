@@ -64,24 +64,28 @@ provider.prototype.getCdt = function getCdt (idCDT) {
  * @returns {*} The CDT with selected dimensions
  */
 provider.prototype.getCdtDimensions = function getCdtDimensions (idCDT, dimensions) {
-    return cdtModel
-        .aggregateAsync(
-            {$match: {_id: mongoose.Types.ObjectId(idCDT)}},
-            {$unwind: '$context'},
-            {$match: {'context.name': {$in: dimensions}}},
-            {$group: {
-                _id: '$_id',
-                context: {
-                    $push: {
-                        dimension: '$context.name',
-                        for: '$context.for',
-                        transformFunction: '$context.transformFunction',
-                        supportCategory: '$context.supportCategory',
-                        params: '$context.params'
+    if (!_.isUndefined(idCDT) && !_.isUndefined(dimensions) && !_.isEmpty(dimensions)) {
+        return cdtModel
+            .aggregateAsync(
+                {$match: {_id: mongoose.Types.ObjectId(idCDT)}},
+                {$unwind: '$context'},
+                {$match: {'context.name': {$in: dimensions}}},
+                {
+                    $group: {
+                        _id: '$_id',
+                        context: {
+                            $push: {
+                                dimension: '$context.name',
+                                for: '$context.for',
+                                transformFunction: '$context.transformFunction',
+                                supportCategory: '$context.supportCategory',
+                                params: '$context.params'
+                            }
+                        }
                     }
                 }
-            }}
-        );
+            );
+    }
 };
 
 /**
@@ -92,29 +96,31 @@ provider.prototype.getCdtDimensions = function getCdtDimensions (idCDT, dimensio
  * @returns {*} The list of son nodes
  */
 provider.prototype.getNodeDescendants = function getNodeDescendants (idCDT, nodes) {
-    //adapt the inputs for the search
-    if(!_.isArray(nodes)) {
-        nodes = _.toArray(nodes);
-    } else {
-        nodes = _.pluck(nodes, 'value');
-    }
-    return cdtModel
-        .aggregateAsync(
-            {$match: {_id: idCDT}},
-            {$unwind: '$context'},
-            {$match: {'context.parents': {$in: nodes}}},
-            {
-                $group: {
-                    _id: '$_id',
-                    context: {
-                        $push: {
-                            dimension: '$context.name',
-                            values: '$context.values'
+    if (!_.isUndefined(idCDT) && !_.isUndefined(nodes) && !_.isEmpty(nodes)) {
+        //adapt the inputs for the search
+        if (!_.isArray(nodes)) {
+            nodes = _.toArray(nodes);
+        } else {
+            nodes = _.pluck(nodes, 'value');
+        }
+        return cdtModel
+            .aggregateAsync(
+                {$match: {_id: idCDT}},
+                {$unwind: '$context'},
+                {$match: {'context.parents': {$in: nodes}}},
+                {
+                    $group: {
+                        _id: '$_id',
+                        context: {
+                            $push: {
+                                dimension: '$context.name',
+                                values: '$context.values'
+                            }
                         }
                     }
                 }
-            }
-        );
+            );
+    }
 };
 
 /**
@@ -130,7 +136,9 @@ provider.prototype.getNodeDescendants = function getNodeDescendants (idCDT, node
  * @returns {*} Returns the service and operation schema
  */
 provider.prototype.getServiceByOperationId = function getServiceOperation (idOperation) {
-    return serviceModel.findByOperationIdAsync(idOperation);
+    if (!_.isUndefined(idOperation)) {
+        return serviceModel.findByOperationIdAsync(idOperation);
+    }
 };
 
 /**
@@ -140,7 +148,9 @@ provider.prototype.getServiceByOperationId = function getServiceOperation (idOpe
  * @returns {*} Returns the service list with only the requested operations
  */
 provider.prototype.getServicesByOperationIds = function getServiceOperation (idOperations) {
-    return serviceModel.findByOperationIdsAsync(idOperations);
+    if (!_.isUndefined(idOperations)) {
+        return serviceModel.findByOperationIdsAsync(idOperations);
+    }
 };
 
 /**
@@ -185,7 +195,7 @@ provider.prototype.filterPrimaryServices = function filterPrimaryServices (attri
     if (_.isUndefined(onlyDimensions)) {
         onlyDimensions = false;
     }
-    if (!_.isEmpty(attributes)) {
+    if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
         var whereClause = {
             _idCDT: idCDT,
             $or: []
@@ -208,8 +218,6 @@ provider.prototype.filterPrimaryServices = function filterPrimaryServices (attri
             projection = {_idOperation: 1, ranking: 1, weight: 1, _id: 0};
         }
         return primaryServiceModel.findAsync(whereClause, projection);
-    } else {
-        throw Error('No filter nodes selected!');
     }
 };
 
@@ -231,7 +239,7 @@ provider.prototype.filterSupportServices = function filterSupportServices (idCDT
     if (_.isUndefined(onlyDimensions)) {
         onlyDimensions = false;
     }
-    if (!_.isEmpty(attributes)) {
+    if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
         var associations;
         var clause;
         if (onlyDimensions) {
@@ -299,8 +307,6 @@ provider.prototype.filterSupportServices = function filterSupportServices (idCDT
             ];
         }
         return supportServiceModel.aggregateAsync(clause);
-    } else {
-        throw Error('No filter nodes selected!');
     }
 };
 

@@ -24,20 +24,20 @@ describe('Component: PrimaryServiceSelection', function() {
     describe('#selectServices()', function() {
         it('check if correct services are selected', function() {
             return serviceManager
-                .selectServices(mockData.decoratedCdt(_idCDT))
+                .selectServices(decoratedCdt(_idCDT))
                 .then(function(services) {
                     assert.equal(services.length, 2);
-                    assert.equal(services[0].rank, 4);
+                    assert.equal(services[0].rank, 6);
                     return [services, provider.getServiceByOperationId(services[0]._idOperation)];
                 })
                 .spread(function (services, data) {
                     assert.equal(data.name, 'GooglePlaces');
                     assert.equal(data.operations[0].name, 'placeTextSearch');
-                    assert.equal(services[1].rank, 1);
+                    assert.equal(services[1].rank, 3);
                     return provider.getServiceByOperationId(services[1]._idOperation);
                 })
                 .then(function (data) {
-                    assert.equal(data.name, 'eventful');
+                    assert.equal(data.name, 'Eventful');
                     assert.equal(data.operations[0].name, 'eventSearch');
                 });
         });
@@ -56,7 +56,7 @@ describe('Component: PrimaryServiceSelection', function() {
                 })
                 .spread(function (services, data) {
                     assert.equal(services[1].rank, 2);
-                    assert.equal(data.name, 'eventful');
+                    assert.equal(data.name, 'Eventful');
                     assert.equal(data.operations[0].name, 'eventSearch');
                     return [services, provider.getServiceByOperationId(services[2]._idOperation)];
                 })
@@ -81,7 +81,7 @@ describe('Component: PrimaryServiceSelection', function() {
                 })
                 .spread(function (services, data) {
                     assert.equal(services[1].rank, 2);
-                    assert.equal(data.name, 'eventful');
+                    assert.equal(data.name, 'Eventful');
                     assert.equal(data.operations[0].name, 'eventSearch');
                     return [services, provider.getServiceByOperationId(services[2]._idOperation)];
                 })
@@ -99,14 +99,14 @@ describe('Component: PrimaryServiceSelection', function() {
                     return [services, provider.getServiceByOperationId(services[0]._idOperation)];
                 })
                 .spread(function (services, data) {
-                    assert.equal(services[0].rank, 4);
+                    assert.equal(services[0].rank, 2);
                     assert.equal(data.name, 'GooglePlaces');
                     assert.equal(data.operations[0].name, 'placeTextSearch');
                     return [services, provider.getServiceByOperationId(services[1]._idOperation)];
                 })
                 .spread(function (services, data) {
                     assert.equal(services[1].rank, 1);
-                    assert.equal(data.name, 'eventful');
+                    assert.equal(data.name, 'Eventful');
                     assert.equal(data.operations[0].name, 'eventSearch');
                 });
         });
@@ -119,7 +119,7 @@ describe('Component: PrimaryServiceSelection', function() {
         });
         it('check correct execution when specified a wrong specific module name', function() {
             return serviceManager
-                .selectServices(context1(_idCDT))
+                .selectServices(wrongContext(_idCDT))
                 .then(function(services) {
                     assert.equal(services[0].rank, 4);
                     assert.equal(services[1].rank, 1);
@@ -137,7 +137,7 @@ describe('Component: PrimaryServiceSelection', function() {
 });
 
 //contex with wrong search module name
-var context1 = function (idCDT) {
+var wrongContext = function (idCDT) {
     return {
         _id: idCDT,
         interestTopic: 'Restaurant',
@@ -284,4 +284,39 @@ var testCustomSearchFunctionContext = function (idCDT) {
             }
         ]
     };
+};
+
+//sample decorated CDT
+var decoratedCdt = function (idCDT) {
+    return {
+        _id: idCDT,
+        interestTopic: 'Restaurant',
+        filterNodes: [
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant'
+            }
+        ],
+        rankingNodes: [
+            {
+                dimension: 'Festivita',
+                value: 'Capodanno'
+            }
+        ],
+        specificFilterNodes: [
+            {
+                dimension: 'Ora',
+                value: '20:00',
+                searchFunction: 'testCustomSearch'
+            }
+        ],
+        specificRankingNodes: [
+            {
+                dimension: 'City',
+                value: 'Milan',
+                searchFunction: 'testCustomSearch'
+            }
+        ],
+        parameterNodes: []
+    }
 };

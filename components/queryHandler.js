@@ -88,6 +88,7 @@ function callServices (services, params) {
     return new Promise(function (resolve, reject) {
         Promise
             .mapSeries(services, function (s) {
+                console.log('Make call to \'' + s.name + '\' service');
                 var promise;
                 //check if the protocol of the current service is 'rest' o 'query'
                 if (s.protocol === 'rest' || s.protocol === 'query') {

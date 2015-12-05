@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var forEnum = 'filter parameter filter|parameter'.split(' ');
+var forEnum = 'filter parameter ranking filter|parameter ranking|parameter'.split(' ');
 
 /**
  * Parameter schema

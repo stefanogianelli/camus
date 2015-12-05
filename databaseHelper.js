@@ -247,7 +247,7 @@ var cdt = {
         },
         {
             name: 'Location',
-            for: 'filter|parameter',
+            for: 'ranking|parameter',
             params: [
                 {
                     name: 'City'

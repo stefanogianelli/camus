@@ -122,7 +122,7 @@ var contextNoSupportName = function(idCDT) {
                 value: 'Train'
             }
         ],
-        specificNodes: [
+        specificRankingNodes: [
             {
                 dimension: 'City',
                 value: 'Milan',

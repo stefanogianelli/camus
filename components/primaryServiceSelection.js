@@ -15,18 +15,30 @@ var primaryServiceSelection = function () { };
  */
 primaryServiceSelection.prototype.selectServices = function selectServices (decoratedCdt) {
     return new Promise(function (resolve, reject) {
-        provider
-            .filterPrimaryServices(decoratedCdt.filterNodes, decoratedCdt._id)
-            .then(function (services) {
-                //check if some services need a custom search function and execute it
-                return [services, loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificNodes)];
+        Promise
+            .props({
+                //search for services associated to the filter nodes
+                filterServices: provider.filterPrimaryServices(decoratedCdt.filterNodes, decoratedCdt._id),
+                //search for services associated to the ranking nodes
+                rankingServices: provider.filterPrimaryServices(decoratedCdt.rankingNodes, decoratedCdt._id),
+                //load specific module for search other filter services
+                filterSpecific: loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificFilterNodes),
+                //load specific module for search other ranking services
+                rankingSpecific: loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificRankingNodes)
             })
-            .spread(function (filterServices, customSearchServices) {
-                //calculate the ranking and returns the list
-                resolve(calculateRanking(_.union(filterServices, customSearchServices)));
+            .then(function (results) {
+                //merge filter nodes results
+                var filter = _.union(results.filterServices, results.filterSpecific);
+                //merge ranking nodes results
+                var ranking = _.union(results.rankingServices, results.rankingSpecific);
+                //discard the ranking nodes that haven't a correspondence in the filter nodes list
+                ranking = intersect(filter, ranking);
+                //calculate the ranking of the merged list
+                resolve(calculateRanking(_.union(filter, ranking)));
             })
             .catch(function (e) {
-                reject(e);
+                console.log(e);
+                resolve();
             });
     })
 };
@@ -47,7 +59,14 @@ function loadSearchPlugins (idCDT, specificNodes) {
                     return pluginManager.executeModules(specificNodes, data);
                 })
                 .then(function (results) {
-                    //return the services found
+                    //clean the results
+                    results = _.map(results, function (r) {
+                        return {
+                            weight: r.weight,
+                            ranking: r.ranking,
+                            _idOperation: r._idOperation
+                        };
+                    });
                     resolve(results);
                 })
                 .catch(function (e) {
@@ -90,6 +109,30 @@ function calculateRanking (services) {
     //take only the first N services
     _.take(rankedList, N);
     return rankedList;
+}
+
+/**
+ * Return the intersection of two arrays.
+ * The base item for comparison is the Operation Identifier
+ * @param array1 The first array
+ * @param array2 The second array
+ * @returns {Array} The array intersection of the input ones
+ */
+function intersect (array1, array2) {
+    var first, second;
+    if (array1.length < array2.length) {
+        first = array1;
+        second = array2;
+    } else {
+        first = array2;
+        second = array1;
+    }
+    return _.filter(first, function (i) {
+        var index = _.findIndex(second, function (s) {
+            return s._idOperation.equals(i._idOperation);
+        });
+        return index !== -1;
+    });
 }
 
 module.exports = new primaryServiceSelection();

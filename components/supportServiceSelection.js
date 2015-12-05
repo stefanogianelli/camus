@@ -66,10 +66,10 @@ function selectServiceFromCategory (categories, decoratedCdt) {
             Promise
                 .map(categories, function (c) {
                     return provider
-                        .filterSupportServices(decoratedCdt._id, c, decoratedCdt.filterNodes)
+                        .filterSupportServices(decoratedCdt._id, c, _.union(decoratedCdt.filterNodes, decoratedCdt.rankingNodes))
                         .then(function (services) {
                             //execute the custom plugins for a subset of nodes
-                            return [services, loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificNodes, c)];
+                            return [services, loadSearchPlugins(decoratedCdt._id, _.union(decoratedCdt.specificFilterNodes, decoratedCdt.specificRankingNodes), c)];
                         })
                         .spread(function (filterServices, customServices) {
                             //retrieve the service descriptions for the found operation identifiers

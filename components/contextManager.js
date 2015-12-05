@@ -9,8 +9,10 @@ var contextManager = function () { };
  * This context is first merged with the full CDT in the database.
  * Decorated CDT mean an object composed in this way:
  * - interestTopic: the interest topic selected
- * - filterNodes: the list of filter nodes (includes also the descendants of each nodes)
- * - specificNodes: the list of specific nodes
+ * - filterNodes: the list of filter nodes (also include the descendants of each node)
+ * - rankingNodes: the list of ranking nodes (also include the descendants of each node)
+ * - specificFilterNodes: the list of specific filter nodes
+ * - specificRankingNodes: the list of specific ranking nodes
  * - parametersNodes: the list of parameter nodes
  * - supportServiceCategories: the list of categories for which retrieve the support services
  * - supportServiceNames: the list of names and operations for selected the correct support services
@@ -36,8 +38,18 @@ contextManager.prototype.getDecoratedCdt = function (context) {
                             .spread(function (filter, descendants) {
                                 return _.union(filter, descendants);
                             }),
-                        //find the specific nodes (that nodes with custom search function associated)
-                        specificNodes: contextManager.prototype.getSpecificNodes(mergedCdt),
+                        //find the ranking nodes (plus their respective descendants)
+                        rankingNodes: contextManager.prototype.getRankingNodes(mergedCdt)
+                            .then(function (ranking) {
+                                return [ranking, contextManager.prototype.getDescendants(context._id, ranking)];
+                            })
+                            .spread(function (ranking, descendants) {
+                                return _.union(ranking, descendants);
+                            }),
+                        //find the specific filter nodes (that nodes with custom search function associated)
+                        specificFilterNodes: contextManager.prototype.getSpecificFilterNodes(mergedCdt),
+                        //find the specific ranking nodes (that nodes with custom search function associated)
+                        specificRankingNodes: contextManager.prototype.getSpecificRankingNodes(mergedCdt),
                         //find the parameter nodes
                         parameterNodes: contextManager.prototype.getParameterNodes(mergedCdt),
                         //find the support service categories requested
@@ -73,7 +85,9 @@ contextManager.prototype.mergeCdtAndContext = function getDecoratedCdt (context)
                         //find in the context the current dimension
                         var c = _.find(context.context, 'dimension', cdt.dimension);
                         //add the value from the context to the decorated item
-                        cdt['value'] = c.value;
+                        if (!_.isUndefined(c.value)) {
+                            cdt['value'] = c.value;
+                        }
                         //if the dimension have also some parameters I merge them
                         if (!_.isEmpty(cdt.params) && !_.isEmpty(c.params)) {
                             var params = [];
@@ -111,11 +125,11 @@ contextManager.prototype.mergeCdtAndContext = function getDecoratedCdt (context)
 };
 
 /**
- * Retrieve the nodes of the CDT that are used for Service selection.
+ * Retrieve the filter nodes of the CDT that are used for Service selection.
  * Are also considered the parameters associated to a node, except for that ones need a custom search function.
  * The parameter are translated as dimension and value.
  * @param mergedCdt The merged CDT
- * @returns {bluebird|exports|module.exports} The list of nodes
+ * @returns {bluebird|exports|module.exports} The list of filter nodes
  */
 contextManager.prototype.getFilterNodes = function getFilterNodes (mergedCdt) {
     return new Promise (function (resolve, reject) {
@@ -166,22 +180,117 @@ contextManager.prototype.getFilterNodes = function getFilterNodes (mergedCdt) {
 };
 
 /**
+ * Retrieve the ranking nodes of the CDT that are used for Service selection.
+ * These nodes are useful for increase the rank of some tipology of services (like the local ones).
+ * However they cannot exists by themselves, so they must compareted with the list of filter nodes to avoid erroneous selections.
+ * Are also considered the parameters associated to a node, except for that ones need a custom search function.
+ * The parameter are translated as dimension and value.
+ * @param mergedCdt The merged CDT
+ * @returns {bluebird|exports|module.exports} The list of ranking nodes
+ */
+contextManager.prototype.getRankingNodes = function getRankingNodes (mergedCdt) {
+    return new Promise (function (resolve, reject) {
+        var context = mergedCdt.context;
+        if (!_.isEmpty(context)) {
+            //gets the pairs dimension and value from the decorated CDT
+            var rankingValues = _(context)
+            //consider only the ranking nodes (also includes ranking and parameter nodes)
+            //deletes also all the nodes that have parameters associated
+                .filter(function (item) {
+                    return (item.for === 'ranking' || item.for === 'ranking|parameter') && _.isEmpty(item.params);
+                })
+                .map(function (item) {
+                    return {
+                        dimension: item.dimension,
+                        value:item.value
+                    };
+                })
+                .value();
+            //map also the values of the parameters inside nodes
+            var rankingParams = _(context)
+            //consider only the ranking nodes (also includes ranking and parameter nodes) that have at least one parameter defined
+                .filter(function (item) {
+                    return (item.for === 'ranking' || item.for === 'ranking|parameter') && !_.isEmpty(item.params);
+                })
+                .map(function (item) {
+                    return _(item.params)
+                    //remove parameters that need a custom search function
+                        .reject(function (item) {
+                            return _.has(item, 'searchFunction');
+                        })
+                        .map(function (param) {
+                            return {
+                                dimension: param.name,
+                                value: param.value
+                            };
+                        })
+                        .value();
+                })
+                .flatten()
+                .value();
+            //return in output the union of the two previous arrays
+            resolve(_.union(rankingValues,rankingParams));
+        } else {
+            reject('No context selected');
+        }
+    });
+};
+
+/**
  * Similar to {@link contextManager#getFilterNodes()}, but it takes into account only the parameters that need a custom search function.
  * @param mergedCdt The merged CDT
- * @returns {bluebird|exports|module.exports} The list of nodes
+ * @returns {bluebird|exports|module.exports} The list of specific filter nodes
  */
-contextManager.prototype.getSpecificNodes = function getSpecificNodes (mergedCdt) {
+contextManager.prototype.getSpecificFilterNodes = function getSpecificFilterNodes (mergedCdt) {
     return new Promise (function (resolve, reject) {
         var context = mergedCdt.context;
         if (!_.isEmpty(context)) {
             var params = _(context)
-                //consider only the filter nodes (also includes filter and parameter nodes) with non-empty parameters list
+            //consider only the filter nodes (also includes filter and parameter nodes) with non-empty parameters list
                 .filter(function (item) {
                     return (item.for === 'filter' || item.for === 'filter|parameter')  && !_.isEmpty(item.params);
                 })
                 .map(function (item) {
                     return _(item.params)
-                        //take into account only the parameters that have associated a custom search function
+                    //take into account only the parameters that have associated a custom search function
+                        .filter(function (item) {
+                            return _.has(item, 'searchFunction');
+                        })
+                        .map(function (param) {
+                            return {
+                                dimension: param.name,
+                                value: param.value,
+                                searchFunction: param.searchFunction
+                            };
+                        })
+                        .value();
+                })
+                .flatten()
+                .value();
+            resolve(params);
+        } else {
+            reject('No context selected');
+        }
+    });
+};
+
+/**
+ * Similar to {@link contextManager#getRankingNodes()}, but it takes into account only the parameters that need a custom search function.
+ * @param mergedCdt The merged CDT
+ * @returns {bluebird|exports|module.exports} The list of specific ranking nodes
+ */
+contextManager.prototype.getSpecificRankingNodes = function getSpecificRankingNodes (mergedCdt) {
+    return new Promise (function (resolve, reject) {
+        var context = mergedCdt.context;
+        if (!_.isEmpty(context)) {
+            var params = _(context)
+            //consider only the ranking nodes (also includes ranking and parameter nodes) with non-empty parameters list
+                .filter(function (item) {
+                    return (item.for === 'ranking' || item.for === 'ranking|parameter')  && !_.isEmpty(item.params);
+                })
+                .map(function (item) {
+                    return _(item.params)
+                    //take into account only the parameters that have associated a custom search function
                         .filter(function (item) {
                             return _.has(item, 'searchFunction');
                         })
@@ -206,7 +315,7 @@ contextManager.prototype.getSpecificNodes = function getSpecificNodes (mergedCdt
 /**
  * Retrieve the nodes of the CDT that are used for query composition
  * @param mergedCdt The merged CDT
- * @returns {bluebird|exports|module.exports} The list of nodes
+ * @returns {bluebird|exports|module.exports} The list of parameter nodes
  */
 contextManager.prototype.getParameterNodes = function getParameterNodes (mergedCdt) {
     return new Promise (function (resolve, reject) {
@@ -214,10 +323,10 @@ contextManager.prototype.getParameterNodes = function getParameterNodes (mergedC
         if (!_.isEmpty(context)) {
             //gets the pairs dimension and value from the decorated CDT
             var paramValues = _(context)
-                //consider only the parameter nodes (also includes filter and parameter nodes)
+                //consider only the parameter nodes (also includes filter or ranking and parameter nodes)
                 //deletes also all the nodes that have parameters associated
                 .filter(function (item) {
-                    return (item.for === 'parameter' || item.for === 'filter|parameter') && _.isEmpty(item.params);
+                    return (item.for === 'parameter' || item.for === 'filter|parameter' || item.for === 'ranking|parameter') && _.isEmpty(item.params);
                 })
                 .map(function (item) {
                     //add information about the translation function, if exists
@@ -237,9 +346,9 @@ contextManager.prototype.getParameterNodes = function getParameterNodes (mergedC
                 .value();
             //map also the values of the parameters inside nodes
             var parameters = _(context)
-                //consider only the parameter nodes (also includes filter and parameter nodes) that have at least one parameter defined
+                //consider only the parameter nodes (also includes filter or ranking and parameter nodes) that have at least one parameter defined
                 .filter(function (item) {
-                    return (item.for === 'parameter' || item.for === 'filter|parameter') && !_.isEmpty(item.params);
+                    return (item.for === 'parameter' || item.for === 'filter|parameter' || item.for === 'ranking|parameter') && !_.isEmpty(item.params);
                 })
                 .map(function (item) {
                     return _(item.params)

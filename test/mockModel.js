@@ -11,12 +11,30 @@ var cdt = {
             ]
         },
         {
+            name: 'Festivita',
+            for: 'ranking',
+            values: [
+                'Natale',
+                'Capodanno'
+            ]
+        },
+        {
             name: 'Location',
-            for: 'filter|parameter',
+            for: 'ranking|parameter',
             params: [
                 {
                     name: 'City',
                     type: 'gps',
+                    searchFunction: 'testCustomSearch'
+                }
+            ]
+        },
+        {
+            name: 'Apertura',
+            for: 'filter',
+            params: [
+                {
+                    name: 'Ora',
                     searchFunction: 'testCustomSearch'
                 }
             ]
@@ -181,10 +199,6 @@ var decoratedCdt = function (idCDT) {
             },
             {
                 dimension: 'Tipology',
-                value: 'DinnerWithFriends'
-            },
-            {
-                dimension: 'Tipology',
                 value: 'Bus'
             },
             {
@@ -192,7 +206,20 @@ var decoratedCdt = function (idCDT) {
                 value: 'Train'
             }
         ],
-        specificNodes: [
+        rankingNodes: [
+            {
+                dimension: 'Festivita',
+                value: 'Capodanno'
+            }
+        ],
+        specificFilterNodes: [
+            {
+                dimension: 'Ora',
+                value: '20:00',
+                searchFunction: 'testCustomSearch'
+            }
+        ],
+        specificRankingNodes: [
             {
                 dimension: 'City',
                 value: 'Milan',
@@ -211,14 +238,14 @@ var decoratedCdt = function (idCDT) {
             },
             {
                 dimension: 'Number',
-                value: '4'
+                value: 4
             },
             {
                 dimension: 'search_key',
                 value: 'restaurantinnewyork'
             }
         ],
-        supportServiceCategories: [ 'Transport', 'Sport' ],
+        supportServiceCategories: [ 'Transport' ],
         supportServiceNames: [
             {
                 name: 'Wikipedia',
@@ -241,12 +268,28 @@ var mergedCdt = function (idCDT) {
                 for: 'filter'
             },
             {
+                dimension: 'Festivita',
+                for: 'ranking',
+                value: 'Capodanno'
+            },
+            {
                 dimension: 'Location',
-                for: 'filter|parameter',
+                for: 'ranking|parameter',
                 params: [
                     {
                         name: 'City',
                         value: 'Milan',
+                        searchFunction: 'testCustomSearch'
+                    }
+                ]
+            },
+            {
+                dimension: 'Apertura',
+                for: 'filter',
+                params: [
+                    {
+                        name: 'Ora',
+                        value: '20:00',
                         searchFunction: 'testCustomSearch'
                     }
                 ]
@@ -409,7 +452,7 @@ module.exports.googlePlaces = googlePlaces;
 
 //eventful service
 var eventful = {
-    name: 'eventful',
+    name: 'Eventful',
     type: 'primary',
     protocol: 'rest',
     basePath: 'http://localhost:3000/json',
@@ -801,8 +844,16 @@ var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMult
         },
         {
             _idOperation: idOperation,
+            dimension: 'Ora',
+            value: '20:00',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
             dimension: 'City',
-            value: 'Rome',
+            value: 'Milan',
             ranking: 1,
             weight: 2,
             _idCDT: idCDT
@@ -841,6 +892,14 @@ var eventfulAssociations = function (idOperation, idCDT, idNestedCDT, idMultiple
         },
         {
             _idOperation: idOperation,
+            dimension: 'Festivita',
+            value: 'Capodanno',
+            ranking: 1,
+            weight: 2,
+            _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
             dimension: 'g',
             value: 'h',
             ranking: 1,
@@ -868,6 +927,14 @@ var fakeServiceAssociation = function (idOperation, idCDT, idNestedCDT, idMultip
             dimension: 'TestServizio',
             value: 'TestSenzaRisposta',
             ranking: 1,
+            weight: 2,
+            _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
+            dimension: 'Festivita',
+            value: 'Capodanno',
+            ranking: 2,
             weight: 2,
             _idCDT: idCDT
         },

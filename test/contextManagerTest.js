@@ -37,9 +37,14 @@ describe('Component: ContextManager', function() {
                     assert.equal(data.filterNodes[3].value, 'Bus');
                     assert.equal(data.filterNodes[4].dimension, 'Tipology');
                     assert.equal(data.filterNodes[4].value, 'Train');
-                    assert.equal(data.specificNodes[0].dimension, 'City');
-                    assert.equal(data.specificNodes[0].value, 'Milan');
-                    assert.equal(data.specificNodes[0].searchFunction, 'testCustomSearch');
+                    assert.equal(data.rankingNodes[0].dimension, 'Festivita');
+                    assert.equal(data.rankingNodes[0].value, 'Capodanno');
+                    assert.equal(data.specificFilterNodes[0].dimension, 'Ora');
+                    assert.equal(data.specificFilterNodes[0].value, '20:00');
+                    assert.equal(data.specificFilterNodes[0].searchFunction, 'testCustomSearch');
+                    assert.equal(data.specificRankingNodes[0].dimension, 'City');
+                    assert.equal(data.specificRankingNodes[0].value, 'Milan');
+                    assert.equal(data.specificRankingNodes[0].searchFunction, 'testCustomSearch');
                     assert.equal(data.parameterNodes[0].dimension, 'Budget');
                     assert.equal(data.parameterNodes[0].value, 'Low');
                     assert.equal(data.parameterNodes[0].transformFunction, 'translateBudget');
@@ -114,10 +119,84 @@ describe('Component: ContextManager', function() {
         });
     });
 
-    describe('#getSpecificNodes()', function () {
-        it('check if correct specific nodes are returned', function () {
+    describe('#getRankingNodes()', function () {
+        it('check if correct ranking nodes are returned', function () {
             return contextManager
-                .getSpecificNodes(mockData.mergedCdt(_idCDT))
+                .getRankingNodes(mockData.mergedCdt(_idCDT))
+                .then(function (nodes) {
+                    if (nodes.length === 1) {
+                        assert.equal(nodes[0].dimension, 'Festivita');
+                        assert.equal(nodes[0].value, 'Capodanno');
+                    } else {
+                        assert.fail(nodes.length, 1, 'Wrong nodes count');
+                    }
+                });
+
+        });
+        it('check error when empty context specified', function () {
+            return contextManager
+                .getRankingNodes(emptyContext(_idCDT))
+                .catch(function (e) {
+                    assert.equal(e, 'No context selected');
+                });
+        });
+        it('check error when empty object specified', function () {
+            return contextManager
+                .getRankingNodes({ })
+                .catch(function (e) {
+                    assert.equal(e, 'No context selected');
+                });
+        });
+        it('check error when context have a wrong format', function () {
+            return contextManager
+                .getRankingNodes(wrongContext(_idCDT))
+                .catch(function (e) {
+                    assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'InterestTopic\', value: \'Restaurant\' }');
+                });
+        });
+    });
+
+    describe('#getSpecificFilterNodes()', function () {
+        it('check if correct specific filter nodes are returned', function () {
+            return contextManager
+                .getSpecificFilterNodes(mockData.mergedCdt(_idCDT))
+                .then(function (nodes) {
+                    if (nodes.length === 1) {
+                        assert.equal(nodes[0].dimension, 'Ora');
+                        assert.equal(nodes[0].value, '20:00');
+                        assert.equal(nodes[0].searchFunction, 'testCustomSearch');
+                    } else {
+                        assert.fail(nodes.length, 1, 'Wrong nodes count');
+                    }
+                });
+        });
+        it('check error when empty context specified', function () {
+            return contextManager
+                .getSpecificFilterNodes(emptyContext(_idCDT))
+                .catch(function (e) {
+                    assert.equal(e, 'No context selected');
+                });
+        });
+        it('check error when empty object specified', function () {
+            return contextManager
+                .getSpecificFilterNodes({ })
+                .catch(function (e) {
+                    assert.equal(e, 'No context selected');
+                });
+        });
+        it('check error when context have a wrong format', function () {
+            return contextManager
+                .getSpecificFilterNodes(wrongContext(_idCDT))
+                .catch(function (e) {
+                    assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'InterestTopic\', value: \'Restaurant\' }');
+                });
+        });
+    });
+
+    describe('#getSpecificRankingNodes', function () {
+        it('check if correct specific ranking nodes are returned', function () {
+            return contextManager
+                .getSpecificRankingNodes(mockData.mergedCdt(_idCDT))
                 .then(function (nodes) {
                     if (nodes.length === 1) {
                         assert.equal(nodes[0].dimension, 'City');
@@ -127,25 +206,24 @@ describe('Component: ContextManager', function() {
                         assert.fail(nodes.length, 1, 'Wrong nodes count');
                     }
                 });
-
         });
         it('check error when empty context specified', function () {
             return contextManager
-                .getSpecificNodes(emptyContext(_idCDT))
+                .getSpecificRankingNodes(emptyContext(_idCDT))
                 .catch(function (e) {
                     assert.equal(e, 'No context selected');
                 });
         });
         it('check error when empty object specified', function () {
             return contextManager
-                .getSpecificNodes({ })
+                .getSpecificRankingNodes({ })
                 .catch(function (e) {
                     assert.equal(e, 'No context selected');
                 });
         });
         it('check error when context have a wrong format', function () {
             return contextManager
-                .getSpecificNodes(wrongContext(_idCDT))
+                .getSpecificRankingNodes(wrongContext(_idCDT))
                 .catch(function (e) {
                     assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'InterestTopic\', value: \'Restaurant\' }');
                 });
@@ -429,6 +507,22 @@ var decoratedContext = function (idCDT) {
                     {
                         name: 'City',
                         value: 'Milan'
+                    }
+                ]
+            },
+            {
+                dimension: 'Festivita',
+                for: 'ranking',
+                value: 'Capodanno'
+            },
+            {
+                dimension: 'Apertura',
+                for: 'filter',
+                params: [
+                    {
+                        name: 'Ora',
+                        value: '20:00',
+                        searchFunction: 'testCustomSearch'
                     }
                 ]
             },
