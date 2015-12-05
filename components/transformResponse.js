@@ -100,9 +100,9 @@ transformResponse.prototype._getItemValue = function _getItemValue (item, key) {
 transformResponse.prototype._transformItem = function _transformItem (item, mapping) {
     var obj = {};
     _.forEach(mapping.items, function (m) {
-        if (typeof m.path === 'string' && !_.isEmpty(m.path)) {
+        if (_.isString(m.path) && !_.isEmpty(m.path)) {
             var v = transformResponse.prototype._getItemValue(item, m.path);
-            if (!_.isUndefined(v) && !_.isEmpty(v)) {
+            if (!_.isUndefined(v) && !isInvalidValue(v)) {
                 obj[m.termName] = v;
             }
         }
@@ -134,5 +134,14 @@ transformResponse.prototype._executeFunctions = function _executeFunctions (item
     });
     return items;
 };
+
+/**
+ * This function filters out the invalid values from the response
+ * @param value The value to be checked
+ * @returns {boolean} True if it's invalid, false otherwise
+ */
+function isInvalidValue (value) {
+    return _.isEqual(value, null) || _.isEqual(value, '');
+}
 
 module.exports = new transformResponse();
