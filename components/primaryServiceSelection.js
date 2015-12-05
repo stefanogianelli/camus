@@ -26,9 +26,9 @@ primaryServiceSelection.prototype.selectServices = function selectServices (deco
                 //search for services associated to the ranking nodes
                 rankingServices: provider.filterPrimaryServices(decoratedCdt.rankingNodes, decoratedCdt._id),
                 //load specific module for search other filter services
-                filterSpecific: loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificFilterNodes),
+                filterSpecific: primaryServiceSelection.prototype._loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificFilterNodes),
                 //load specific module for search other ranking services
-                rankingSpecific: loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificRankingNodes)
+                rankingSpecific: primaryServiceSelection.prototype._loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificRankingNodes)
             })
             .then(function (results) {
                 //merge filter nodes results
@@ -36,7 +36,7 @@ primaryServiceSelection.prototype.selectServices = function selectServices (deco
                 //merge ranking nodes results
                 var ranking = _.union(results.rankingServices, results.rankingSpecific);
                 //discard the ranking nodes that haven't a correspondence in the filter nodes list
-                ranking = intersect(filter, ranking);
+                ranking = primaryServiceSelection.prototype._intersect(filter, ranking);
                 //add the weight values for each item
                 _.forEach(filter, function (i) {
                     i['weight'] = filterWeight;
@@ -45,7 +45,7 @@ primaryServiceSelection.prototype.selectServices = function selectServices (deco
                     i['weight'] = rankingWeight;
                 });
                 //calculate the ranking of the merged list
-                resolve(calculateRanking(_.union(filter, ranking)));
+                resolve(primaryServiceSelection.prototype._calculateRanking(_.union(filter, ranking)));
             })
             .catch(function (e) {
                 console.log(e);
@@ -60,7 +60,7 @@ primaryServiceSelection.prototype.selectServices = function selectServices (deco
  * @param specificNodes The list of specific nodes
  * @returns {bluebird|exports|module.exports} The promise with the services found
  */
-function loadSearchPlugins (idCDT, specificNodes) {
+primaryServiceSelection.prototype._loadSearchPlugins = function _loadSearchPlugins (idCDT, specificNodes) {
     return new Promise(function (resolve, reject) {
         if (!_.isUndefined(specificNodes) && !_.isEmpty(specificNodes)) {
             provider
@@ -87,14 +87,14 @@ function loadSearchPlugins (idCDT, specificNodes) {
             resolve();
         }
     });
-}
+};
 
 /**
  * Compute the ranking of each operation found by the previous steps
  * @param services The list of services, with own rank and weight
  * @returns {Array} The ranked list of Top-N services
  */
-function calculateRanking (services) {
+primaryServiceSelection.prototype._calculateRanking = function _calculateRanking (services) {
     var rankedList = [];
     _.forEach(services, function (s) {
         //calculate the ranking of the current service
@@ -119,7 +119,7 @@ function calculateRanking (services) {
     //take only the first N services
     _.take(rankedList, N);
     return rankedList;
-}
+};
 
 /**
  * Return the intersection of two arrays.
@@ -128,7 +128,7 @@ function calculateRanking (services) {
  * @param array2 The second array
  * @returns {Array} The array intersection of the input ones
  */
-function intersect (array1, array2) {
+primaryServiceSelection.prototype._intersect = function _intersect (array1, array2) {
     var first, second;
     if (array1.length < array2.length) {
         first = array1;
@@ -143,6 +143,6 @@ function intersect (array1, array2) {
         });
         return index !== -1;
     });
-}
+};
 
 module.exports = new primaryServiceSelection();

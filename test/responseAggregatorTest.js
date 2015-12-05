@@ -31,7 +31,7 @@ describe('Component: ResponseAggregator', function () {
 
     describe('#findSimilarities()', function () {
         it('check if similar items are correctly merged', function () {
-            var response = responseAggregator.findSimilarities(testSuccessfulMerging);
+            var response = responseAggregator._findSimilarities(testSuccessfulMerging);
             assert.equal(response[0][0].nome, 'Bottega Ghiotta Gourmet');
             assert.equal(response[0][0].tipologia, 'Ristorante Italiano, Pizzeria');
             assert.equal(response[0][0].rating, '5/5');
@@ -57,10 +57,10 @@ describe('Component: ResponseAggregator', function () {
 
     describe('#calculateObjectSimilarity()', function () {
         it('check if similar objects are identified', function () {
-            assert.equal(responseAggregator.calculateObjectSimilarity(baseObject, similarObject), true);
+            assert.equal(responseAggregator._calculateObjectSimilarity(baseObject, similarObject), true);
         });
         it('check if different objects are identified', function () {
-            assert.equal(responseAggregator.calculateObjectSimilarity(baseObject, differentObject), false);
+            assert.equal(responseAggregator._calculateObjectSimilarity(baseObject, differentObject), false);
         });
     });
 

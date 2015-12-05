@@ -1,6 +1,5 @@
 var assert = require('assert');
 var serviceManager = require('../components/primaryServiceSelection.js');
-var mockData = require('./mockModel.js');
 var MockDatabase = require('./mockDatabaseCreator.js');
 var provider = require('../provider/provider.js');
 

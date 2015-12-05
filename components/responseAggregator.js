@@ -17,7 +17,7 @@ responseAggregator.prototype.prepareResponse = function (responses, supportServi
     return new Promise (function (resolve, reject) {
         if (!_.isUndefined(responses) && !_.isEmpty(responses)) {
             var response = {};
-            response['data'] = _.flatten(responseAggregator.prototype.findSimilarities(responses));
+            response['data'] = _.flatten(responseAggregator.prototype._findSimilarities(responses));
             response['support'] = supportServices;
             resolve(response);
         } else {
@@ -33,7 +33,7 @@ responseAggregator.prototype.prepareResponse = function (responses, supportServi
  * @param responses The array that contains all the responses
  * @returns {*} The responses list without duplicate items
  */
-responseAggregator.prototype.findSimilarities = function findSimilarities (responses) {
+responseAggregator.prototype._findSimilarities = function _findSimilarities (responses) {
     //analyze all pairs of responses
     for(var i = 0; i < responses.length - 1; i++) {
         for (var j = i + 1; j < responses.length; j++) {
@@ -41,7 +41,7 @@ responseAggregator.prototype.findSimilarities = function findSimilarities (respo
             for(var a = 0; a < responses[i].length; a++) {
                 for(var b = 0; b < responses[j].length; b++) {
                     //calculate a similarity index
-                    if (responseAggregator.prototype.calculateObjectSimilarity(responses[i][a], responses[j][b])) {
+                    if (responseAggregator.prototype._calculateObjectSimilarity(responses[i][a], responses[j][b])) {
                         //merge the two items
                         responses[i][a] = _.assign(responses[j][b], responses[i][a]);
                         //delete the item from the second array
@@ -65,7 +65,7 @@ responseAggregator.prototype.findSimilarities = function findSimilarities (respo
  * @param obj2 The second object
  * @returns {boolean} True if the two objects are similar, false otherwise
  */
-responseAggregator.prototype.calculateObjectSimilarity = function calculateObjectSimilarity (obj1, obj2) {
+responseAggregator.prototype._calculateObjectSimilarity = function _calculateObjectSimilarity (obj1, obj2) {
     //take into account only the attributes in common for both the objects
     var intersect = _.intersection(_.keysIn(obj1), _.keysIn(obj2));
     var count = 0;

@@ -10,14 +10,14 @@ var supportServiceSelection = function () { };
  * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The list of services, with the query associated
  */
-supportServiceSelection.prototype.selectServices = function (decoratedCdt) {
+supportServiceSelection.prototype.selectServices = function selectServices (decoratedCdt) {
     return new Promise (function (resolve, reject) {
         Promise
             .props({
                 //acquire the URLs for the services requested by name and operation
-                servicesByName: selectServicesFromName(decoratedCdt.supportServiceNames),
+                servicesByName: supportServiceSelection.prototype._selectServicesFromName(decoratedCdt.supportServiceNames),
                 //acquire the URLs for the services requested by categories
-                serviceByCategory: selectServiceFromCategory(decoratedCdt.supportServiceCategories, decoratedCdt)
+                serviceByCategory: supportServiceSelection.prototype._selectServiceFromCategory(decoratedCdt.supportServiceCategories, decoratedCdt)
             })
             .then(function (result) {
                 //return the union of the two lists
@@ -34,7 +34,7 @@ supportServiceSelection.prototype.selectServices = function (decoratedCdt) {
  * @param serviceNames The list of services name and operation
  * @returns {bluebird|exports|module.exports} The list of service objects, composed by the service name and the query associated
  */
-function selectServicesFromName (serviceNames) {
+supportServiceSelection.prototype._selectServicesFromName = function _selectServicesFromName (serviceNames) {
     return new Promise (function (resolve, reject) {
         if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
             provider
@@ -42,7 +42,7 @@ function selectServicesFromName (serviceNames) {
                 .getServicesByNames(serviceNames)
                 .then(function (services) {
                     //compose the queries
-                    resolve(composeQueries(services));
+                    resolve(supportServiceSelection.prototype._composeQueries(services));
                 })
                 .catch(function (e) {
                     console.log(e);
@@ -52,7 +52,7 @@ function selectServicesFromName (serviceNames) {
             resolve();
         }
     });
-}
+};
 
 /**
  * Select the services associated to a category
@@ -60,7 +60,7 @@ function selectServicesFromName (serviceNames) {
  * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The list of service objects, composed by the service name and the query associated
  */
-function selectServiceFromCategory (categories, decoratedCdt) {
+supportServiceSelection.prototype._selectServiceFromCategory = function _selectServiceFromCategory (categories, decoratedCdt) {
     return new Promise (function (resolve, reject) {
         if (!_.isUndefined(categories) && !_.isEmpty(categories) && !_.isEmpty(decoratedCdt.filterNodes)) {
             Promise
@@ -69,16 +69,16 @@ function selectServiceFromCategory (categories, decoratedCdt) {
                         .filterSupportServices(decoratedCdt._id, c, _.union(decoratedCdt.filterNodes, decoratedCdt.rankingNodes))
                         .then(function (services) {
                             //execute the custom plugins for a subset of nodes
-                            return [services, loadSearchPlugins(decoratedCdt._id, _.union(decoratedCdt.specificFilterNodes, decoratedCdt.specificRankingNodes), c)];
+                            return [services, supportServiceSelection.prototype._loadSearchPlugins(decoratedCdt._id, _.union(decoratedCdt.specificFilterNodes, decoratedCdt.specificRankingNodes), c)];
                         })
                         .spread(function (filterServices, customServices) {
                             //retrieve the service descriptions for the found operation identifiers
                             return provider
-                                .getServicesByOperationIds(mergeResults(filterServices, customServices));
+                                .getServicesByOperationIds(supportServiceSelection.prototype._mergeResults(filterServices, customServices));
                         })
                         .then(function (services) {
                             //compose the queries
-                            return composeQueries(services, c);
+                            return supportServiceSelection.prototype._composeQueries(services, c);
                         })
                         .catch(function (e) {
                             console.log(e);
@@ -91,7 +91,7 @@ function selectServiceFromCategory (categories, decoratedCdt) {
             resolve();
         }
     });
-}
+};
 
 /**
  * Search for the CDT nodes that need a specific search function and execute it
@@ -100,7 +100,7 @@ function selectServiceFromCategory (categories, decoratedCdt) {
  * @param category The support service category
  * @returns {bluebird|exports|module.exports} The promise with the services found
  */
-function loadSearchPlugins (idCDT, specificNodes, category) {
+supportServiceSelection.prototype._loadSearchPlugins = function _loadSearchPlugins (idCDT, specificNodes, category) {
     return new Promise(function (resolve, reject) {
         if (!_.isEmpty(specificNodes)) {
             //retrieve the association data for the dimensions
@@ -121,7 +121,7 @@ function loadSearchPlugins (idCDT, specificNodes, category) {
             resolve();
         }
     });
-}
+};
 
 /**
  * Create the final list of support services selected for a specific category
@@ -129,7 +129,7 @@ function loadSearchPlugins (idCDT, specificNodes, category) {
  * @param customServices The services found by the custom searches
  * @returns {Array} The operation identifiers of the selected support services
  */
-function mergeResults (filterServices, customServices) {
+supportServiceSelection.prototype._mergeResults = function _mergeResults (filterServices, customServices) {
     var results = [];
     _.forEach(_.union(filterServices, customServices), function (s) {
         //search if the current operation already exists in the results collection
@@ -155,7 +155,7 @@ function mergeResults (filterServices, customServices) {
         return r.count === maxCount && r.constraintCount === r.count;
     });
     return _.pluck(results, '_idOperation');
-}
+};
 
 /**
  * Compose the queries of the selected services
@@ -163,7 +163,7 @@ function mergeResults (filterServices, customServices) {
  * @param category (optional) The service category
  * @returns {Array} The list of services with the composed queries
  */
-function composeQueries (services, category) {
+supportServiceSelection.prototype._composeQueries = function _composeQueries (services, category) {
     return _.map(services, function (s) {
         //configure parameters (the default ones are useful for standard query composition)
         var start = '?';
@@ -230,6 +230,6 @@ function composeQueries (services, category) {
             };
         }
     });
-}
+};
 
 module.exports = new supportServiceSelection();

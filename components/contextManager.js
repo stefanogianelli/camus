@@ -19,43 +19,43 @@ var contextManager = function () { };
  * @param context The user's context
  * @returns {bluebird|exports|module.exports} The decorated CDT
  */
-contextManager.prototype.getDecoratedCdt = function (context) {
+contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
     return new Promise(function (resolve, reject) {
         contextManager.prototype
             //merge the CDT full description with the values from the user's context
-            .mergeCdtAndContext(context)
+            ._mergeCdtAndContext(context)
             .then(function (mergedCdt) {
                 //find the filter nodes (plus their respective descendants)
                 Promise
                     .props({
                         //get the interest topic
-                        interestTopic: contextManager.prototype.getInterestTopic(mergedCdt),
+                        interestTopic: contextManager.prototype._getInterestTopic(mergedCdt),
                         //find the filter nodes (plus their respective descendants)
-                        filterNodes: contextManager.prototype.getFilterNodes(mergedCdt)
+                        filterNodes: contextManager.prototype._getFilterNodes(mergedCdt)
                             .then(function (filter) {
-                                return [filter, contextManager.prototype.getDescendants(context._id, filter)];
+                                return [filter, contextManager.prototype._getDescendants(context._id, filter)];
                             })
                             .spread(function (filter, descendants) {
                                 return _.union(filter, descendants);
                             }),
                         //find the ranking nodes (plus their respective descendants)
-                        rankingNodes: contextManager.prototype.getRankingNodes(mergedCdt)
+                        rankingNodes: contextManager.prototype._getRankingNodes(mergedCdt)
                             .then(function (ranking) {
-                                return [ranking, contextManager.prototype.getDescendants(context._id, ranking)];
+                                return [ranking, contextManager.prototype._getDescendants(context._id, ranking)];
                             })
                             .spread(function (ranking, descendants) {
                                 return _.union(ranking, descendants);
                             }),
                         //find the specific filter nodes (that nodes with custom search function associated)
-                        specificFilterNodes: contextManager.prototype.getSpecificFilterNodes(mergedCdt),
+                        specificFilterNodes: contextManager.prototype._getSpecificFilterNodes(mergedCdt),
                         //find the specific ranking nodes (that nodes with custom search function associated)
-                        specificRankingNodes: contextManager.prototype.getSpecificRankingNodes(mergedCdt),
+                        specificRankingNodes: contextManager.prototype._getSpecificRankingNodes(mergedCdt),
                         //find the parameter nodes
-                        parameterNodes: contextManager.prototype.getParameterNodes(mergedCdt),
+                        parameterNodes: contextManager.prototype._getParameterNodes(mergedCdt),
                         //find the support service categories requested
-                        supportServiceCategories: contextManager.prototype.getSupportServiceCategories(mergedCdt),
+                        supportServiceCategories: contextManager.prototype._getSupportServiceCategories(mergedCdt),
                         //find the support service names and operations requested
-                        supportServiceNames: contextManager.prototype.getSupportServiceNames(mergedCdt)
+                        supportServiceNames: contextManager.prototype._getSupportServiceNames(mergedCdt)
                     })
                     .then(function (results) {
                         //add in the output the CDT identifier
@@ -74,7 +74,7 @@ contextManager.prototype.getDecoratedCdt = function (context) {
  * @param context The user context
  * @returns {bluebird|exports|module.exports} The merged CDT
  */
-contextManager.prototype.mergeCdtAndContext = function getDecoratedCdt (context) {
+contextManager.prototype._mergeCdtAndContext = function _mergeCdtAndContext (context) {
     return new Promise (function (resolve, reject) {
         provider
             .getCdtDimensions(context._id, _.pluck(context.context, 'dimension'))
@@ -131,7 +131,7 @@ contextManager.prototype.mergeCdtAndContext = function getDecoratedCdt (context)
  * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of filter nodes
  */
-contextManager.prototype.getFilterNodes = function getFilterNodes (mergedCdt) {
+contextManager.prototype._getFilterNodes = function _getFilterNodes (mergedCdt) {
     return new Promise (function (resolve, reject) {
         var context = mergedCdt.context;
         if (!_.isEmpty(context)) {
@@ -188,7 +188,7 @@ contextManager.prototype.getFilterNodes = function getFilterNodes (mergedCdt) {
  * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of ranking nodes
  */
-contextManager.prototype.getRankingNodes = function getRankingNodes (mergedCdt) {
+contextManager.prototype._getRankingNodes = function _getRankingNodes (mergedCdt) {
     return new Promise (function (resolve, reject) {
         var context = mergedCdt.context;
         if (!_.isEmpty(context)) {
@@ -237,11 +237,11 @@ contextManager.prototype.getRankingNodes = function getRankingNodes (mergedCdt) 
 };
 
 /**
- * Similar to {@link contextManager#getFilterNodes()}, but it takes into account only the parameters that need a custom search function.
+ * Similar to {@link contextManager#_getFilterNodes()}, but it takes into account only the parameters that need a custom search function.
  * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of specific filter nodes
  */
-contextManager.prototype.getSpecificFilterNodes = function getSpecificFilterNodes (mergedCdt) {
+contextManager.prototype._getSpecificFilterNodes = function _getSpecificFilterNodes (mergedCdt) {
     return new Promise (function (resolve, reject) {
         var context = mergedCdt.context;
         if (!_.isEmpty(context)) {
@@ -275,11 +275,11 @@ contextManager.prototype.getSpecificFilterNodes = function getSpecificFilterNode
 };
 
 /**
- * Similar to {@link contextManager#getRankingNodes()}, but it takes into account only the parameters that need a custom search function.
+ * Similar to {@link contextManager#_getRankingNodes()}, but it takes into account only the parameters that need a custom search function.
  * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of specific ranking nodes
  */
-contextManager.prototype.getSpecificRankingNodes = function getSpecificRankingNodes (mergedCdt) {
+contextManager.prototype._getSpecificRankingNodes = function _getSpecificRankingNodes (mergedCdt) {
     return new Promise (function (resolve, reject) {
         var context = mergedCdt.context;
         if (!_.isEmpty(context)) {
@@ -317,7 +317,7 @@ contextManager.prototype.getSpecificRankingNodes = function getSpecificRankingNo
  * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of parameter nodes
  */
-contextManager.prototype.getParameterNodes = function getParameterNodes (mergedCdt) {
+contextManager.prototype._getParameterNodes = function _getParameterNodes (mergedCdt) {
     return new Promise (function (resolve, reject) {
         var context = mergedCdt.context;
         if (!_.isEmpty(context)) {
@@ -376,7 +376,7 @@ contextManager.prototype.getParameterNodes = function getParameterNodes (mergedC
  * @param mergedCdt The merged CDT
  * @returns The interest topic name
  */
-contextManager.prototype.getInterestTopic = function getInterestTopic (mergedCdt) {
+contextManager.prototype._getInterestTopic = function _getInterestTopic (mergedCdt) {
     var context = mergedCdt.context;
     if (!_.isEmpty(context)) {
         var r = _.find(context, {dimension: 'InterestTopic'});
@@ -395,7 +395,7 @@ contextManager.prototype.getInterestTopic = function getInterestTopic (mergedCdt
  * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of categories
  */
-contextManager.prototype.getSupportServiceCategories = function getSupportServiceCategories (mergedCdt) {
+contextManager.prototype._getSupportServiceCategories = function _getSupportServiceCategories (mergedCdt) {
     return new Promise (function (resolve, reject) {
         var support = mergedCdt.support;
         if (!_.isEmpty(support)) {
@@ -414,7 +414,7 @@ contextManager.prototype.getSupportServiceCategories = function getSupportServic
  * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of services name and operation
  */
-contextManager.prototype.getSupportServiceNames = function getSupportServiceNames (mergedCdt) {
+contextManager.prototype._getSupportServiceNames = function _getSupportServiceNames (mergedCdt) {
     return new Promise (function (resolve, reject) {
         var support = mergedCdt.support;
         if (!_.isEmpty(support)) {
@@ -435,7 +435,7 @@ contextManager.prototype.getSupportServiceNames = function getSupportServiceName
  * @param nodes The parent nodes
  * @returns {*} The list of son nodes, formatted in dimension and value
  */
-contextManager.prototype.getDescendants = function getDescendants (idCDT, nodes) {
+contextManager.prototype._getDescendants = function _getDescendants (idCDT, nodes) {
     return new Promise (function (resolve, reject) {
         //start the searching only if at least one node is specified
         if (!_.isUndefined(nodes) && !_.isEmpty(nodes)) {

@@ -4,6 +4,7 @@ var translator = require('./translationManager.js');
 var Interface = require('./interfaceChecker.js');
 var restBridge = require('../bridges/restBridge.js');
 var provider = require('../provider/provider.js');
+var transformResponse = require('./transformResponse.js');
 
 var bridgeFolder = '../bridges/';
 //every bridge must implement the 'executeQuery' method
@@ -28,11 +29,11 @@ queryHandler.prototype.executeQueries = function executeQueries (services, decor
                 })
                 .then(function (serviceDescriptions) {
                     //check if some parameters need translation
-                    return [serviceDescriptions, translateParameters(decoratedCdt.parameterNodes, decoratedCdt)];
+                    return [serviceDescriptions, queryHandler.prototype._translateParameters(decoratedCdt.parameterNodes, decoratedCdt)];
                 })
                 .spread(function (serviceDescriptions, params) {
                     //execute the queries toward web services
-                    return callServices(serviceDescriptions, params);
+                    return queryHandler.prototype._callServices(serviceDescriptions, params);
                 })
                 .then(function (responses) {
                     resolve(responses);
@@ -52,7 +53,7 @@ queryHandler.prototype.executeQueries = function executeQueries (services, decor
  * @param decoratedCdt The current context
  * @returns {bluebird|exports|module.exports} The list of parameters with the translated values
  */
-function translateParameters (params, decoratedCdt) {
+queryHandler.prototype._translateParameters = function _translateParameters (params, decoratedCdt) {
     return new Promise (function (resolve, reject) {
         Promise
             //take only the parameters that have specified a translation function
@@ -76,7 +77,7 @@ function translateParameters (params, decoratedCdt) {
                 resolve(params);
             });
     });
-}
+};
 
 /**
  * Call the service bridges and collect the responses
@@ -84,11 +85,10 @@ function translateParameters (params, decoratedCdt) {
  * @param params The list of parameters from the CDT
  * @returns {bluebird|exports|module.exports} The list of the responses, in order of service ranking
  */
-function callServices (services, params) {
+queryHandler.prototype._callServices = function _callServices (services, params) {
     return new Promise(function (resolve, reject) {
         Promise
             .mapSeries(services, function (s) {
-                console.log('Make call to \'' + s.name + '\' service');
                 var promise;
                 //check if the protocol of the current service is 'rest' o 'query'
                 if (s.protocol === 'rest' || s.protocol === 'query') {
@@ -111,7 +111,7 @@ function callServices (services, params) {
                 return promise
                     .then(function (response) {
                         //transform the response
-                        return transformResponse(s.operations[0].responseMapping, response)
+                        return transformResponse.mappingResponse(s.operations[0].responseMapping, response)
                     })
                     .catch(function (e) {
                         console.log('[' + s.name + '] ERROR: ' + e);
@@ -127,138 +127,6 @@ function callServices (services, params) {
                 resolve(responses);
             });
     });
-}
-
-/**
- * It transforms the response of the service to make it in internal representation
- * @param mapping The mapping rules for the specific service
- * @param response The response from the service
- * @returns {bluebird|exports|module.exports}
- */
-function transformResponse (mapping, response) {
-    return new Promise (function (resolve, reject) {
-        if (!_.isUndefined(response) && _.isObject(response)) {
-            if (!_.isUndefined(mapping)) {
-                var transformedResponse = _.map(retrieveListOfResults(response, mapping.list), function (i) {
-                    return transformItem(i, mapping);
-                });
-                transformedResponse = executeFunctions(transformedResponse, mapping);
-                //clean the response from empty objects
-                transformedResponse = _(transformedResponse)
-                    .filter(function (item) {
-                        return !_.isUndefined(item) && !_.isEmpty(item);
-                    })
-                    .value();
-                resolve(transformedResponse);
-            } else {
-                reject('no mapping associated to the service');
-            }
-        } else {
-            reject('wrong response type or empty response');
-        }
-    })
-}
-
-/**
- * It retrieve the base path where find the list of result items.
- * If the specified path is not an array it converts it to an array.
- * @param response The response received from the web service
- * @param listItem The base path where find the items. If the root of the document if the base path leave this field empty
- * @returns {Array} The array of items
- */
-function retrieveListOfResults (response, listItem) {
-    var list = [];
-    if (!_.isUndefined(listItem) && !_.isEmpty(listItem)) {
-        //it was defined a base list item so consider it as root for the transformation
-        list = getItemValue(response, listItem);
-    } else {
-        //start at the root element
-        list = response;
-    }
-    //check if the current list is an array, otherwise I transform it in a list from the current set of objects
-    if (!_.isArray(list)) {
-        list = _.map(list, function(item) {
-            return item;
-        });
-    }
-    return list;
-}
-
-/**
- * Retrieve the value associated to a key
- * The key must be written in dot notation
- * Es.:
- * {
- *   'a': {
- *     'b': 'test'
- *   }
- * }
- * key = a.b --> test
- * @param item The item where to search the key
- * @param key The key to be searched. Write it in dot notation
- * @returns {*} The value found or null
- */
-function getItemValue (item, key) {
-    if (_.isUndefined(item)) {
-        return null;
-    }
-    if (_.isEmpty(key) || _.isUndefined(key)) {
-        return null;
-    }
-    var keys = key.split('.');
-    var value = item;
-    _.forEach(keys, function (k) {
-        if (!_.isUndefined(value)) {
-            value = value[k];
-        } else {
-            return null;
-        }
-    });
-    return value;
-}
-
-/**
- * Tranform a single item in the new representation
- * @param item The original item
- * @param mapping The mapping rules
- * @returns {{}} The transformed object
- */
-function transformItem (item, mapping) {
-    var obj = {};
-    _.forEach(mapping.items, function (m) {
-        if (typeof m.path === 'string' && !_.isEmpty(m.path)) {
-            var v = getItemValue(item, m.path);
-            if (!_.isUndefined(v) && !_.isEmpty(v)) {
-                obj[m.termName] = v;
-            }
-        }
-    });
-    return obj;
-}
-
-/**
- * Execute custom function on attributes
- * @param items The list of transformed items
- * @param mapping The mapping rules
- * @returns {*} The modified list of items
- */
-function executeFunctions (items, mapping) {
-    _.forEach(mapping.functions, function (f) {
-        _.forEach(items, function (i) {
-            if (_.has(i, f.onAttribute)) {
-                try {
-                    var fn = new Function('value', f.run);
-                    var value = fn(i[f.onAttribute]);
-                    if (!_.isEmpty(value) && !_.isUndefined(value)) {
-                        i[f.onAttribute] = fn(i[f.onAttribute]);
-                    }
-                } catch (e) {
-                    console.log(e);
-                }
-            }
-        });
-    });
-    return items;
-}
+};
 
 module.exports = new queryHandler();
