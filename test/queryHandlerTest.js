@@ -55,37 +55,26 @@ describe('Component: QueryHandler', function () {
                     assert.equal(responses[0][1].title, 'Restaurant The Purple Pig');
                 });
         });
-        it('check correct execution of custom function on attributes', function () {
-            return serviceManager
-                .selectServices(testBridgeContext(_idCDT))
-                .then(function(services) {
-                    return queryHandler.executeQueries(services, testBridgeContext(_idCDT));
+        it('check if a parameter is correctly translated', function () {
+            return queryHandler
+                ._translateParameters(translateTestCdt.parameterNodes, translateTestCdt)
+                .then(function (params) {
+                    assert.equal(params[0].value, 10);
                 })
-                .then(function (responses) {
-                    assert.equal(responses.length, 1);
-                    assert.equal(responses[0][0].title, 'Restaurant Girl & the Goat');
-                    assert.equal(responses[0][1].title, 'Restaurant The Purple Pig');
-                });
         });
         it('check error when an non existent translation function is called', function () {
-            return serviceManager
-                .selectServices(invalidTranslationFunction(_idCDT))
-                .then(function(services) {
-                    return queryHandler.executeQueries(services, invalidTranslationFunction(_idCDT));
+            return queryHandler
+                ._translateParameters(invalidTranslationCdt.parameterNodes, invalidTranslationCdt)
+                .then(function (params) {
+                    assert.equal(params[0].value, 'Low');
                 })
-                .then(function (responses) {
-                    assert.equal(responses[0][0].title, 'Bouley');
-                });
         });
         it('check error when a translation function receive an unrecognized parameter', function () {
-            return serviceManager
-                .selectServices(mockData.decoratedCdt(_idCDT))
-                .then(function(services) {
-                    return queryHandler.executeQueries(services, invalidInterestTopic(_idCDT));
+            return queryHandler
+                ._translateParameters(invalidTranslationInterestTopicCdt.parameterNodes, invalidTranslationInterestTopicCdt)
+                .then(function (params) {
+                    assert.equal(params[0].value, 'Low');
                 })
-                .then(function (responses) {
-                    assert.notEqual(responses, 'undefined');
-                });
         });
     });
 
@@ -161,104 +150,35 @@ var testBridgeContext = function (idCDT) {
     }
 };
 
-//context for testing the behavior when non existent translation function is called
-var invalidTranslationFunction = function (idCDT) {
-    return {
-        _id: idCDT,
-        interestTopic: 'Restaurant',
-        filterNodes: [
-            {
-                dimension: 'InterestTopic',
-                value: 'Restaurant'
-            },
-            {
-                dimension: 'Budget',
-                value: 'Low'
-            },
-            {
-                dimension: 'Tipology',
-                value: 'DinnerWithFriends'
-            }
-        ],
-        specificNodes: [],
-        parameterNodes: [
-            {
-                dimension: 'Budget',
-                value: 'Low',
-                transformFunction: 'translateBudgets'
-            },
-            {
-                dimension: 'City',
-                value: 'Milan'
-            },
-            {
-                dimension: 'Number',
-                value: '4'
-            },
-            {
-                dimension: 'search_key',
-                value: 'restaurantinnewyork'
-            }
-        ]
-    }
+var translateTestCdt = {
+    interestTopic: 'Restaurant',
+    parameterNodes: [
+        {
+            dimension: 'Budget',
+            value: 'Low',
+            transformFunction: 'translateBudget'
+        }
+    ]
 };
 
-//context for testing the behavior when the translation function receive an unrecognized parameter
-var invalidInterestTopic = function (idCDT) {
-    return {
-        _id: idCDT,
-        interestTopic: 'WrongName',
-        filterNodes: [
-            {
-                dimension: 'InterestTopic',
-                value: 'Restaurant'
-            },
-            {
-                dimension: 'Budget',
-                value: 'Low'
-            },
-            {
-                dimension: 'Transport',
-                value: 'PublicTransport'
-            },
-            {
-                dimension: 'Tipology',
-                value: 'DinnerWithFriends'
-            },
-            {
-                dimension: 'Tipology',
-                value: 'Bus'
-            },
-            {
-                dimension: 'Tipology',
-                value: 'Train'
-            }
-        ],
-        specificNodes: [
-            {
-                dimension: 'City',
-                value: 'Milan',
-                searchFunction: 'testCustomSearch'
-            }
-        ],
-        parameterNodes: [
-            {
-                dimension: 'Budget',
-                value: 'Low',
-                transformFunction: 'translateBudget'
-            },
-            {
-                dimension: 'City',
-                value: 'Milan'
-            },
-            {
-                dimension: 'Number',
-                value: '4'
-            },
-            {
-                dimension: 'search_key',
-                value: 'restaurantinnewyork'
-            }
-        ]
-    }
+var invalidTranslationCdt = {
+    interestTopic: 'Restaurant',
+    parameterNodes: [
+        {
+            dimension: 'Budget',
+            value: 'Low',
+            transformFunction: 'translateBudgets'
+        }
+    ]
+};
+
+var invalidTranslationInterestTopicCdt = {
+    interestTopic: 'Sport',
+    parameterNodes: [
+        {
+            dimension: 'Budget',
+            value: 'Low',
+            transformFunction: 'translateBudget'
+        }
+    ]
 };

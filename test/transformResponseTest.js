@@ -8,7 +8,87 @@ describe('Component: TransformResponse', function () {
             return transformResponse
                 .mappingResponse(googlePlacesMapping, googlePlacesResponse)
                 .then(function (data) {
-                    console.log(data);
+                    assert.equal(data[0].title, 'Girl & the Goat');
+                    assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
+                    assert.equal(data[0].latitude, 41.8841133);
+                    assert.equal(data[0].longitude, -87.6480041);
+                    assert.equal(data[1].title, 'Bandera');
+                    assert.equal(data[1].address, '535 N Michigan Ave, Chicago, IL 60611, Stati Uniti');
+                    assert.equal(data[1].latitude, 41.8918882);
+                    assert.equal(data[1].longitude, -87.62385739999999);
+                });
+        });
+        it('check if a custom function on an attribute is correctly executed', function () {
+            return transformResponse
+                .mappingResponse(mappingWithFunction, googlePlacesResponse)
+                .then(function (data) {
+                    assert.equal(data[0].title, 'Restaurant Girl & the Goat');
+                    assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
+                    assert.equal(data[0].latitude, 41.8841133);
+                    assert.equal(data[0].longitude, -87.6480041);
+                    assert.equal(data[1].title, 'Restaurant Bandera');
+                    assert.equal(data[1].address, '535 N Michigan Ave, Chicago, IL 60611, Stati Uniti');
+                    assert.equal(data[1].latitude, 41.8918882);
+                    assert.equal(data[1].longitude, -87.62385739999999);
+                });
+        });
+        it('check if a function on a non existent attribute doesn\'t change the response', function () {
+            return transformResponse
+                .mappingResponse(mappingWithInvalidFunction, googlePlacesResponse)
+                .then(function (data) {
+                    assert.equal(data[0].title, 'Girl & the Goat');
+                    assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
+                    assert.equal(data[0].latitude, 41.8841133);
+                    assert.equal(data[0].longitude, -87.6480041);
+                    assert.equal(typeof data[0].website, 'undefined');
+                    assert.equal(data[1].title, 'Bandera');
+                    assert.equal(data[1].address, '535 N Michigan Ave, Chicago, IL 60611, Stati Uniti');
+                    assert.equal(data[1].latitude, 41.8918882);
+                    assert.equal(data[1].longitude, -87.62385739999999);
+                    assert.equal(typeof data[1].website, 'undefined');
+                });
+        });
+        it('check if nested base list is correctly handled', function () {
+            return transformResponse
+                .mappingResponse(eventfulMapping, eventfulResponse)
+                .then(function (data) {
+                    assert.equal(data[0].title, 'Wine Lover\'s New Year\'s Eve at Volo Restaurant Wine Bar');
+                    assert.equal(data[0].address, '2008 West Roscoe');
+                    assert.equal(data[0].latitude, '41.9433228');
+                    assert.equal(data[0].longitude, '-87.6788849');
+                    assert.equal(data[1].title, 'National Restaurant Association');
+                    assert.equal(data[1].address, '2301 S. Lake Shore Drive');
+                    assert.equal(data[1].latitude, '41.854092');
+                    assert.equal(data[1].longitude, '-87.6127372');
+                });
+        });
+        it('check if null values are deleted from the response', function () {
+            return transformResponse
+                .mappingResponse(mappgingWithNullValue, eventfulResponse)
+                .then(function (data) {
+                    assert.equal(typeof data[0].count, 'undefined');
+                    assert.equal(typeof data[1].count, 'undefined');
+                });
+        });
+        it('check root and non array base list is correctly handled', function () {
+            return transformResponse
+                .mappingResponse(cinemaMapping, cinemaResponse)
+                .then(function (data) {
+                    assert.equal(data[0].title, 'Cinema Pierrot');
+                    assert.equal(data[0].address, 'Via Camillo De Meis, 58');
+                    assert.equal(data[0].telephone, '+39 0815 967 802');
+                    assert.equal(data[0].latitude, '40.85151');
+                    assert.equal(data[0].longitude, '14.333234');
+                    assert.equal(data[1].title, 'Cinema Ambasciatori');
+                    assert.equal(data[1].address, 'Via Francesco Crispi, 33');
+                    assert.equal(data[1].telephone, '+39 0817 613 128');
+                    assert.equal(data[1].latitude, '40.836518');
+                    assert.equal(data[1].longitude, '14.231663');
+                    assert.equal(data[2].title, 'Cinema Acacia');
+                    assert.equal(data[2].address, 'Via Raffaele Tarantino, 10');
+                    assert.equal(data[2].telephone, '+39 081 5563999');
+                    assert.equal(data[2].latitude, '40.849546');
+                    assert.equal(data[2].longitude, '14.230291');
                 });
         });
     });
@@ -65,6 +145,34 @@ var mappingWithFunction = {
     ]
 };
 
+var mappingWithInvalidFunction = {
+    list: 'results',
+    items: [
+        {
+            path: 'name',
+            termName: 'title'
+        },
+        {
+            path: 'formatted_address',
+            termName: 'address'
+        },
+        {
+            path: 'geometry.location.lat',
+            termName: 'latitude'
+        },
+        {
+            path: 'geometry.location.lng',
+            termName: 'longitude'
+        }
+    ],
+    functions: [
+        {
+            onAttribute: 'website',
+            run: 'return \'Restaurant \' + value;'
+        }
+    ]
+};
+
 var eventfulMapping = {
     list: 'events.event',
     items: [
@@ -83,6 +191,61 @@ var eventfulMapping = {
         {
             path: 'longitude',
             termName: 'longitude'
+        }
+    ]
+};
+
+var mappgingWithNullValue = {
+    list: 'events.event',
+    items: [
+        {
+            path: 'title',
+            termName: 'title'
+        },
+        {
+            path: 'venue_address',
+            termName: 'address'
+        },
+        {
+            path: 'latitude',
+            termName: 'latitude'
+        },
+        {
+            path: 'longitude',
+            termName: 'longitude'
+        },
+        {
+            path: 'watching_count',
+            termName: 'count'
+        }
+    ]
+};
+
+var cinemaMapping = {
+    items: [
+        {
+            termName: 'title',
+            path: 'nome'
+        },
+        {
+            termName: 'address',
+            path: 'indirizzo'
+        },
+        {
+            termName: 'telephone',
+            path: 'telefono'
+        },
+        {
+            termName: 'website',
+            path: 'sito'
+        },
+        {
+            termName: 'latitude',
+            path: 'latitudine'
+        },
+        {
+            termName: 'longitude',
+            path: 'longitudine'
         }
     ]
 };
@@ -295,5 +458,59 @@ var eventfulResponse = {
                 "venue_url": "http://chicago.eventful.com/venues/mccormick-place-convention-center-/V0-001-004815602-7?utm_source=apis&utm_medium=apim&utm_campaign=apic"
             }
         ]
+    }
+};
+
+var cinemaResponse = {
+    "0": {
+        "idCinema":65,
+        "nome":"Cinema Pierrot",
+        "citta":"Napoli",
+        "indirizzo":"Via Camillo De Meis, 58",
+        "telefono":"+39 0815 967 802",
+        "sito":"",
+        "orarioApertura":"21:15:00",
+        "orarioChiusuraFeriali":"24:10:00",
+        "orarioChiusuraFestivi":"01:10:00",
+        "nSale":7,
+        "latitudine":"40.85151",
+        "longitudine":"14.333234",
+        "accessoFacilitato":1,
+        "3D":0,
+        "prevendita":0
+    },
+    "1": {
+        "idCinema":66,
+        "nome":"Cinema Ambasciatori",
+        "citta":"Napoli",
+        "indirizzo":"Via Francesco Crispi, 33",
+        "telefono":"+39 0817 613 128",
+        "sito":"",
+        "orarioApertura":"20:50:00",
+        "orarioChiusuraFeriali":"01:15:00",
+        "orarioChiusuraFestivi":"03:15:00",
+        "nSale":5,
+        "latitudine":"40.836518",
+        "longitudine":"14.231663",
+        "accessoFacilitato":1,
+        "3D":0,
+        "prevendita":1
+    },
+    "2": {
+        "idCinema":67,
+        "nome":"Cinema Acacia",
+        "citta":"Napoli",
+        "indirizzo":"Via Raffaele Tarantino, 10",
+        "telefono":"+39 081 5563999",
+        "sito":"",
+        "orarioApertura":"17:35:00",
+        "orarioChiusuraFeriali":"24:25:00",
+        "orarioChiusuraFestivi":"00:25:00",
+        "nSale":4,
+        "latitudine":"40.849546",
+        "longitudine":"14.230291",
+        "accessoFacilitato":1,
+        "3D":0,
+        "prevendita":0
     }
 };
