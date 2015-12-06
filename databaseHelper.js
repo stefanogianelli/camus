@@ -350,6 +350,16 @@ var googlePlaces = {
                         termName: 'longitude',
                         path: 'geometry.location.lng'
                     }
+                ],
+                functions: [
+                    {
+                        onAttribute: 'latitude',
+                        run: 'return String(value);'
+                    },
+                    {
+                        onAttribute: 'longitude',
+                        run: 'return String(value);'
+                    }
                 ]
             }
         },

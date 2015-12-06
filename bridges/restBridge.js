@@ -111,7 +111,7 @@ function searchMapping (nodes, name) {
 }
 
 /**
- * Compose the address of the service, add the header informations and call the service.
+ * Compose the address of the service, add the header information and call the service.
  * Then return the service response (parsed)
  * @param service The service description
  * @param params The parameters that will be used for query composition
