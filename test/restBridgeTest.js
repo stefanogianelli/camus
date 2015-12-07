@@ -34,6 +34,13 @@ describe('Component: RestBridge', function () {
                     assert.notEqual(e, null);
                 });
         });
+        it('check that composite parameters are correctly handled', function () {
+            return restBridge
+                .executeQuery(compositeParameterService, compositeParameterNodes)
+                .then(function (data) {
+                    assert.equal(data.events.event[0].title, 'National Restaurant Association');
+                });
+        });
     });
 
 });
@@ -210,3 +217,63 @@ var wrongBasePath = {
         }
     ]
 };
+
+var compositeParameterService = {
+    name: 'test',
+    type: 'primary',
+    protocol: 'rest',
+    basePath: 'http://localhost:3000',
+    operations: [
+        {
+            name: 'search',
+            path: '/compositeSearch',
+            parameters: [
+                {
+                    name: 'latitude',
+                    required: true,
+                    default: '45.46427',
+                    mappingCDT: [
+                        'CityCoord#Latitude'
+                    ]
+                },
+                {
+                    name: 'longitude',
+                    required: true,
+                    default: '9.18951',
+                    mappingCDT: [
+                        'CityCoord#Longitude'
+                    ]
+                }
+            ],
+            responseMapping: {
+                list: 'events.event',
+                items: [
+                    {
+                        termName: 'title',
+                        path: 'title'
+                    },
+                    {
+                        termName: 'venue_address',
+                        path: 'address'
+                    },
+                    {
+                        termName: 'latitude',
+                        path: 'latitude'
+                    },
+                    {
+                        termName: 'longitude',
+                        path: 'longitude'
+                    }
+                ]
+            }
+        }
+    ]
+};
+
+var compositeParameterNodes = [
+    {
+        dimension: 'CityCoord',
+        value: '45.478861|9.234320',
+        format: 'Latitude|Longitude'
+    }
+];

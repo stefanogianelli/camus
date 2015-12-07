@@ -329,19 +329,15 @@ contextManager.prototype._getParameterNodes = function _getParameterNodes (merge
                     return (item.for === 'parameter' || item.for === 'filter|parameter' || item.for === 'ranking|parameter') && _.isEmpty(item.params);
                 })
                 .map(function (item) {
+                    var obj = {
+                        dimension: item.dimension,
+                        value: item.value
+                    };
                     //add information about the translation function, if exists
                     if (_.has(item, 'transformFunction')) {
-                        return {
-                            dimension: item.dimension,
-                            value: item.value,
-                            transformFunction: item.transformFunction
-                        };
-                    } else {
-                        return {
-                            dimension: item.dimension,
-                            value: item.value
-                        };
+                        obj['transformFunction'] = item.transformFunction;
                     }
+                    return obj;
                 })
                 .value();
             //map also the values of the parameters inside nodes
@@ -353,10 +349,15 @@ contextManager.prototype._getParameterNodes = function _getParameterNodes (merge
                 .map(function (item) {
                     return _(item.params)
                         .map(function (param) {
-                            return {
+                            var obj = {
                                 dimension: param.name,
                                 value: param.value
                             };
+                            //add information about the format
+                            if (_.has(item, 'format')) {
+                                obj['format'] = item.format;
+                            }
+                            return obj;
                         })
                         .value();
                 })

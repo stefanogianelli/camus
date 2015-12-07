@@ -107,7 +107,30 @@ function parameterMapping (service, paramNodes) {
  * @returns {*} The value found, if exists
  */
 function searchMapping (nodes, name) {
-    return _.result(_.find(nodes, {dimension: name}), 'value')
+    var value;
+    //check if the parameter is composite
+    if (_.includes(name, '#')) {
+        var names = name.split('#');
+        //find the item that corresponds to the searched dimension
+        var item = _.find(nodes, {dimension: names[0]});
+        if (_.has(item, 'format')) {
+            var values = item.value.split('|');
+            var format = item.format.split('|');
+            var index = _.findIndex(format, function (f) {
+                return f === names[1];
+            });
+            if (index !== -1) {
+                value = values[index];
+            } else {
+                value = item.value;
+            }
+        } else {
+            value = item.value;
+        }
+    } else {
+        value = _.result(_.find(nodes, {dimension: name}), 'value');
+    }
+    return value;
 }
 
 /**
