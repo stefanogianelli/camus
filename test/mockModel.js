@@ -26,6 +26,11 @@ var cdt = {
                     name: 'City',
                     type: 'gps',
                     searchFunction: 'testCustomSearch'
+                },
+                {
+                    name: 'CityCoord',
+                    format: 'Latitude|Longitude',
+                    searchFunction: 'testCustomSearch'
                 }
             ]
         },
@@ -852,6 +857,14 @@ var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMult
             dimension: 'City',
             value: 'Milan',
             ranking: 1,
+            _idCDT: idCDT
+        },
+        {
+            _idOperation: idOperation,
+            dimension: 'CityCoord',
+            value: '45.46427|9.18951|10',
+            ranking: 1,
+            format: 'Latitude|Longitude|Radius',
             _idCDT: idCDT
         },
         {

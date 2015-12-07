@@ -12,6 +12,7 @@ var ParamSchema = new Schema({
         required: true
     },
     type: String,
+    format: String,
     searchFunction: String,
     enum: [String]
 });
@@ -19,8 +20,7 @@ var ParamSchema = new Schema({
 /**
  * Node schema
  */
-var NodeSchema = new Schema();
-NodeSchema.add({
+var NodeSchema = new Schema({
     name: {
         type: String,
         required: true

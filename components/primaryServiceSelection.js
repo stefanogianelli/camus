@@ -98,7 +98,13 @@ primaryServiceSelection.prototype._calculateRanking = function _calculateRanking
     var rankedList = [];
     _.forEach(services, function (s) {
         //calculate the ranking of the current service
-        var rank = s.weight * (1 / s.ranking);
+        var rank;
+        //avoid infinity results
+        if (s.ranking > 0) {
+            rank = s.weight * (1 / s.ranking);
+        } else {
+            rank = s.weight;
+        }
         //check if the service is already in the list
         var index = _.findIndex(rankedList, function (i) {
             return i._idOperation.equals(s._idOperation);

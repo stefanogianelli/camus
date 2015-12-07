@@ -213,9 +213,9 @@ provider.prototype.filterPrimaryServices = function filterPrimaryServices (attri
         });
         var projection = {};
         if (onlyDimensions) {
-            projection = {_idCDT: 0, _id: 0, __v: 0};
+            projection = {_idCDT: 0, _id: 0, __v: 0, ranking: 0};
         } else {
-            projection = {_idOperation: 1, ranking: 1, weight: 1, _id: 0};
+            projection = {_idOperation: 1, ranking: 1, weight: 1, format:1, _id: 0};
         }
         return primaryServiceModel.findAsync(whereClause, projection);
     }

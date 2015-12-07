@@ -12,14 +12,13 @@ var searchPluginStructure = function () { };
  * Each items must have this structure:
  * {
  *   _idOperation: ObjectId,
- *   ranking: Number,
- *   weight: Number
+ *   ranking: Number
  * }
  * You can return an array by using resolve(array) or return an error by reject('error message')
  * @param data The association data for the current dimension
- * @param value The value obtained from the context
+ * @param node The node obtained from the context
  */
-searchPluginStructure.prototype.search = function (data, value) {
+searchPluginStructure.prototype.search = function (data, node) {
     return new Promise(function (resolve, reject) {
         //add code below
     });

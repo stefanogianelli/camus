@@ -126,6 +126,20 @@ describe('Component: PrimaryServiceSelection', function() {
         });
     });
 
+    describe('#loadSearchPlugins()', function () {
+        it('check if composite parameters are correctly handled', function () {
+            return serviceManager
+                ._loadSearchPlugins(_idCDT, compositeParameterNode)
+                .then(function (result) {
+                    return provider
+                        .getServiceByOperationId(result[0]._idOperation);
+                })
+                .then(function (service) {
+                    assert.equal(service.name, 'GooglePlaces');
+                });
+        });
+    });
+
     after(function (done) {
         MockDatabase.deleteDatabase(function (err) {
             assert.equal(err, null);
@@ -319,3 +333,12 @@ var decoratedCdt = function (idCDT) {
         parameterNodes: []
     }
 };
+
+var compositeParameterNode = [
+    {
+        dimension: 'CityCoord',
+        value: '45.478885|9.234308',
+        format: 'Latitude|Longitude',
+        searchFunction: 'locationSearch'
+    }
+];

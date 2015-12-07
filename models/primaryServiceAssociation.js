@@ -20,9 +20,9 @@ var primaryServiceSchema = new Schema ({
     },
     ranking: {
         type: Number,
-        min: 1,
-        required: true
+        min: 1
     },
+    format: String,
     _idCDT: {
         type: ObjectId,
         required: true

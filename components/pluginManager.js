@@ -31,7 +31,7 @@ pluginManager.prototype.executeModules = function (nodes, data) {
                     //launch the search function with the associated data and the value obtained by the decorated CDT
                     promises.push(
                         Module
-                            .search(filter, n.value)
+                            .search(filter, n)
                             .then(function (results) {
                                 if (!_.isUndefined(results) && _.isArray(results) && !_.isEmpty(results)) {
                                     services = _.union(services, results);

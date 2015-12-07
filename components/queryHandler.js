@@ -98,7 +98,7 @@ queryHandler.prototype._callServices = function _callServices (services, params)
                     //call the custom bridge
                     var bridgeName = s.operations[0].bridgeName;
                     //check if a bridge name is defined
-                    if (!_.isEmpty(bridgeName) && !_.isUndefined(bridgeName)) {
+                    if (!_.isUndefined(bridgeName) && !_.isEmpty(bridgeName)) {
                         //load the module
                         var module = require(bridgeFolder + bridgeName + '.js');
                         //check if the module implements the bridge interface
