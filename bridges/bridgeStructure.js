@@ -8,7 +8,7 @@ var bridgeStructure = function () { };
  * These parameters respect this structure:
  * {
  *    name: the CDT dimension node name
- *    value: the value choosen by the user or acquired by the phone sensors
+ *    value: the value chosen by the user or acquired by the phone sensors
  * }
  * @returns {bluebird|exports|module.exports} The response provided by the service, in JSON format
  */
