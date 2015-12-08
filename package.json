@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "node_modules/.bin/mocha"
+    "start": "node ./index.js",
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "superagent": "^1.4.0"
   },
   "devDependencies": {
+    "istanbul": "^0.4.1",
     "mocha": "^2.3.3"
   }
 }
