@@ -242,7 +242,8 @@ var cdt = {
                 'Restaurant',
                 'Cinema',
                 'Theater',
-                'Hotel'
+                'Hotel',
+                'Museum'
             ]
         },
         {
@@ -250,23 +251,12 @@ var cdt = {
             for: 'ranking|parameter',
             params: [
                 {
-                    name: 'City'
+                    name: 'CityName'
                 },
                 {
-                    name: 'Latitude'
-                },
-                {
-                    name: 'Longitude'
-                }
-            ]
-        },
-        {
-            name: 'Guests',
-            for: 'filter|parameter',
-            params: [
-                {
-                    name: 'Number',
-                    type: 'Integer'
+                    name: 'CityCoord',
+                    format: 'Latitude|Longitude',
+                    searchFunction: 'locationSearch'
                 }
             ]
         },
@@ -275,7 +265,7 @@ var cdt = {
             for: 'parameter',
             params: [
                 {
-                    name: 'search_key',
+                    name: 'SearchKey',
                     type: 'String'
                 }
             ]
@@ -321,7 +311,7 @@ var googlePlaces = {
                     required: true,
                     default: 'restaurant+in+milan',
                     mappingCDT: [
-                        'search_key'
+                        'SearchKey'
                     ]
                 },
                 {
@@ -373,14 +363,14 @@ var googlePlaces = {
                     default: '-33.8670522,151.1957362',
                     collectionFormat: 'csv',
                     mappingCDT: [
-                        'Latitude',
-                        'Longitude'
+                        'CityCoord#Latitude',
+                        'CityCoord#Longitude'
                     ]
                 },
                 {
                     name: 'radius',
                     required: true,
-                    default: '500',
+                    default: '50',
                     mappingCDT: []
                 },
                 {
@@ -450,7 +440,7 @@ var eventful = {
                     required: false,
                     default: 'restaurant',
                     mappingCDT: [
-                        'search_key'
+                        'SearchKey'
                     ]
                 },
                 {
@@ -458,7 +448,7 @@ var eventful = {
                     required: false,
                     default: 'chicago',
                     mappingCDT: [
-                        'City'
+                        'CityName'
                     ]
                 }
             ],
@@ -524,7 +514,7 @@ var wikipedia = {
                     default: 'Italy',
                     mappingCDT: [],
                     mappingTerm: [
-                        'search_key'
+                        'title'
                     ]
                 },
                 {
@@ -578,7 +568,7 @@ var googleMaps = {
                 },
                 {
                     name: 'mode',
-                    default: 'bus'
+                    default: 'car'
                 }
             ]
         }
@@ -617,9 +607,9 @@ var cinemaStub = {
                 {
                     name: 'citta',
                     required: true,
-                    default: 'milano',
+                    default: 'Milano',
                     mappingCDT: [
-                        'City'
+                        'CityName'
                     ]
                 }
             ],
@@ -684,7 +674,7 @@ var theaterStub = {
                     required: true,
                     default: '45.46867',
                     mappingCDT: [
-                        'Latitude'
+                        'CityCoord#Latitude'
                     ]
                 },
                 {
@@ -692,7 +682,7 @@ var theaterStub = {
                     required: true,
                     default: '9.11144',
                     mappingCDT: [
-                        'Longitude'
+                        'CityCoord#Longitude'
                     ]
                 }
             ],
@@ -741,9 +731,9 @@ var theaterStubAssociations = function (idOperation, idCDT) {
         },
         {
             _idOperation: idOperation,
-            dimension: 'City',
-            value: 'Milan',
-            ranking: 1,
+            dimension: 'CityCoord',
+            value: '45.46427|9.18951|10',
+            format: 'Latitude|Longitude|Radius',
             _idCDT: idCDT
         }
     ];
@@ -770,7 +760,7 @@ var mericiPrimary = {
                     required: false,
                     default: 'rome',
                     mappingCDT: [
-                        'City'
+                        'CityName'
                     ]
                 },
                 {
@@ -778,7 +768,7 @@ var mericiPrimary = {
                     required: false,
                     default: '45.46867',
                     mappingCDT: [
-                        'latitude'
+                        'CityCoord#Latitude'
                     ]
                 },
                 {
@@ -786,7 +776,7 @@ var mericiPrimary = {
                     required: false,
                     default: '9.11144',
                     mappingCDT: [
-                        'longitude'
+                        'CityCoord#Longitude'
                     ]
                 }
             ],
@@ -842,7 +832,7 @@ var mericiPrimary = {
                     required: false,
                     default: 'rome',
                     mappingCDT: [
-                        'City'
+                        'CityName'
                     ]
                 },
                 {
@@ -850,7 +840,7 @@ var mericiPrimary = {
                     required: false,
                     default: '45.46867',
                     mappingCDT: [
-                        'latitude'
+                        'CityCoord#Latitude'
                     ]
                 },
                 {
@@ -858,7 +848,7 @@ var mericiPrimary = {
                     required: false,
                     default: '9.11144',
                     mappingCDT: [
-                        'longitude'
+                        'CityCoord#Longitude'
                     ]
                 }
             ],
@@ -914,7 +904,7 @@ var mericiPrimary = {
                     required: false,
                     default: 'rome',
                     mappingCDT: [
-                        'City'
+                        'CityName'
                     ]
                 },
                 {
@@ -922,7 +912,7 @@ var mericiPrimary = {
                     required: false,
                     default: '45.46867',
                     mappingCDT: [
-                        'latitude'
+                        'CityCoord#Latitude'
                     ]
                 },
                 {
@@ -930,7 +920,7 @@ var mericiPrimary = {
                     required: false,
                     default: '9.11144',
                     mappingCDT: [
-                        'longitude'
+                        'CityCoord#Longitude'
                     ]
                 }
             ],
@@ -986,7 +976,7 @@ var mericiPrimary = {
                     required: false,
                     default: 'rome',
                     mappingCDT: [
-                        'City'
+                        'CityName'
                     ]
                 },
                 {
@@ -994,7 +984,7 @@ var mericiPrimary = {
                     required: false,
                     default: '45.46867',
                     mappingCDT: [
-                        'latitude'
+                        'CityCoord#Latitude'
                     ]
                 },
                 {
@@ -1002,7 +992,7 @@ var mericiPrimary = {
                     required: false,
                     default: '9.11144',
                     mappingCDT: [
-                        'longitude'
+                        'CityCoord#Longitude'
                     ]
                 }
             ],

@@ -257,11 +257,15 @@ contextManager.prototype._getSpecificFilterNodes = function _getSpecificFilterNo
                             return _.has(item, 'searchFunction');
                         })
                         .map(function (param) {
-                            return {
+                            var obj = {
                                 dimension: param.name,
                                 value: param.value,
                                 searchFunction: param.searchFunction
                             };
+                            if (_.has(param, 'format')) {
+                                obj['format'] = param.format;
+                            }
+                            return obj;
                         })
                         .value();
                 })
@@ -295,11 +299,15 @@ contextManager.prototype._getSpecificRankingNodes = function _getSpecificRanking
                             return _.has(item, 'searchFunction');
                         })
                         .map(function (param) {
-                            return {
+                            var obj = {
                                 dimension: param.name,
                                 value: param.value,
                                 searchFunction: param.searchFunction
                             };
+                            if (_.has(param, 'format')) {
+                                obj['format'] = param.format;
+                            }
+                            return obj;
                         })
                         .value();
                 })
@@ -354,8 +362,8 @@ contextManager.prototype._getParameterNodes = function _getParameterNodes (merge
                                 value: param.value
                             };
                             //add information about the format
-                            if (_.has(item, 'format')) {
-                                obj['format'] = item.format;
+                            if (_.has(param, 'format')) {
+                                obj['format'] = param.format;
                             }
                             return obj;
                         })
