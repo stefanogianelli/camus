@@ -30,7 +30,6 @@ var NodeSchema = new Schema({
         enum: forEnum,
         required: true
     },
-    transformFunction: String,
     supportCategory: String,
     values: [String],
     params: [ParamSchema],

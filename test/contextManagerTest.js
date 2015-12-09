@@ -47,7 +47,6 @@ describe('Component: ContextManager', function() {
                     assert.equal(data.specificRankingNodes[0].searchFunction, 'testCustomSearch');
                     assert.equal(data.parameterNodes[0].dimension, 'Budget');
                     assert.equal(data.parameterNodes[0].value, 'Low');
-                    assert.equal(data.parameterNodes[0].transformFunction, 'translateBudget');
                     assert.equal(data.parameterNodes[1].dimension, 'City');
                     assert.equal(data.parameterNodes[1].value, 'Milan');
                     assert.equal(data.parameterNodes[2].dimension, 'Number');

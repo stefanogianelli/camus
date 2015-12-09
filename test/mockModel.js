@@ -57,7 +57,6 @@ var cdt = {
         {
             name: 'Budget',
             for: 'filter|parameter',
-            transformFunction: 'translateBudget',
             values: [
                 'Low',
                 'Medium',
@@ -234,8 +233,7 @@ var decoratedCdt = function (idCDT) {
         parameterNodes: [
             {
                 dimension: 'Budget',
-                value: 'Low',
-                transformFunction: 'translateBudget'
+                value: 'Low'
             },
             {
                 dimension: 'City',
@@ -312,8 +310,7 @@ var mergedCdt = function (idCDT) {
             {
                 dimension: 'Budget',
                 value: 'Low',
-                for: 'filter|parameter',
-                transformFunction: 'translateBudget'
+                for: 'filter|parameter'
             },
             {
                 dimension: 'Keyword',

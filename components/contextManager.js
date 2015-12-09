@@ -337,15 +337,10 @@ contextManager.prototype._getParameterNodes = function _getParameterNodes (merge
                     return (item.for === 'parameter' || item.for === 'filter|parameter' || item.for === 'ranking|parameter') && _.isEmpty(item.params);
                 })
                 .map(function (item) {
-                    var obj = {
+                    return {
                         dimension: item.dimension,
                         value: item.value
                     };
-                    //add information about the translation function, if exists
-                    if (_.has(item, 'transformFunction')) {
-                        obj['transformFunction'] = item.transformFunction;
-                    }
-                    return obj;
                 })
                 .value();
             //map also the values of the parameters inside nodes

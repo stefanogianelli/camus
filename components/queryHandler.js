@@ -1,6 +1,5 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
-var translator = require('./translationManager.js');
 var Interface = require('./interfaceChecker.js');
 var restBridge = require('../bridges/restBridge.js');
 var provider = require('../provider/provider.js');
@@ -28,12 +27,8 @@ queryHandler.prototype.executeQueries = function executeQueries (services, decor
                     return provider.getServiceByOperationId(s._idOperation);
                 })
                 .then(function (serviceDescriptions) {
-                    //check if some parameters need translation
-                    return [serviceDescriptions, queryHandler.prototype._translateParameters(decoratedCdt.parameterNodes, decoratedCdt)];
-                })
-                .spread(function (serviceDescriptions, params) {
                     //execute the queries toward web services
-                    return queryHandler.prototype._callServices(serviceDescriptions, params);
+                    return queryHandler.prototype._callServices(serviceDescriptions, decoratedCdt.parameterNodes);
                 })
                 .then(function (responses) {
                     resolve(responses);
@@ -44,38 +39,6 @@ queryHandler.prototype.executeQueries = function executeQueries (services, decor
         } else {
             resolve();
         }
-    });
-};
-
-/**
- * Translate the parameters to a value useful for the service invocation
- * @param params The selected parameters
- * @param decoratedCdt The current context
- * @returns {bluebird|exports|module.exports} The list of parameters with the translated values
- */
-queryHandler.prototype._translateParameters = function _translateParameters (params, decoratedCdt) {
-    return new Promise (function (resolve, reject) {
-        Promise
-            //take only the parameters that have specified a translation function
-            .map(_.filter(params, 'transformFunction'), function (p) {
-                //check if the translation function is defined
-                if (typeof translator[p.transformFunction] == 'function') {
-                    //call the function to retrieve the translated value
-                    return translator[p.transformFunction](decoratedCdt.interestTopic, p.value)
-                        .then(function (value) {
-                            //modify the value with the translated one
-                            p.value = value;
-                        })
-                        .catch(function (e) {
-                            console.log(e);
-                        })
-                } else {
-                    console.log('ERROR: translation function \'' + p.transformFunction + '\' not exists');
-                }
-            })
-            .then(function () {
-                resolve(params);
-            });
     });
 };
 

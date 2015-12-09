@@ -55,27 +55,6 @@ describe('Component: QueryHandler', function () {
                     assert.equal(responses[0][1].title, 'Restaurant The Purple Pig');
                 });
         });
-        it('check if a parameter is correctly translated', function () {
-            return queryHandler
-                ._translateParameters(translateTestCdt.parameterNodes, translateTestCdt)
-                .then(function (params) {
-                    assert.equal(params[0].value, 10);
-                })
-        });
-        it('check error when an non existent translation function is called', function () {
-            return queryHandler
-                ._translateParameters(invalidTranslationCdt.parameterNodes, invalidTranslationCdt)
-                .then(function (params) {
-                    assert.equal(params[0].value, 'Low');
-                })
-        });
-        it('check error when a translation function receive an unrecognized parameter', function () {
-            return queryHandler
-                ._translateParameters(invalidTranslationInterestTopicCdt.parameterNodes, invalidTranslationInterestTopicCdt)
-                .then(function (params) {
-                    assert.equal(params[0].value, 'Low');
-                })
-        });
     });
 
     after(function (done) {
@@ -148,37 +127,4 @@ var testBridgeContext = function (idCDT) {
         specificNodes: [],
         parameterNodes: []
     }
-};
-
-var translateTestCdt = {
-    interestTopic: 'Restaurant',
-    parameterNodes: [
-        {
-            dimension: 'Budget',
-            value: 'Low',
-            transformFunction: 'translateBudget'
-        }
-    ]
-};
-
-var invalidTranslationCdt = {
-    interestTopic: 'Restaurant',
-    parameterNodes: [
-        {
-            dimension: 'Budget',
-            value: 'Low',
-            transformFunction: 'translateBudgets'
-        }
-    ]
-};
-
-var invalidTranslationInterestTopicCdt = {
-    interestTopic: 'Sport',
-    parameterNodes: [
-        {
-            dimension: 'Budget',
-            value: 'Low',
-            transformFunction: 'translateBudget'
-        }
-    ]
 };
