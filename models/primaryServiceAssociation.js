@@ -22,7 +22,6 @@ var primaryServiceSchema = new Schema ({
         type: Number,
         min: 1
     },
-    format: String,
     _idCDT: {
         type: ObjectId,
         required: true

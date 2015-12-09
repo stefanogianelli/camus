@@ -27,8 +27,8 @@ describe('Component: QueryHandler', function () {
                 })
                 .then(function (responses) {
                     assert.equal(responses.length, 2);
-                    assert.equal(responses[0][0].title, 'Bouley');
-                    assert.equal(responses[1][0].title, 'International Restaurant & Foodservice Show-New York');
+                    assert.equal(responses[0][0].title, 'International Restaurant & Foodservice Show-New York');
+                    assert.equal(responses[1][0].title, 'Bouley');
                 });
         });
         it('check array composition when one service does not respond to a query', function () {
@@ -90,7 +90,6 @@ var contextForFakeService = function (idCDT) {
                 value: 'TestSenzaRisposta'
             }
         ],
-        specificNodes: [],
         parameterNodes: [
             {
                 dimension: 'Budget',
@@ -123,8 +122,6 @@ var testBridgeContext = function (idCDT) {
                 dimension: 'TestBridge',
                 value: 'TestBridge'
             }
-        ],
-        specificNodes: [],
-        parameterNodes: []
+        ]
     }
 };

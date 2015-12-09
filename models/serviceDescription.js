@@ -26,8 +26,7 @@ var parameterSchema = new Schema({
         enum: separators
     },
     mappingCDT: [String],
-    mappingTerm: [String],
-    transformFunction: String
+    mappingTerm: [String]
 });
 
 /**

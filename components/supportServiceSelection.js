@@ -1,7 +1,6 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
 var provider = require('../provider/provider.js');
-var pluginManager = require('./pluginManager.js');
 
 var supportServiceSelection = function () { };
 
@@ -68,13 +67,8 @@ supportServiceSelection.prototype._selectServiceFromCategory = function _selectS
                     return provider
                         .filterSupportServices(decoratedCdt._id, c, _.union(decoratedCdt.filterNodes, decoratedCdt.rankingNodes))
                         .then(function (services) {
-                            //execute the custom plugins for a subset of nodes
-                            return [services, supportServiceSelection.prototype._loadSearchPlugins(decoratedCdt._id, _.union(decoratedCdt.specificFilterNodes, decoratedCdt.specificRankingNodes), c)];
-                        })
-                        .spread(function (filterServices, customServices) {
                             //retrieve the service descriptions for the found operation identifiers
-                            return provider
-                                .getServicesByOperationIds(supportServiceSelection.prototype._mergeResults(filterServices, customServices));
+                            return provider.getServicesByOperationIds(_.pluck(services, '_idOperation'));
                         })
                         .then(function (services) {
                             //compose the queries
@@ -91,70 +85,6 @@ supportServiceSelection.prototype._selectServiceFromCategory = function _selectS
             resolve();
         }
     });
-};
-
-/**
- * Search for the CDT nodes that need a specific search function and execute it
- * @param idCDT The CDT identifier
- * @param specificNodes The specific nodes defined in the decorated CDT
- * @param category The support service category
- * @returns {bluebird|exports|module.exports} The promise with the services found
- */
-supportServiceSelection.prototype._loadSearchPlugins = function _loadSearchPlugins (idCDT, specificNodes, category) {
-    return new Promise(function (resolve, reject) {
-        if (!_.isEmpty(specificNodes)) {
-            //retrieve the association data for the dimensions
-            provider
-                .filterSupportServices(idCDT, category, specificNodes, true)
-                .then(function (data) {
-                    //call the function that takes care to execute the search functions
-                    return pluginManager.executeModules(specificNodes, data);
-                })
-                .then(function (results) {
-                    //return the services found
-                    resolve(results);
-                })
-                .catch(function (e) {
-                    reject(e);
-                });
-        } else {
-            resolve();
-        }
-    });
-};
-
-/**
- * Create the final list of support services selected for a specific category
- * @param filterServices The services found by the standard search
- * @param customServices The services found by the custom searches
- * @returns {Array} The operation identifiers of the selected support services
- */
-supportServiceSelection.prototype._mergeResults = function _mergeResults (filterServices, customServices) {
-    var results = [];
-    _.forEach(_.union(filterServices, customServices), function (s) {
-        //search if the current operation already exists in the results collection
-        var index = _.findIndex(results, function (i) {
-            return i._idOperation.equals(s._idOperation);
-        });
-        if (index === -1) {
-            //operation not found, so I create a new object
-            results.push({
-                _idOperation: s._idOperation,
-                constraintCount: s.constraintCount,
-                count: 1
-            });
-        } else {
-            //operation found, so I increase the counter
-            results[index].count += 1
-        }
-    });
-    //get the maximum value of the count attribute
-    var maxCount = _.max(_.pluck(results, 'count'));
-    //filter out the operations with the maximum count value and that respect their total constraint counter
-    results = _.filter(results, function (r) {
-        return r.count === maxCount && r.constraintCount === r.count;
-    });
-    return _.pluck(results, '_idOperation');
 };
 
 /**

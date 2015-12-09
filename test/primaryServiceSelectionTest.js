@@ -26,18 +26,18 @@ describe('Component: PrimaryServiceSelection', function() {
                 .selectServices(decoratedCdt(_idCDT))
                 .then(function(services) {
                     assert.equal(services.length, 2);
-                    assert.equal(services[0].rank, 8);
+                    assert.equal(services[0].rank, 5);
                     return [services, provider.getServiceByOperationId(services[0]._idOperation)];
                 })
                 .spread(function (services, data) {
-                    assert.equal(data.name, 'GooglePlaces');
-                    assert.equal(data.operations[0].name, 'placeTextSearch');
-                    assert.equal(services[1].rank, 5);
+                    assert.equal(data.name, 'Eventful');
+                    assert.equal(data.operations[0].name, 'eventSearch');
+                    assert.equal(services[1].rank, 2);
                     return provider.getServiceByOperationId(services[1]._idOperation);
                 })
                 .then(function (data) {
-                    assert.equal(data.name, 'Eventful');
-                    assert.equal(data.operations[0].name, 'eventSearch');
+                    assert.equal(data.name, 'GooglePlaces');
+                    assert.equal(data.operations[0].name, 'placeTextSearch');
                 });
         });
         it('check if correct services are selected for nested CDT dimensions', function() {
@@ -90,52 +90,11 @@ describe('Component: PrimaryServiceSelection', function() {
                     assert.equal(data.operations[0].name, 'eventSearch');
                 });
         });
-        it('check correct execution of custom search function', function () {
-            return serviceManager
-                .selectServices(testCustomSearchFunctionContext(_idCDT))
-                .then(function (services) {
-                    assert.equal(services.length, 2);
-                    return [services, provider.getServiceByOperationId(services[0]._idOperation)];
-                })
-                .spread(function (services, data) {
-                    assert.equal(services[0].rank, 2);
-                    assert.equal(data.name, 'GooglePlaces');
-                    assert.equal(data.operations[0].name, 'placeTextSearch');
-                    return [services, provider.getServiceByOperationId(services[1]._idOperation)];
-                })
-                .spread(function (services, data) {
-                    assert.equal(services[1].rank, 1);
-                    assert.equal(data.name, 'Eventful');
-                    assert.equal(data.operations[0].name, 'eventSearch');
-                });
-        });
         it('check error when no filter nodes selected', function() {
             return serviceManager
                 .selectServices(parameterContext(_idCDT))
                 .catch(function (e) {
                     assert.equal(e.message, 'No filter nodes selected!');
-                });
-        });
-        it('check correct execution when specified a wrong specific module name', function() {
-            return serviceManager
-                .selectServices(wrongContext(_idCDT))
-                .then(function(services) {
-                    assert.equal(services[0].rank, 4);
-                    assert.equal(services[1].rank, 1);
-                });
-        });
-    });
-
-    describe('#loadSearchPlugins()', function () {
-        it('check if composite parameters are correctly handled', function () {
-            return serviceManager
-                ._loadSearchPlugins(_idCDT, compositeParameterNode)
-                .then(function (result) {
-                    return provider
-                        .getServiceByOperationId(result[0]._idOperation);
-                })
-                .then(function (service) {
-                    assert.equal(service.name, 'GooglePlaces');
                 });
         });
     });
@@ -149,56 +108,10 @@ describe('Component: PrimaryServiceSelection', function() {
     });
 });
 
-//contex with wrong search module name
-var wrongContext = function (idCDT) {
-    return {
-        _id: idCDT,
-        interestTopic: 'Restaurant',
-        filterNodes: [
-            {
-                dimension: 'InterestTopic',
-                value: 'Restaurant'
-            },
-            {
-                dimension: 'Budget',
-                value: 'Low'
-            },
-            {
-                dimension: 'Tipology',
-                value: 'DinnerWithFriends'
-            }
-        ],
-        specificNodes: [
-            {
-                dimension: 'City',
-                value: 'Milan',
-                searchFunction: 'wrongName'
-            }
-        ],
-        parameterNodes: [
-            {
-                dimension: 'Budget',
-                value: 'Low',
-                transformFunction: 'translateBudget'
-            },
-            {
-                dimension: 'City',
-                value: 'Milan'
-            },
-            {
-                dimension: 'Number',
-                value: '4'
-            }
-        ]
-    }
-};
-
 //context with only parameter attribues
 var parameterContext = function(idCDT) {
     return {
         _id: idCDT,
-        filterNodes: [],
-        specificNodes: [],
         parameterNodes: [
             {
                 dimension: 'Number',
@@ -233,8 +146,7 @@ var nestedContext = function (idCDT) {
                 dimension: 'g',
                 value: 'i'
             }
-        ],
-        specificNodes: []
+        ]
     };
 };
 
@@ -267,34 +179,6 @@ var multipleSonContext = function (idCDT) {
                 dimension: 'h',
                 value: 'n'
             }
-        ],
-        specificNodes: []
-    };
-};
-
-//context used to test custom search function
-var testCustomSearchFunctionContext = function (idCDT) {
-    return {
-        _id: idCDT,
-        interestTopic: 'Restaurant',
-        filterNodes: [
-            {
-                dimension: 'InterestTopic',
-                value: 'Restaurant'
-            }
-        ],
-        specificNodes: [
-            {
-                dimension: 'City',
-                value: 'Rome',
-                searchFunction: 'testCustomSearch'
-            }
-        ],
-        parameterNodes: [
-            {
-                dimension: 'City',
-                value: 'Rome'
-            }
         ]
     };
 };
@@ -315,30 +199,6 @@ var decoratedCdt = function (idCDT) {
                 dimension: 'Festivita',
                 value: 'Capodanno'
             }
-        ],
-        specificFilterNodes: [
-            {
-                dimension: 'Ora',
-                value: '20:00',
-                searchFunction: 'testCustomSearch'
-            }
-        ],
-        specificRankingNodes: [
-            {
-                dimension: 'City',
-                value: 'Milan',
-                searchFunction: 'testCustomSearch'
-            }
-        ],
-        parameterNodes: []
+        ]
     }
 };
-
-var compositeParameterNode = [
-    {
-        dimension: 'CityCoord',
-        value: '45.478885|9.234308',
-        format: 'Latitude|Longitude',
-        searchFunction: 'locationSearch'
-    }
-];

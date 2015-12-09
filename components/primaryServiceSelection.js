@@ -1,7 +1,6 @@
 var _ = require('lodash');
 var Promise = require('bluebird');
 var provider = require('../provider/provider.js');
-var pluginManager = require('./pluginManager.js');
 
 //number of services to keep
 var N = 3;
@@ -22,71 +21,28 @@ primaryServiceSelection.prototype.selectServices = function selectServices (deco
         Promise
             .props({
                 //search for services associated to the filter nodes
-                filterServices: provider.filterPrimaryServices(decoratedCdt.filterNodes, decoratedCdt._id),
+                filter: provider.filterPrimaryServices(decoratedCdt.filterNodes, decoratedCdt._id),
                 //search for services associated to the ranking nodes
-                rankingServices: provider.filterPrimaryServices(decoratedCdt.rankingNodes, decoratedCdt._id),
-                //load specific module for search other filter services
-                filterSpecific: primaryServiceSelection.prototype._loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificFilterNodes),
-                //load specific module for search other ranking services
-                rankingSpecific: primaryServiceSelection.prototype._loadSearchPlugins(decoratedCdt._id, decoratedCdt.specificRankingNodes)
+                ranking: provider.filterPrimaryServices(decoratedCdt.rankingNodes, decoratedCdt._id)
             })
             .then(function (results) {
-                //merge filter nodes results
-                var filter = _.union(results.filterServices, results.filterSpecific);
-                //merge ranking nodes results
-                var ranking = _.union(results.rankingServices, results.rankingSpecific);
                 //discard the ranking nodes that haven't a correspondence in the filter nodes list
-                ranking = primaryServiceSelection.prototype._intersect(filter, ranking);
+                results.ranking = primaryServiceSelection.prototype._intersect(results.filter, results.ranking);
                 //add the weight values for each item
-                _.forEach(filter, function (i) {
+                _.forEach(results.filter, function (i) {
                     i['weight'] = filterWeight;
                 });
-                _.forEach(ranking, function (i) {
+                _.forEach(results.ranking, function (i) {
                     i['weight'] = rankingWeight;
                 });
                 //calculate the ranking of the merged list
-                resolve(primaryServiceSelection.prototype._calculateRanking(_.union(filter, ranking)));
+                resolve(primaryServiceSelection.prototype._calculateRanking(_.union(results.filter, results.ranking)));
             })
             .catch(function (e) {
                 console.log(e);
                 resolve();
             });
     })
-};
-
-/**
- * Search for the CDT nodes that need a specific search function and execute it
- * @param idCDT The CDT identifier
- * @param specificNodes The list of specific nodes
- * @returns {bluebird|exports|module.exports} The promise with the services found
- */
-primaryServiceSelection.prototype._loadSearchPlugins = function _loadSearchPlugins (idCDT, specificNodes) {
-    return new Promise(function (resolve, reject) {
-        if (!_.isUndefined(specificNodes) && !_.isEmpty(specificNodes)) {
-            provider
-                .filterPrimaryServices(specificNodes, idCDT, true)
-                .then(function (data) {
-                    //call the function that takes care to execute the search functions
-                    return pluginManager.executeModules(specificNodes, data);
-                })
-                .then(function (results) {
-                    //clean the results
-                    results = _.map(results, function (r) {
-                        return {
-                            ranking: r.ranking,
-                            _idOperation: r._idOperation
-                        };
-                    });
-                    resolve(results);
-                })
-                .catch(function (e) {
-                    reject(e);
-                });
-        } else {
-            //no specific search needed
-            resolve();
-        }
-    });
 };
 
 /**
@@ -135,20 +91,22 @@ primaryServiceSelection.prototype._calculateRanking = function _calculateRanking
  * @returns {Array} The array intersection of the input ones
  */
 primaryServiceSelection.prototype._intersect = function _intersect (array1, array2) {
-    var first, second;
-    if (array1.length < array2.length) {
-        first = array1;
-        second = array2;
-    } else {
-        first = array2;
-        second = array1;
-    }
-    return _.filter(first, function (i) {
-        var index = _.findIndex(second, function (s) {
-            return s._idOperation.equals(i._idOperation);
+    if (!_.isUndefined(array1) && !_.isUndefined(array2)) {
+        var first, second;
+        if (array1.length < array2.length) {
+            first = array1;
+            second = array2;
+        } else {
+            first = array2;
+            second = array1;
+        }
+        return _.filter(first, function (i) {
+            var index = _.findIndex(second, function (s) {
+                return s._idOperation.equals(i._idOperation);
+            });
+            return index !== -1;
         });
-        return index !== -1;
-    });
+    }
 };
 
 module.exports = new primaryServiceSelection();

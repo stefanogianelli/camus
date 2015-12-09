@@ -33,18 +33,16 @@ describe('Component: ContextManager', function() {
                     assert.equal(data.filterNodes[1].value, 'Low');
                     assert.equal(data.filterNodes[2].dimension, 'Transport');
                     assert.equal(data.filterNodes[2].value, 'PublicTransport');
-                    assert.equal(data.filterNodes[3].dimension, 'Tipology');
-                    assert.equal(data.filterNodes[3].value, 'Bus');
+                    assert.equal(data.filterNodes[3].dimension, 'Ora');
+                    assert.equal(data.filterNodes[3].value, '20:00');
                     assert.equal(data.filterNodes[4].dimension, 'Tipology');
-                    assert.equal(data.filterNodes[4].value, 'Train');
+                    assert.equal(data.filterNodes[4].value, 'Bus');
+                    assert.equal(data.filterNodes[5].dimension, 'Tipology');
+                    assert.equal(data.filterNodes[5].value, 'Train');
                     assert.equal(data.rankingNodes[0].dimension, 'Festivita');
                     assert.equal(data.rankingNodes[0].value, 'Capodanno');
-                    assert.equal(data.specificFilterNodes[0].dimension, 'Ora');
-                    assert.equal(data.specificFilterNodes[0].value, '20:00');
-                    assert.equal(data.specificFilterNodes[0].searchFunction, 'testCustomSearch');
-                    assert.equal(data.specificRankingNodes[0].dimension, 'City');
-                    assert.equal(data.specificRankingNodes[0].value, 'Milan');
-                    assert.equal(data.specificRankingNodes[0].searchFunction, 'testCustomSearch');
+                    assert.equal(data.rankingNodes[1].dimension, 'City');
+                    assert.equal(data.rankingNodes[1].value, 'Milan');
                     assert.equal(data.parameterNodes[0].dimension, 'Budget');
                     assert.equal(data.parameterNodes[0].value, 'Low');
                     assert.equal(data.parameterNodes[1].dimension, 'City');
@@ -68,7 +66,6 @@ describe('Component: ContextManager', function() {
                     assert.equal(data.context[1].dimension, 'Location');
                     assert.equal(data.context[1].params[0].name, 'City');
                     assert.equal(data.context[1].params[0].value, 'Milan');
-                    assert.equal(data.context[1].params[0].searchFunction, 'testCustomSearch');
                 });
         });
     });
@@ -78,20 +75,19 @@ describe('Component: ContextManager', function() {
             return contextManager
                 ._getFilterNodes(mockData.mergedCdt(_idCDT))
                 .then(function (nodes) {
-                    if (nodes.length === 5) {
-                        assert.equal(nodes[0].dimension, 'InterestTopic');
-                        assert.equal(nodes[0].value, 'Restaurant');
-                        assert.equal(nodes[1].dimension, 'Budget');
-                        assert.equal(nodes[1].value, 'Low');
-                        assert.equal(nodes[2].dimension, 'Transport');
-                        assert.equal(nodes[2].value, 'PublicTransport');
-                        assert.equal(nodes[3].dimension, 'Tipology');
-                        assert.equal(nodes[3].value, 'DinnerWithFriends');
-                        assert.equal(nodes[4].dimension, 'Number');
-                        assert.equal(nodes[4].value, 4);
-                    } else {
-                        assert.fail(nodes.length, 5, 'Wrong nodes count');
-                    }
+                    assert.equal(nodes.length, 6);
+                    assert.equal(nodes[0].dimension, 'InterestTopic');
+                    assert.equal(nodes[0].value, 'Restaurant');
+                    assert.equal(nodes[1].dimension, 'Budget');
+                    assert.equal(nodes[1].value, 'Low');
+                    assert.equal(nodes[2].dimension, 'Transport');
+                    assert.equal(nodes[2].value, 'PublicTransport');
+                    assert.equal(nodes[3].dimension, 'Tipology');
+                    assert.equal(nodes[3].value, 'DinnerWithFriends');
+                    assert.equal(nodes[4].dimension, 'Ora');
+                    assert.equal(nodes[4].value, '20:00');
+                    assert.equal(nodes[5].dimension, 'Number');
+                    assert.equal(nodes[5].value, 4);
                 });
 
         });
@@ -123,12 +119,11 @@ describe('Component: ContextManager', function() {
             return contextManager
                 ._getRankingNodes(mockData.mergedCdt(_idCDT))
                 .then(function (nodes) {
-                    if (nodes.length === 1) {
-                        assert.equal(nodes[0].dimension, 'Festivita');
-                        assert.equal(nodes[0].value, 'Capodanno');
-                    } else {
-                        assert.fail(nodes.length, 1, 'Wrong nodes count');
-                    }
+                    assert.equal(nodes.length, 2);
+                    assert.equal(nodes[0].dimension, 'Festivita');
+                    assert.equal(nodes[0].value, 'Capodanno');
+                    assert.equal(nodes[1].dimension, 'City');
+                    assert.equal(nodes[1].value, 'Milan');
                 });
 
         });
@@ -155,97 +150,20 @@ describe('Component: ContextManager', function() {
         });
     });
 
-    describe('#getSpecificFilterNodes()', function () {
-        it('check if correct specific filter nodes are returned', function () {
-            return contextManager
-                ._getSpecificFilterNodes(mockData.mergedCdt(_idCDT))
-                .then(function (nodes) {
-                    if (nodes.length === 1) {
-                        assert.equal(nodes[0].dimension, 'Ora');
-                        assert.equal(nodes[0].value, '20:00');
-                        assert.equal(nodes[0].searchFunction, 'testCustomSearch');
-                    } else {
-                        assert.fail(nodes.length, 1, 'Wrong nodes count');
-                    }
-                });
-        });
-        it('check error when empty context specified', function () {
-            return contextManager
-                ._getSpecificFilterNodes(emptyContext(_idCDT))
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
-        it('check error when empty object specified', function () {
-            return contextManager
-                ._getSpecificFilterNodes({ })
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
-        it('check error when context have a wrong format', function () {
-            return contextManager
-                ._getSpecificFilterNodes(wrongContext(_idCDT))
-                .catch(function (e) {
-                    assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'InterestTopic\', value: \'Restaurant\' }');
-                });
-        });
-    });
-
-    describe('#getSpecificRankingNodes', function () {
-        it('check if correct specific ranking nodes are returned', function () {
-            return contextManager
-                ._getSpecificRankingNodes(mockData.mergedCdt(_idCDT))
-                .then(function (nodes) {
-                    if (nodes.length === 1) {
-                        assert.equal(nodes[0].dimension, 'City');
-                        assert.equal(nodes[0].value, 'Milan');
-                        assert.equal(nodes[0].searchFunction, 'testCustomSearch');
-                    } else {
-                        assert.fail(nodes.length, 1, 'Wrong nodes count');
-                    }
-                });
-        });
-        it('check error when empty context specified', function () {
-            return contextManager
-                ._getSpecificRankingNodes(emptyContext(_idCDT))
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
-        it('check error when empty object specified', function () {
-            return contextManager
-                ._getSpecificRankingNodes({ })
-                .catch(function (e) {
-                    assert.equal(e, 'No context selected');
-                });
-        });
-        it('check error when context have a wrong format', function () {
-            return contextManager
-                ._getSpecificRankingNodes(wrongContext(_idCDT))
-                .catch(function (e) {
-                    assert.equal(e, 'Lack of attribute \'for\' in item { dimension: \'InterestTopic\', value: \'Restaurant\' }');
-                });
-        });
-    });
-
     describe('#getParameterNodes()', function () {
         it('check if correct parameter nodes are returned', function () {
             return contextManager
                 ._getParameterNodes(mockData.mergedCdt(_idCDT))
                 .then(function (nodes) {
-                    if (nodes.length === 4) {
-                        assert.equal(nodes[0].dimension, 'Budget');
-                        assert.equal(nodes[0].value, 'Low');
-                        assert.equal(nodes[1].dimension, 'City');
-                        assert.equal(nodes[1].value, 'Milan');
-                        assert.equal(nodes[2].dimension, 'Number');
-                        assert.equal(nodes[2].value, 4);
-                        assert.equal(nodes[3].dimension, 'search_key');
-                        assert.equal(nodes[3].value, 'restaurantinnewyork');
-                    } else {
-                        assert.fail(nodes.length, 4, 'Wrong nodes count');
-                    }
+                    assert.equal(nodes.length, 4);
+                    assert.equal(nodes[0].dimension, 'Budget');
+                    assert.equal(nodes[0].value, 'Low');
+                    assert.equal(nodes[1].dimension, 'City');
+                    assert.equal(nodes[1].value, 'Milan');
+                    assert.equal(nodes[2].dimension, 'Number');
+                    assert.equal(nodes[2].value, 4);
+                    assert.equal(nodes[3].dimension, 'search_key');
+                    assert.equal(nodes[3].value, 'restaurantinnewyork');
                 });
         });
         it('check error when empty context specified', function () {
@@ -357,7 +275,6 @@ describe('Component: ContextManager', function() {
             return contextManager
                 ._getDescendants(_idCDT, {value: 'PublicTransport'})
                 .then(function (nodes) {
-                    assert.notEqual(nodes, null);
                     assert.equal(nodes.length, 2);
                     assert.equal(nodes[0].dimension, 'Tipology');
                     assert.equal(nodes[0].value, 'Bus');
@@ -520,8 +437,7 @@ var decoratedContext = function (idCDT) {
                 params: [
                     {
                         name: 'Ora',
-                        value: '20:00',
-                        searchFunction: 'testCustomSearch'
+                        value: '20:00'
                     }
                 ]
             },

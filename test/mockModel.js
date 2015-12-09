@@ -23,14 +23,10 @@ var cdt = {
             for: 'ranking|parameter',
             params: [
                 {
-                    name: 'City',
-                    type: 'gps',
-                    searchFunction: 'testCustomSearch'
+                    name: 'City'
                 },
                 {
-                    name: 'CityCoord',
-                    format: 'Latitude|Longitude',
-                    searchFunction: 'testCustomSearch'
+                    name: 'CityCoord'
                 }
             ]
         },
@@ -39,8 +35,7 @@ var cdt = {
             for: 'filter',
             params: [
                 {
-                    name: 'Ora',
-                    searchFunction: 'testCustomSearch'
+                    name: 'Ora'
                 }
             ]
         },
@@ -214,16 +209,7 @@ var decoratedCdt = function (idCDT) {
             {
                 dimension: 'Festivita',
                 value: 'Capodanno'
-            }
-        ],
-        specificFilterNodes: [
-            {
-                dimension: 'Ora',
-                value: '20:00',
-                searchFunction: 'testCustomSearch'
-            }
-        ],
-        specificRankingNodes: [
+            },
             {
                 dimension: 'City',
                 value: 'Milan',
@@ -281,8 +267,7 @@ var mergedCdt = function (idCDT) {
                 params: [
                     {
                         name: 'City',
-                        value: 'Milan',
-                        searchFunction: 'testCustomSearch'
+                        value: 'Milan'
                     }
                 ]
             },
@@ -292,8 +277,7 @@ var mergedCdt = function (idCDT) {
                 params: [
                     {
                         name: 'Ora',
-                        value: '20:00',
-                        searchFunction: 'testCustomSearch'
+                        value: '20:00'
                     }
                 ]
             },

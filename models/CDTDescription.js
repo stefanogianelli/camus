@@ -12,7 +12,6 @@ var ParamSchema = new Schema({
         required: true
     },
     type: String,
-    format: String,
     searchFunction: String,
     enum: [String]
 });
