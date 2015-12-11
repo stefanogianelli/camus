@@ -187,36 +187,20 @@ provider.prototype.getServicesByNames = function getServicesByNames (serviceName
  * { dimension: 'dimension name', value: 'associated value' }
  * @param attributes The list of filter nodes selected
  * @param idCDT The CDT identifier
- * @param onlyDimensions (optional) If it's true it considers only the dimensions name (default false)
  * @returns {*} The list of operation id, with ranking and weight, of the found services
  */
-provider.prototype.filterPrimaryServices = function filterPrimaryServices (attributes, idCDT, onlyDimensions) {
-    if (_.isUndefined(onlyDimensions)) {
-        onlyDimensions = false;
-    }
+provider.prototype.filterPrimaryServices = function filterPrimaryServices (attributes, idCDT) {
     if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
         var whereClause = {
             _idCDT: idCDT,
             $or: []
         };
         whereClause.$or = _.map(attributes, function (a) {
-            if (onlyDimensions) {
-                return {
-                    dimension: a.dimension
-                };
-            } else {
-                return {
-                    $and: [a]
-                };
-            }
+            return {
+                $and: [a]
+            };
         });
-        var projection = {};
-        if (onlyDimensions) {
-            projection = {_idCDT: 0, _id: 0, __v: 0, ranking: 0};
-        } else {
-            projection = {_idOperation: 1, ranking: 1, weight: 1, format:1, _id: 0};
-        }
-        return primaryServiceModel.findAsync(whereClause, projection);
+        return primaryServiceModel.findAsync(whereClause, {_idOperation: 1, ranking: 1, weight: 1, _id: 0});
     }
 };
 
@@ -231,80 +215,41 @@ provider.prototype.filterPrimaryServices = function filterPrimaryServices (attri
  * @param idCDT The CDT identifier
  * @param category The service category
  * @param attributes The list of attributes
- * @param onlyDimensions (optional) If it's true it considers only the dimensions name (default false)
  * @returns {*} The list of services found, with the number of constraints defined for each operation and the count of constraint that are satisfied
  */
-provider.prototype.filterSupportServices = function filterSupportServices (idCDT, category, attributes, onlyDimensions) {
-    if (_.isUndefined(onlyDimensions)) {
-        onlyDimensions = false;
-    }
+provider.prototype.filterSupportServices = function filterSupportServices (idCDT, category, attributes) {
     if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
-        var associations;
-        var clause;
-        if (onlyDimensions) {
-            associations = _.map(attributes, function (a) {
-                return {
-                    'associations.dimension': a.dimension
+        var associations = _.map(attributes, function (a) {
+            return {
+                'associations.dimension': a.dimension,
+                'associations.value': a.value
+            }
+        });
+        var clause = [
+            {
+                $match: {
+                    _idCDT: idCDT,
+                    category: category
                 }
-            });
-            clause = [
-                {
-                    $match: {
-                        _idCDT: idCDT,
-                        category: category
-                    }
-                },
-                {
-                    $unwind: '$associations'
-                },
-                {
-                    $match: {
-                        $or: associations
-                    }
-                },
-                {
-                    $project: {
-                        _idOperation: '$_idOperation',
-                        dimension: '$associations.dimension',
-                        value: '$associations.value',
-                        constraintCount: '$constraintCount',
-                        _id: 0
-                    }
+            },
+            {
+                $unwind: '$associations'
+            },
+            {
+                $match: {
+                    $or: associations
                 }
-            ];
-        } else {
-            associations = _.map(attributes, function (a) {
-                return {
-                    'associations.dimension': a.dimension,
-                    'associations.value': a.value
+            },
+            {
+                $project: {
+                    _idOperation: '$_idOperation',
+                    dimension: '$associations.dimension',
+                    value: '$associations.value',
+                    constraintCount: '$constraintCount',
+                    _id: 0
                 }
-            });
-            clause = [
-                {
-                    $match: {
-                        _idCDT: idCDT,
-                        category: category
-                    }
-                },
-                {
-                    $unwind: '$associations'
-                },
-                {
-                    $match: {
-                        $or: associations
-                    }
-                },
-                {
-                    $project: {
-                        _idOperation: '$_idOperation',
-                        dimension: '$associations.dimension',
-                        value: '$associations.value',
-                        constraintCount: '$constraintCount',
-                        _id: 0
-                    }
-                }
-            ];
-        }
+            }
+        ];
         return supportServiceModel.aggregateAsync(clause);
     }
 };
