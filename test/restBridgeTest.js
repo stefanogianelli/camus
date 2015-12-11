@@ -34,13 +34,6 @@ describe('Component: RestBridge', function () {
                     assert.notEqual(e, null);
                 });
         });
-        it('check that composite parameters are correctly handled', function () {
-            return restBridge
-                .executeQuery(compositeParameterService, compositeParameterNodes)
-                .then(function (data) {
-                    assert.equal(data.events.event[0].title, 'National Restaurant Association');
-                });
-        });
     });
 
 });
@@ -269,11 +262,3 @@ var compositeParameterService = {
         }
     ]
 };
-
-var compositeParameterNodes = [
-    {
-        dimension: 'CityCoord',
-        value: '45.478861|9.234320',
-        format: 'Latitude|Longitude'
-    }
-];

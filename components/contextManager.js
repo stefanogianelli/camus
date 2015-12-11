@@ -75,7 +75,7 @@ contextManager.prototype._mergeCdtAndContext = function _mergeCdtAndContext (con
             .then(function (data) {
                 if (!_.isUndefined(data) && !_.isEmpty(data)) {
                     //associate the values of nodes and parameter to the CDT retrieved
-                    var decoratedCdt = _.map(data[0].context, function (cdt) {
+                    var mergedCdt = _.map(data[0].context, function (cdt) {
                         //find in the context the current dimension
                         var c = _.find(context.context, 'dimension', cdt.dimension);
                         //add the value from the context to the decorated item
@@ -101,13 +101,13 @@ contextManager.prototype._mergeCdtAndContext = function _mergeCdtAndContext (con
                     if (_.has(context, 'support')) {
                         resolve({
                             _id: data[0]._id,
-                            context: decoratedCdt,
+                            context: mergedCdt,
                             support: context.support
                         });
                     } else {
                         resolve({
                             _id: data[0]._id,
-                            context: decoratedCdt
+                            context: mergedCdt
                         });
                     }
                 } else {

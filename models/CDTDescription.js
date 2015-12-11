@@ -12,7 +12,6 @@ var ParamSchema = new Schema({
         required: true
     },
     type: String,
-    searchFunction: String,
     enum: [String]
 });
 
@@ -33,7 +32,8 @@ var NodeSchema = new Schema({
     values: [String],
     params: [ParamSchema],
     forbidden: [String],
-    parents: [String]
+    parents: [String],
+    parent: String
 });
 
 /**
