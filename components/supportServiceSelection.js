@@ -32,6 +32,7 @@ supportServiceSelection.prototype.selectServices = function selectServices (deco
  * Compose the queries of services from a list of operation ids
  * @param serviceNames The list of services name and operation
  * @returns {bluebird|exports|module.exports} The list of service objects, composed by the service name and the query associated
+ * @private
  */
 supportServiceSelection.prototype._selectServicesFromName = function _selectServicesFromName (serviceNames) {
     return new Promise (function (resolve, reject) {
@@ -58,6 +59,7 @@ supportServiceSelection.prototype._selectServicesFromName = function _selectServ
  * @param categories The list of categories
  * @param decoratedCdt The decorated CDT
  * @returns {bluebird|exports|module.exports} The list of service objects, composed by the service name and the query associated
+ * @private
  */
 supportServiceSelection.prototype._selectServiceFromCategory = function _selectServiceFromCategory (categories, decoratedCdt) {
     return new Promise (function (resolve, reject) {
@@ -92,6 +94,7 @@ supportServiceSelection.prototype._selectServiceFromCategory = function _selectS
  * @param services The list of services
  * @param category (optional) The service category
  * @returns {Array} The list of services with the composed queries
+ * @private
  */
 supportServiceSelection.prototype._composeQueries = function _composeQueries (services, category) {
     return _.map(services, function (s) {

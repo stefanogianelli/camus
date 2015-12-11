@@ -4,6 +4,11 @@ var provider = require('../provider/provider.js');
 
 var contextManager = function () { };
 
+//List of dimensions that needs a specific search
+var specificDimensions = [
+    'Location'
+];
+
 /**
  * It takes as input the user's context and transform it into the decorated one.
  * This context is first merged with the full CDT in the database.
@@ -11,6 +16,7 @@ var contextManager = function () { };
  * - interestTopic: the interest topic selected
  * - filterNodes: the list of filter nodes (also include the descendants of each node)
  * - rankingNodes: the list of ranking nodes (also include the descendants of each node)
+ * - specificNodes: the list of specific nodes (assumed that they are ranking nodes)
  * - parametersNodes: the list of parameter nodes
  * - supportServiceCategories: the list of categories for which retrieve the support services
  * - supportServiceNames: the list of names and operations for selected the correct support services
@@ -29,23 +35,13 @@ contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
                         //get the interest topic
                         interestTopic: contextManager.prototype._getInterestTopic(mergedCdt),
                         //find the filter nodes (plus their respective descendants)
-                        filterNodes: contextManager.prototype._getFilterNodes(mergedCdt)
-                            .then(function (filter) {
-                                return [filter, contextManager.prototype._getDescendants(context._id, filter)];
-                            })
-                            .spread(function (filter, descendants) {
-                                return _.union(filter, descendants);
-                            }),
+                        filterNodes: contextManager.prototype._getFilterNodes(mergedCdt._id, mergedCdt.context),
                         //find the ranking nodes (plus their respective descendants)
-                        rankingNodes: contextManager.prototype._getRankingNodes(mergedCdt)
-                            .then(function (ranking) {
-                                return [ranking, contextManager.prototype._getDescendants(context._id, ranking)];
-                            })
-                            .spread(function (ranking, descendants) {
-                                return _.union(ranking, descendants);
-                            }),
+                        rankingNodes: contextManager.prototype._getRankingNodes(mergedCdt._id, mergedCdt.context),
+                        //find the specific nodes
+                        specificNodes: contextManager.prototype._getSpecificNodes(mergedCdt.context),
                         //find the parameter nodes
-                        parameterNodes: contextManager.prototype._getParameterNodes(mergedCdt),
+                        parameterNodes: contextManager.prototype._getParameterNodes(mergedCdt.context),
                         //find the support service categories requested
                         supportServiceCategories: contextManager.prototype._getSupportServiceCategories(mergedCdt),
                         //find the support service names and operations requested
@@ -64,218 +60,264 @@ contextManager.prototype.getDecoratedCdt = function getDecoratedCdt (context) {
 };
 
 /**
- * Find the current CDT, filter out the needed dimensions and add the values for the dimension and parameters node from the user context
+ * Find the current CDT and add values for the dimension and parameters node from the user context
  * @param context The user context
  * @returns {bluebird|exports|module.exports} The merged CDT
+ * @private
  */
 contextManager.prototype._mergeCdtAndContext = function _mergeCdtAndContext (context) {
     return new Promise (function (resolve, reject) {
         provider
-            .getCdtDimensions(context._id, _.pluck(context.context, 'dimension'))
-            .then(function (data) {
-                if (!_.isUndefined(data) && !_.isEmpty(data)) {
-                    //associate the values of nodes and parameter to the CDT retrieved
-                    var mergedCdt = _.map(data[0].context, function (cdt) {
-                        //find in the context the current dimension
-                        var c = _.find(context.context, 'dimension', cdt.dimension);
-                        //add the value from the context to the decorated item
-                        if (!_.isUndefined(c.value)) {
-                            cdt['value'] = c.value;
+            .getCdt(context._id)
+            .then(function (cdt) {
+                var mergedCdt = [];
+                //merge the dimensions
+                _.forEach(context.context, function (c) {
+                    var cdtItem = _.find(cdt.context, {name: c.dimension});
+                    if (!_.isUndefined(cdtItem)) {
+                        var obj = {
+                            dimension: cdtItem.name,
+                            for: cdtItem.for
+                        };
+                        //add the support service category, if defined
+                        if (!_.isUndefined(cdtItem.supportCategory)) {
+                            obj['supportCategory'] = cdtItem.supportCategory;
                         }
-                        //if the dimension have also some parameters I merge them
-                        if (!_.isEmpty(cdt.params) && !_.isEmpty(c.params)) {
-                            var params = [];
-                            _.forEach(cdt.params, function (p1) {
-                                //search the corresponding parameter in the context
-                                var p2 = _.find(c.params, 'name', p1.name);
-                                //if the parameter is also set in the context I merge them
-                                if (!_.isUndefined(p2) && !_.isEmpty(p2)) {
-                                    p1['value'] = p2.value;
-                                    params.push(p1);
-                                }
-                            });
-                            cdt['params'] = params;
+                        //add the context value, if defined
+                        if (_.has(c, 'value')) {
+                            obj['value'] = c.value;
                         }
-                        return cdt;
-                    });
-                    if (_.has(context, 'support')) {
-                        resolve({
-                            _id: data[0]._id,
-                            context: mergedCdt,
-                            support: context.support
-                        });
-                    } else {
-                        resolve({
-                            _id: data[0]._id,
-                            context: mergedCdt
-                        });
+                        //check if the item have some parameters
+                        if (!_.isUndefined(cdtItem.parameters) && _.has(c, 'parameters')) {
+                            obj['parameters'] = contextManager.prototype._mergeParameters(cdtItem.parameters, c.parameters);
+                        }
+                        mergedCdt.push(obj);
                     }
+                });
+                if (_.has(context, 'support')) {
+                    resolve({
+                        _id: cdt._id,
+                        context: mergedCdt,
+                        support: context.support
+                    });
                 } else {
-                    //no data found
-                    reject('No context data found');
+                    resolve({
+                        _id: cdt._id,
+                        context: mergedCdt
+                    });
                 }
             });
     });
 };
 
 /**
- * Retrieve the filter nodes of the CDT that are used for Service selection.
- * Are also considered the parameters associated to a node.
- * The parameter are translated as dimension and value.
- * @param mergedCdt The merged CDT
- * @returns {bluebird|exports|module.exports} The list of filter nodes
+ * Merge the parameters of a single parameter
+ * @param cdtParameters The CDT's parameters
+ * @param contextParameters The context's parameters
+ * @returns {Array} The merged parameters
+ * @private
  */
-contextManager.prototype._getFilterNodes = function _getFilterNodes (mergedCdt) {
-    return new Promise (function (resolve, reject) {
-        var context = mergedCdt.context;
-        if (!_.isEmpty(context)) {
-            //gets the pairs dimension and value from the decorated CDT
-            var filterValues = _(context)
-                //consider only the filter nodes (also includes filter and parameter nodes)
-                //deletes also all the nodes that have parameters associated
-                .filter(function (item) {
-                    return (item.for === 'filter' || item.for === 'filter|parameter') && _.isEmpty(item.params);
-                })
-                .map(function (item) {
-                    return {
-                        dimension: item.dimension,
-                        value:item.value
-                    };
-                })
-                .value();
-            //map also the values of the parameters inside nodes
-            var filterParams = _(context)
-                //consider only the filter nodes (also includes filter and parameter nodes) that have at least one parameter defined
-                .filter(function (item) {
-                    return (item.for === 'filter' || item.for === 'filter|parameter') && !_.isEmpty(item.params);
-                })
-                .map(function (item) {
-                    return _(item.params)
-                        .map(function (param) {
-                            return {
-                                dimension: param.name,
-                                value: param.value
-                            };
-                        })
-                        .value();
-                })
-                .flatten()
-                .value();
-            //return in output the union of the two previous arrays
-            resolve(_.union(filterValues,filterParams));
-        } else {
-            reject('No context selected');
+contextManager.prototype._mergeParameters = function _mergeParameters (cdtParameters, contextParameters) {
+    var parameters = [];
+    _.forEach(contextParameters, function (p) {
+        var cdtParam = _.find(cdtParameters, {name: p.name});
+        if (!_.isUndefined(cdtParam)) {
+            var obj = {
+                name: cdtParam.name
+            };
+            if (!_.isUndefined(cdtParam.type)) {
+                obj['type'] = cdtParam.type;
+            }
+            if (_.has(p, 'value')) {
+                obj['value'] = p.value;
+            }
+            if (!_.isUndefined(cdtParam.fields) && _.has(p, 'fields')) {
+                obj['fields'] = contextManager.prototype._mergeFields(cdtParam.fields, p.fields);
+            }
+            parameters.push(obj);
         }
     });
+    return parameters;
 };
 
 /**
- * Retrieve the ranking nodes of the CDT that are used for Service selection.
- * These nodes are useful for increase the rank of some typology of services (like the local ones).
- * However they cannot exists by themselves, so they must compared with the list of filter nodes to avoid erroneous selections.
- * Are also considered the parameters associated to a node.
- * The parameter are translated as dimension and value.
- * @param mergedCdt The merged CDT
- * @returns {bluebird|exports|module.exports} The list of ranking nodes
+ * Merge the field of a single parameter
+ * @param cdtFields The CDT's fields
+ * @param contextFields The context's fields
+ * @returns {Array} The merged fields
+ * @private
  */
-contextManager.prototype._getRankingNodes = function _getRankingNodes (mergedCdt) {
-    return new Promise (function (resolve, reject) {
-        var context = mergedCdt.context;
-        if (!_.isEmpty(context)) {
-            //gets the pairs dimension and value from the decorated CDT
-            var rankingValues = _(context)
-            //consider only the ranking nodes (also includes ranking and parameter nodes)
-            //deletes also all the nodes that have parameters associated
-                .filter(function (item) {
-                    return (item.for === 'ranking' || item.for === 'ranking|parameter') && _.isEmpty(item.params);
-                })
-                .map(function (item) {
-                    return {
-                        dimension: item.dimension,
-                        value:item.value
-                    };
-                })
-                .value();
-            //map also the values of the parameters inside nodes
-            var rankingParams = _(context)
-                //consider only the ranking nodes (also includes ranking and parameter nodes) that have at least one parameter defined
-                .filter(function (item) {
-                    return (item.for === 'ranking' || item.for === 'ranking|parameter') && !_.isEmpty(item.params);
-                })
-                .map(function (item) {
-                    return _(item.params)
-                        .map(function (param) {
-                            return {
-                                dimension: param.name,
-                                value: param.value
-                            };
-                        })
-                        .value();
-                })
-                .flatten()
-                .value();
-            //return in output the union of the two previous arrays
-            resolve(_.union(rankingValues,rankingParams));
-        } else {
-            reject('No context selected');
+contextManager.prototype._mergeFields = function _mergeFields (cdtFields, contextFields) {
+    var fields = [];
+    _.forEach(contextFields, function (f) {
+        var cdtField = _.find(cdtFields, {name: f.name});
+        if (!_.isUndefined(cdtField)) {
+            var obj = {
+              name: cdtField.name
+            };
+            if (_.has(f, 'value')) {
+                obj['value'] = f.value;
+            }
+            fields.push(obj);
         }
     });
+    return fields;
 };
 
 /**
- * Retrieve the nodes of the CDT that are used for query composition
+ * Return the list of filter nodes, plus their descendants
+ * @param idCdt The CDT identifier
  * @param mergedCdt The merged CDT
- * @returns {bluebird|exports|module.exports} The list of parameter nodes
+ * @returns {Function|*} The list of filter nodes
+ * @private
  */
-contextManager.prototype._getParameterNodes = function _getParameterNodes (mergedCdt) {
-    return new Promise (function (resolve, reject) {
-        var context = mergedCdt.context;
-        if (!_.isEmpty(context)) {
-            //gets the pairs dimension and value from the decorated CDT
-            var paramValues = _(context)
-                //consider only the parameter nodes (also includes filter or ranking and parameter nodes)
-                //deletes also all the nodes that have parameters associated
-                .filter(function (item) {
-                    return (item.for === 'parameter' || item.for === 'filter|parameter' || item.for === 'ranking|parameter') && _.isEmpty(item.params);
-                })
-                .map(function (item) {
-                    return {
-                        dimension: item.dimension,
-                        value: item.value
-                    };
-                })
-                .value();
-            //map also the values of the parameters inside nodes
-            var parameters = _(context)
-                //consider only the parameter nodes (also includes filter or ranking and parameter nodes) that have at least one parameter defined
-                .filter(function (item) {
-                    return (item.for === 'parameter' || item.for === 'filter|parameter' || item.for === 'ranking|parameter') && !_.isEmpty(item.params);
-                })
-                .map(function (item) {
-                    return _(item.params)
-                        .map(function (param) {
-                            return {
-                                dimension: param.name,
-                                value: param.value
-                            };
-                        })
-                        .value();
-                })
-                .flatten()
-                .value();
+contextManager.prototype._getFilterNodes = function (idCdt, mergedCdt) {
+    return contextManager.prototype
+        ._getNodes('filter', mergedCdt, true)
+        .then(function (filter) {
+            return [filter, contextManager.prototype._getDescendants(idCdt, filter)];
+        })
+        .spread(function (filter, descendants) {
+            return _.union(filter, descendants);
+        });
+};
 
-            //return in output the union of the two previous arrays
-            resolve(_.union(paramValues, parameters));
+/**
+ * Return the list of ranking nodes, plus their descendants
+ * @param idCdt The CDT identifier
+ * @param mergedCdt The merged CDT
+ * @returns {Function|*} The list of ranking nodes
+ * @private
+ */
+contextManager.prototype._getRankingNodes = function (idCdt, mergedCdt) {
+    return contextManager.prototype
+        ._getNodes('ranking', mergedCdt, true)
+        .then(function (ranking) {
+            return [ranking, contextManager.prototype._getDescendants(idCdt, ranking)];
+        })
+        .spread(function (ranking, descendants) {
+            return _.union(ranking, descendants);
+        });
+};
+
+/**
+ * The list of parameter nodes. Are also taken into account the specific nodes
+ * @param mergedCdt The merged CDT
+ * @returns The list of parameter nodes
+ * @private
+ */
+contextManager.prototype._getParameterNodes = function (mergedCdt) {
+    return Promise
+        .join(
+            contextManager.prototype._getNodes('parameter', mergedCdt, true),
+            contextManager.prototype._getNodes('parameter', mergedCdt, true, true),
+        function (parameterNodes, specificNodes) {
+            return _.union(parameterNodes, specificNodes);
+        });
+};
+
+/**
+ * Return the list of specific nodes.
+ * It assumes that the specific nodes belong to the ranking category
+ * @param items The list of items (the merged CDT)
+ * @returns {Promise|Request} The list of specific nodes
+ * @private
+ */
+contextManager.prototype._getSpecificNodes = function getSpecificNodes (items) {
+    return contextManager.prototype._getNodes('ranking', items, true, true);
+};
+
+/**
+ * Find the nodes that belong to the specified type.
+ * The valid types are: filter, ranking and parameter.
+ * The parameter attached to a dimension are flattened to the root level.
+ * Instead, the internal fields of a parameter are leave as they are.
+ * This function doesn't take into account the dimensions that are labelled as specific, except when the specific flag is not set.
+ * @param type The type of nodes
+ * @param items The list of item (the merged CDT)
+ * @param firstStep Flag true if this is the first call to the function
+ * @param specificFlag For internal use only. If true search for specific nodes
+ * @returns {Promise|Request} The list of nodes found
+ * @private
+ */
+contextManager.prototype._getNodes = function _getNodes (type, items, firstStep, specificFlag) {
+    if (_.isEqual(type, 'filter') || _.isEqual(type, 'ranking') || _.isEqual(type, 'parameter')) {
+        if (!_.isUndefined(items)) {
+            if (_.isUndefined(specificFlag)) {
+                specificFlag = false;
+            }
+            //in the first call to the function the items are filtered
+            if (firstStep) {
+                items = _.filter(items, function (item) {
+                        return _.includes(item.for, type);
+                    });
+                //according to the value of the specific flag, select or discard the specific nodes
+                if (specificFlag) {
+                    //consider only the specific nodes
+                    items = _.filter(items, function (item) {
+                        return _.includes(specificDimensions, item.dimension);
+                    });
+                } else {
+                    //reject the specific nodes
+                    items = _.reject(items, function (item) {
+                        return _.includes(specificDimensions, item.dimension);
+                    });
+                }
+            }
+            return Promise
+                .map(items, function (item) {
+                    //recall the function for parsing the parameter
+                    if (_.has(item, 'parameters')) {
+                        return contextManager.prototype._getNodes(type, item.parameters, false);
+                    }
+                    //return the value
+                    if (_.has(item, 'value')) {
+                        return {
+                            dimension: item.dimension || item.name,
+                            value: item.value
+                        };
+                    //if the parameter has fields, return them without modifications
+                    } else if (_.has(item, 'fields')) {
+                        return {
+                            dimension: item.dimension || item.name,
+                            fields: item.fields
+                        };
+                    }
+                })
+                //merge the various list
+                .reduce(function (a, b) {
+                    var results = [];
+                    if (_.isArray(a)) {
+                        results = a;
+                    } else {
+                        results.push(a);
+                    }
+                    if (_.isArray(b)) {
+                        results = _.union(results, b);
+                    } else {
+                        results.push(b);
+                    }
+                    return results;
+                })
+                .then(function (results) {
+                    if (!_.isArray(results)) {
+                        return [results];
+                    }
+                    return results;
+                });
         } else {
-            reject('No context selected');
+            return Promise.reject('No items selected');
         }
-    });
+    } else {
+        return Promise.reject('Invalid type selected');
+    }
 };
 
 /**
  * Search the selected interest topic
  * @param mergedCdt The merged CDT
  * @returns The interest topic name
+ * @private
  */
 contextManager.prototype._getInterestTopic = function _getInterestTopic (mergedCdt) {
     var context = mergedCdt.context;
@@ -295,6 +337,7 @@ contextManager.prototype._getInterestTopic = function _getInterestTopic (mergedC
  * Return the support service categories to be researched
  * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of categories
+ * @private
  */
 contextManager.prototype._getSupportServiceCategories = function _getSupportServiceCategories (mergedCdt) {
     return new Promise (function (resolve, reject) {
@@ -314,6 +357,7 @@ contextManager.prototype._getSupportServiceCategories = function _getSupportServ
  * Return the support service names
  * @param mergedCdt The merged CDT
  * @returns {bluebird|exports|module.exports} The list of services name and operation
+ * @private
  */
 contextManager.prototype._getSupportServiceNames = function _getSupportServiceNames (mergedCdt) {
     return new Promise (function (resolve, reject) {
@@ -335,6 +379,7 @@ contextManager.prototype._getSupportServiceNames = function _getSupportServiceNa
  * @param idCDT The CDT identifier
  * @param nodes The parent nodes
  * @returns {*} The list of son nodes, formatted in dimension and value
+ * @private
  */
 contextManager.prototype._getDescendants = function _getDescendants (idCDT, nodes) {
     return new Promise (function (resolve, reject) {

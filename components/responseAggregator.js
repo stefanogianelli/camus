@@ -32,6 +32,7 @@ responseAggregator.prototype.prepareResponse = function (responses, supportServi
  * When a similar pair is found, the two items are merged and the second instance is removed.
  * @param responses The array that contains all the responses
  * @returns {*} The responses list without duplicate items
+ * @private
  */
 responseAggregator.prototype._findSimilarities = function _findSimilarities (responses) {
     //analyze all pairs of responses
@@ -64,6 +65,7 @@ responseAggregator.prototype._findSimilarities = function _findSimilarities (res
  * @param obj1 The first object
  * @param obj2 The second object
  * @returns {boolean} True if the two objects are similar, false otherwise
+ * @private
  */
 responseAggregator.prototype._calculateObjectSimilarity = function _calculateObjectSimilarity (obj1, obj2) {
     //take into account only the attributes in common for both the objects

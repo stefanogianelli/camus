@@ -21,28 +21,27 @@ var cdt = {
         {
             name: 'Location',
             for: 'ranking|parameter',
-            params: [
+            parameters: [
                 {
-                    name: 'City'
+                    name: 'CityName'
                 },
                 {
-                    name: 'CityCoord'
-                }
-            ]
-        },
-        {
-            name: 'Apertura',
-            for: 'filter',
-            params: [
-                {
-                    name: 'Ora'
+                    name: 'CityCoord',
+                    fields: [
+                        {
+                            name: 'Latitude'
+                        },
+                        {
+                            name: 'Longitude'
+                        }
+                    ]
                 }
             ]
         },
         {
             name: 'Guests',
             for: 'parameter',
-            params: [
+            parameters: [
                 {
                     name: 'Number',
                     type: 'Integer'
@@ -68,7 +67,7 @@ var cdt = {
         {
             name: 'Keyword',
             for: 'parameter',
-            params: [
+            parameters: [
                 {
                     name: 'search_key',
                     type: 'String'
@@ -264,7 +263,7 @@ var mergedCdt = function (idCDT) {
             {
                 dimension: 'Location',
                 for: 'ranking|parameter',
-                params: [
+                parameters: [
                     {
                         name: 'City',
                         value: 'Milan'
@@ -272,19 +271,9 @@ var mergedCdt = function (idCDT) {
                 ]
             },
             {
-                dimension: 'Apertura',
-                for: 'filter',
-                params: [
-                    {
-                        name: 'Ora',
-                        value: '20:00'
-                    }
-                ]
-            },
-            {
                 dimension: 'Guests',
                 for: 'filter|parameter',
-                params: [
+                parameters: [
                     {
                         name: 'Number',
                         value: '4'
@@ -299,7 +288,7 @@ var mergedCdt = function (idCDT) {
             {
                 dimension: 'Keyword',
                 for: 'parameter',
-                params: [
+                parameters: [
                     {
                         name: 'search_key',
                         value: 'restaurantinnewyork'
@@ -352,55 +341,6 @@ var googlePlaces = {
                     mappingCDT: [
                         'search_key'
                     ]
-                },
-                {
-                    name: 'key',
-                    required: true,
-                    default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio',
-                    mappingCDT: []
-                }
-            ],
-            responseMapping: {
-                list: 'results',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'name'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'formatted_address'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'geometry.location.lat'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'geometry.location.lng'
-                    }
-                ]
-            }
-        },
-        {
-            name: 'nearbySearch',
-            path: '/nearbysearch/json',
-            parameters: [
-                {
-                    name: 'location',
-                    required: true,
-                    default: '-33.8670522,151.1957362',
-                    collectionFormat: 'csv',
-                    mappingCDT: [
-                        'latitude',
-                        'longitude'
-                    ]
-                },
-                {
-                    name: 'radius',
-                    required: true,
-                    default: '500',
-                    mappingCDT: []
                 },
                 {
                     name: 'key',
@@ -814,53 +754,50 @@ var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMult
     return [
         {
             _idOperation: idOperation,
-            dimension: 'InterestTopic',
-            value: 'Restaurant',
-            ranking: 1,
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'InterestTopic',
+                    value: 'Restaurant',
+                    ranking: 1
+                },
+                {
+                    dimension: 'City',
+                    value: 'Milan',
+                    ranking: 1
+                },
+                {
+                    dimension: 'Tipology',
+                    value: 'DinnerWithFriends',
+                    ranking: 1
+                }
+            ],
+            geo: {
+                coord: [9.18951, 45.46427],
+                radius: 10
+            }
         },
         {
             _idOperation: idOperation,
-            dimension: 'Tipology',
-            value: 'DinnerWithFriends',
-            ranking: 1,
-            _idCDT: idCDT
+            _idCDT: idNestedCDT,
+            associations: [
+                {
+                    dimension: 'd',
+                    value: 'e',
+                    ranking: 1
+                }
+            ]
         },
         {
             _idOperation: idOperation,
-            dimension: 'Ora',
-            value: '20:00',
-            ranking: 1,
-            _idCDT: idCDT
-        },
-        {
-            _idOperation: idOperation,
-            dimension: 'City',
-            value: 'Milan',
-            ranking: 1,
-            _idCDT: idCDT
-        },
-        {
-            _idOperation: idOperation,
-            dimension: 'CityCoord',
-            value: '45.46427|9.18951|10',
-            ranking: 1,
-            format: 'Latitude|Longitude|Radius',
-            _idCDT: idCDT
-        },
-        {
-            _idOperation: idOperation,
-            dimension: 'd',
-            value: 'e',
-            ranking: 1,
-            _idCDT: idNestedCDT
-        },
-        {
-            _idOperation: idOperation,
-            dimension: 'g',
-            value: 'i',
-            ranking: 1,
-            _idCDT: idMultipleSonCDT
+            _idCDT: idMultipleSonCDT,
+            associations: [
+                {
+                    dimension: 'g',
+                    value: 'i',
+                    ranking: 1
+                }
+            ]
         }
     ];
 };
@@ -872,31 +809,41 @@ var eventfulAssociations = function (idOperation, idCDT, idNestedCDT, idMultiple
     return [
         {
             _idOperation: idOperation,
-            dimension: 'InterestTopic',
-            value: 'Restaurant',
-            ranking: 2,
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'InterestTopic',
+                    value: 'Restaurant',
+                    ranking: 2
+                },
+                {
+                    dimension: 'Festivita',
+                    value: 'Capodanno',
+                    ranking: 1
+                }
+            ]
         },
         {
             _idOperation: idOperation,
-            dimension: 'Festivita',
-            value: 'Capodanno',
-            ranking: 1,
-            _idCDT: idCDT
+            _idCDT: idNestedCDT,
+            associations: [
+                {
+                    dimension: 'g',
+                    value: 'h',
+                    ranking: 1
+                }
+            ]
         },
         {
             _idOperation: idOperation,
-            dimension: 'g',
-            value: 'h',
-            ranking: 1,
-            _idCDT: idNestedCDT
-        },
-        {
-            _idOperation: idOperation,
-            dimension: 'g',
-            value: 'l',
-            ranking: 1,
-            _idCDT: idMultipleSonCDT
+            _idCDT: idMultipleSonCDT,
+            associations: [
+                {
+                    dimension: 'g',
+                    value: 'l',
+                    ranking: 1
+                }
+            ]
         }
     ];
 };
@@ -908,31 +855,41 @@ var fakeServiceAssociation = function (idOperation, idCDT, idNestedCDT, idMultip
     return [
         {
             _idOperation: idOperation,
-            dimension: 'TestServizio',
-            value: 'TestSenzaRisposta',
-            ranking: 1,
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'TestServizio',
+                    value: 'TestSenzaRisposta',
+                    ranking: 1
+                },
+                {
+                    dimension: 'Festivita',
+                    value: 'Capodanno',
+                    ranking: 2
+                }
+            ]
         },
         {
             _idOperation: idOperation,
-            dimension: 'Festivita',
-            value: 'Capodanno',
-            ranking: 2,
-            _idCDT: idCDT
+            _idCDT: idNestedCDT,
+            associations: [
+                {
+                    dimension: 'g',
+                    value: 'i',
+                    ranking: 1
+                }
+            ]
         },
         {
             _idOperation: idOperation,
-            dimension: 'g',
-            value: 'i',
-            ranking: 1,
-            _idCDT: idNestedCDT
-        },
-        {
-            _idOperation: idOperation,
-            dimension: 'h',
-            value: 'n',
-            ranking: 1,
-            _idCDT: idMultipleSonCDT
+            _idCDT: idMultipleSonCDT,
+            associations: [
+                {
+                    dimension: 'h',
+                    value: 'n',
+                    ranking: 1
+                }
+            ]
         }
     ];
 };
@@ -944,10 +901,14 @@ var testBridgeAssociation = function (idOperation, idCDT) {
     return [
         {
             _idOperation: idOperation,
-            dimension: 'TestBridge',
-            value: 'TestBridge',
-            ranking: 1,
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'TestBridge',
+                    value: 'TestBridge',
+                    ranking: 1
+                }
+            ]
         }
     ];
 };

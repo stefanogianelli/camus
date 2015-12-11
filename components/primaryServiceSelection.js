@@ -21,9 +21,9 @@ primaryServiceSelection.prototype.selectServices = function selectServices (deco
         Promise
             .props({
                 //search for services associated to the filter nodes
-                filter: provider.filterPrimaryServices(decoratedCdt.filterNodes, decoratedCdt._id),
+                filter: provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.filterNodes),
                 //search for services associated to the ranking nodes
-                ranking: provider.filterPrimaryServices(decoratedCdt.rankingNodes, decoratedCdt._id)
+                ranking: provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.rankingNodes)
             })
             .then(function (results) {
                 //discard the ranking nodes that haven't a correspondence in the filter nodes list
@@ -49,6 +49,7 @@ primaryServiceSelection.prototype.selectServices = function selectServices (deco
  * Compute the ranking of each operation found by the previous steps
  * @param services The list of services, with own rank and weight
  * @returns {Array} The ranked list of Top-N services
+ * @private
  */
 primaryServiceSelection.prototype._calculateRanking = function _calculateRanking (services) {
     var rankedList = [];
@@ -89,6 +90,7 @@ primaryServiceSelection.prototype._calculateRanking = function _calculateRanking
  * @param array1 The first array
  * @param array2 The second array
  * @returns {Array} The array intersection of the input ones
+ * @private
  */
 primaryServiceSelection.prototype._intersect = function _intersect (array1, array2) {
     if (!_.isUndefined(array1) && !_.isUndefined(array2)) {

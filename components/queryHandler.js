@@ -47,6 +47,7 @@ queryHandler.prototype.executeQueries = function executeQueries (services, decor
  * @param services The list of services to be queried
  * @param params The list of parameters from the CDT
  * @returns {bluebird|exports|module.exports} The list of the responses, in order of service ranking
+ * @private
  */
 queryHandler.prototype._callServices = function _callServices (services, params) {
     return new Promise(function (resolve, reject) {

@@ -54,37 +54,7 @@ provider.prototype.closeConnection = function closeConnection () {
  * @returns {*} Returns the CDT schema
  */
 provider.prototype.getCdt = function getCdt (idCDT) {
-    return cdtModel.findAsync({_id: idCDT});
-};
-
-/**
- * Find the correct CDT and returns only the specified dimensions
- * @param idCDT The CDT identifier
- * @param dimensions The interested dimensions
- * @returns {*} The CDT with selected dimensions
- */
-provider.prototype.getCdtDimensions = function getCdtDimensions (idCDT, dimensions) {
-    if (!_.isUndefined(idCDT) && !_.isUndefined(dimensions) && !_.isEmpty(dimensions)) {
-        return cdtModel
-            .aggregateAsync(
-                {$match: {_id: mongoose.Types.ObjectId(idCDT)}},
-                {$unwind: '$context'},
-                {$match: {'context.name': {$in: dimensions}}},
-                {
-                    $group: {
-                        _id: '$_id',
-                        context: {
-                            $push: {
-                                dimension: '$context.name',
-                                for: '$context.for',
-                                supportCategory: '$context.supportCategory',
-                                params: '$context.params'
-                            }
-                        }
-                    }
-                }
-            );
-    }
+    return cdtModel.findOneAsync({_id: idCDT});
 };
 
 /**
@@ -185,22 +155,41 @@ provider.prototype.getServicesByNames = function getServicesByNames (serviceName
  * Search the services that are associated to the specified attributes.
  * These attributes must have this format:
  * { dimension: 'dimension name', value: 'associated value' }
- * @param attributes The list of filter nodes selected
  * @param idCDT The CDT identifier
+ * @param attributes The list of filter nodes selected
  * @returns {*} The list of operation id, with ranking and weight, of the found services
  */
-provider.prototype.filterPrimaryServices = function filterPrimaryServices (attributes, idCDT) {
+provider.prototype.filterPrimaryServices = function filterPrimaryServices (idCDT, attributes) {
     if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
-        var whereClause = {
-            _idCDT: idCDT,
-            $or: []
-        };
-        whereClause.$or = _.map(attributes, function (a) {
+        var associations = _.map(attributes, function (a) {
             return {
-                $and: [a]
-            };
+                'associations.dimension': a.dimension,
+                'associations.value': a.value
+            }
         });
-        return primaryServiceModel.findAsync(whereClause, {_idOperation: 1, ranking: 1, weight: 1, _id: 0});
+        var clause = [
+            {
+                $match: {
+                    _idCDT: idCDT
+                }
+            },
+            {
+                $unwind: '$associations'
+            },
+            {
+                $match: {
+                    $or: associations
+                }
+            },
+            {
+                $project: {
+                    _idOperation: '$_idOperation',
+                    ranking: '$associations.ranking',
+                    _id: 0
+                }
+            }
+        ];
+        return primaryServiceModel.aggregateAsync(clause);
     }
 };
 

@@ -39,6 +39,7 @@ transformResponse.prototype.mappingResponse = function mappingResponse (mapping,
  * @param response The response received from the web service
  * @param listItem The base path where find the items. If the root of the document if the base path leave this field empty
  * @returns {Array} The array of items
+ * @private
  */
 transformResponse.prototype._retrieveListOfResults = function _retrieveListOfResults (response, listItem) {
     var list = [];
@@ -71,6 +72,7 @@ transformResponse.prototype._retrieveListOfResults = function _retrieveListOfRes
  * @param item The item where to search the key
  * @param key The key to be searched. Write it in dot notation
  * @returns {*} The value found or null
+ * @private
  */
 transformResponse.prototype._getItemValue = function _getItemValue (item, key) {
     if (_.isUndefined(item)) {
@@ -96,6 +98,7 @@ transformResponse.prototype._getItemValue = function _getItemValue (item, key) {
  * @param item The original item
  * @param mapping The mapping rules
  * @returns {{}} The transformed object
+ * @private
  */
 transformResponse.prototype._transformItem = function _transformItem (item, mapping) {
     var obj = {};
@@ -115,6 +118,7 @@ transformResponse.prototype._transformItem = function _transformItem (item, mapp
  * @param items The list of transformed items
  * @param mapping The mapping rules
  * @returns {*} The modified list of items
+ * @private
  */
 transformResponse.prototype._executeFunctions = function _executeFunctions (items, mapping) {
     _.forEach(mapping.functions, function (f) {
@@ -139,6 +143,7 @@ transformResponse.prototype._executeFunctions = function _executeFunctions (item
  * This function filters out the invalid values from the response
  * @param value The value to be checked
  * @returns {boolean} True if it's invalid, false otherwise
+ * @private
  */
 function isInvalidValue (value) {
     return _.isEqual(value, null) || _.isEqual(value, '');
