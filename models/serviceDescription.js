@@ -1,15 +1,17 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.Types.ObjectId;
+'use strict';
 
-var types = 'primary support'.split(' ');
-var separators = 'csv ssv tsv pipes'.split(' ');
-var protocols = 'rest query custom'.split(' ');
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
+let ObjectId = Schema.Types.ObjectId;
+
+let types = 'primary support'.split(' ');
+let separators = 'csv ssv tsv pipes'.split(' ');
+let protocols = 'rest query custom'.split(' ');
 
 /**
  * Parameter schema
  */
-var parameterSchema = new Schema({
+let parameterSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -32,7 +34,7 @@ var parameterSchema = new Schema({
 /**
  * Header schema
  */
-var headerSchema = new Schema({
+let headerSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -46,7 +48,7 @@ var headerSchema = new Schema({
 /**
  * Item schema
  */
-var itemSchema = new Schema({
+let itemSchema = new Schema({
     termName: {
         type: String,
         required: true
@@ -60,7 +62,7 @@ var itemSchema = new Schema({
 /**
  * Operate schema
  */
-var operateSchema = new Schema({
+let operateSchema = new Schema({
     run: {
         type: String,
         required: true
@@ -74,7 +76,7 @@ var operateSchema = new Schema({
 /**
  * Response schema
  */
-var responseSchema = new Schema({
+let responseSchema = new Schema({
     list: String,
     items: [itemSchema],
     functions: [operateSchema]
@@ -83,7 +85,7 @@ var responseSchema = new Schema({
 /**
  * Operation schema
  */
-var operationSchema = new Schema({
+let operationSchema = new Schema({
     _id: {
         type: ObjectId,
         default: function () {
@@ -105,7 +107,7 @@ var operationSchema = new Schema({
 /**
  * Description schema
  */
-var serviceDescriptionSchema = new Schema({
+let serviceDescriptionSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -173,6 +175,6 @@ serviceDescriptionSchema.static('findByOperationIds', function (idOperations, ca
             }, callback);
 });
 
-var serviceDescription = mongoose.model('service_description', serviceDescriptionSchema);
+let serviceDescription = mongoose.model('service_description', serviceDescriptionSchema);
 
 module.exports = serviceDescription;

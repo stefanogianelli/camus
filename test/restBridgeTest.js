@@ -1,36 +1,39 @@
-var assert = require('assert');
-var restBridge = require('../bridges/restBridge.js');
-var mockModel = require('./mockModel.js');
+'use strict';
 
-describe('Component: RestBridge', function () {
+let assert = require('assert');
+let restBridge = require('../bridges/restBridge.js');
+let RestBridge = new restBridge();
+let mockModel = require('./mockModel.js');
 
-    describe('#executeQuery()', function () {
-        it('check that correct response is returned', function () {
-            return restBridge
+describe('Component: RestBridge', () => {
+
+    describe('#executeQuery()', () => {
+        it('check that correct response is returned', () => {
+            return RestBridge
                 .executeQuery(mockModel.eventful, mockModel.decoratedCdt(1).parameterNodes)
-                .then(function (data) {
+                .then(data => {
                     assert.notEqual(data, null);
                     assert.equal(data.total_items, 134);
                 });
         });
-        it('check error when a required default parameter is not defined', function () {
-            return restBridge
+        it('check error when a required default parameter is not defined', () => {
+            return RestBridge
                 .executeQuery(noDefaultParameterService, mockModel.decoratedCdt(1).parameterNodes)
-                .catch(function (e) {
+                .catch(e => {
                     assert.equal(e, 'lack of required parameter \'app_key\'');
                 });
         });
-        it('check error when a required parameter has no value in the CDT', function () {
-            return restBridge
+        it('check error when a required parameter has no value in the CDT', () => {
+            return RestBridge
                 .executeQuery(noValueParameterService, mockModel.decoratedCdt(1).parameterNodes)
-                .catch(function (e) {
+                .catch(e => {
                     assert.equal(e, 'lack of required parameter \'location\'');
                 });
         });
-        it('check error when the service does not respond', function () {
-            return restBridge
+        it('check error when the service does not respond', () => {
+            return RestBridge
                 .executeQuery(wrongBasePath, mockModel.decoratedCdt(1).parameterNodes)
-                .catch(function (e) {
+                .catch(e => {
                     assert.notEqual(e, null);
                 });
         });
@@ -38,7 +41,7 @@ describe('Component: RestBridge', function () {
 
 });
 
-var noDefaultParameterService = {
+let noDefaultParameterService = {
     name: 'eventful',
     type: 'primary',
     protocol: 'rest',
@@ -95,7 +98,7 @@ var noDefaultParameterService = {
     ]
 };
 
-var noValueParameterService = {
+let noValueParameterService = {
     name: 'eventful',
     type: 'primary',
     protocol: 'rest',
@@ -153,7 +156,7 @@ var noValueParameterService = {
     ]
 };
 
-var wrongBasePath = {
+let wrongBasePath = {
     name: 'eventful',
     type: 'primary',
     protocol: 'rest',
@@ -183,58 +186,6 @@ var wrongBasePath = {
                     default: 'chicago',
                     mappingCDT: [
                         'Location'
-                    ]
-                }
-            ],
-            responseMapping: {
-                list: 'events.event',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'title'
-                    },
-                    {
-                        termName: 'venue_address',
-                        path: 'address'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'latitude'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'longitude'
-                    }
-                ]
-            }
-        }
-    ]
-};
-
-var compositeParameterService = {
-    name: 'test',
-    type: 'primary',
-    protocol: 'rest',
-    basePath: 'http://localhost:3000',
-    operations: [
-        {
-            name: 'search',
-            path: '/compositeSearch',
-            parameters: [
-                {
-                    name: 'latitude',
-                    required: true,
-                    default: '45.46427',
-                    mappingCDT: [
-                        'CityCoord#Latitude'
-                    ]
-                },
-                {
-                    name: 'longitude',
-                    required: true,
-                    default: '9.18951',
-                    mappingCDT: [
-                        'CityCoord#Longitude'
                     ]
                 }
             ],

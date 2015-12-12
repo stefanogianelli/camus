@@ -1,27 +1,32 @@
-var assert = require('assert');
-var supportServiceSelection = require('../components/supportServiceSelection.js');
-var mockData = require('./mockModel.js');
-var MockDatabase = require('./mockDatabaseCreator.js');
-var provider = require('../provider/provider.js');
+'use strict';
 
-var _idCDT;
+let assert = require('assert');
+let supportServiceSelection = require('../components/supportServiceSelection.js');
+let SupportServiceSelection = new supportServiceSelection();
+let mockData = require('./mockModel.js');
+let mockDatabase = require('./mockDatabaseCreator.js');
+let MockDatabase = new mockDatabase();
+let provider = require('../provider/provider.js');
+let Provider = new provider();
 
-describe('Component: SupportServiceSelection', function () {
+let _idCDT;
+
+describe('Component: SupportServiceSelection', () => {
 
     before(function(done) {
-        provider.createConnection('mongodb://localhost/camus_test');
-        MockDatabase.createDatabase(function (err, idCDT) {
+        Provider.createConnection('mongodb://localhost/camus_test');
+        MockDatabase.createDatabase((err, idCDT) => {
             assert.equal(err, null);
             _idCDT = idCDT;
             done();
         });
     });
 
-    describe('#selectServices()', function () {
-        it('check if correct services are selected', function () {
-            return supportServiceSelection
+    describe('#selectServices()', () => {
+        it('check if correct services are selected', () => {
+            return SupportServiceSelection
                 .selectServices(mockData.decoratedCdt(_idCDT))
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data.length, 5);
                     /*assert.equal(data[0].name, 'Wikipedia');
                     assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={search_key}&prop=revisions&rvprop=content&format=json');
@@ -33,10 +38,10 @@ describe('Component: SupportServiceSelection', function () {
                     assert.equal(data[2].url, 'http://api.trenord.it/searchStation/fromStation/{startStationName}/toStation/{endStationName}');*/
                 });
         });
-        it('check response when no support service name is provided', function () {
-            return supportServiceSelection
+        it('check response when no support service name is provided', () => {
+            return SupportServiceSelection
                 .selectServices(contextNoSupportName(_idCDT))
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data.length, 4);
                     /*assert.equal(data[0].category, 'Transport');
                     assert.equal(data[0].service, 'ATM');
@@ -46,44 +51,44 @@ describe('Component: SupportServiceSelection', function () {
                     assert.equal(data[1].url, 'http://api.trenord.it/searchStation/fromStation/{startStationName}/toStation/{endStationName}');*/
                 });
         });
-        it('check response when no support category is provided', function () {
-            return supportServiceSelection
+        it('check response when no support category is provided', () => {
+            return SupportServiceSelection
                 .selectServices(contextNoSupportCategory(_idCDT))
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data.length, 1);
                     assert.equal(data[0].name, 'Wikipedia');
-                    assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={search_key}&prop=revisions&rvprop=content&format=json');
+                    assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={SearchKey}&prop=revisions&rvprop=content&format=json');
                 });
         });
-        it('check response when the specified service name does not exists', function () {
-            return supportServiceSelection
+        it('check response when the specified service name does not exists', () => {
+            return SupportServiceSelection
                 .selectServices(contextWithInexistentName(_idCDT))
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data.length, 0);
                 });
         });
-        it('check response when the support category does not exists', function () {
-            return supportServiceSelection
+        it('check response when the support category does not exists', () => {
+            return SupportServiceSelection
                 .selectServices(contextWithInexistentCategory(_idCDT))
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data.length, 0);
                 });
         });
-        it('check response when multiple service names are provided', function () {
-            return supportServiceSelection
+        it('check response when multiple service names are provided', () => {
+            return SupportServiceSelection
                 .selectServices(contextMultipleSupportServiceNames(_idCDT))
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data.length, 2);
                     assert.equal(data[0].name, 'Wikipedia');
-                    assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={search_key}&prop=revisions&rvprop=content&format=json');
+                    assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={SearchKey}&prop=revisions&rvprop=content&format=json');
                     assert.equal(data[1].name, 'Flickr');
                     assert.equal(data[1].url, 'http://api.flickr.com/photos/tag/{tag}');
                 });
         });
-        it('check response when multiple service categories are provided', function () {
-            return supportServiceSelection
+        it('check response when multiple service categories are provided', () => {
+            return SupportServiceSelection
                 .selectServices(contextMultipleSupportServiceCategories(_idCDT))
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data.length, 2);
                     assert.equal(data[0].category, 'Transport');
                     assert.equal(data[0].service, 'GoogleMaps');
@@ -96,16 +101,16 @@ describe('Component: SupportServiceSelection', function () {
     });
 
     after(function (done) {
-        MockDatabase.deleteDatabase(function (err) {
+        MockDatabase.deleteDatabase(err => {
             assert.equal(err, null);
-            provider.closeConnection();
+            Provider.closeConnection();
             done();
         });
     });
 });
 
 //context without service names
-var contextNoSupportName = function(idCDT) {
+let contextNoSupportName = idCDT => {
     return {
         _id: idCDT,
         filterNodes: [
@@ -133,7 +138,7 @@ var contextNoSupportName = function(idCDT) {
 };
 
 //context without support categories
-var contextNoSupportCategory = function(idCDT) {
+let contextNoSupportCategory = idCDT => {
     return {
         _id: idCDT,
         supportServiceNames: [
@@ -146,7 +151,7 @@ var contextNoSupportCategory = function(idCDT) {
 };
 
 //context with inexistent support category
-var contextWithInexistentCategory = function(idCDT) {
+let contextWithInexistentCategory = idCDT => {
     return {
         _id: idCDT,
         supportServiceCategories: [ 'Sport' ]
@@ -154,7 +159,7 @@ var contextWithInexistentCategory = function(idCDT) {
 };
 
 //context with inexistent support service name
-var contextWithInexistentName = function(idCDT) {
+let contextWithInexistentName = idCDT => {
     return {
         _id: idCDT,
         supportServiceNames: [
@@ -167,7 +172,7 @@ var contextWithInexistentName = function(idCDT) {
 };
 
 //context with multiple support service names
-var contextMultipleSupportServiceNames = function(idCDT) {
+let contextMultipleSupportServiceNames = idCDT => {
     return {
         _id: idCDT,
         supportServiceNames: [
@@ -184,7 +189,7 @@ var contextMultipleSupportServiceNames = function(idCDT) {
 };
 
 //context with multiple support service categories
-var contextMultipleSupportServiceCategories = function(idCDT) {
+let contextMultipleSupportServiceCategories = idCDT => {
     return {
         _id: idCDT,
         interestTopic: 'Restaurant',

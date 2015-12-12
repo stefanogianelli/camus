@@ -1,37 +1,40 @@
-var assert = require('assert');
-var responseAggregator = require('../components/responseAggregator.js');
+'use strict';
 
-describe('Component: ResponseAggregator', function () {
+let assert = require('assert');
+let responseAggregator = require('../components/responseAggregator.js');
+let ResponseAggregator = new responseAggregator();
 
-    describe('#prepareResponse()', function () {
-        it('check correct response aggregation', function () {
-            return responseAggregator
+describe('Component: ResponseAggregator', () => {
+
+    describe('#prepareResponse()', () => {
+        it('check correct response aggregation', () => {
+            return ResponseAggregator
                 .prepareResponse(testSuccessfulMerging, supportResponse)
-                .then(function (response) {
+                .then(response => {
                     assert.equal(response.data.length, 3);
                     assert.equal(response.support.length, 3);
                 });
         });
-        it('check correct response when no support services are found', function () {
-            return responseAggregator
+        it('check correct response when no support services are found', () => {
+            return ResponseAggregator
                 .prepareResponse(testSuccessfulMerging, [])
-                .then(function (response) {
+                .then(response => {
                     assert.equal(response.data.length, 3);
                     assert.equal(response.support.length, 0);
                 });
         });
-        it('check error message when empty response list is sent', function () {
-           return responseAggregator
+        it('check error message when empty response list is sent', () => {
+           return ResponseAggregator
                .prepareResponse([], [])
-               .catch(function (e) {
+               .catch(e => {
                    assert.equal(e, 'No results');
                })
         });
     });
 
-    describe('#findSimilarities()', function () {
-        it('check if similar items are correctly merged', function () {
-            var response = responseAggregator._findSimilarities(testSuccessfulMerging);
+    describe('#findSimilarities()', () => {
+        it('check if similar items are correctly merged', () => {
+            let response = ResponseAggregator._findSimilarities(testSuccessfulMerging);
             assert.equal(response[0][0].nome, 'Bottega Ghiotta Gourmet');
             assert.equal(response[0][0].tipologia, 'Ristorante Italiano, Pizzeria');
             assert.equal(response[0][0].rating, '5/5');
@@ -55,19 +58,19 @@ describe('Component: ResponseAggregator', function () {
         });
     });
 
-    describe('#calculateObjectSimilarity()', function () {
-        it('check if similar objects are identified', function () {
-            assert.equal(responseAggregator._calculateObjectSimilarity(baseObject, similarObject), true);
+    describe('#calculateObjectSimilarity()', () => {
+        it('check if similar objects are identified', () => {
+            assert.equal(ResponseAggregator._calculateObjectSimilarity(baseObject, similarObject), true);
         });
-        it('check if different objects are identified', function () {
-            assert.equal(responseAggregator._calculateObjectSimilarity(baseObject, differentObject), false);
+        it('check if different objects are identified', () => {
+            assert.equal(ResponseAggregator._calculateObjectSimilarity(baseObject, differentObject), false);
         });
     });
 
 });
 
 //Base object for similarity testing
-var baseObject = {
+let baseObject = {
     title: 'Spectre',
     director: 'Sam Mendes',
     writtenBy: 'John Logan, Neal Purvis, Robert Wade, Jez Butterworth',
@@ -75,7 +78,7 @@ var baseObject = {
 };
 
 //Example of an object similar to the base one
-var similarObject = {
+let similarObject = {
     title: 'Spectre',
     director: 'Mendes J. Sam',
     writtenBy: 'John Logan, Robert Wade, Jez Butterworth, Neal Purvis',
@@ -83,7 +86,7 @@ var similarObject = {
 };
 
 //Example of an object different from the base one
-var differentObject = {
+let differentObject = {
     title: 'Burnt',
     director: 'John Wells',
     writtenBy: 'Steven Knight',
@@ -91,7 +94,7 @@ var differentObject = {
 };
 
 //response used to test if two similar items are merged correctly
-var testSuccessfulMerging = [
+let testSuccessfulMerging = [
     [
         {
             nome: 'Bottega Ghiotta Gourmet',
@@ -143,7 +146,7 @@ var testSuccessfulMerging = [
 ];
 
 //test response that came from SupportServiceSelection component
-var supportResponse = [
+let supportResponse = [
     {
         name: 'Wikipedia',
         url: 'https://en.wikipedia.org/w/api.php?action=query&titles={search_key}&prop=revisions&rvprop=content&format=json'

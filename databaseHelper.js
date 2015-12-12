@@ -1,238 +1,240 @@
-var _ = require('lodash');
-var async = require('async');
-var Promise = require('bluebird');
+'use strict'
+
+let _ = require('lodash');
+let async = require('async');
+let Promise = require('bluebird');
 
 //models
-var ServiceModel = require('./models/serviceDescription.js');
-var PrimaryServiceModel = require('./models/primaryServiceAssociation.js');
-var SupportServiceModel = require('./models/supportServiceAssociation.js');
-var cdtModel = require('./models/cdtDescription.js');
+let ServiceModel = require('./models/serviceDescription.js');
+let PrimaryServiceModel = require('./models/primaryServiceAssociation.js');
+let SupportServiceModel = require('./models/supportServiceAssociation.js');
+let cdtModel = require('./models/cdtDescription.js');
 
-var databaseHelper = function () { };
-
-/**
- * This function adds the entries to the database, from a default model
- * @returns {bluebird|exports|module.exports} Returns the identifier of the created CDT
- */
-databaseHelper.prototype.createDatabase = function createDatabase () {
-    return new Promise(function (resolve, reject) {
-        async.waterfall([
-            function (callback) {
-                //create the CDT
-                new cdtModel(cdt).save(function (err, savedCdt) {
-                    callback(err, savedCdt._id);
-                });
-            },
-            function (idCdt, callback) {
-                //create the services and save their associations
-                async.parallel([
-                    /*
-                    ADD PRIMARY SERVICES BELOW
-                     */
-                    function (callback) {
-                        //save google places service
-                        async.waterfall([
-                            function (callback) {
-                                new ServiceModel(googlePlaces).save(function (err, service) {
-                                    callback(err, service.operations[0].id);
-                                });
-                            },
-                            function (idOperation, callback) {
-                                _.forEach(googlePlacesAssociations(idOperation, idCdt), function (a) {
-                                    new PrimaryServiceModel(a).save(function (err) {
-                                        callback(err, 'done');
+class DatabaseHelper {
+    /**
+     * This function adds the entries to the database, from a default model
+     * @returns {bluebird|exports|module.exports} Returns the identifier of the created CDT
+     */
+    createDatabase () {
+        return new Promise((resolve, reject) => {
+            async.waterfall([
+                callback => {
+                    //create the CDT
+                    new cdtModel(cdt).save((err, savedCdt) => {
+                        callback(err, savedCdt._id);
+                    });
+                },
+                (idCdt, callback) => {
+                    //create the services and save their associations
+                    async.parallel([
+                        /*
+                         ADD PRIMARY SERVICES BELOW
+                         */
+                        callback => {
+                            //save google places service
+                            async.waterfall([
+                                callback => {
+                                    new ServiceModel(googlePlaces).save((err, service) => {
+                                        callback(err, service.operations[0].id);
                                     });
-                                });
-                            }
-                        ], function (err) {
-                            callback(err, 'done');
-                        });
-                    },
-                    function (callback) {
-                        //save eventful service
-                        async.waterfall([
-                            function (callback) {
-                                new ServiceModel(eventful).save(function (err, service) {
-                                    callback(err, service.operations[0].id);
-                                });
-                            },
-                            function (idOperation, callback) {
-                                _.forEach(eventfulAssociations(idOperation, idCdt), function (a) {
-                                    new PrimaryServiceModel(a).save(function (err) {
-                                        callback(err, 'done');
+                                },
+                                (idOperation, callback) => {
+                                    _.forEach(googlePlacesAssociations(idOperation, idCdt), a => {
+                                        new PrimaryServiceModel(a).save(err => {
+                                            callback(err, 'done');
+                                        });
                                     });
-                                });
-                            }
-                        ], function (err) {
-                            callback(err, 'done');
-                        });
-                    },
-                    function (callback) {
-                        //save cinema stub
-                        async.waterfall([
-                            function (callback) {
-                                new ServiceModel(cinemaStub).save(function (err, service) {
-                                    callback(err, service.operations[0].id);
-                                });
-                            },
-                            function (idOperation, callback) {
-                                _.forEach(cinemaStubAssociations(idOperation, idCdt), function (a) {
-                                    new PrimaryServiceModel(a).save(function (err) {
-                                        callback(err, 'done');
+                                }
+                            ], err => {
+                                callback(err, 'done');
+                            });
+                        },
+                        callback => {
+                            //save eventful service
+                            async.waterfall([
+                                callback => {
+                                    new ServiceModel(eventful).save((err, service) => {
+                                        callback(err, service.operations[0].id);
                                     });
-                                });
-                            }
-                        ], function (err) {
-                            callback(err, 'done');
-                        });
-                    },
-                    function (callback) {
-                        //save theater stub
-                        async.waterfall([
-                            function (callback) {
-                                new ServiceModel(theaterStub).save(function (err, service) {
-                                    callback(err, service.operations[0].id);
-                                });
-                            },
-                            function (idOperation, callback) {
-                                _.forEach(theaterStubAssociations(idOperation, idCdt), function (a) {
-                                    new PrimaryServiceModel(a).save(function (err) {
-                                        callback(err, 'done');
+                                },
+                                (idOperation, callback) => {
+                                    _.forEach(eventfulAssociations(idOperation, idCdt), a => {
+                                        new PrimaryServiceModel(a).save(err => {
+                                            callback(err, 'done');
+                                        });
                                     });
-                                });
-                            }
-                        ], function (err) {
-                            callback(err, 'done');
-                        });
-                    },
-                    function (callback) {
-                        //save merici stub
-                        async.waterfall([
-                            function (callback) {
-                                new ServiceModel(mericiPrimary).save(function (err, service) {
-                                    callback(err, service.operations[0].id, service.operations[1].id, service.operations[2].id, service.operations[3].id);
-                                });
-                            },
-                            function (idHotel, idFood, idTheater, idMuseum, callback) {
-                                _.forEach(mericiPrimaryAssociations(idCdt, idHotel, idFood, idTheater, idMuseum), function (a) {
-                                    new PrimaryServiceModel(a).save(function (err) {
-                                        callback(err, 'done');
+                                }
+                            ], err => {
+                                callback(err, 'done');
+                            });
+                        },
+                        callback => {
+                            //save cinema stub
+                            async.waterfall([
+                                callback => {
+                                    new ServiceModel(cinemaStub).save((err, service) => {
+                                        callback(err, service.operations[0].id);
                                     });
-                                });
-                            }
-                        ], function (err) {
-                            callback(err, 'done');
-                        });
-                    },
-                    /*
-                    ADD SUPPORT SERVICES BELOW
-                     */
-                    function (callback) {
-                        //save wikipedia service
-                        new ServiceModel(wikipedia).save(function (err) {
-                            callback(err, 'done');
-                        });
-                    },
-                    function (callback) {
-                        //save google maps service
-                        async.waterfall([
-                            function (callback) {
-                                new ServiceModel(googleMaps).save(function (err, service) {
-                                    callback(err, service.operations[0].id);
-                                });
-                            },
-                            function (idOperation, callback) {
-                                _.forEach(googleMapsAssociation(idOperation, idCdt), function (a) {
-                                    new SupportServiceModel(a).save(function (err) {
-                                        callback(err, 'done');
+                                },
+                                (idOperation, callback) => {
+                                    _.forEach(cinemaStubAssociations(idOperation, idCdt), a => {
+                                        new PrimaryServiceModel(a).save(err => {
+                                            callback(err, 'done');
+                                        });
                                     });
-                                });
-                            }
-                        ], function (err) {
-                            callback(err, 'done');
-                        });
-                    },
-                    function (callback) {
-                        //save merici support service
-                        async.waterfall([
-                            function (callback) {
-                                new ServiceModel(mericiSupport).save(function (err, service) {
-                                    callback(err, service.operations[0].id, service.operations[1].id, service.operations[2].id);
-                                });
-                            },
-                            function (idTaxi, idCarSharing, idDriver, callback) {
-                                _.forEach(mericiSupportAssociation(idCdt, idTaxi, idCarSharing, idDriver), function (a) {
-                                    new SupportServiceModel(a).save(function (err) {
-                                        callback(err, 'done');
+                                }
+                            ], err => {
+                                callback(err, 'done');
+                            });
+                        },
+                        callback => {
+                            //save theater stub
+                            async.waterfall([
+                                callback => {
+                                    new ServiceModel(theaterStub).save((err, service) => {
+                                        callback(err, service.operations[0].id);
                                     });
-                                });
-                            }
-                        ], function (err) {
-                            callback(err, 'done');
-                        });
-                    }
-                    /*
-                    END SERVICE INSERTION
-                     */
-                ], function (err) {
-                    callback(err, idCdt);
-                });
-            }
-        ], function (err, idCdt) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(idCdt);
-            }
+                                },
+                                (idOperation, callback) => {
+                                    _.forEach(theaterStubAssociations(idOperation, idCdt), a => {
+                                        new PrimaryServiceModel(a).save(err => {
+                                            callback(err, 'done');
+                                        });
+                                    });
+                                }
+                            ], err => {
+                                callback(err, 'done');
+                            });
+                        },
+                        callback => {
+                            //save merici stub
+                            async.waterfall([
+                                callback => {
+                                    new ServiceModel(mericiPrimary).save((err, service) => {
+                                        callback(err, service.operations[0].id, service.operations[1].id, service.operations[2].id, service.operations[3].id);
+                                    });
+                                },
+                                (idHotel, idFood, idTheater, idMuseum, callback) => {
+                                    _.forEach(mericiPrimaryAssociations(idCdt, idHotel, idFood, idTheater, idMuseum), a => {
+                                        new PrimaryServiceModel(a).save(err => {
+                                            callback(err, 'done');
+                                        });
+                                    });
+                                }
+                            ], err => {
+                                callback(err, 'done');
+                            });
+                        },
+                        /*
+                         ADD SUPPORT SERVICES BELOW
+                         */
+                        callback => {
+                            //save wikipedia service
+                            new ServiceModel(wikipedia).save(err => {
+                                callback(err, 'done');
+                            });
+                        },
+                        callback => {
+                            //save google maps service
+                            async.waterfall([
+                                callback => {
+                                    new ServiceModel(googleMaps).save((err, service) => {
+                                        callback(err, service.operations[0].id);
+                                    });
+                                },
+                                (idOperation, callback) => {
+                                    _.forEach(googleMapsAssociation(idOperation, idCdt), a => {
+                                        new SupportServiceModel(a).save(err => {
+                                            callback(err, 'done');
+                                        });
+                                    });
+                                }
+                            ], err => {
+                                callback(err, 'done');
+                            });
+                        },
+                        callback => {
+                            //save merici support service
+                            async.waterfall([
+                                callback => {
+                                    new ServiceModel(mericiSupport).save((err, service) => {
+                                        callback(err, service.operations[0].id, service.operations[1].id, service.operations[2].id);
+                                    });
+                                },
+                                (idTaxi, idCarSharing, idDriver, callback) => {
+                                    _.forEach(mericiSupportAssociation(idCdt, idTaxi, idCarSharing, idDriver), a => {
+                                        new SupportServiceModel(a).save(err => {
+                                            callback(err, 'done');
+                                        });
+                                    });
+                                }
+                            ], err => {
+                                callback(err, 'done');
+                            });
+                        }
+                        /*
+                         END SERVICE INSERTION
+                         */
+                    ], err => {
+                        callback(err, idCdt);
+                    });
+                }
+            ], (err, idCdt) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(idCdt);
+                }
+            });
         });
-    });
-};
+    }
 
-/**
- * This function cleans the current database
- * @returns {bluebird|exports|module.exports}
- */
-databaseHelper.prototype.deleteDatabase = function deleteDatabase () {
-    return new Promise(function (resolve, reject) {
-        async.parallel([
-            function (callback) {
-                cdtModel.remove({}, function(err) {
-                    callback(err, 'done');
-                })
-            },
-            function (callback) {
-                PrimaryServiceModel.remove({}, function(err) {
-                    callback(err, 'done');
-                })
-            },
-            function (callback) {
-                ServiceModel.remove({}, function(err) {
-                    callback(err, 'done');
-                })
-            },
-            function (callback) {
-                SupportServiceModel.remove({}, function(err) {
-                    callback(err, 'done');
-                })
-            }
-        ], function (err) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve();
-            }
+    /**
+     * This function cleans the current database
+     * @returns {bluebird|exports|module.exports}
+     */
+    deleteDatabase () {
+        return new Promise((resolve, reject) => {
+            async.parallel([
+                callback => {
+                    cdtModel.remove({}, err => {
+                        callback(err, 'done');
+                    })
+                },
+                callback => {
+                    PrimaryServiceModel.remove({}, err => {
+                        callback(err, 'done');
+                    })
+                },
+                callback => {
+                    ServiceModel.remove({}, err => {
+                        callback(err, 'done');
+                    })
+                },
+                callback => {
+                    SupportServiceModel.remove({}, err => {
+                        callback(err, 'done');
+                    })
+                }
+            ], err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
         });
-    });
-};
+    }
+}
 
-module.exports = new databaseHelper();
+module.exports = DatabaseHelper;
 
 /**
  * MODELS
  */
 
 //CDT
-var cdt = {
+let cdt = {
     _userId: 1,
     context: [
         {
@@ -296,7 +298,7 @@ var cdt = {
 };
 
 //googlePlaces service
-var googlePlaces = {
+let googlePlaces = {
     name: 'GooglePlaces',
     type: 'primary',
     protocol: 'query',
@@ -406,7 +408,7 @@ var googlePlaces = {
 };
 
 //googlePlaces associations
-var googlePlacesAssociations = function (idOperation, idCDT) {
+let googlePlacesAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -419,7 +421,7 @@ var googlePlacesAssociations = function (idOperation, idCDT) {
 };
 
 //eventful service
-var eventful = {
+let eventful = {
     name: 'eventful',
     type: 'primary',
     protocol: 'query',
@@ -478,7 +480,7 @@ var eventful = {
 };
 
 //eventful associations
-var eventfulAssociations = function (idOperation, idCDT) {
+let eventfulAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -491,7 +493,7 @@ var eventfulAssociations = function (idOperation, idCDT) {
 };
 
 //wikipedia support service
-var wikipedia = {
+let wikipedia = {
     name: 'Wikipedia',
     type: 'support',
     protocol: 'query',
@@ -544,7 +546,7 @@ var wikipedia = {
 };
 
 //google maps support service
-var googleMaps = {
+let googleMaps = {
     name: 'GoogleMaps',
     type: 'support',
     protocol: 'query',
@@ -576,7 +578,7 @@ var googleMaps = {
 };
 
 //google maps service associations
-var googleMapsAssociation = function (idOperation, idCDT) {
+let googleMapsAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -594,7 +596,7 @@ var googleMapsAssociation = function (idOperation, idCDT) {
 };
 
 //cinema stub service
-var cinemaStub = {
+let cinemaStub = {
     name: 'cinemaStub',
     type: 'primary',
     protocol: 'query',
@@ -646,7 +648,7 @@ var cinemaStub = {
 };
 
 //cinema stub associations
-var cinemaStubAssociations = function (idOperation, idCDT) {
+let cinemaStubAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -659,7 +661,7 @@ var cinemaStubAssociations = function (idOperation, idCDT) {
 };
 
 //theater stub service
-var theaterStub = {
+let theaterStub = {
     name: 'theaterStub',
     type: 'primary',
     protocol: 'query',
@@ -720,7 +722,7 @@ var theaterStub = {
 };
 
 //theater stub associations
-var theaterStubAssociations = function (idOperation, idCDT) {
+let theaterStubAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -740,7 +742,7 @@ var theaterStubAssociations = function (idOperation, idCDT) {
 };
 
 //merici primary service
-var mericiPrimary = {
+let mericiPrimary = {
     name: 'mericiPrimary',
     type: 'primary',
     protocol: 'query',
@@ -1038,7 +1040,7 @@ var mericiPrimary = {
 };
 
 //merici primary service associations
-var mericiPrimaryAssociations = function (idCDT, idHotel, idFood, idTheater, idMuseum) {
+let mericiPrimaryAssociations = (idCDT, idHotel, idFood, idTheater, idMuseum) => {
     return [
         {
             _idOperation: idHotel,
@@ -1072,7 +1074,7 @@ var mericiPrimaryAssociations = function (idCDT, idHotel, idFood, idTheater, idM
 };
 
 //merici support service
-var mericiSupport = {
+let mericiSupport = {
     name: 'mericiSupport',
     type: 'support',
     protocol: 'query',
@@ -1163,7 +1165,7 @@ var mericiSupport = {
 };
 
 //merici support service associations
-var mericiSupportAssociation = function (idCDT, idTaxi, idCarSharing, idDriver) {
+let mericiSupportAssociation = (idCDT, idTaxi, idCarSharing, idDriver) => {
     return [
         {
             _idOperation: idTaxi,

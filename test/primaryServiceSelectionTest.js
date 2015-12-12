@@ -1,17 +1,22 @@
-var assert = require('assert');
-var serviceManager = require('../components/primaryServiceSelection.js');
-var MockDatabase = require('./mockDatabaseCreator.js');
-var provider = require('../provider/provider.js');
+'use strict';
 
-var _idCDT;
-var _idNestedCDT;
-var _idMultipleSonCDT;
+let assert = require('assert');
+let serviceManager = require('../components/primaryServiceSelection.js');
+let ServiceManager = new serviceManager();
+let mockDatabase = require('./mockDatabaseCreator.js');
+let MockDatabase = new mockDatabase();
+let provider = require('../provider/provider.js');
+let Provider = new provider();
 
-describe('Component: PrimaryServiceSelection', function() {
+let _idCDT;
+let _idNestedCDT;
+let _idMultipleSonCDT;
+
+describe('Component: PrimaryServiceSelection', () => {
 
     before(function(done) {
-        provider.createConnection('mongodb://localhost/camus_test');
-        MockDatabase.createDatabase(function (err, idCDT, idNestedCDT, idMultipleSonCDT) {
+        Provider.createConnection('mongodb://localhost/camus_test');
+        MockDatabase.createDatabase((err, idCDT, idNestedCDT, idMultipleSonCDT) => {
             assert.equal(err, null);
             _idCDT = idCDT;
             _idNestedCDT = idNestedCDT;
@@ -20,96 +25,96 @@ describe('Component: PrimaryServiceSelection', function() {
         });
     });
 
-    describe('#selectServices()', function() {
-        it('check if correct services are selected', function() {
-            return serviceManager
+    describe('#selectServices()', () => {
+        it('check if correct services are selected', () => {
+            return ServiceManager
                 .selectServices(decoratedCdt(_idCDT))
-                .then(function(services) {
+                .then(services => {
                     assert.equal(services.length, 2);
                     assert.equal(services[0].rank, 5);
-                    return [services, provider.getServiceByOperationId(services[0]._idOperation)];
+                    return [services, Provider.getServiceByOperationId(services[0]._idOperation)];
                 })
-                .spread(function (services, data) {
+                .spread((services, data) => {
                     assert.equal(data.name, 'Eventful');
                     assert.equal(data.operations[0].name, 'eventSearch');
                     assert.equal(services[1].rank, 2);
-                    return provider.getServiceByOperationId(services[1]._idOperation);
+                    return Provider.getServiceByOperationId(services[1]._idOperation);
                 })
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data.name, 'GooglePlaces');
                     assert.equal(data.operations[0].name, 'placeTextSearch');
                 });
         });
-        it('check if correct services are selected for nested CDT dimensions', function() {
-            return serviceManager
+        it('check if correct services are selected for nested CDT dimensions', () => {
+            return ServiceManager
                 .selectServices(nestedContext(_idNestedCDT))
-                .then(function(services) {
+                .then(services => {
                     assert.equal(services.length, 3);
-                    return [services, provider.getServiceByOperationId(services[0]._idOperation)];
+                    return [services, Provider.getServiceByOperationId(services[0]._idOperation)];
                 })
-                .spread(function (services, data) {
+                .spread((services, data) => {
                     assert.equal(services[0].rank, 2);
                     assert.equal(data.name, 'GooglePlaces');
                     assert.equal(data.operations[0].name, 'placeTextSearch');
-                    return [services, provider.getServiceByOperationId(services[1]._idOperation)];
+                    return [services, Provider.getServiceByOperationId(services[1]._idOperation)];
                 })
-                .spread(function (services, data) {
+                .spread((services, data) => {
                     assert.equal(services[1].rank, 2);
                     assert.equal(data.name, 'Eventful');
                     assert.equal(data.operations[0].name, 'eventSearch');
-                    return [services, provider.getServiceByOperationId(services[2]._idOperation)];
+                    return [services, Provider.getServiceByOperationId(services[2]._idOperation)];
                 })
-                .spread(function (services, data) {
+                .spread((services, data) => {
                     assert.equal(services[2].rank, 2);
                     assert.equal(data.name, 'fakeService');
                     assert.equal(data.operations[0].name, 'eventSearch');
                 });
         });
-        it('check if correct services are selected for multiple son CDT dimensions', function() {
-            return serviceManager
+        it('check if correct services are selected for multiple son CDT dimensions', () => {
+            return ServiceManager
                 .selectServices(multipleSonContext(_idMultipleSonCDT))
-                .then(function(services) {
+                .then(services => {
                     assert.equal(services.length, 3);
-                    return [services, provider.getServiceByOperationId(services[0]._idOperation)];
+                    return [services, Provider.getServiceByOperationId(services[0]._idOperation)];
                 })
-                .spread(function (services, data) {
+                .spread((services, data) => {
                     assert.equal(services[0].rank, 2);
                     assert.equal(data.name, 'GooglePlaces');
                     assert.equal(data.operations[0].name, 'placeTextSearch');
-                    return [services, provider.getServiceByOperationId(services[1]._idOperation)];
+                    return [services, Provider.getServiceByOperationId(services[1]._idOperation)];
                 })
-                .spread(function (services, data) {
+                .spread((services, data) => {
                     assert.equal(services[1].rank, 2);
                     assert.equal(data.name, 'Eventful');
                     assert.equal(data.operations[0].name, 'eventSearch');
-                    return [services, provider.getServiceByOperationId(services[2]._idOperation)];
+                    return [services, Provider.getServiceByOperationId(services[2]._idOperation)];
                 })
-                .spread(function (services, data) {
+                .spread((services, data) => {
                     assert.equal(services[2].rank, 2);
                     assert.equal(data.name, 'fakeService');
                     assert.equal(data.operations[0].name, 'eventSearch');
                 });
         });
-        it('check error when no filter nodes selected', function() {
-            return serviceManager
+        it('check error when no filter nodes selected', () => {
+            return ServiceManager
                 .selectServices(parameterContext(_idCDT))
-                .catch(function (e) {
+                .catch(e => {
                     assert.equal(e.message, 'No filter nodes selected!');
                 });
         });
     });
 
-    after(function (done) {
-        MockDatabase.deleteDatabase(function (err) {
+    after(done => {
+        MockDatabase.deleteDatabase(err => {
             assert.equal(err, null);
-            provider.closeConnection();
+            Provider.closeConnection();
             done();
         });
     });
 });
 
 //context with only parameter attribues
-var parameterContext = function(idCDT) {
+let parameterContext = idCDT => {
     return {
         _id: idCDT,
         parameterNodes: [
@@ -122,7 +127,7 @@ var parameterContext = function(idCDT) {
 };
 
 //decorated context for test nested service selection
-var nestedContext = function (idCDT) {
+let nestedContext = idCDT => {
     return {
         _id: idCDT,
         filterNodes: [
@@ -151,7 +156,7 @@ var nestedContext = function (idCDT) {
 };
 
 //decorated context for test multiple son service selection
-var multipleSonContext = function (idCDT) {
+let multipleSonContext = idCDT => {
     return {
         _id: idCDT,
         filterNodes: [
@@ -184,7 +189,7 @@ var multipleSonContext = function (idCDT) {
 };
 
 //sample decorated CDT
-var decoratedCdt = function (idCDT) {
+let decoratedCdt = idCDT => {
     return {
         _id: idCDT,
         interestTopic: 'Restaurant',

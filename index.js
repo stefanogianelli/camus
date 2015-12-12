@@ -1,16 +1,25 @@
-var hapi = require('hapi');
-var Promise = require('bluebird');
-var provider = require('./provider/provider.js');
+'use strict';
+
+let hapi = require('hapi');
+let Promise = require('bluebird');
+let provider = require('./provider/provider.js');
+let Provider = new provider();
 
 //components
-var contextManager = require('./components/contextManager.js');
-var primaryService = require('./components/primaryServiceSelection.js');
-var queryHandler = require('./components/queryHandler.js');
-var supportService = require('./components/supportServiceSelection.js');
-var responseAggregator = require('./components/responseAggregator.js');
-var databaseHelper = require('./databaseHelper.js');
+let contextManager = require('./components/contextManager.js');
+let ContextManager = new contextManager();
+let primaryService = require('./components/primaryServiceSelection.js');
+let PrimaryService = new primaryService();
+let queryHandler = require('./components/queryHandler.js');
+let QueryHandler = new queryHandler();
+let supportService = require('./components/supportServiceSelection.js');
+let SupportService = new supportService();
+let responseAggregator = require('./components/responseAggregator.js');
+let ResponseAggregator = new responseAggregator();
+let databaseHelper = require('./databaseHelper.js');
+let DatabaseHelper = new databaseHelper();
 
-var app = new hapi.Server();
+let app = new hapi.Server();
 
 app.connection({
     host: 'localhost',
@@ -23,7 +32,7 @@ app.connection({
 app.route({
     method: 'GET',
     path: '/',
-    handler: function(req, reply) {
+    handler: (req, reply) => {
         reply('Hello CAMUS!');
     }
 });
@@ -35,28 +44,28 @@ app.route({
 app.route({
     method: 'POST',
     path: '/query',
-    handler: function(req, reply) {
-        contextManager
+    handler: (req, reply) => {
+        ContextManager
             .getDecoratedCdt(req.payload)
-            .then(function (decoratedCdt) {
+            .then(decoratedCdt =>{
                 return Promise
                     .props({
-                        primary: primaryService
+                        primary: PrimaryService
                             .selectServices(decoratedCdt)
-                            .then(function (services) {
-                                return queryHandler
+                            .then(services => {
+                                return QueryHandler
                                     .executeQueries(services, decoratedCdt);
                             }),
-                        support: supportService.selectServices(decoratedCdt)
+                        support: SupportService.selectServices(decoratedCdt)
                     });
             })
-            .then(function (result) {
-                return responseAggregator.prepareResponse(result.primary, result.support);
+            .then(result => {
+                return ResponseAggregator.prepareResponse(result.primary, result.support);
             })
-            .then(function (response) {
+            .then(response => {
                 reply(response);
             })
-            .catch(function (e) {
+            .catch(e => {
                 reply(e);
             });
     }
@@ -68,24 +77,24 @@ app.route({
 app.route({
     method: 'GET',
     path: '/createDatabase',
-    handler: function (req, reply) {
-        databaseHelper
+    handler: (req, reply) => {
+        DatabaseHelper
             //first I clean the existing database
             .deleteDatabase()
             //recreate the database
-            .then(function () {
-                return databaseHelper.createDatabase();
+            .then(() => {
+                return DatabaseHelper.createDatabase();
             })
-            .then(function (idCDT) {
+            .then(idCDT => {
                 reply('Database created!<br/>idCDT: ' + idCDT);
             })
-            .catch(function (e) {
+            .catch(e => {
                 reply(e);
             });
     }
 });
 
-app.start(function() {
-    provider.createConnection('mongodb://localhost/camus');
+app.start(() => {
+    Provider.createConnection('mongodb://localhost/camus');
     console.log('Server running at ' + app.info.uri);
 });

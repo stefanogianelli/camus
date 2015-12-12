@@ -1,11 +1,13 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.Types.ObjectId;
+'use strict';
+
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
+let ObjectId = Schema.Types.ObjectId;
 
 /**
  * Schema for associations
  */
-var associationSchema = new Schema({
+let associationSchema = new Schema({
     dimension: {
         type: String,
         required: true
@@ -19,7 +21,7 @@ var associationSchema = new Schema({
 /**
  * Schema for support services associations with the CDT nodes
  */
-var supportServiceSchema = new Schema ({
+let supportServiceSchema = new Schema ({
     _idCDT: {
         type: ObjectId,
         required: true
@@ -40,6 +42,6 @@ var supportServiceSchema = new Schema ({
     associations: [associationSchema]
 });
 
-var supportServiceAssociation = mongoose.model('support_service', supportServiceSchema);
+let supportServiceAssociation = mongoose.model('support_service', supportServiceSchema);
 
 module.exports = supportServiceAssociation;

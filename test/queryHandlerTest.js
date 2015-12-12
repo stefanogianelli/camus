@@ -1,55 +1,61 @@
-var assert = require('assert');
-var MockDatabase = require('./mockDatabaseCreator.js');
-var mockData = require('./mockModel.js');
-var serviceManager = require('../components/primaryServiceSelection.js');
-var queryHandler = require('../components/queryHandler.js');
-var provider = require('../provider/provider.js');
+'use strict';
 
-var _idCDT;
+let assert = require('assert');
+let mockDatabase = require('./mockDatabaseCreator.js');
+let MockDatabase = new mockDatabase();
+let mockData = require('./mockModel.js');
+let serviceManager = require('../components/primaryServiceSelection.js');
+let ServiceManager = new serviceManager();
+let queryHandler = require('../components/queryHandler.js');
+let QueryHandler = new queryHandler();
+let provider = require('../provider/provider.js');
+let Provider = new provider();
 
-describe('Component: QueryHandler', function () {
+let _idCDT;
+
+describe('Component: QueryHandler', () => {
 
     before(function(done) {
-        provider.createConnection('mongodb://localhost/camus_test');
-        MockDatabase.createDatabase(function (err, idCDT) {
+        Provider.createConnection('mongodb://localhost/camus_test');
+        MockDatabase.createDatabase((err, idCDT) => {
             assert.equal(err, null);
             _idCDT = idCDT;
             done();
         });
     });
 
-    describe('#executeQueries()', function () {
-        it('check if correct data are retrieved', function () {
-            return serviceManager
+    describe('#executeQueries()', () => {
+        it('check if correct data are retrieved', () => {
+            return ServiceManager
                 .selectServices(mockData.decoratedCdt(_idCDT))
-                .then(function(services) {
-                    return queryHandler.executeQueries(services, mockData.decoratedCdt(_idCDT));
+                .then(services => {
+                    return QueryHandler.executeQueries(services, mockData.decoratedCdt(_idCDT));
                 })
-                .then(function (responses) {
+                .then(responses => {
                     assert.equal(responses.length, 2);
-                    assert.equal(responses[0][0].title, 'Bouley');
-                    assert.equal(responses[1][0].title, 'International Restaurant & Foodservice Show-New York');
+                    assert.equal(responses[0][0].title, 'International Restaurant & Foodservice Show-New York');
+                    assert.equal(responses[1][0].title, 'Bouley');
                 });
         });
-        it('check array composition when one service does not respond to a query', function () {
-            return serviceManager
+        it('check array composition when one service does not respond to a query', () => {
+            return ServiceManager
                 .selectServices(contextForFakeService(_idCDT))
-                .then(function(services) {
-                    return queryHandler.executeQueries(services, contextForFakeService(_idCDT));
+                .then(services => {
+                    return QueryHandler.executeQueries(services, contextForFakeService(_idCDT));
                 })
-                .then(function (responses) {
+                .then(responses => {
                     assert.equal(responses.length, 2);
                     assert.equal(responses[0][0].title, 'Bouley');
                     assert.equal(responses[1][0].title, 'International Restaurant & Foodservice Show-New York');
                 });
         });
-        it('check correct execution of custom bridge', function () {
-            return serviceManager
+        it('check correct execution of custom bridge', () => {
+            return ServiceManager
                 .selectServices(testBridgeContext(_idCDT))
                 .then(function(services) {
-                    return queryHandler.executeQueries(services, testBridgeContext(_idCDT));
+                    return QueryHandler.executeQueries(services, testBridgeContext(_idCDT));
                 })
-                .then(function (responses) {
+                .then(responses => {
                     assert.equal(responses.length, 1);
                     assert.equal(responses[0][0].title, 'Restaurant Girl & the Goat');
                     assert.equal(responses[0][1].title, 'Restaurant The Purple Pig');
@@ -57,10 +63,10 @@ describe('Component: QueryHandler', function () {
         });
     });
 
-    after(function (done) {
-        MockDatabase.deleteDatabase(function (err) {
+    after(done => {
+        MockDatabase.deleteDatabase(err => {
             assert.equal(err, null);
-            provider.closeConnection();
+            Provider.closeConnection();
             done();
         });
     });
@@ -68,7 +74,7 @@ describe('Component: QueryHandler', function () {
 });
 
 //Context that involve the fake service
-var contextForFakeService = function (idCDT) {
+let contextForFakeService = idCDT => {
     return {
         _id: idCDT,
         interestTopic: 'Restaurant',
@@ -93,19 +99,14 @@ var contextForFakeService = function (idCDT) {
         parameterNodes: [
             {
                 dimension: 'Budget',
-                value: 'Low',
-                transformFunction: 'translateBudget'
+                value: 'Low'
             },
             {
-                dimension: 'City',
+                dimension: 'CityName',
                 value: 'Milan'
             },
             {
-                dimension: 'Number',
-                value: '4'
-            },
-            {
-                dimension: 'search_key',
+                dimension: 'SearchKey',
                 value: 'restaurantinnewyork'
             }
         ]
@@ -113,7 +114,7 @@ var contextForFakeService = function (idCDT) {
 };
 
 //context for test the correct execution of custom bridge
-var testBridgeContext = function (idCDT) {
+let testBridgeContext = idCDT => {
     return {
         _id: idCDT,
         interestTopic: 'Restaurant',

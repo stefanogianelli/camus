@@ -1,5 +1,7 @@
+'use strict'
+
 //cdt
-var cdt = {
+let cdt = {
     _userId: 1,
     context: [
         {
@@ -69,7 +71,7 @@ var cdt = {
             for: 'parameter',
             parameters: [
                 {
-                    name: 'search_key',
+                    name: 'SearchKey',
                     type: 'String'
                 }
             ]
@@ -99,7 +101,7 @@ var cdt = {
 module.exports.cdt = cdt;
 
 //CDT with nested sons
-var nestedCdt = {
+let nestedCdt = {
     _userId: 1,
     context: [
         {
@@ -135,7 +137,7 @@ var nestedCdt = {
 module.exports.nestedCdt = nestedCdt;
 
 //CDT with multiple sons
-var multipleSonsCdt = {
+let multipleSonsCdt = {
     _userId: 1,
     context: [
         {
@@ -178,7 +180,7 @@ var multipleSonsCdt = {
 module.exports.multipleSonsCdt = multipleSonsCdt;
 
 //sample decorated CDT
-var decoratedCdt = function (idCDT) {
+let decoratedCdt = idCDT => {
     return {
         _id: idCDT,
         interestTopic: 'Restaurant',
@@ -208,28 +210,42 @@ var decoratedCdt = function (idCDT) {
             {
                 dimension: 'Festivita',
                 value: 'Capodanno'
+            }
+        ],
+        specificNodes: [
+            {
+                dimension: 'CityName',
+                value: 'Milan'
             },
             {
-                dimension: 'City',
-                value: 'Milan',
-                searchFunction: 'testCustomSearch'
+                dimension: 'CityCoord',
+                fields: [
+                    {
+                        name: 'Longitude',
+                        value: '9.234297'
+                    },
+                    {
+                        name: 'Latitude',
+                        value: '45.478906'
+                    }
+                ]
             }
         ],
         parameterNodes: [
-            {
-                dimension: 'Budget',
-                value: 'Low'
-            },
-            {
-                dimension: 'City',
-                value: 'Milan'
-            },
             {
                 dimension: 'Number',
                 value: 4
             },
             {
-                dimension: 'search_key',
+                dimension: 'Budget',
+                value: 'Low'
+            },
+            {
+                dimension: 'CityName',
+                value: 'Milan'
+            },
+            {
+                dimension: 'SearchKey',
                 value: 'restaurantinnewyork'
             }
         ],
@@ -245,86 +261,8 @@ var decoratedCdt = function (idCDT) {
 
 module.exports.decoratedCdt = decoratedCdt;
 
-//sample merged CDT
-var mergedCdt = function (idCDT) {
-    return {
-        _id: idCDT,
-        context: [
-            {
-                dimension: 'InterestTopic',
-                value: 'Restaurant',
-                for: 'filter'
-            },
-            {
-                dimension: 'Festivita',
-                for: 'ranking',
-                value: 'Capodanno'
-            },
-            {
-                dimension: 'Location',
-                for: 'ranking|parameter',
-                parameters: [
-                    {
-                        name: 'City',
-                        value: 'Milan'
-                    }
-                ]
-            },
-            {
-                dimension: 'Guests',
-                for: 'filter|parameter',
-                parameters: [
-                    {
-                        name: 'Number',
-                        value: '4'
-                    }
-                ]
-            },
-            {
-                dimension: 'Budget',
-                value: 'Low',
-                for: 'filter|parameter'
-            },
-            {
-                dimension: 'Keyword',
-                for: 'parameter',
-                parameters: [
-                    {
-                        name: 'search_key',
-                        value: 'restaurantinnewyork'
-                    }
-                ]
-            },
-            {
-                dimension: 'Transport',
-                value: 'PublicTransport',
-                for: 'filter'
-            },
-            {
-                dimension: 'Tipology',
-                value: 'DinnerWithFriends',
-                for: 'filter'
-            }
-        ],
-        support: [
-            {
-                category: 'Transport'
-            },
-            {
-                category: 'Sport'
-            },
-            {
-                name: 'Wikipedia',
-                operation: 'search'
-            }
-        ]
-    }
-};
-
-module.exports.mergedCdt = mergedCdt;
-
 //googlePlaces service
-var googlePlaces = {
+let googlePlaces = {
     name: 'GooglePlaces',
     type: 'primary',
     protocol: 'rest',
@@ -339,14 +277,13 @@ var googlePlaces = {
                     required: true,
                     default: 'restaurant+in+milan',
                     mappingCDT: [
-                        'search_key'
+                        'SearchKey'
                     ]
                 },
                 {
                     name: 'key',
                     required: true,
-                    default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio',
-                    mappingCDT: []
+                    default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio'
                 }
             ],
             responseMapping: {
@@ -377,7 +314,7 @@ var googlePlaces = {
 module.exports.googlePlaces = googlePlaces;
 
 //eventful service
-var eventful = {
+let eventful = {
     name: 'Eventful',
     type: 'primary',
     protocol: 'rest',
@@ -390,15 +327,14 @@ var eventful = {
                 {
                     name: 'app_key',
                     required: true,
-                    default: 'cpxgqQcFnbVSmvc2',
-                    mappingCDT: []
+                    default: 'cpxgqQcFnbVSmvc2'
                 },
                 {
                     name: 'keywords',
                     required: false,
                     default: 'restaurant',
                     mappingCDT: [
-                        'search_key'
+                        'SearchKey'
                     ]
                 },
                 {
@@ -406,7 +342,7 @@ var eventful = {
                     required: false,
                     default: 'chicago',
                     mappingCDT: [
-                        'City'
+                        'CityName'
                     ]
                 }
             ],
@@ -438,7 +374,7 @@ var eventful = {
 module.exports.eventful = eventful;
 
 //fake service with wrong URL
-var fakeService = {
+let fakeService = {
     name: 'fakeService',
     type: 'primary',
     protocol: 'rest',
@@ -451,15 +387,14 @@ var fakeService = {
                 {
                     name: 'app_key',
                     required: true,
-                    default: 'cpxgqQcFnbVSmvc2',
-                    mappingCDT: []
+                    default: 'cpxgqQcFnbVSmvc2'
                 },
                 {
                     name: 'keywords',
                     required: false,
                     default: 'restaurant',
                     mappingCDT: [
-                        'search_key'
+                        'SearchKey'
                     ]
                 },
                 {
@@ -467,7 +402,7 @@ var fakeService = {
                     required: false,
                     default: 'chicago',
                     mappingCDT: [
-                        'City'
+                        'CityName'
                     ]
                 }
             ],
@@ -499,7 +434,7 @@ var fakeService = {
 module.exports.fakeService = fakeService;
 
 //service created for custom bridge testing
-var testBridge = {
+let testBridge = {
     name: 'testBridge',
     type: 'primary',
     protocol: 'custom',
@@ -541,7 +476,7 @@ var testBridge = {
 module.exports.testBridge = testBridge;
 
 //wikipedia support service
-var wikipedia = {
+let wikipedia = {
     name: 'Wikipedia',
     type: 'support',
     protocol: 'query',
@@ -554,39 +489,30 @@ var wikipedia = {
                 {
                     name: 'action',
                     required: true,
-                    default: 'query',
-                    mappingCDT: [],
-                    mappingTerm: []
+                    default: 'query'
                 },
                 {
                     name: 'titles',
                     required: true,
                     default: 'Italy',
-                    mappingCDT: [],
                     mappingTerm: [
-                        'search_key'
+                        'SearchKey'
                     ]
                 },
                 {
                     name: 'prop',
                     required: true,
-                    default: 'revisions',
-                    mappingCDT: [],
-                    mappingTerm: []
+                    default: 'revisions'
                 },
                 {
                     name: 'rvprop',
                     required: true,
-                    default: 'content',
-                    mappingCDT: [],
-                    mappingTerm: []
+                    default: 'content'
                 },
                 {
                     name: 'format',
                     required: true,
-                    default: 'json',
-                    mappingCDT: [],
-                    mappingTerm: []
+                    default: 'json'
                 }
             ]
         }
@@ -596,7 +522,7 @@ var wikipedia = {
 module.exports.wikipedia = wikipedia;
 
 //google maps support service
-var flickr = {
+let flickr = {
     name: 'Flickr',
     type: 'support',
     protocol: 'rest',
@@ -620,7 +546,7 @@ var flickr = {
 module.exports.flickr = flickr;
 
 //google maps support service
-var googleMaps = {
+let googleMaps = {
     name: 'GoogleMaps',
     type: 'support',
     protocol: 'query',
@@ -654,7 +580,7 @@ var googleMaps = {
 module.exports.googleMaps = googleMaps;
 
 //ATM support service
-var atm = {
+let atm = {
     name: 'ATM',
     type: 'support',
     protocol: 'query',
@@ -692,7 +618,7 @@ var atm = {
 module.exports.atm = atm;
 
 //ATAC support service
-var atac = {
+let atac = {
     name: 'ATAC',
     type: 'support',
     protocol: 'query',
@@ -706,7 +632,7 @@ var atac = {
 module.exports.atac = atac;
 
 //FS support service
-var fs = {
+let fs = {
     name: 'FS',
     type: 'support',
     protocol: 'query',
@@ -720,7 +646,7 @@ var fs = {
 module.exports.fs = fs;
 
 //Trenord support service
-var trenord = {
+let trenord = {
     name: 'Trenord',
     type: 'support',
     protocol: 'rest',
@@ -750,7 +676,7 @@ var trenord = {
 module.exports.trenord = trenord;
 
 //googlePlaces associations
-var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) {
+let googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -805,7 +731,7 @@ var googlePlacesAssociations = function (idOperation, idCDT, idNestedCDT, idMult
 module.exports.googlePlacesAssociations = googlePlacesAssociations;
 
 //eventful associations
-var eventfulAssociations = function (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) {
+let eventfulAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -851,7 +777,7 @@ var eventfulAssociations = function (idOperation, idCDT, idNestedCDT, idMultiple
 module.exports.eventfulAssociations = eventfulAssociations;
 
 //fake service associations
-var fakeServiceAssociation = function (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) {
+let fakeServiceAssociation = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -897,7 +823,7 @@ var fakeServiceAssociation = function (idOperation, idCDT, idNestedCDT, idMultip
 module.exports.fakeServiceAssociation = fakeServiceAssociation;
 
 //test bridge service associations
-var testBridgeAssociation = function (idOperation, idCDT) {
+let testBridgeAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -916,7 +842,7 @@ var testBridgeAssociation = function (idOperation, idCDT) {
 module.exports.testBridgeAssociation = testBridgeAssociation;
 
 //google maps service associations
-var googleMapsAssociation = function (idOperation, idCDT) {
+let googleMapsAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -936,7 +862,7 @@ var googleMapsAssociation = function (idOperation, idCDT) {
 module.exports.googleMapsAssociation = googleMapsAssociation;
 
 //ATM service associations
-var atmAssociation = function (idOperation, idCDT) {
+let atmAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -960,7 +886,7 @@ var atmAssociation = function (idOperation, idCDT) {
 module.exports.atmAssociation = atmAssociation;
 
 //ATAC service associations
-var atacAssociation = function (idOperation, idCDT) {
+let atacAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -984,7 +910,7 @@ var atacAssociation = function (idOperation, idCDT) {
 module.exports.atacAssociation = atacAssociation;
 
 //FS service associations
-var fsAssociation = function (idOperation, idCDT) {
+let fsAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -1005,7 +931,7 @@ var fsAssociation = function (idOperation, idCDT) {
 module.exports.fsAssociation = fsAssociation;
 
 //Trenord service associations
-var trenordAssociation = function (idOperation, idCDT) {
+let trenordAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -1029,7 +955,7 @@ var trenordAssociation = function (idOperation, idCDT) {
 module.exports.trenordAssociation = trenordAssociation;
 
 //Flickr service associations
-var flickrAssociation = function (idOperation, idCDT) {
+let flickrAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,

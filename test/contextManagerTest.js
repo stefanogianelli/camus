@@ -1,18 +1,22 @@
-var assert = require('assert');
-var contextManager = require('../components/contextManager.js');
-var mockData = require('./mockModel.js');
-var MockDatabase = require('./mockDatabaseCreator.js');
-var provider = require('../provider/provider.js');
+'use strict';
 
-var _idCDT;
-var _nestedCDT;
-var _multipleSonsCDT;
+let assert = require('assert');
+let contextManager = require('../components/contextManager.js');
+let ContextManager = new contextManager();
+let mockDatabase = require('./mockDatabaseCreator.js');
+let MockDatabase = new mockDatabase();
+let provider = require('../provider/provider.js');
+let Provider = new provider();
 
-describe('Component: ContextManager', function() {
+let _idCDT;
+let _nestedCDT;
+let _multipleSonsCDT;
 
-    before(function(done) {
-        provider.createConnection('mongodb://localhost/camus_test');
-        MockDatabase.createDatabase(function (err, idCDT, nestedCDT, multipleSonsCDT) {
+describe('Component: ContextManager', () => {
+
+    before(done => {
+        Provider.createConnection('mongodb://localhost/camus_test');
+        MockDatabase.createDatabase((err, idCDT, nestedCDT, multipleSonsCDT) => {
             assert.equal(err, null);
             _idCDT = idCDT;
             _nestedCDT = nestedCDT;
@@ -21,11 +25,11 @@ describe('Component: ContextManager', function() {
         });
     });
 
-    describe('#getDecoratedCdt()', function () {
-        it('check if correct decorated CDT is generated', function () {
-            return contextManager
+    describe('#getDecoratedCdt()', () => {
+        it('check if correct decorated CDT is generated', () => {
+            return ContextManager
                 .getDecoratedCdt(mergedCdt(_idCDT))
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data.interestTopic, 'Restaurant');
                     //filter nodes
                     assert.equal(data.filterNodes.length, 5);
@@ -76,11 +80,11 @@ describe('Component: ContextManager', function() {
         });
     });
 
-    describe('#mergeCdtAndContext()', function () {
-        it('check if a CDT and a context are correctly merged', function () {
-            return contextManager
+    describe('#mergeCdtAndContext()', () => {
+        it('check if a CDT and a context are correctly merged', () => {
+            return ContextManager
                 ._mergeCdtAndContext(context(_idCDT))
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data.context[0].dimension, 'Location');
                     assert.equal(data.context[0].for, 'ranking|parameter');
                     assert.equal(data.context[0].parameters[0].name, 'CityName');
@@ -97,11 +101,11 @@ describe('Component: ContextManager', function() {
         });
     });
 
-    describe('#getNodes()', function () {
-       it('check if correct filter nodes are returned', function () {
-           return contextManager
+    describe('#getNodes()', () => {
+       it('check if correct filter nodes are returned', () => {
+           return ContextManager
                ._getNodes('filter', mergedCdt(_idCDT).context, true)
-               .then(function (results) {
+               .then(results => {
                    assert.equal(results.length, 3);
                    assert.equal(results[0].dimension, 'InterestTopic');
                    assert.equal(results[0].value, 'Restaurant');
@@ -111,19 +115,19 @@ describe('Component: ContextManager', function() {
                    assert.equal(results[2].value, 'PublicTransport');
                });
        });
-        it('check if correct ranking nodes are returned', function () {
-            return contextManager
+        it('check if correct ranking nodes are returned', () => {
+            return ContextManager
                 ._getNodes('ranking', mergedCdt(_idCDT).context, true)
-                .then(function (results) {
+                .then(results => {
                     assert.equal(results.length, 1);
                     assert.equal(results[0].dimension, 'Festivita');
                     assert.equal(results[0].value, 'Capodanno');
                 });
         });
-        it('check if correct parameter nodes are returned', function () {
-            return contextManager
+        it('check if correct parameter nodes are returned', () => {
+            return ContextManager
                 ._getNodes('parameter', mergedCdt(_idCDT).context, true)
-                .then(function (results) {
+                .then(results => {
                     assert.equal(results.length, 2);
                     assert.equal(results[0].dimension, 'Number');
                     assert.equal(results[0].value, 4);
@@ -133,92 +137,91 @@ describe('Component: ContextManager', function() {
         });
     });
 
-    describe('#getInterestTopic()', function () {
-        it('check if correct interest topic are returned', function () {
-            var interestTopic = contextManager._getInterestTopic(mockData.mergedCdt(_idCDT));
+    describe('#getInterestTopic()', () => {
+        it('check if correct interest topic are returned', () => {
+            let interestTopic = ContextManager.constructor._getInterestTopic(mergedCdt(_idCDT));
             assert.equal(interestTopic, 'Restaurant');
         });
-        it('check error when sending empty context', function () {
+        it('check error when sending empty context', () => {
             try {
-                contextManager._getInterestTopic(emptyContext(_idCDT));
+                ContextManager.constructor._getInterestTopic(emptyContext(_idCDT));
             } catch (e) {
                 assert.equal(e.message, 'No context selected');
             }
         });
-        it('check error when sending empty object', function () {
+        it('check error when sending empty object', () => {
             try {
-                contextManager._getInterestTopic({ });
+                ContextManager.constructor._getInterestTopic({ });
             } catch (e) {
                 assert.equal(e.message, 'No context selected');
             }
         });
-        it('check error when sending context without interest topic', function () {
+        it('check error when sending context without interest topic', () => {
             try {
-                contextManager._getInterestTopic(noInterestTopicContext(_idCDT));
+                ContextManager.constructor._getInterestTopic(noInterestTopicContext(_idCDT));
             } catch (e) {
                 assert.equal(e.message, 'No interest topic selected');
             }
         });
     });
 
-    describe('#getSupportServiceCategories()', function () {
-        it('check if correct categories are returned', function () {
-            return contextManager
-                ._getSupportServiceCategories(mockData.mergedCdt(_idCDT))
-                .then(function (categories) {
-                    assert.equal(categories.length, 2);
+    describe('#getSupportServiceCategories()', () => {
+        it('check if correct categories are returned', () => {
+            return ContextManager
+                ._getSupportServiceCategories(mergedCdt(_idCDT))
+                .then(categories => {
+                    assert.equal(categories.length, 1);
                     assert.equal(categories[0], 'Transport');
-                    assert.equal(categories[1], 'Sport');
                 });
         });
-        it('check error when sending empty context', function () {
-            return contextManager
+        it('check error when sending empty context', () => {
+            return ContextManager
                 ._getSupportServiceCategories(emptySupport(_idCDT))
-                .catch(function (e) {
+                .catch(e => {
                     assert.equal(e, 'No support services defined');
                 });
         });
-        it('check error when sending empty object', function () {
-            return contextManager
+        it('check error when sending empty object', () => {
+            return ContextManager
                 ._getSupportServiceCategories({ })
-                .catch(function (e) {
+                .catch(e => {
                     assert.equal(e, 'No support services defined');
                 });
         });
     });
 
-    describe('#getSupportServiceNames()', function () {
-        it('check if correct names are returned', function () {
-            return contextManager
-                ._getSupportServiceNames(mockData.mergedCdt(_idCDT))
-                .then(function (names) {
+    describe('#getSupportServiceNames()', () => {
+        it('check if correct names are returned', () => {
+            return ContextManager
+                ._getSupportServiceNames(mergedCdt(_idCDT))
+                .then(names => {
                     assert.notEqual(names, null);
                     assert.equal(names.length, 1);
                     assert.equal(names[0].name, 'Wikipedia');
                     assert.equal(names[0].operation, 'search');
                 });
         });
-        it('check error when sending empty context', function () {
-            return contextManager
+        it('check error when sending empty context', () => {
+            return ContextManager
                 ._getSupportServiceNames(emptySupport(_idCDT))
-                .catch(function (e) {
+                .catch(e => {
                     assert.equal(e, 'No support services defined');
                 });
         });
-        it('check error when sending empty object', function () {
-            return contextManager
+        it('check error when sending empty object', () => {
+            return ContextManager
                 ._getSupportServiceNames({ })
-                .catch(function (e) {
+                .catch(e => {
                     assert.equal(e, 'No support services defined');
                 });
         });
     });
 
-    describe('#getDescendants()', function () {
-        it('check if correct descendants are returned', function () {
-            return contextManager
+    describe('#getDescendants()', () => {
+        it('check if correct descendants are returned', () => {
+            return ContextManager
                 ._getDescendants(_idCDT, {value: 'PublicTransport'})
-                .then(function (nodes) {
+                .then(nodes => {
                     assert.equal(nodes.length, 2);
                     assert.equal(nodes[0].dimension, 'Tipology');
                     assert.equal(nodes[0].value, 'Bus');
@@ -226,10 +229,10 @@ describe('Component: ContextManager', function() {
                     assert.equal(nodes[1].value, 'Train');
                 });
         });
-        it('check if correct nested descendants are returned', function () {
-            return contextManager
+        it('check if correct nested descendants are returned', () => {
+            return ContextManager
                 ._getDescendants(_nestedCDT, {value: 'b'})
-                .then(function (nodes) {
+                .then(nodes => {
                     assert.equal(nodes[0].dimension, 'd');
                     assert.equal(nodes[0].value, 'e');
                     assert.equal(nodes[1].dimension, 'd');
@@ -240,10 +243,10 @@ describe('Component: ContextManager', function() {
                     assert.equal(nodes[3].value, 'i');
                 });
         });
-        it('check if correct multiple descendants are returned', function () {
-            return contextManager
+        it('check if correct multiple descendants are returned', () => {
+            return ContextManager
                 ._getDescendants(_multipleSonsCDT, [{value: 'd'}, {value: 'e'}])
-                .then(function (nodes) {
+                .then(nodes => {
                     assert.equal(nodes[0].dimension, 'g');
                     assert.equal(nodes[0].value, 'i');
                     assert.equal(nodes[1].dimension, 'g');
@@ -254,46 +257,33 @@ describe('Component: ContextManager', function() {
                     assert.equal(nodes[3].value, 'n');
                 });
         });
-        it('check error with empty node name', function () {
-            return contextManager
+        it('check error with empty node name', () => {
+            return ContextManager
                 ._getDescendants(_idCDT)
-                .catch(function (e) {
+                .catch(e => {
                    assert.equal(e, 'Empty or wrong node name');
                 });
         });
-        it('check error with empty CDT identifier', function () {
-            return contextManager
+        it('check error with empty CDT identifier', () => {
+            return ContextManager
                 ._getDescendants()
-                .catch(function (e) {
+                .catch(e => {
                     assert.equal(e, 'Specify a CDT identifier');
                 });
         });
     });
 
-    after(function (done) {
-        MockDatabase.deleteDatabase(function (err) {
+    after(done => {
+        MockDatabase.deleteDatabase(err => {
             assert.equal(err, null);
-            provider.closeConnection();
+            Provider.closeConnection();
             done();
         });
     });
 });
 
-//wrong context
-var wrongContext = function(idCDT) {
-    return {
-        _id: idCDT,
-        context: [
-            {
-                dimension: 'InterestTopic',
-                value: 'Restaurant'
-            }
-        ]
-    }
-};
-
 //context with no dimensions selected
-var emptyContext = function (idCDT) {
+let emptyContext = idCDT => {
     return {
         _id: idCDT,
         context: []
@@ -301,7 +291,7 @@ var emptyContext = function (idCDT) {
 };
 
 //context with no support services selected
-var emptySupport = function (idCDT) {
+let emptySupport = idCDT => {
     return {
         _id: idCDT,
         support: []
@@ -309,7 +299,7 @@ var emptySupport = function (idCDT) {
 };
 
 //context without interest topic
-var noInterestTopicContext = function (idCDT) {
+let noInterestTopicContext = idCDT => {
     return {
         _id: idCDT,
         context: [
@@ -327,7 +317,7 @@ var noInterestTopicContext = function (idCDT) {
 };
 
 //context used to test the merging function
-var context = function (idCDT) {
+let context = idCDT => {
     return {
         _id: idCDT,
         context: [
@@ -370,7 +360,7 @@ var context = function (idCDT) {
 };
 
 //context used to test the decoration function
-var mergedCdt = function (idCDT) {
+let mergedCdt = idCDT => {
     return {
         _id: idCDT,
         context: [

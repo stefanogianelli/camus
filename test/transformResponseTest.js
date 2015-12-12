@@ -1,13 +1,16 @@
-var assert = require('assert');
-var transformResponse = require('../components/transformResponse.js');
+'use strict';
 
-describe('Component: TransformResponse', function () {
+let assert = require('assert');
+let transformResponse = require('../components/transformResponse.js');
+let TransformResponse = new transformResponse();
 
-    describe('#mappingResponse()', function () {
-        it('check if the mapping is done correctly', function () {
-            return transformResponse
+describe('Component: TransformResponse', () => {
+
+    describe('#mappingResponse()', () => {
+        it('check if the mapping is done correctly', () => {
+            return TransformResponse
                 .mappingResponse(googlePlacesMapping, googlePlacesResponse)
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data[0].title, 'Girl & the Goat');
                     assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
                     assert.equal(data[0].latitude, 41.8841133);
@@ -18,10 +21,10 @@ describe('Component: TransformResponse', function () {
                     assert.equal(data[1].longitude, -87.62385739999999);
                 });
         });
-        it('check if a custom function on an attribute is correctly executed', function () {
-            return transformResponse
+        it('check if a custom function on an attribute is correctly executed', () => {
+            return TransformResponse
                 .mappingResponse(mappingWithFunction, googlePlacesResponse)
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data[0].title, 'Restaurant Girl & the Goat');
                     assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
                     assert.equal(data[0].latitude, 41.8841133);
@@ -32,10 +35,10 @@ describe('Component: TransformResponse', function () {
                     assert.equal(data[1].longitude, -87.62385739999999);
                 });
         });
-        it('check if a function on a non existent attribute doesn\'t change the response', function () {
-            return transformResponse
+        it('check if a function on a non existent attribute doesn\'t change the response', () => {
+            return TransformResponse
                 .mappingResponse(mappingWithInvalidFunction, googlePlacesResponse)
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data[0].title, 'Girl & the Goat');
                     assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
                     assert.equal(data[0].latitude, 41.8841133);
@@ -48,10 +51,10 @@ describe('Component: TransformResponse', function () {
                     assert.equal(typeof data[1].website, 'undefined');
                 });
         });
-        it('check if nested base list is correctly handled', function () {
-            return transformResponse
+        it('check if nested base list is correctly handled', () => {
+            return TransformResponse
                 .mappingResponse(eventfulMapping, eventfulResponse)
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data[0].title, 'Wine Lover\'s New Year\'s Eve at Volo Restaurant Wine Bar');
                     assert.equal(data[0].address, '2008 West Roscoe');
                     assert.equal(data[0].latitude, '41.9433228');
@@ -62,18 +65,18 @@ describe('Component: TransformResponse', function () {
                     assert.equal(data[1].longitude, '-87.6127372');
                 });
         });
-        it('check if null values are deleted from the response', function () {
-            return transformResponse
+        it('check if null values are deleted from the response', () => {
+            return TransformResponse
                 .mappingResponse(mappgingWithNullValue, eventfulResponse)
-                .then(function (data) {
+                .then(data => {
                     assert.equal(typeof data[0].count, 'undefined');
                     assert.equal(typeof data[1].count, 'undefined');
                 });
         });
-        it('check root and non array base list is correctly handled', function () {
-            return transformResponse
+        it('check root and non array base list is correctly handled', () => {
+            return TransformResponse
                 .mappingResponse(cinemaMapping, cinemaResponse)
-                .then(function (data) {
+                .then(data => {
                     assert.equal(data[0].title, 'Cinema Pierrot');
                     assert.equal(data[0].address, 'Via Camillo De Meis, 58');
                     assert.equal(data[0].telephone, '+39 0815 967 802');
@@ -95,7 +98,7 @@ describe('Component: TransformResponse', function () {
 
 });
 
-var googlePlacesMapping = {
+let googlePlacesMapping = {
     list: 'results',
     items: [
         {
@@ -117,7 +120,7 @@ var googlePlacesMapping = {
     ]
 };
 
-var mappingWithFunction = {
+let mappingWithFunction = {
     list: 'results',
     items: [
         {
@@ -145,7 +148,7 @@ var mappingWithFunction = {
     ]
 };
 
-var mappingWithInvalidFunction = {
+let mappingWithInvalidFunction = {
     list: 'results',
     items: [
         {
@@ -173,7 +176,7 @@ var mappingWithInvalidFunction = {
     ]
 };
 
-var eventfulMapping = {
+let eventfulMapping = {
     list: 'events.event',
     items: [
         {
@@ -195,7 +198,7 @@ var eventfulMapping = {
     ]
 };
 
-var mappgingWithNullValue = {
+let mappgingWithNullValue = {
     list: 'events.event',
     items: [
         {
@@ -221,7 +224,7 @@ var mappgingWithNullValue = {
     ]
 };
 
-var cinemaMapping = {
+let cinemaMapping = {
     items: [
         {
             termName: 'title',
@@ -250,7 +253,7 @@ var cinemaMapping = {
     ]
 };
 
-var googlePlacesResponse = {
+let googlePlacesResponse = {
     "html_attributions": [],
     "results": [
         {
@@ -318,7 +321,7 @@ var googlePlacesResponse = {
     ]
 };
 
-var eventfulResponse = {
+let eventfulResponse = {
     "last_item":null,
     "total_items":"235",
     "first_item":null,
@@ -461,7 +464,7 @@ var eventfulResponse = {
     }
 };
 
-var cinemaResponse = {
+let cinemaResponse = {
     "0": {
         "idCinema":65,
         "nome":"Cinema Pierrot",

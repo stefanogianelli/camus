@@ -1,11 +1,13 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.Types.ObjectId;
+'use strict';
+
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
+let ObjectId = Schema.Types.ObjectId;
 
 /**
  * Schema for associations
  */
-var associationSchema = new Schema({
+let associationSchema = new Schema({
     dimension: {
         type: String,
         required: true
@@ -23,7 +25,7 @@ var associationSchema = new Schema({
 /**
  * Schema for geographic association
  */
-var geoSchema = new Schema({
+let geoSchema = new Schema({
     coord: {
         type: [Number], //[Longitude, Latitude]
         index: '2d'
@@ -37,7 +39,7 @@ var geoSchema = new Schema({
 /**
  * Schema for primary services associations with the CDT nodes
  */
-var primaryServiceSchema = new Schema ({
+let primaryServiceSchema = new Schema ({
     _idOperation: {
         type: ObjectId,
         required: true
@@ -50,6 +52,6 @@ var primaryServiceSchema = new Schema ({
     geo: geoSchema
 });
 
-var primaryServiceAssociation = mongoose.model('primary_service', primaryServiceSchema);
+let primaryServiceAssociation = mongoose.model('primary_service', primaryServiceSchema);
 
 module.exports = primaryServiceAssociation;

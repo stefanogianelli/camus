@@ -1,3 +1,5 @@
+'use strict';
+
 var _ = require('lodash');
 var mongoose = require('mongoose');
 var Promise = require('bluebird');
@@ -14,233 +16,239 @@ Promise.promisifyAll(serviceModel);
 Promise.promisifyAll(primaryServiceModel);
 Promise.promisifyAll(supportServiceModel);
 
-/**
- * Module constructor
- */
-var provider = function () {
-    mongoose.connection.on('error', function (err) {
-        console.log('Mongoose default connection error: ' + err);
-    });
-};
+let instance = null;
 
-/**
- * Create a connection to MongoDB
- * @param url The database url
- */
-provider.prototype.createConnection = function createConnection (url) {
-    if (!_.isUndefined(url)) {
-        mongoose.connect(url);
-    } else {
-        throw Error('No dabatase URL specified');
-    }
-};
+class Provider {
 
-/**
- * Close the connection with MongoDB
- */
-provider.prototype.closeConnection = function closeConnection () {
-    mongoose.connection.close();
-};
-
-/**
- * -------------------------------------
- * CDT METHODS
- * -------------------------------------
- */
-
-/**
- * Retrieve the CDT schema associated to the current identifier
- * @param idCDT The CDT identifier
- * @returns {*} Returns the CDT schema
- */
-provider.prototype.getCdt = function getCdt (idCDT) {
-    return cdtModel.findOneAsync({_id: idCDT});
-};
-
-/**
- * Create the list of descendant nodes of the specified nodes.
- * These nodes must have the 'value' attribute defined
- * @param idCDT The CDT identifier
- * @param nodes The node or the list of nodes
- * @returns {*} The list of son nodes
- */
-provider.prototype.getNodeDescendants = function getNodeDescendants (idCDT, nodes) {
-    if (!_.isUndefined(idCDT) && !_.isUndefined(nodes) && !_.isEmpty(nodes)) {
-        //adapt the inputs for the search
-        if (!_.isArray(nodes)) {
-            nodes = _.toArray(nodes);
-        } else {
-            nodes = _.pluck(nodes, 'value');
+    constructor () {
+        if (!instance) {
+            mongoose.connection.on('error', function (err) {
+                console.log('Mongoose default connection error: ' + err);
+            });
+            instance = this;
         }
-        return cdtModel
-            .aggregateAsync(
-                {$match: {_id: idCDT}},
-                {$unwind: '$context'},
-                {$match: {'context.parents': {$in: nodes}}},
-                {
-                    $group: {
-                        _id: '$_id',
-                        context: {
-                            $push: {
-                                dimension: '$context.name',
-                                values: '$context.values'
+        return instance;
+    }
+
+    /**
+     * Create a connection to MongoDB
+     * @param url The database url
+     */
+    createConnection (url) {
+        if (!_.isUndefined(url)) {
+            mongoose.connect(url);
+        } else {
+            throw Error('No dabatase URL specified');
+        }
+    }
+
+    /**
+     * Close the connection with MongoDB
+     */
+    closeConnection () {
+        mongoose.connection.close();
+    }
+
+    /**
+     * -------------------------------------
+     * CDT METHODS
+     * -------------------------------------
+     */
+
+    /**
+     * Retrieve the CDT schema associated to the current identifier
+     * @param idCDT The CDT identifier
+     * @returns {*} Returns the CDT schema
+     */
+    getCdt (idCDT) {
+        return cdtModel.findOneAsync({_id: idCDT});
+    }
+
+    /**
+     * Create the list of descendant nodes of the specified nodes.
+     * These nodes must have the 'value' attribute defined
+     * @param idCDT The CDT identifier
+     * @param nodes The node or the list of nodes
+     * @returns {*} The list of son nodes
+     */
+    getNodeDescendants (idCDT, nodes) {
+        if (!_.isUndefined(idCDT) && !_.isUndefined(nodes) && !_.isEmpty(nodes)) {
+            //adapt the inputs for the search
+            if (!_.isArray(nodes)) {
+                nodes = _.toArray(nodes);
+            } else {
+                nodes = _.pluck(nodes, 'value');
+            }
+            return cdtModel
+                .aggregateAsync(
+                    {$match: {_id: idCDT}},
+                    {$unwind: '$context'},
+                    {$match: {'context.parents': {$in: nodes}}},
+                    {
+                        $group: {
+                            _id: '$_id',
+                            context: {
+                                $push: {
+                                    dimension: '$context.name',
+                                    values: '$context.values'
+                                }
                             }
                         }
                     }
-                }
-            );
+                );
+        }
     }
-};
 
-/**
- * -------------------------------------
- * SERVICE DESCRIPTION METHODS
- * -------------------------------------
- */
+    /**
+     * -------------------------------------
+     * SERVICE DESCRIPTION METHODS
+     * -------------------------------------
+     */
 
-/**
- * Retrieve the service description for the requested operation.
- * This schema contains only the requested operation.
- * @param idOperation The operation identifier
- * @returns {*} Returns the service and operation schema
- */
-provider.prototype.getServiceByOperationId = function getServiceOperation (idOperation) {
-    if (!_.isUndefined(idOperation)) {
-        return serviceModel.findByOperationIdAsync(idOperation);
+    /**
+     * Retrieve the service description for the requested operation.
+     * This schema contains only the requested operation.
+     * @param idOperation The operation identifier
+     * @returns {*} Returns the service and operation schema
+     */
+    getServiceByOperationId (idOperation) {
+        if (!_.isUndefined(idOperation)) {
+            return serviceModel.findByOperationIdAsync(idOperation);
+        }
     }
-};
 
-/**
- * Retrieve the service descriptions for the requested operations.
- * This schema contains only the requested operations.
- * @param idOperations The list of operation identifiers
- * @returns {*} Returns the service list with only the requested operations
- */
-provider.prototype.getServicesByOperationIds = function getServiceOperation (idOperations) {
-    if (!_.isUndefined(idOperations)) {
-        return serviceModel.findByOperationIdsAsync(idOperations);
+    /**
+     * Retrieve the service descriptions for the requested operations.
+     * This schema contains only the requested operations.
+     * @param idOperations The list of operation identifiers
+     * @returns {*} Returns the service list with only the requested operations
+     */
+    getServicesByOperationIds (idOperations) {
+        if (!_.isUndefined(idOperations)) {
+            return serviceModel.findByOperationIdsAsync(idOperations);
+        }
     }
-};
 
-/**
- * Retrieve a service description by it's name and operation name.
- * @param serviceNames The object containing the service and operation names.
- * This object must be in form { name: 'service name', operation: 'operation name' }
- * @returns {*} The service and operation description
- */
-provider.prototype.getServicesByNames = function getServicesByNames (serviceNames) {
-    if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
-        var whereClause = {
-            $or: []
-        };
-        whereClause.$or = _.map(serviceNames, function (s) {
-            return {
-                $and: [{
-                    name: s.name,
-                    'operations.name': s.operation
-                }]
+    /**
+     * Retrieve a service description by it's name and operation name.
+     * @param serviceNames The object containing the service and operation names.
+     * This object must be in form { name: 'service name', operation: 'operation name' }
+     * @returns {*} The service and operation description
+     */
+    getServicesByNames (serviceNames) {
+        if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
+            let whereClause = {
+                $or: []
             };
-        });
-        return serviceModel.findAsync(whereClause);
+            whereClause.$or = _.map(serviceNames, s => {
+                return {
+                    $and: [{
+                        name: s.name,
+                        'operations.name': s.operation
+                    }]
+                };
+            });
+            return serviceModel.findAsync(whereClause);
+        }
     }
-};
 
-/**
- * -------------------------------------
- * PRIMARY SERVICE ASSOCIATION METHODS
- * -------------------------------------
- */
+    /**
+     * -------------------------------------
+     * PRIMARY SERVICE ASSOCIATION METHODS
+     * -------------------------------------
+     */
 
-/**
- * Search the services that are associated to the specified attributes.
- * These attributes must have this format:
- * { dimension: 'dimension name', value: 'associated value' }
- * @param idCDT The CDT identifier
- * @param attributes The list of filter nodes selected
- * @returns {*} The list of operation id, with ranking and weight, of the found services
- */
-provider.prototype.filterPrimaryServices = function filterPrimaryServices (idCDT, attributes) {
-    if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
-        var associations = _.map(attributes, function (a) {
-            return {
-                'associations.dimension': a.dimension,
-                'associations.value': a.value
-            }
-        });
-        var clause = [
-            {
-                $match: {
-                    _idCDT: idCDT
+    /**
+     * Search the services that are associated to the specified attributes.
+     * These attributes must have this format:
+     * { dimension: 'dimension name', value: 'associated value' }
+     * @param idCDT The CDT identifier
+     * @param attributes The list of filter nodes selected
+     * @returns {*} The list of operation id, with ranking and weight, of the found services
+     */
+    filterPrimaryServices (idCDT, attributes) {
+        if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
+            let associations = _.map(attributes, a => {
+                return {
+                    'associations.dimension': a.dimension,
+                    'associations.value': a.value
                 }
-            },
-            {
-                $unwind: '$associations'
-            },
-            {
-                $match: {
-                    $or: associations
+            });
+            let clause = [
+                {
+                    $match: {
+                        _idCDT: idCDT
+                    }
+                },
+                {
+                    $unwind: '$associations'
+                },
+                {
+                    $match: {
+                        $or: associations
+                    }
+                },
+                {
+                    $project: {
+                        _idOperation: '$_idOperation',
+                        ranking: '$associations.ranking',
+                        _id: 0
+                    }
                 }
-            },
-            {
-                $project: {
-                    _idOperation: '$_idOperation',
-                    ranking: '$associations.ranking',
-                    _id: 0
-                }
-            }
-        ];
-        return primaryServiceModel.aggregateAsync(clause);
+            ];
+            return primaryServiceModel.aggregateAsync(clause);
+        }
     }
-};
 
-/**
- * -------------------------------------
- * SUPPORT SERVICE ASSOCIATION METHODS
- * -------------------------------------
- */
+    /**
+     * -------------------------------------
+     * SUPPORT SERVICE ASSOCIATION METHODS
+     * -------------------------------------
+     */
 
-/**
- * Search the support services associated to specific attributes
- * @param idCDT The CDT identifier
- * @param category The service category
- * @param attributes The list of attributes
- * @returns {*} The list of services found, with the number of constraints defined for each operation and the count of constraint that are satisfied
- */
-provider.prototype.filterSupportServices = function filterSupportServices (idCDT, category, attributes) {
-    if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
-        var associations = _.map(attributes, function (a) {
-            return {
-                'associations.dimension': a.dimension,
-                'associations.value': a.value
-            }
-        });
-        var clause = [
-            {
-                $match: {
-                    _idCDT: idCDT,
-                    category: category
+    /**
+     * Search the support services associated to specific attributes
+     * @param idCDT The CDT identifier
+     * @param category The service category
+     * @param attributes The list of attributes
+     * @returns {*} The list of services found, with the number of constraints defined for each operation and the count of constraint that are satisfied
+     */
+    filterSupportServices (idCDT, category, attributes) {
+        if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
+            let associations = _.map(attributes, a => {
+                return {
+                    'associations.dimension': a.dimension,
+                    'associations.value': a.value
                 }
-            },
-            {
-                $unwind: '$associations'
-            },
-            {
-                $match: {
-                    $or: associations
+            });
+            let clause = [
+                {
+                    $match: {
+                        _idCDT: idCDT,
+                        category: category
+                    }
+                },
+                {
+                    $unwind: '$associations'
+                },
+                {
+                    $match: {
+                        $or: associations
+                    }
+                },
+                {
+                    $project: {
+                        _idOperation: '$_idOperation',
+                        dimension: '$associations.dimension',
+                        value: '$associations.value',
+                        constraintCount: '$constraintCount',
+                        _id: 0
+                    }
                 }
-            },
-            {
-                $project: {
-                    _idOperation: '$_idOperation',
-                    dimension: '$associations.dimension',
-                    value: '$associations.value',
-                    constraintCount: '$constraintCount',
-                    _id: 0
-                }
-            }
-        ];
-        return supportServiceModel.aggregateAsync(clause);
+            ];
+            return supportServiceModel.aggregateAsync(clause);
+        }
     }
-};
+}
 
-module.exports = new provider();
+module.exports = Provider;
