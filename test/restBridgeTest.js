@@ -39,6 +39,23 @@ describe('Component: RestBridge', () => {
         });
     });
 
+    describe('#searchMapping()', () => {
+        it('check if simple attribute are correctly handled', () => {
+            let value = RestBridge._searchMapping(simpleParameters, 'CityName');
+            assert.equal(value, 'Milan');
+        });
+        it('check if composite attributes are correctly handled', () => {
+            let latitude = RestBridge._searchMapping(compositeParameters, 'CityCoord.Latitude');
+            assert.equal(latitude, 45.478906);
+            let longitude = RestBridge._searchMapping(compositeParameters, 'CityCoord.Longitude');
+            assert.equal(longitude, 9.234297);
+        });
+        it('check value if a non valid mapping is provided', () => {
+            let value =  RestBridge._searchMapping(simpleParameters, 'Budget');
+            assert.equal(typeof value, 'undefined');
+        });
+    });
+
 });
 
 let noDefaultParameterService = {
@@ -61,7 +78,7 @@ let noDefaultParameterService = {
                     required: false,
                     default: 'restaurant',
                     mappingCDT: [
-                        'search_key'
+                        'SearchKey'
                     ]
                 },
                 {
@@ -119,7 +136,7 @@ let noValueParameterService = {
                     required: false,
                     default: 'restaurant',
                     mappingCDT: [
-                        'search_key'
+                        'SearchKey'
                     ]
                 },
                 {
@@ -177,7 +194,7 @@ let wrongBasePath = {
                     required: false,
                     default: 'restaurant',
                     mappingCDT: [
-                        'search_key'
+                        'SearchKey'
                     ]
                 },
                 {
@@ -213,3 +230,26 @@ let wrongBasePath = {
         }
     ]
 };
+
+let simpleParameters = [
+    {
+        dimension: 'CityName',
+        value: 'Milan'
+    }
+];
+
+let compositeParameters = [
+    {
+        dimension: 'CityCoord',
+        fields: [
+            {
+                name: 'Longitude',
+                value: '9.234297'
+            },
+            {
+                name: 'Latitude',
+                value: '45.478906'
+            }
+        ]
+    }
+];

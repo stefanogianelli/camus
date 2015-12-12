@@ -257,8 +257,14 @@ let cdt = {
                 },
                 {
                     name: 'CityCoord',
-                    format: 'Latitude|Longitude',
-                    searchFunction: 'locationSearch'
+                    fields: [
+                        {
+                            name: 'Latitude'
+                        },
+                        {
+                            name: 'Longitude'
+                        }
+                    ]
                 }
             ]
         },
@@ -354,55 +360,6 @@ let googlePlaces = {
                     }
                 ]
             }
-        },
-        {
-            name: 'nearbySearch',
-            path: '/nearbysearch/json',
-            parameters: [
-                {
-                    name: 'location',
-                    required: true,
-                    default: '-33.8670522,151.1957362',
-                    collectionFormat: 'csv',
-                    mappingCDT: [
-                        'CityCoord#Latitude',
-                        'CityCoord#Longitude'
-                    ]
-                },
-                {
-                    name: 'radius',
-                    required: true,
-                    default: '50',
-                    mappingCDT: []
-                },
-                {
-                    name: 'key',
-                    required: true,
-                    default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio',
-                    mappingCDT: []
-                }
-            ],
-            responseMapping: {
-                list: 'results',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'name'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'formatted_address'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'geometry.location.lat'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'geometry.location.lng'
-                    }
-                ]
-            }
         }
     ]
 };
@@ -412,10 +369,14 @@ let googlePlacesAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
-            dimension: 'InterestTopic',
-            value: 'Restaurant',
-            ranking: 1,
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'InterestTopic',
+                    value: 'Restaurant',
+                    ranking: 1
+                }
+            ]
         }
     ];
 };
@@ -484,10 +445,14 @@ let eventfulAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
-            dimension: 'InterestTopic',
-            value: 'Restaurant',
-            ranking: 2,
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'InterestTopic',
+                    value: 'Restaurant',
+                    ranking: 2
+                }
+            ]
         }
     ];
 };
@@ -652,10 +617,14 @@ let cinemaStubAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
-            dimension: 'InterestTopic',
-            value: 'Cinema',
-            ranking: 1,
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'InterestTopic',
+                    value: 'Cinema',
+                    ranking: 1
+                }
+            ]
         }
     ];
 };
@@ -676,7 +645,7 @@ let theaterStub = {
                     required: true,
                     default: '45.46867',
                     mappingCDT: [
-                        'CityCoord#Latitude'
+                        'CityCoord.Latitude'
                     ]
                 },
                 {
@@ -684,7 +653,7 @@ let theaterStub = {
                     required: true,
                     default: '9.11144',
                     mappingCDT: [
-                        'CityCoord#Longitude'
+                        'CityCoord.Longitude'
                     ]
                 }
             ],
@@ -726,17 +695,15 @@ let theaterStubAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
-            dimension: 'InterestTopic',
-            value: 'Theater',
-            ranking: 2,
-            _idCDT: idCDT
-        },
-        {
-            _idOperation: idOperation,
-            dimension: 'CityCoord',
-            value: '45.46427|9.18951|10',
-            format: 'Latitude|Longitude|Radius',
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'InterestTopic',
+                    value: 'Theater',
+                    ranking: 2
+                }
+            ],
+            loc: [9.18951, 45.46427]
         }
     ];
 };
@@ -770,7 +737,7 @@ let mericiPrimary = {
                     required: false,
                     default: '45.46867',
                     mappingCDT: [
-                        'CityCoord#Latitude'
+                        'CityCoord.Latitude'
                     ]
                 },
                 {
@@ -778,7 +745,7 @@ let mericiPrimary = {
                     required: false,
                     default: '9.11144',
                     mappingCDT: [
-                        'CityCoord#Longitude'
+                        'CityCoord.Longitude'
                     ]
                 }
             ],
@@ -842,7 +809,7 @@ let mericiPrimary = {
                     required: false,
                     default: '45.46867',
                     mappingCDT: [
-                        'CityCoord#Latitude'
+                        'CityCoord.Latitude'
                     ]
                 },
                 {
@@ -850,7 +817,7 @@ let mericiPrimary = {
                     required: false,
                     default: '9.11144',
                     mappingCDT: [
-                        'CityCoord#Longitude'
+                        'CityCoord.Longitude'
                     ]
                 }
             ],
@@ -914,7 +881,7 @@ let mericiPrimary = {
                     required: false,
                     default: '45.46867',
                     mappingCDT: [
-                        'CityCoord#Latitude'
+                        'CityCoord.Latitude'
                     ]
                 },
                 {
@@ -922,7 +889,7 @@ let mericiPrimary = {
                     required: false,
                     default: '9.11144',
                     mappingCDT: [
-                        'CityCoord#Longitude'
+                        'CityCoord.Longitude'
                     ]
                 }
             ],
@@ -986,7 +953,7 @@ let mericiPrimary = {
                     required: false,
                     default: '45.46867',
                     mappingCDT: [
-                        'CityCoord#Latitude'
+                        'CityCoord.Latitude'
                     ]
                 },
                 {
@@ -994,7 +961,7 @@ let mericiPrimary = {
                     required: false,
                     default: '9.11144',
                     mappingCDT: [
-                        'CityCoord#Longitude'
+                        'CityCoord.Longitude'
                     ]
                 }
             ],
@@ -1044,31 +1011,47 @@ let mericiPrimaryAssociations = (idCDT, idHotel, idFood, idTheater, idMuseum) =>
     return [
         {
             _idOperation: idHotel,
-            dimension: 'InterestTopic',
-            value: 'Hotel',
-            ranking: 1,
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'InterestTopic',
+                    value: 'Hotel',
+                    ranking: 1
+                }
+            ]
         },
         {
             _idOperation: idFood,
-            dimension: 'InterestTopic',
-            value: 'Restaurant',
-            ranking: 3,
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'InterestTopic',
+                    value: 'Restaurant',
+                    ranking: 3
+                }
+            ]
         },
         {
             _idOperation: idTheater,
-            dimension: 'InterestTopic',
-            value: 'Theater',
-            ranking: 1,
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'InterestTopic',
+                    value: 'Theater',
+                    ranking: 1
+                }
+            ]
         },
         {
             _idOperation: idMuseum,
-            dimension: 'InterestTopic',
-            value: 'Museum',
-            ranking: 1,
-            _idCDT: idCDT
+            _idCDT: idCDT,
+            associations: [
+                {
+                    dimension: 'InterestTopic',
+                    value: 'Museum',
+                    ranking: 1
+                }
+            ]
         }
     ];
 };

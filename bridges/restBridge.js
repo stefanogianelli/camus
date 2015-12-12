@@ -77,7 +77,7 @@ class RestBridge {
                             break;
                     }
                     _.forEach(p.mappingCDT, m => {
-                        let v = RestBridge._searchMapping(paramNodes, m);
+                        let v = this._searchMapping(paramNodes, m);
                         if (!_.isEmpty(v)) {
                             if (_.isEmpty(values)) {
                                 values = v;
@@ -110,8 +110,16 @@ class RestBridge {
      * @returns {*} The value found, if exists
      * @private
      */
-    static _searchMapping (nodes, name) {
-        return _.result(_.find(nodes, {dimension: name}), 'value');
+    _searchMapping (nodes, name) {
+        let names = name.split('.');
+        let obj = {};
+        if (names.length > 0) {
+            obj = _.find(nodes, {dimension: names[0]});
+        }
+        if (names.length > 1) {
+            obj = _.find(obj.fields, {name: names[1]});
+        }
+        return _.result(obj, 'value');
     }
 
     /**
