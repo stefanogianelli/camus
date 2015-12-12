@@ -107,7 +107,7 @@ class TransformResponse {
         _.forEach(mapping.items, m => {
             if (_.isString(m.path) && !_.isEmpty(m.path)) {
                 let v = this._getItemValue(item, m.path);
-                if (!_.isUndefined(v) && !TransformResponse.isInvalidValue(v)) {
+                if (!_.isUndefined(v) && !this._isInvalidValue(v)) {
                     obj[m.termName] = v;
                 }
             }
@@ -147,7 +147,7 @@ class TransformResponse {
      * @returns {boolean} True if it's invalid, false otherwise
      * @private
      */
-    static isInvalidValue (value) {
+    _isInvalidValue (value) {
         return _.isEqual(value, null) || _.isEqual(value, '');
     }
 }

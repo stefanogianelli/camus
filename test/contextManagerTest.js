@@ -44,26 +44,26 @@ describe('Component: ContextManager', () => {
                     assert.equal(data.filterNodes[4].dimension, 'Tipology');
                     assert.equal(data.filterNodes[4].value, 'Train');
                     //ranking nodes
-                    assert.equal(data.rankingNodes.length, 1);
-                    assert.equal(data.rankingNodes[0].dimension, 'Festivita');
-                    assert.equal(data.rankingNodes[0].value, 'Capodanno');
+                    assert.equal(data.rankingNodes.length, 2);
+                    assert.equal(data.rankingNodes[0].dimension, 'CityName');
+                    assert.equal(data.rankingNodes[0].value, 'Milan');
+                    assert.equal(data.rankingNodes[1].dimension, 'Festivita');
+                    assert.equal(data.rankingNodes[1].value, 'Capodanno');
                     //specific nodes
-                    assert.equal(data.specificNodes.length, 2);
-                    assert.equal(data.specificNodes[0].dimension, 'CityName');
-                    assert.equal(data.specificNodes[0].value, 'Milan');
-                    assert.equal(data.specificNodes[1].dimension, 'CityCoord');
-                    assert.equal(data.specificNodes[1].fields[0].name, 'Longitude');
-                    assert.equal(data.specificNodes[1].fields[0].value, '9.234297');
-                    assert.equal(data.specificNodes[1].fields[1].name, 'Latitude');
-                    assert.equal(data.specificNodes[1].fields[1].value, '45.478906');
+                    assert.equal(data.specificNodes.length, 1);
+                    assert.equal(data.specificNodes[0].dimension, 'CityCoord');
+                    assert.equal(data.specificNodes[0].fields[0].name, 'Longitude');
+                    assert.equal(data.specificNodes[0].fields[0].value, '9.234297');
+                    assert.equal(data.specificNodes[0].fields[1].name, 'Latitude');
+                    assert.equal(data.specificNodes[0].fields[1].value, '45.478906');
                     //parameter nodes
                     assert.equal(data.parameterNodes.length, 4);
-                    assert.equal(data.parameterNodes[0].dimension, 'Number');
-                    assert.equal(data.parameterNodes[0].value, 4);
-                    assert.equal(data.parameterNodes[1].dimension, 'Budget');
-                    assert.equal(data.parameterNodes[1].value, 'Low');
-                    assert.equal(data.parameterNodes[2].dimension, 'CityName');
-                    assert.equal(data.parameterNodes[2].value, 'Milan');
+                    assert.equal(data.parameterNodes[0].dimension, 'CityName');
+                    assert.equal(data.parameterNodes[0].value, 'Milan');
+                    assert.equal(data.parameterNodes[1].dimension, 'Number');
+                    assert.equal(data.parameterNodes[1].value, 4);
+                    assert.equal(data.parameterNodes[2].dimension, 'Budget');
+                    assert.equal(data.parameterNodes[2].value, 'Low');
                     assert.equal(data.parameterNodes[3].dimension, 'CityCoord');
                     assert.equal(data.parameterNodes[3].fields[0].name, 'Longitude');
                     assert.equal(data.parameterNodes[3].fields[0].value, '9.234297');
@@ -104,61 +104,86 @@ describe('Component: ContextManager', () => {
     describe('#getNodes()', () => {
        it('check if correct filter nodes are returned', () => {
            return ContextManager
-               ._getNodes('filter', mergedCdt(_idCDT).context, true)
+               ._getFilterNodes(_idCDT, mergedCdt(_idCDT).context)
                .then(results => {
-                   assert.equal(results.length, 3);
+                   assert.equal(results.length, 5);
                    assert.equal(results[0].dimension, 'InterestTopic');
                    assert.equal(results[0].value, 'Restaurant');
                    assert.equal(results[1].dimension, 'Budget');
                    assert.equal(results[1].value, 'Low');
                    assert.equal(results[2].dimension, 'Transport');
                    assert.equal(results[2].value, 'PublicTransport');
+                   assert.equal(results[3].dimension, 'Tipology');
+                   assert.equal(results[3].value, 'Bus');
+                   assert.equal(results[4].dimension, 'Tipology');
+                   assert.equal(results[4].value, 'Train');
                });
        });
         it('check if correct ranking nodes are returned', () => {
             return ContextManager
-                ._getNodes('ranking', mergedCdt(_idCDT).context, true)
+                ._getRankingNodes(_idCDT, mergedCdt(_idCDT).context)
                 .then(results => {
-                    assert.equal(results.length, 1);
-                    assert.equal(results[0].dimension, 'Festivita');
-                    assert.equal(results[0].value, 'Capodanno');
+                    assert.equal(results.length, 2);
+                    assert.equal(results[0].dimension, 'CityName');
+                    assert.equal(results[0].value, 'Milan');
+                    assert.equal(results[1].dimension, 'Festivita');
+                    assert.equal(results[1].value, 'Capodanno');
                 });
         });
         it('check if correct parameter nodes are returned', () => {
             return ContextManager
-                ._getNodes('parameter', mergedCdt(_idCDT).context, true)
+                ._getParameterNodes(mergedCdt(_idCDT).context)
                 .then(results => {
-                    assert.equal(results.length, 2);
-                    assert.equal(results[0].dimension, 'Number');
-                    assert.equal(results[0].value, 4);
-                    assert.equal(results[1].dimension, 'Budget');
-                    assert.equal(results[1].value, 'Low');
+                    assert.equal(results.length, 4);
+                    assert.equal(results[0].dimension, 'CityName');
+                    assert.equal(results[0].value, 'Milan');
+                    assert.equal(results[1].dimension, 'Number');
+                    assert.equal(results[1].value, 4);
+                    assert.equal(results[2].dimension, 'Budget');
+                    assert.equal(results[2].value, 'Low');
+                    assert.equal(results[3].dimension, 'CityCoord');
+                    assert.equal(results[3].fields[0].name, 'Longitude');
+                    assert.equal(results[3].fields[0].value, '9.234297');
+                    assert.equal(results[3].fields[1].name, 'Latitude');
+                    assert.equal(results[3].fields[1].value, '45.478906');
+                });
+        });
+        it('check if correct specific nodes are returned', () => {
+            return ContextManager
+                ._getSpecificNodes(mergedCdt(_idCDT).context)
+                .then(results => {
+                    assert.equal(results.length, 1);
+                    assert.equal(results[0].dimension, 'CityCoord');
+                    assert.equal(results[0].fields[0].name, 'Longitude');
+                    assert.equal(results[0].fields[0].value, '9.234297');
+                    assert.equal(results[0].fields[1].name, 'Latitude');
+                    assert.equal(results[0].fields[1].value, '45.478906');
                 });
         });
     });
 
     describe('#getInterestTopic()', () => {
         it('check if correct interest topic are returned', () => {
-            let interestTopic = ContextManager.constructor._getInterestTopic(mergedCdt(_idCDT));
+            let interestTopic = ContextManager._getInterestTopic(mergedCdt(_idCDT));
             assert.equal(interestTopic, 'Restaurant');
         });
         it('check error when sending empty context', () => {
             try {
-                ContextManager.constructor._getInterestTopic(emptyContext(_idCDT));
+                ContextManager._getInterestTopic(emptyContext(_idCDT));
             } catch (e) {
                 assert.equal(e.message, 'No context selected');
             }
         });
         it('check error when sending empty object', () => {
             try {
-                ContextManager.constructor._getInterestTopic({ });
+                ContextManager._getInterestTopic({ });
             } catch (e) {
                 assert.equal(e.message, 'No context selected');
             }
         });
         it('check error when sending context without interest topic', () => {
             try {
-                ContextManager.constructor._getInterestTopic(noInterestTopicContext(_idCDT));
+                ContextManager._getInterestTopic(noInterestTopicContext(_idCDT));
             } catch (e) {
                 assert.equal(e.message, 'No interest topic selected');
             }

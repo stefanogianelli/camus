@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 //cdt
 let cdt = {
@@ -208,15 +208,15 @@ let decoratedCdt = idCDT => {
         ],
         rankingNodes: [
             {
+                dimension: 'CityName',
+                value: 'Milan'
+            },
+            {
                 dimension: 'Festivita',
                 value: 'Capodanno'
             }
         ],
         specificNodes: [
-            {
-                dimension: 'CityName',
-                value: 'Milan'
-            },
             {
                 dimension: 'CityCoord',
                 fields: [
@@ -247,6 +247,19 @@ let decoratedCdt = idCDT => {
             {
                 dimension: 'SearchKey',
                 value: 'restaurantinnewyork'
+            },
+            {
+                dimension: 'CityCoord',
+                fields: [
+                    {
+                        name: 'Longitude',
+                        value: '9.234297'
+                    },
+                    {
+                        name: 'Latitude',
+                        value: '45.478906'
+                    }
+                ]
             }
         ],
         supportServiceCategories: [ 'Transport' ],
@@ -688,11 +701,6 @@ let googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCD
                     ranking: 1
                 },
                 {
-                    dimension: 'City',
-                    value: 'Milan',
-                    ranking: 1
-                },
-                {
                     dimension: 'Tipology',
                     value: 'DinnerWithFriends',
                     ranking: 1
@@ -868,17 +876,17 @@ let atmAssociation = (idOperation, idCDT) => {
             _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 2,
+            constraintCount: 1,
             associations: [
                 {
                     dimension: 'Tipology',
                     value: 'Bus'
-                },
-                {
-                    dimension: 'City',
-                    value: 'Milan'
                 }
-            ]
+            ],
+            geo: {
+                coord: [9.18951, 45.46427],
+                radius: 10
+            }
         }
     ];
 };
@@ -892,17 +900,17 @@ let atacAssociation = (idOperation, idCDT) => {
             _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 2,
+            constraintCount: 1,
             associations: [
                 {
                     dimension: 'Tipology',
                     value: 'Bus'
-                },
-                {
-                    dimension: 'City',
-                    value: 'Rome'
                 }
-            ]
+            ],
+            geo: {
+                coord: [12.51133, 41.89193],
+                radius: 18
+            }
         }
     ];
 };
@@ -937,17 +945,17 @@ let trenordAssociation = (idOperation, idCDT) => {
             _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 2,
+            constraintCount: 1,
             associations: [
                 {
                     dimension: 'Tipology',
                     value: 'Train'
-                },
-                {
-                    dimension: 'City',
-                    value: 'Milan'
                 }
-            ]
+            ],
+            geo: {
+                coord: [9.18951, 45.46427],
+                radius: 10
+            }
         }
     ];
 };

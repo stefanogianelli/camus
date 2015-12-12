@@ -1,24 +1,37 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+'use strict';
 
-var forEnum = 'filter parameter ranking filter|parameter ranking|parameter'.split(' ');
+let mongoose = require('mongoose');
+let Schema = mongoose.Schema;
+
+let forEnum = 'filter parameter ranking filter|parameter ranking|parameter'.split(' ');
+
+/**
+ * Field schema
+ */
+let fieldSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    }
+});
 
 /**
  * Parameter schema
  */
-var ParamSchema = new Schema({
+let ParameterSchema = new Schema({
     name: {
         type: String,
         required: true
     },
     type: String,
-    enum: [String]
+    enum: [String],
+    fields: [fieldSchema]
 });
 
 /**
  * Node schema
  */
-var NodeSchema = new Schema({
+let NodeSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -30,7 +43,7 @@ var NodeSchema = new Schema({
     },
     supportCategory: String,
     values: [String],
-    params: [ParamSchema],
+    parameters: [ParameterSchema],
     forbidden: [String],
     parents: [String],
     parent: String
@@ -39,11 +52,11 @@ var NodeSchema = new Schema({
 /**
  * Schema for CDT
  */
-var cdtSchema = new Schema ({
+let cdtSchema = new Schema ({
     _userId: String,
     context: [NodeSchema]
 });
 
-var cdtModel = mongoose.model('cdt_description', cdtSchema);
+let cdtModel = mongoose.model('cdt_description', cdtSchema);
 
 module.exports = cdtModel;

@@ -7,11 +7,6 @@ let Provider = new provider();
 
 class ContextManager {
 
-    constructor () {
-        //List of dimensions that needs a specific search
-        this._specificDimensions = ['Location'];
-    }
-
     /**
      * It takes as input the user's context and transform it into the decorated one.
      * This context is first merged with the full CDT in the database.
@@ -36,7 +31,7 @@ class ContextManager {
                     Promise
                         .props({
                             //get the interest topic
-                            interestTopic: ContextManager._getInterestTopic(mergedCdt),
+                            interestTopic: this._getInterestTopic(mergedCdt),
                             //find the filter nodes (plus their respective descendants)
                             filterNodes: this._getFilterNodes(mergedCdt._id, mergedCdt.context),
                             //find the ranking nodes (plus their respective descendants)
@@ -176,7 +171,7 @@ class ContextManager {
      */
     _getFilterNodes (idCdt, mergedCdt) {
         return this
-            ._getNodes('filter', mergedCdt, true)
+            ._getNodes('filter', mergedCdt, false)
             .then(filter => {
                 return [filter, this._getDescendants(idCdt, filter)];
             })
@@ -194,7 +189,7 @@ class ContextManager {
      */
     _getRankingNodes (idCdt, mergedCdt) {
         return this
-            ._getNodes('ranking', mergedCdt, true)
+            ._getNodes('ranking', mergedCdt, false)
             .then(ranking => {
                 return [ranking, this._getDescendants(idCdt, ranking)];
             })
@@ -212,8 +207,8 @@ class ContextManager {
     _getParameterNodes (mergedCdt) {
         return Promise
             .join(
+                this._getNodes('parameter', mergedCdt, false),
                 this._getNodes('parameter', mergedCdt, true),
-                this._getNodes('parameter', mergedCdt, true, true),
                 (parameterNodes, specificNodes) => {
                     return _.union(parameterNodes, specificNodes);
                 });
@@ -222,12 +217,12 @@ class ContextManager {
     /**
      * Return the list of specific nodes.
      * It assumes that the specific nodes belong to the ranking category
-     * @param items The list of items (the merged CDT)
+     * @param mergedCdt The list of items (the merged CDT)
      * @returns {Promise|Request} The list of specific nodes
      * @private
      */
-    _getSpecificNodes (items) {
-        return this._getNodes('ranking', items, true, true);
+    _getSpecificNodes (mergedCdt) {
+        return this._getNodes('ranking', mergedCdt, true);
     }
 
     /**
@@ -238,51 +233,57 @@ class ContextManager {
      * This function doesn't take into account the dimensions that are labelled as specific, except when the specific flag is not set.
      * @param type The type of nodes
      * @param items The list of item (the merged CDT)
-     * @param firstStep Flag true if this is the first call to the function
-     * @param specificFlag For internal use only. If true search for specific nodes
+     * @param specificFlag If true it searches for specific nodes
      * @returns {Promise|Request} The list of nodes found
      * @private
      */
-    _getNodes (type, items, firstStep, specificFlag) {
+    _getNodes (type, items, specificFlag) {
         if (_.isEqual(type, 'filter') || _.isEqual(type, 'ranking') || _.isEqual(type, 'parameter')) {
             if (!_.isUndefined(items)) {
-                if (_.isUndefined(specificFlag)) {
-                    specificFlag = false;
-                }
-                //in the first call to the function the items are filtered
-                if (firstStep) {
-                    items = _.filter(items, item => {
-                        return _.includes(item.for, type);
+                //filter the items that belongs to the selected category
+                items = _.filter(items, item => {
+                    return _.includes(item.for, type);
+                });
+                let list = [];
+                let index = 0;
+                //according to the value of the specific flag, select or discard the specific nodes
+                //a parameter with multiple fields defined it's considered as specific
+                if (specificFlag) {
+                    //consider only the specific nodes (the parameter items are flattened to the root)
+                    _.forEach(_.filter(items, 'parameters'), item => {
+                        _.forEach(item.parameters, p => {
+                            if (_.has(p, 'fields') && !_.isEmpty(p.fields)) {
+                                list[index++] = p;
+                            }
+                        });
                     });
-                    //according to the value of the specific flag, select or discard the specific nodes
-                    if (specificFlag) {
-                        //consider only the specific nodes
-                        items = _.filter(items, item => {
-                            return _.includes(this._specificDimensions, item.dimension);
-                        });
-                    } else {
-                        //reject the specific nodes
-                        items = _.reject(items, item => {
-                            return _.includes(this._specificDimensions, item.dimension);
-                        });
-                    }
+                } else {
+                    //reject the specific nodes
+                    //the dimension and parameter nodes are flattened to the root
+                    _.forEach(items, item => {
+                        if (_.has(item, 'value')) {
+                            list[index++] = item;
+                        } else if (_.has(item, 'parameters')) {
+                            _.forEach(item.parameters, p => {
+                               if (!_.has(p, 'fields')) {
+                                   list[index++] = p;
+                               }
+                            });
+                        }
+                    });
                 }
                 return Promise
-                    .map(items, item => {
-                        //recall the function for parsing the parameter
-                        if (_.has(item, 'parameters')) {
-                            return this._getNodes(type, item.parameters, false);
-                        }
+                    .map(list, item => {
                         //return the value
                         if (_.has(item, 'value')) {
                             return {
                                 dimension: item.dimension || item.name,
                                 value: item.value
                             };
-                            //if the parameter has fields, return them without modifications
+                        //if the parameter has fields, return them without modifications
                         } else if (_.has(item, 'fields')) {
                             return {
-                                dimension: item.dimension || item.name,
+                                dimension: item.name,
                                 fields: item.fields
                             };
                         }
@@ -322,7 +323,7 @@ class ContextManager {
      * @returns The interest topic name
      * @private
      */
-    static _getInterestTopic (mergedCdt) {
+    _getInterestTopic (mergedCdt) {
         let context = mergedCdt.context;
         if (!_.isEmpty(context)) {
             let r = _.find(context, {dimension: 'InterestTopic'});
