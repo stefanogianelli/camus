@@ -33,8 +33,8 @@ describe('Component: QueryHandler', () => {
                 })
                 .then(responses => {
                     assert.equal(responses.length, 2);
-                    assert.equal(responses[0][0].title, 'International Restaurant & Foodservice Show-New York');
-                    assert.equal(responses[1][0].title, 'Bouley');
+                    assert.equal(responses[0][0].title, 'Bouley');
+                    assert.equal(responses[1][0].title, 'International Restaurant & Foodservice Show-New York');
                 });
         });
         it('check array composition when one service does not respond to a query', () => {

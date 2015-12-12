@@ -23,20 +23,6 @@ let associationSchema = new Schema({
 });
 
 /**
- * Schema for geographic association
- */
-let geoSchema = new Schema({
-    coord: {
-        type: [Number], //[Longitude, Latitude]
-        index: '2d'
-    },
-    radius: {
-        type: Number,
-        required: true
-    }
-});
-
-/**
  * Schema for primary services associations with the CDT nodes
  */
 let primaryServiceSchema = new Schema ({
@@ -49,7 +35,10 @@ let primaryServiceSchema = new Schema ({
         required: true
     },
     associations: [associationSchema],
-    geo: geoSchema
+    loc: {
+        type: [Number], //[Longitude, Latitude]
+        index: '2d'
+    }
 });
 
 let primaryServiceAssociation = mongoose.model('primary_service', primaryServiceSchema);

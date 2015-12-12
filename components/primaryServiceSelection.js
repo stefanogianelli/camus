@@ -28,9 +28,13 @@ class PrimaryServiceSelection  {
                     //search for services associated to the filter nodes
                     filter: Provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.filterNodes),
                     //search for services associated to the ranking nodes
-                    ranking: Provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.rankingNodes)
+                    ranking: Provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.rankingNodes),
+                    //search for specific associations
+                    specific: this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes)
                 })
                 .then(results => {
+                    //merge the ranking and specific list (specific searches are considered ranking)
+                    results.ranking = _.union(results.ranking, results.specific);
                     //discard the ranking nodes that haven't a correspondence in the filter nodes list
                     results.ranking = this._intersect(results.filter, results.ranking);
                     //add the weight values for each item
@@ -48,6 +52,34 @@ class PrimaryServiceSelection  {
                     resolve();
                 });
         })
+    }
+
+    /**
+     * This function dispatch the specific nodes to the correct search function.
+     * It collects the results and return them to the main method
+     * @param idCdt The CDT identifier
+     * @param nodes The list of specific ndoes
+     * @returns {bluebird|exports|module.exports} The list of associations found. Each association must be composed of an operation identifier and a ranking (starting from 1)
+     * @private
+     */
+    _specificSearch (idCdt, nodes) {
+        return new Promise (resolve => {
+            let promises = [];
+            //check if the node dimension have a specific search associated
+            _.forEach(nodes, node => {
+                switch (node.dimension) {
+                    case 'CityCoord':
+                        //load specific coordinates search
+                        promises.push(this._searchByCoordinates(idCdt, node));
+                        break;
+                }
+            });
+            Promise
+                .all(promises)
+                .then(results => {
+                    resolve(_.flatten(results));
+                });
+        });
     }
 
     /**
@@ -114,6 +146,28 @@ class PrimaryServiceSelection  {
                 return index !== -1;
             });
         }
+    }
+
+    /**
+     * Search associations by coordinates.
+     * It also assigns a ranking starting from the nearest service
+     * @param idCdt The CDT identifier
+     * @param node The node with the coordinates
+     * @returns {Promise.<T>} The list of operation identifiers with ranking
+     * @private
+     */
+    _searchByCoordinates (idCdt, node) {
+        return Provider
+            .searchByCoordinates(idCdt, node)
+            .map((result, index) => {
+                return {
+                    _idOperation: result._idOperation,
+                    ranking: index + 1
+                };
+            })
+            .catch(e => {
+                console.log(e);
+            });
     }
 }
 

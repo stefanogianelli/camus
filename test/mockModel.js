@@ -706,10 +706,7 @@ let googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCD
                     ranking: 1
                 }
             ],
-            geo: {
-                coord: [9.18951, 45.46427],
-                radius: 10
-            }
+            loc: [9.18951, 45.46427]
         },
         {
             _idOperation: idOperation,
@@ -883,10 +880,7 @@ let atmAssociation = (idOperation, idCDT) => {
                     value: 'Bus'
                 }
             ],
-            geo: {
-                coord: [9.18951, 45.46427],
-                radius: 10
-            }
+            loc: [9.18951, 45.46427]
         }
     ];
 };
@@ -907,10 +901,7 @@ let atacAssociation = (idOperation, idCDT) => {
                     value: 'Bus'
                 }
             ],
-            geo: {
-                coord: [12.51133, 41.89193],
-                radius: 18
-            }
+            loc: [12.51133, 41.89193]
         }
     ];
 };
@@ -952,10 +943,7 @@ let trenordAssociation = (idOperation, idCDT) => {
                     value: 'Train'
                 }
             ],
-            geo: {
-                coord: [9.18951, 45.46427],
-                radius: 10
-            }
+            loc: [9.18951, 45.46427]
         }
     ];
 };

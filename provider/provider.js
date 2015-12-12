@@ -201,6 +201,25 @@ class Provider {
     }
 
     /**
+     * Search the services that are associated near the current position
+     * @param idCdt The CDT identifier
+     * @param node The current position node
+     * @returns {*} The list of operation identifiers found
+     */
+    searchByCoordinates (idCdt, node) {
+        let radius = 1500 / 6371;
+        let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
+        let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
+        return primaryServiceModel.findAsync({
+            _idCDT: idCdt,
+            loc: {
+                $near: [longitude, latitude],
+                $maxDistance: radius
+            }
+        }, {_idOperation: 1, _id: 0});
+    }
+
+    /**
      * -------------------------------------
      * SUPPORT SERVICE ASSOCIATION METHODS
      * -------------------------------------
