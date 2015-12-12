@@ -69,11 +69,18 @@ class SupportServiceSelection {
             if (!_.isUndefined(categories) && !_.isEmpty(categories) && !_.isEmpty(decoratedCdt.filterNodes)) {
                 Promise
                     .map(categories, c => {
-                        return Provider
-                            .filterSupportServices(decoratedCdt._id, c, _.union(decoratedCdt.filterNodes, decoratedCdt.rankingNodes))
+                        return Promise
+                            .join(
+                                Provider
+                                    .filterSupportServices(decoratedCdt._id, c, _.union(decoratedCdt.filterNodes, decoratedCdt.rankingNodes)),
+                                this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes),
+                                (filterServices, customServices) => {
+                                    return this._mergeResults(filterServices, customServices);
+                                }
+                            )
                             .then(services => {
                                 //retrieve the service descriptions for the found operation identifiers
-                                return Provider.getServicesByOperationIds(_.pluck(services, '_idOperation'));
+                                return Provider.getServicesByOperationIds(services);
                             })
                             .then(services => {
                                 //compose the queries
@@ -90,6 +97,41 @@ class SupportServiceSelection {
                 resolve();
             }
         });
+    }
+
+    /**
+     * Create the final list of support services selected for a specific category
+     * @param filterServices The services found by the standard search
+     * @param customServices The services found by the custom searches
+     * @returns {Array} The operation identifiers of the selected support services
+     * @private
+     */
+    _mergeResults (filterServices, customServices) {
+        let results = [];
+        _.forEach(_.union(filterServices, customServices), s => {
+            //search if the current operation already exists in the results collection
+            let index = _.findIndex(results, i => {
+                return i._idOperation.equals(s._idOperation);
+            });
+            if (index === -1) {
+                //operation not found, so I create a new object
+                results.push({
+                    _idOperation: s._idOperation,
+                    constraintCount: s.constraintCount,
+                    count: 1
+                });
+            } else {
+                //operation found, so I increase the counter
+                results[index].count += 1
+            }
+        });
+        //get the maximum value of the count attribute
+        let maxCount = _.max(_.pluck(results, 'count'));
+        //filter out the operations with the maximum count value and that respect their total constraint counter
+        results = _.filter(results, r => {
+            return r.count === maxCount && r.constraintCount === r.count;
+        });
+        return _.pluck(results, '_idOperation');
     }
 
     /**
@@ -166,6 +208,49 @@ class SupportServiceSelection {
                 };
             }
         });
+    }
+
+    /**
+     * This function dispatch the specific nodes to the correct search function.
+     * It collects the results and return them to the main method
+     * @param idCdt The CDT identifier
+     * @param nodes The list of specific ndoes
+     * @returns {bluebird|exports|module.exports} The list of associations found. Each association must be composed of an operation identifier
+     * @private
+     */
+    _specificSearch (idCdt, nodes) {
+        return new Promise (resolve => {
+            let promises = [];
+            //check if the node dimension have a specific search associated
+            _.forEach(nodes, node => {
+                switch (node.dimension) {
+                    case 'CityCoord':
+                        //load specific coordinates search
+                        promises.push(this._searchByCoordinates(idCdt, node));
+                        break;
+                }
+            });
+            Promise
+                .all(promises)
+                .then(results => {
+                    resolve(_.flatten(results));
+                });
+        });
+    }
+
+    /**
+     * Search associations by coordinates.
+     * @param idCdt The CDT identifier
+     * @param node The node with the coordinates
+     * @returns {Promise.<T>} The list of operation identifiers
+     * @private
+     */
+    _searchByCoordinates (idCdt, node) {
+        return Provider
+            .searchSupportByCoordinates(idCdt, node)
+            .catch(e => {
+                console.log(e);
+            });
     }
 }
 

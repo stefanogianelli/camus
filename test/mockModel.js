@@ -635,9 +635,33 @@ let atac = {
     name: 'ATAC',
     type: 'support',
     protocol: 'query',
+    basePath: 'http://api.atac.it',
     operations: [
         {
-            name: 'searchAddress'
+            name: 'searchAddress',
+            path: '/searchAddress',
+            parameters: [
+                {
+                    name: 'from',
+                    collectionFormat: 'pipes',
+                    mappingTerm: [
+                        'latitude',
+                        'longitude'
+                    ]
+                },
+                {
+                    name: 'to',
+                    collectionFormat: 'pipes',
+                    mappingTerm: [
+                        'latitude',
+                        'longitude'
+                    ]
+                },
+                {
+                    name: 'key',
+                    default: 'abc123'
+                }
+            ]
         }
     ]
 };
@@ -873,7 +897,7 @@ let atmAssociation = (idOperation, idCDT) => {
             _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 1,
+            constraintCount: 2,
             associations: [
                 {
                     dimension: 'Tipology',
@@ -894,7 +918,7 @@ let atacAssociation = (idOperation, idCDT) => {
             _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 1,
+            constraintCount: 2,
             associations: [
                 {
                     dimension: 'Tipology',
@@ -936,7 +960,7 @@ let trenordAssociation = (idOperation, idCDT) => {
             _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 1,
+            constraintCount: 2,
             associations: [
                 {
                     dimension: 'Tipology',

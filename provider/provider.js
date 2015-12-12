@@ -201,12 +201,12 @@ class Provider {
     }
 
     /**
-     * Search the services that are associated near the current position
+     * Search the primary services that are associated near the current position
      * @param idCdt The CDT identifier
      * @param node The current position node
      * @returns {*} The list of operation identifiers found
      */
-    searchByCoordinates (idCdt, node) {
+    searchPrimaryByCoordinates (idCdt, node) {
         let radius = 1500 / 6371;
         let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
         let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
@@ -267,6 +267,25 @@ class Provider {
             ];
             return supportServiceModel.aggregateAsync(clause);
         }
+    }
+
+    /**
+     * Search the support services that are associated near the current position
+     * @param idCdt The CDT identifier
+     * @param node The current position node
+     * @returns {*} The list of operation identifiers found
+     */
+    searchSupportByCoordinates (idCdt, node) {
+        let radius = 1500 / 6371;
+        let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
+        let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
+        return supportServiceModel.findAsync({
+            _idCDT: idCdt,
+            loc: {
+                $near: [longitude, latitude],
+                $maxDistance: radius
+            }
+        }, {_idOperation: 1, _id: 0});
     }
 }
 

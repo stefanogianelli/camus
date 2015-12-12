@@ -39,7 +39,11 @@ let supportServiceSchema = new Schema ({
         required: true,
         default: 0
     },
-    associations: [associationSchema]
+    associations: [associationSchema],
+    loc: {
+        type: [Number], //[Longitude, Latitude]
+        index: '2d'
+    }
 });
 
 let supportServiceAssociation = mongoose.model('support_service', supportServiceSchema);

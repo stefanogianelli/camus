@@ -158,7 +158,7 @@ class PrimaryServiceSelection  {
      */
     _searchByCoordinates (idCdt, node) {
         return Provider
-            .searchByCoordinates(idCdt, node)
+            .searchPrimaryByCoordinates(idCdt, node)
             .map((result, index) => {
                 return {
                     _idOperation: result._idOperation,

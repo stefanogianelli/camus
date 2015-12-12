@@ -27,28 +27,25 @@ describe('Component: SupportServiceSelection', () => {
             return SupportServiceSelection
                 .selectServices(mockData.decoratedCdt(_idCDT))
                 .then(data => {
-                    assert.equal(data.length, 5);
-                    /*assert.equal(data[0].name, 'Wikipedia');
-                    assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={search_key}&prop=revisions&rvprop=content&format=json');
+                    assert.equal(data.length, 3);
+                    assert.equal(data[0].name, 'Wikipedia');
+                    assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={SearchKey}&prop=revisions&rvprop=content&format=json');
                     assert.equal(data[1].category, 'Transport');
                     assert.equal(data[1].service, 'ATM');
                     assert.equal(data[1].url, 'http://api.atm-mi.it/searchAddress?from={latitude|longitude}&to={latitude|longitude}&key=abc123');
                     assert.equal(data[2].category, 'Transport');
                     assert.equal(data[2].service, 'Trenord');
-                    assert.equal(data[2].url, 'http://api.trenord.it/searchStation/fromStation/{startStationName}/toStation/{endStationName}');*/
+                    assert.equal(data[2].url, 'http://api.trenord.it/searchStation/fromStation/{startStationName}/toStation/{endStationName}');
                 });
         });
         it('check response when no support service name is provided', () => {
             return SupportServiceSelection
                 .selectServices(contextNoSupportName(_idCDT))
                 .then(data => {
-                    assert.equal(data.length, 4);
-                    /*assert.equal(data[0].category, 'Transport');
-                    assert.equal(data[0].service, 'ATM');
-                    assert.equal(data[0].url, 'http://api.atm-mi.it/searchAddress?from={latitude|longitude}&to={latitude|longitude}&key=abc123');
-                    assert.equal(data[1].category, 'Transport');
-                    assert.equal(data[1].service, 'Trenord');
-                    assert.equal(data[1].url, 'http://api.trenord.it/searchStation/fromStation/{startStationName}/toStation/{endStationName}');*/
+                    assert.equal(data.length, 1);
+                    assert.equal(data[0].category, 'Transport');
+                    assert.equal(data[0].service, 'ATAC');
+                    assert.equal(data[0].url, 'http://api.atac.it/searchAddress?from={latitude|longitude}&to={latitude|longitude}&key=abc123');
                 });
         });
         it('check response when no support category is provided', () => {
@@ -129,8 +126,32 @@ let contextNoSupportName = idCDT => {
         ],
         parameterNodes: [
             {
-                dimension: 'City',
-                value: 'Milan'
+                dimension: 'CityCoord',
+                fields: [
+                    {
+                        name: 'Longitude',
+                        value: '12.492118'
+                    },
+                    {
+                        name: 'Latitude',
+                        value: '41.889757'
+                    }
+                ]
+            }
+        ],
+        specificNodes: [
+            {
+                dimension: 'CityCoord',
+                fields: [
+                    {
+                        name: 'Longitude',
+                        value: '12.492118'
+                    },
+                    {
+                        name: 'Latitude',
+                        value: '41.889757'
+                    }
+                ]
             }
         ],
         supportServiceCategories: [ 'Transport']
