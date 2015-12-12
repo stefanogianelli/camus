@@ -116,10 +116,12 @@ class RestBridge {
         if (names.length > 0) {
             obj = _.find(nodes, {dimension: names[0]});
         }
-        if (names.length > 1) {
-            obj = _.find(obj.fields, {name: names[1]});
+        if (!_.isUndefined(obj)) {
+            if (names.length > 1) {
+                obj = _.find(obj.fields, {name: names[1]});
+            }
+            return _.result(obj, 'value');
         }
-        return _.result(obj, 'value');
     }
 
     /**

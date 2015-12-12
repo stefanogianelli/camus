@@ -1,6 +1,7 @@
 'use strict';
 
 let assert = require('assert');
+var Promise = require('bluebird');
 let contextManager = require('../components/contextManager.js');
 let ContextManager = new contextManager();
 let mockDatabase = require('./mockDatabaseCreator.js');
@@ -159,6 +160,56 @@ describe('Component: ContextManager', () => {
                     assert.equal(results[0].fields[1].name, 'Latitude');
                     assert.equal(results[0].fields[1].value, '45.478906');
                 });
+        });
+        it('check empty list when no nodes are selected', () => {
+            return Promise
+                .join(
+                    ContextManager
+                        ._getFilterNodes(_idCDT, onlyParameter(_idCDT).context)
+                        .then(results => {
+                            assert.equal(results.length, 0);
+                        }),
+                    ContextManager
+                        ._getFilterNodes(_idCDT, onlyRanking(_idCDT).context)
+                        .then(results => {
+                            assert.equal(results.length, 0);
+                        }),
+                    ContextManager
+                        ._getParameterNodes(_idCDT, onlyFilter(_idCDT).context)
+                        .then(results => {
+                            assert.equal(results.length, 0);
+                        }),
+                    ContextManager
+                        ._getParameterNodes(_idCDT, onlyRanking(_idCDT).context)
+                        .then(results => {
+                            assert.equal(results.length, 0);
+                        }),
+                    ContextManager
+                        ._getRankingNodes(_idCDT, onlyFilter(_idCDT).context)
+                        .then(results => {
+                            assert.equal(results.length, 0);
+                        }),
+                    ContextManager
+                        ._getRankingNodes(_idCDT, onlyParameter(_idCDT).context)
+                        .then(results => {
+                            assert.equal(results.length, 0);
+                        }),
+                    ContextManager
+                        ._getSpecificNodes(onlyFilter(_idCDT).context)
+                        .then(results => {
+                            assert.equal(results.length, 0);
+                        }),
+                    ContextManager
+                        ._getSpecificNodes(onlyParameter(_idCDT).context)
+                        .then(results => {
+                            assert.equal(results.length, 0);
+                        }),
+                    ContextManager
+                        ._getSpecificNodes(onlyRanking(_idCDT).context)
+                        .then(results => {
+                            assert.equal(results.length, 0);
+                        })
+                );
         });
     });
 
@@ -450,6 +501,45 @@ let mergedCdt = idCDT => {
             {
                 name: 'Wikipedia',
                 operation: 'search'
+            }
+        ]
+    }
+};
+
+let onlyFilter = (idCDT) => {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'InterestTopic',
+                for: 'filter',
+                value: 'Restaurant'
+            }
+        ]
+    }
+};
+
+let onlyRanking = (idCDT) => {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'Festivita',
+                for: 'ranking',
+                value: 'Capodanno'
+            }
+        ]
+    }
+};
+
+let onlyParameter = (idCDT) => {
+    return {
+        _id: idCDT,
+        context: [
+            {
+                dimension: 'Budget',
+                for: 'parameter',
+                value: 'Low'
             }
         ]
     }

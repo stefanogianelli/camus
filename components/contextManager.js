@@ -304,6 +304,9 @@ class ContextManager {
                         return results;
                     })
                     .then(results => {
+                        if (_.isUndefined(results)) {
+                            return [];
+                        }
                         if (!_.isArray(results)) {
                             return [results];
                         }

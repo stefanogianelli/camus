@@ -251,7 +251,7 @@ let cdt = {
         {
             name: 'Location',
             for: 'ranking|parameter',
-            params: [
+            parameters: [
                 {
                     name: 'CityName'
                 },
@@ -271,7 +271,7 @@ let cdt = {
         {
             name: 'Keyword',
             for: 'parameter',
-            params: [
+            parameters: [
                 {
                     name: 'SearchKey',
                     type: 'String'

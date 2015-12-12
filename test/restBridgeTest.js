@@ -54,6 +54,10 @@ describe('Component: RestBridge', () => {
             let value =  RestBridge._searchMapping(simpleParameters, 'Budget');
             assert.equal(typeof value, 'undefined');
         });
+        it('check value if dot notation mapping is provided but the object doesn\'t have fields', () => {
+            let value =  RestBridge._searchMapping(simpleParameters, 'Budget.Name');
+            assert.equal(typeof value, 'undefined');
+        });
     });
 
 });
