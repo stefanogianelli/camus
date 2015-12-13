@@ -2,6 +2,8 @@
 
 let express = require('express');
 let bodyParser = require('body-parser');
+let graphql = require('graphql');
+let graphqlHTTP = require('express-graphql');
 let Promise = require('bluebird');
 let provider = require('./provider/provider.js');
 let Provider = new provider();
@@ -20,7 +22,12 @@ let ResponseAggregator = new responseAggregator();
 let databaseHelper = require('./databaseHelper.js');
 let DatabaseHelper = new databaseHelper();
 
+//load GraphQL schemas
+let schemas = require('./graphQLSchemas.js');
+
 let app = express();
+
+//register middleware
 app.use(bodyParser.json());
 
 /**
@@ -78,6 +85,49 @@ app.get('/createDatabase', (req, res) => {
             res.status(500).send(e);
         });
 });
+
+let schema = new graphql.GraphQLSchema({
+    query: new graphql.GraphQLObjectType({
+        name: 'Query',
+        fields: {
+            service: {
+                type: schemas.responseSchema,
+                args: {
+                    context: {
+                        type: schemas.contextSchema
+                    }
+                },
+                resolve: (_, context) => {
+                    return ContextManager
+                        .getDecoratedCdt(context.context)
+                        .then(decoratedCdt => {
+                            return Promise
+                                .props({
+                                    primary: PrimaryService
+                                        .selectServices(decoratedCdt)
+                                        .then(services => {
+                                            return QueryHandler
+                                                .executeQueries(services, decoratedCdt);
+                                        }),
+                                    support: SupportService.selectServices(decoratedCdt)
+                                });
+                        })
+                        .then(result => {
+                            return ResponseAggregator.prepareResponse(result.primary, result.support);
+                        })
+                        .then(response => {
+                            return response;
+                        })
+                        .catch(e => {
+                            return e;
+                        });
+                }
+            }
+        }
+    })
+});
+
+app.use('/graphql', graphqlHTTP({schema: schema, graphiql: true}));
 
 let server = app.listen(3001, () => {
     //connect to the DB
