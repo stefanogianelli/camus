@@ -77,10 +77,6 @@ class ContextManager {
                                 dimension: cdtItem.name,
                                 for: cdtItem.for
                             };
-                            //add the support service category, if defined
-                            if (!_.isUndefined(cdtItem.supportCategory)) {
-                                obj['supportCategory'] = cdtItem.supportCategory;
-                            }
                             //add the context value, if defined
                             if (_.has(c, 'value')) {
                                 obj['value'] = c.value;
