@@ -41,7 +41,6 @@ let NodeSchema = new Schema({
         enum: forEnum,
         required: true
     },
-    supportCategory: String,
     values: [String],
     parameters: [ParameterSchema],
     forbidden: [String],

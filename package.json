@@ -19,15 +19,15 @@
   "homepage": "https://github.com/stefanogianelli/camus#readme",
   "dependencies": {
     "async": "^1.5.0",
-    "bluebird": "^3.0.5",
+    "bluebird": "^3.0.6",
     "clj-fuzzy": "^0.3.1",
-    "hapi": "^11.1.0",
+    "hapi": "^11.1.2",
     "lodash": "^3.10.1",
-    "mongoose": "^4.2.5",
-    "superagent": "^1.4.0"
+    "mongoose": "^4.3.1",
+    "superagent": "^1.5.0"
   },
   "devDependencies": {
     "istanbul": "^0.4.1",
-    "mocha": "^2.3.3"
+    "mocha": "^2.3.4"
   }
 }
