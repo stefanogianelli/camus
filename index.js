@@ -86,7 +86,7 @@ app.get('/createDatabase', (req, res) => {
 });
 
 //register graphql endpoint
-app.use('/graphql', graphqlHTTP({schema: schemas.graphqlSchema, graphiql: true}));
+app.use('/graphql', graphqlHTTP({schema: schemas.querySchema, graphiql: true}));
 
 //start the server
 let server = app.listen(3001, () => {
