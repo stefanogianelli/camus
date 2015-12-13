@@ -1,6 +1,9 @@
+/*
+Restaurant sample context
+ */
 var restaurantContext = `
     query Restaurant {
-        service (
+        executeQuery (
             context: {
                 _id: "566d8aa73450c916059a5141",
                 context: [

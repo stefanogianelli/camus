@@ -2,7 +2,6 @@
 
 let express = require('express');
 let bodyParser = require('body-parser');
-let graphql = require('graphql');
 let graphqlHTTP = require('express-graphql');
 let Promise = require('bluebird');
 let provider = require('./provider/provider.js');
@@ -86,52 +85,10 @@ app.get('/createDatabase', (req, res) => {
         });
 });
 
-/**
- * Schema for GraphQL query
- */
-let schema = new graphql.GraphQLSchema({
-    query: new graphql.GraphQLObjectType({
-        name: 'Query',
-        fields: {
-            service: {
-                type: schemas.responseSchema,
-                args: {
-                    context: {
-                        type: schemas.contextSchema
-                    }
-                },
-                resolve: (_, context) => {
-                    return ContextManager
-                        .getDecoratedCdt(context.context)
-                        .then(decoratedCdt => {
-                            return Promise
-                                .props({
-                                    primary: PrimaryService
-                                        .selectServices(decoratedCdt)
-                                        .then(services => {
-                                            return QueryHandler
-                                                .executeQueries(services, decoratedCdt);
-                                        }),
-                                    support: SupportService.selectServices(decoratedCdt)
-                                });
-                        })
-                        .then(result => {
-                            return ResponseAggregator.prepareResponse(result.primary, result.support);
-                        })
-                        .then(response => {
-                            return response;
-                        })
-                        .catch(e => {
-                            return e;
-                        });
-                }
-            }
-        }
-    })
-});
+//register graphql endpoint
+app.use('/graphql', graphqlHTTP({schema: schemas.graphqlSchema, graphiql: true}));
 
-app.use('/graphql', graphqlHTTP({schema: schema, graphiql: true}));
-
+//start the server
 let server = app.listen(3001, () => {
     //connect to the DB
     Provider.createConnection('mongodb://localhost/camus');
