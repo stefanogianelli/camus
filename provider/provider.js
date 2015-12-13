@@ -61,7 +61,7 @@ class Provider {
      * @returns {*} Returns the CDT schema
      */
     getCdt (idCDT) {
-        return cdtModel.findOneAsync({_id: idCDT});
+        return cdtModel.findOneAsync({_id: mongoose.Types.ObjectId(idCDT)});
     }
 
     /**
