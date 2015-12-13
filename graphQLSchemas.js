@@ -2,7 +2,10 @@
 
 let graphql = require('graphql');
 
-let fieldItem = new graphql.GraphQLInputObjectType({
+/**
+ * Field schema
+ */
+let fieldItemSchema = new graphql.GraphQLInputObjectType({
     name: 'FieldItem',
     fields: {
         name: {
@@ -14,7 +17,10 @@ let fieldItem = new graphql.GraphQLInputObjectType({
     }
 });
 
-let parameterItem = new graphql.GraphQLInputObjectType({
+/**
+ * Parameter schema
+ */
+let parameterItemSchema = new graphql.GraphQLInputObjectType({
     name: 'ParameterItem',
     fields: {
         name: {
@@ -24,12 +30,15 @@ let parameterItem = new graphql.GraphQLInputObjectType({
             type: graphql.GraphQLString
         },
         fields: {
-            type: new graphql.GraphQLList(fieldItem)
+            type: new graphql.GraphQLList(fieldItemSchema)
         }
     }
 });
 
-let contextItem = new graphql.GraphQLInputObjectType({
+/**
+ * Context item
+ */
+let contextItemSchema = new graphql.GraphQLInputObjectType({
     name: 'ContextItem',
     fields: {
         dimension: {
@@ -39,12 +48,15 @@ let contextItem = new graphql.GraphQLInputObjectType({
             type: graphql.GraphQLString
         },
         parameters: {
-            type: new graphql.GraphQLList(parameterItem)
+            type: new graphql.GraphQLList(parameterItemSchema)
         }
     }
 });
 
-let supportItem = new graphql.GraphQLInputObjectType({
+/**
+ * Support item
+ */
+let supportItemSchema = new graphql.GraphQLInputObjectType({
     name: 'SupportItem',
     fields: {
         name: {
@@ -59,6 +71,9 @@ let supportItem = new graphql.GraphQLInputObjectType({
     }
 });
 
+/**
+ * Context schema
+ */
 let contextSchema = new graphql.GraphQLInputObjectType({
     name: 'Context',
     fields: {
@@ -66,14 +81,17 @@ let contextSchema = new graphql.GraphQLInputObjectType({
             type: graphql.GraphQLString
         },
         context: {
-            type: new graphql.GraphQLList(contextItem)
+            type: new graphql.GraphQLList(contextItemSchema)
         },
         support: {
-            type: new graphql.GraphQLList(supportItem)
+            type: new graphql.GraphQLList(supportItemSchema)
         }
     }
 });
 
+/**
+ * Data schema
+ */
 let dataSchema = new graphql.GraphQLObjectType({
     name: 'DataItem',
     fields: {
@@ -81,6 +99,18 @@ let dataSchema = new graphql.GraphQLObjectType({
             type: graphql.GraphQLString
         },
         address: {
+            type: graphql.GraphQLString
+        },
+        telephone: {
+            type: graphql.GraphQLString
+        },
+        website: {
+            type: graphql.GraphQLString
+        },
+        city: {
+            type: graphql.GraphQLString
+        },
+        email: {
             type: graphql.GraphQLString
         },
         latitude: {
@@ -92,11 +122,38 @@ let dataSchema = new graphql.GraphQLObjectType({
     }
 });
 
+/**
+ * Support response schema
+ */
+let supportResponseSchema = new graphql.GraphQLObjectType ({
+    name: 'SupportResponse',
+    fields: {
+        name: {
+            type: graphql.GraphQLString
+        },
+        category: {
+            type: graphql.GraphQLString
+        },
+        service: {
+            type: graphql.GraphQLString
+        },
+        url: {
+            type: graphql.GraphQLString
+        }
+    }
+});
+
+/**
+ * Response schema
+ */
 let responseSchema = new graphql.GraphQLObjectType({
     name: 'Response',
     fields: {
         data: {
             type: new graphql.GraphQLList(dataSchema)
+        },
+        support: {
+            type: new graphql.GraphQLList(supportResponseSchema)
         }
     }
 });

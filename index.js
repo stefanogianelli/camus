@@ -86,6 +86,9 @@ app.get('/createDatabase', (req, res) => {
         });
 });
 
+/**
+ * Schema for GraphQL query
+ */
 let schema = new graphql.GraphQLSchema({
     query: new graphql.GraphQLObjectType({
         name: 'Query',
