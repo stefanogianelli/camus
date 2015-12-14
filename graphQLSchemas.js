@@ -26,7 +26,7 @@ let ResponseAggregator = new responseAggregator();
 /**
  * Field schema
  */
-let fieldItemSchema = new GraphQLInputObjectType({
+let fieldItemType = new GraphQLInputObjectType({
     name: 'FieldItem',
     description: 'A sub-parameter item',
     fields: {
@@ -44,7 +44,7 @@ let fieldItemSchema = new GraphQLInputObjectType({
 /**
  * Parameter schema
  */
-let parameterItemSchema = new GraphQLInputObjectType({
+let parameterItemType = new GraphQLInputObjectType({
     name: 'ParameterItem',
     description: 'It define a single parameter associated to the node. It\'s possible to define nested sub-parameters',
     fields: {
@@ -58,7 +58,7 @@ let parameterItemSchema = new GraphQLInputObjectType({
         },
         fields: {
             description: 'The list of sub-parameters',
-            type: new GraphQLList(fieldItemSchema)
+            type: new GraphQLList(fieldItemType)
         }
     }
 });
@@ -66,7 +66,7 @@ let parameterItemSchema = new GraphQLInputObjectType({
 /**
  * Context item
  */
-let contextItemSchema = new GraphQLInputObjectType({
+let contextItemType = new GraphQLInputObjectType({
     name: 'ContextItem',
     description: 'A context item is a single selection made by the user',
     fields: {
@@ -80,7 +80,7 @@ let contextItemSchema = new GraphQLInputObjectType({
         },
         parameters: {
             description: 'The list of parameters associated to the node',
-            type: new GraphQLList(parameterItemSchema)
+            type: new GraphQLList(parameterItemType)
         }
     }
 });
@@ -88,7 +88,7 @@ let contextItemSchema = new GraphQLInputObjectType({
 /**
  * Support item
  */
-let supportItemSchema = new GraphQLInputObjectType({
+let supportItemType = new GraphQLInputObjectType({
     name: 'SupportItem',
     description: 'Support service item. It allows the definition of the requested support service name or category. If a service is requested by the name the fields name and operation are mandatory. Otherwise it\'s sufficient to specify a category' ,
     fields: {
@@ -110,7 +110,7 @@ let supportItemSchema = new GraphQLInputObjectType({
 /**
  * Context schema
  */
-let contextSchema = new GraphQLInputObjectType({
+let contextType = new GraphQLInputObjectType({
     name: 'Context',
     description: 'The context item. It describes the user context',
     fields: {
@@ -120,11 +120,11 @@ let contextSchema = new GraphQLInputObjectType({
         },
         context: {
             description: 'The list of context preferences',
-            type: new GraphQLList(contextItemSchema)
+            type: new GraphQLList(contextItemType)
         },
         support: {
             description: 'The list of support services that are requested',
-            type: new GraphQLList(supportItemSchema)
+            type: new GraphQLList(supportItemType)
         }
     }
 });
@@ -132,7 +132,7 @@ let contextSchema = new GraphQLInputObjectType({
 /**
  * Data schema
  */
-let dataSchema = new GraphQLObjectType({
+let dataType = new GraphQLObjectType({
     name: 'DataItem',
     description: 'A single result item',
     fields: {
@@ -174,7 +174,7 @@ let dataSchema = new GraphQLObjectType({
 /**
  * Support response schema
  */
-let supportResponseSchema = new GraphQLObjectType ({
+let supportResponseType = new GraphQLObjectType ({
     name: 'SupportResponse',
     description: 'It contains list of support service descriptions',
     fields: {
@@ -200,17 +200,17 @@ let supportResponseSchema = new GraphQLObjectType ({
 /**
  * Response schema
  */
-let responseSchema = new GraphQLObjectType({
+let responseType = new GraphQLObjectType({
     name: 'Response',
     description: 'The response type. It contains the information retrieved by the services',
     fields: {
         data: {
             description: 'Provide the list of result items',
-            type: new GraphQLList(dataSchema)
+            type: new GraphQLList(dataType)
         },
         support: {
             description: 'Provide the URL of the requested support services',
-            type: new GraphQLList(supportResponseSchema)
+            type: new GraphQLList(supportResponseType)
         }
     }
 });
@@ -218,46 +218,51 @@ let responseSchema = new GraphQLObjectType({
 /**
  * Schema for GraphQL query
  */
-export let querySchema = new GraphQLSchema({
-    query: new GraphQLObjectType({
-        name: 'Root',
-        description: 'The main type for each operation',
-        fields: {
-            executeQuery: {
-                type: responseSchema,
-                description: 'The endpoint committed to the query execution',
-                args: {
-                    context: {
-                        description:'The user context. It will be used for service selection and data filtering',
-                        type: contextSchema
-                    }
-                },
-                resolve: (root, context) => {
-                    return ContextManager
-                        .getDecoratedCdt(context.context)
-                        .then(decoratedCdt => {
-                            return Promise
-                                .props({
-                                    primary: PrimaryService
-                                        .selectServices(decoratedCdt)
-                                        .then(services => {
-                                            return QueryHandler
-                                                .executeQueries(services, decoratedCdt);
-                                        }),
-                                    support: SupportService.selectServices(decoratedCdt)
-                                });
-                        })
-                        .then(result => {
-                            return ResponseAggregator.prepareResponse(result.primary, result.support);
-                        })
-                        .then(response => {
-                            return response;
-                        })
-                        .catch(e => {
-                            return e;
-                        });
+let queryType = new GraphQLObjectType({
+    name: 'Root',
+    description: 'The main type for each operation',
+    fields: {
+        executeQuery: {
+            type: responseType,
+            description: 'The endpoint committed to the query execution',
+            args: {
+                context: {
+                    description:'The user context. It will be used for service selection and data filtering',
+                    type: contextType
                 }
+            },
+            resolve: (root, context) => {
+                return ContextManager
+                    .getDecoratedCdt(context.context)
+                    .then(decoratedCdt => {
+                        return Promise
+                            .props({
+                                primary: PrimaryService
+                                    .selectServices(decoratedCdt)
+                                    .then(services => {
+                                        return QueryHandler
+                                            .executeQueries(services, decoratedCdt);
+                                    }),
+                                support: SupportService.selectServices(decoratedCdt)
+                            });
+                    })
+                    .then(result => {
+                        return ResponseAggregator.prepareResponse(result.primary, result.support);
+                    })
+                    .then(response => {
+                        return response;
+                    })
+                    .catch(e => {
+                        return e;
+                    });
             }
         }
-    })
+    }
+});
+
+/**
+ * The main schema
+ */
+export let camusSchema = new GraphQLSchema({
+    query: queryType
 });

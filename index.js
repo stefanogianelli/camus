@@ -22,7 +22,8 @@ let databaseHelper = require('./databaseHelper.js');
 let DatabaseHelper = new databaseHelper();
 
 //load GraphQL schemas
-let schemas = require('./graphQLSchemas.js');
+//let schemas = require('./graphQLSchemas.js');
+import {camusSchema} from './graphQLSchemas.js';
 
 let app = express();
 
@@ -86,7 +87,7 @@ app.get('/createDatabase', (req, res) => {
 });
 
 //register graphql endpoint
-app.use('/graphql', graphqlHTTP({schema: schemas.querySchema, graphiql: true}));
+app.use('/graphql', graphqlHTTP({schema: camusSchema, graphiql: true}));
 
 //start the server
 let server = app.listen(3001, () => {
