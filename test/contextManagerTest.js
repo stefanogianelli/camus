@@ -100,26 +100,36 @@ describe('Component: ContextManager', () => {
                     assert.equal(data.context[1].value, 'Restaurant');
                 });
         });
+        it('check error when an invalid CDT identifier is provided', () => {
+            return ContextManager
+                ._mergeCdtAndContext(context(1))
+                .catch(e => {
+                    assert.equal(e, 'No CDT found. Check if the ID is correct');
+                });
+        });
     });
 
-    describe('#getNodes()', () => {
-       it('check if correct filter nodes are returned', () => {
-           return ContextManager
-               ._getFilterNodes(_idCDT, mergedCdt(_idCDT).context)
-               .then(results => {
-                   assert.equal(results.length, 5);
-                   assert.equal(results[0].dimension, 'InterestTopic');
-                   assert.equal(results[0].value, 'Restaurant');
-                   assert.equal(results[1].dimension, 'Budget');
-                   assert.equal(results[1].value, 'Low');
-                   assert.equal(results[2].dimension, 'Transport');
-                   assert.equal(results[2].value, 'PublicTransport');
-                   assert.equal(results[3].dimension, 'Tipology');
-                   assert.equal(results[3].value, 'Bus');
-                   assert.equal(results[4].dimension, 'Tipology');
-                   assert.equal(results[4].value, 'Train');
-               });
-       });
+    describe('#getFilterNodes()', () => {
+        it('check if correct filter nodes are returned', () => {
+            return ContextManager
+                ._getFilterNodes(_idCDT, mergedCdt(_idCDT).context)
+                .then(results => {
+                    assert.equal(results.length, 5);
+                    assert.equal(results[0].dimension, 'InterestTopic');
+                    assert.equal(results[0].value, 'Restaurant');
+                    assert.equal(results[1].dimension, 'Budget');
+                    assert.equal(results[1].value, 'Low');
+                    assert.equal(results[2].dimension, 'Transport');
+                    assert.equal(results[2].value, 'PublicTransport');
+                    assert.equal(results[3].dimension, 'Tipology');
+                    assert.equal(results[3].value, 'Bus');
+                    assert.equal(results[4].dimension, 'Tipology');
+                    assert.equal(results[4].value, 'Train');
+                });
+        });
+    });
+
+    describe('#getRankingNodes()', () => {
         it('check if correct ranking nodes are returned', () => {
             return ContextManager
                 ._getRankingNodes(_idCDT, mergedCdt(_idCDT).context)
@@ -131,6 +141,9 @@ describe('Component: ContextManager', () => {
                     assert.equal(results[1].value, 'Capodanno');
                 });
         });
+    });
+
+    describe('#getParameterNodes()', () => {
         it('check if correct parameter nodes are returned', () => {
             return ContextManager
                 ._getParameterNodes(mergedCdt(_idCDT).context)
@@ -149,6 +162,9 @@ describe('Component: ContextManager', () => {
                     assert.equal(results[3].fields[1].value, '45.478906');
                 });
         });
+    });
+
+    describe('#getSpecificNodes()', () => {
         it('check if correct specific nodes are returned', () => {
             return ContextManager
                 ._getSpecificNodes(mergedCdt(_idCDT).context)
@@ -161,6 +177,9 @@ describe('Component: ContextManager', () => {
                     assert.equal(results[0].fields[1].value, '45.478906');
                 });
         });
+    });
+
+    describe('#getNodes()', () => {
         it('check empty list when no nodes are selected', () => {
             return Promise
                 .join(
@@ -210,6 +229,20 @@ describe('Component: ContextManager', () => {
                             assert.equal(results.length, 0);
                         })
                 );
+        });
+        it('check error when an invalid type is selected', () => {
+            return ContextManager
+                ._getNodes('invalid', onlyFilter(_idCDT).context, false)
+                .catch(e => {
+                    assert.equal(e, 'Invalid type selected');
+                });
+        });
+        it('check error when an empty item list is provided', () => {
+            return ContextManager
+                ._getNodes('filter', null, false)
+                .catch(e => {
+                    assert.equal(e, 'No items selected');
+                });
         });
     });
 
@@ -336,18 +369,25 @@ describe('Component: ContextManager', () => {
                     assert.equal(nodes[3].value, 'n');
                 });
         });
-        it('check error with empty node name', () => {
+        it('check empty list in output when an invalid CDT identifier is provided', () => {
             return ContextManager
-                ._getDescendants(_idCDT)
-                .catch(e => {
-                   assert.equal(e, 'Empty or wrong node name');
+                ._getDescendants(1, {value: 'PublicTransport'})
+                .then(nodes => {
+                    assert.equal(nodes.length, 0);
+                });
+        });
+        it('check empty list in output when an empty node name', () => {
+            return ContextManager
+                ._getDescendants(_idCDT, null)
+                .then(nodes => {
+                    assert.equal(nodes.length, 0);
                 });
         });
         it('check error with empty CDT identifier', () => {
             return ContextManager
                 ._getDescendants()
                 .catch(e => {
-                    assert.equal(e, 'Specify a CDT identifier');
+                    assert.equal(e, 'CDT identifier not defined');
                 });
         });
     });

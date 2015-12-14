@@ -249,9 +249,6 @@ let queryType = new GraphQLObjectType({
                     .then(result => {
                         return ResponseAggregator.prepareResponse(result.primary, result.support);
                     })
-                    .then(response => {
-                        return response;
-                    })
                     .catch(e => {
                         throw new Error(e);
                     });

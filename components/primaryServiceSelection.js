@@ -78,6 +78,10 @@ class PrimaryServiceSelection  {
                 .all(promises)
                 .then(results => {
                     resolve(_.flatten(results));
+                })
+                .catch(e => {
+                    console.log(e);
+                    resolve();
                 });
         });
     }
@@ -164,9 +168,6 @@ class PrimaryServiceSelection  {
                     _idOperation: result._idOperation,
                     ranking: index + 1
                 };
-            })
-            .catch(e => {
-                console.log(e);
             });
     }
 }
