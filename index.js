@@ -95,6 +95,9 @@ let server = app.listen(3001, () => {
 
     let host = server.address().address;
     let port = server.address().port;
+    if (host === '::') {
+        host = 'localhost';
+    }
 
     console.log('Server running at http://%s:%s', host, port);
 });
