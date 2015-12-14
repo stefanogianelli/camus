@@ -319,21 +319,23 @@ class ContextManager {
     /**
      * Search the selected interest topic
      * @param mergedCdt The merged CDT
-     * @returns The interest topic name
+     * @returns {bluebird|exports|module.exports} The interest topic name
      * @private
      */
     _getInterestTopic (mergedCdt) {
-        let context = mergedCdt.context;
-        if (!_.isEmpty(context)) {
-            let r = _.find(context, {dimension: 'InterestTopic'});
-            if (!_.isUndefined(r)) {
-                return r.value;
+        return new Promise((resolve, reject) => {
+            let context = mergedCdt.context;
+            if (!_.isEmpty(context)) {
+                let r = _.find(context, {dimension: 'InterestTopic'});
+                if (!_.isUndefined(r)) {
+                    resolve(r.value);
+                } else {
+                    reject('No interest topic selected');
+                }
             } else {
-                throw new Error('No interest topic selected');
+                reject('No context selected');
             }
-        } else {
-            throw new Error('No context selected');
-        }
+        });
     }
 
     /**

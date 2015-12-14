@@ -152,9 +152,15 @@ class SupportServiceSelection {
                 start = assign = separator = '/';
             }
             //add the base path and the operation path to the address
-            let address = s.basePath + s.operations[0].path + start;
+            let operationsObject = {};
+            if (_.isArray(s.operations)) {
+                operationsObject = s.operations[0];
+            } else {
+                operationsObject = s.operations;
+            }
+            let address = s.basePath + operationsObject.path + start;
             //compose the parameters part of the query
-            let output = _.reduce(s.operations[0].parameters, (output, p) => {
+            let output = _.reduce(operationsObject.parameters, (output, p) => {
                 let values;
                 if (_.isEmpty(p.mappingTerm)) {
                     //if no term is associated use the default value

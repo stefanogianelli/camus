@@ -215,29 +215,32 @@ describe('Component: ContextManager', () => {
 
     describe('#getInterestTopic()', () => {
         it('check if correct interest topic are returned', () => {
-            let interestTopic = ContextManager._getInterestTopic(mergedCdt(_idCDT));
-            assert.equal(interestTopic, 'Restaurant');
+            return ContextManager
+                ._getInterestTopic(mergedCdt(_idCDT))
+                .then(interestTopic => {
+                    assert.equal(interestTopic, 'Restaurant');
+                });
         });
         it('check error when sending empty context', () => {
-            try {
-                ContextManager._getInterestTopic(emptyContext(_idCDT));
-            } catch (e) {
-                assert.equal(e.message, 'No context selected');
-            }
+            return ContextManager
+                ._getInterestTopic(emptyContext(_idCDT))
+                .catch(e => {
+                    assert.equal(e, 'No context selected');
+                });
         });
         it('check error when sending empty object', () => {
-            try {
-                ContextManager._getInterestTopic({ });
-            } catch (e) {
-                assert.equal(e.message, 'No context selected');
-            }
+            return ContextManager
+                ._getInterestTopic({ })
+                .catch(e => {
+                        assert.equal(e, 'No context selected');
+                });
         });
         it('check error when sending context without interest topic', () => {
-            try {
-                ContextManager._getInterestTopic(noInterestTopicContext(_idCDT));
-            } catch (e) {
-                assert.equal(e.message, 'No interest topic selected');
-            }
+            return ContextManager
+                ._getInterestTopic(noInterestTopicContext(_idCDT))
+                .catch(e => {
+                    assert.equal(e, 'No interest topic selected');
+                });
         });
     });
 

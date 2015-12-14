@@ -122,7 +122,6 @@ let serviceDescriptionSchema = new Schema({
         type: String,
         enum: protocols
     },
-    category: String,
     basePath: String,
     operations: [operationSchema]
 });
@@ -154,25 +153,10 @@ serviceDescriptionSchema.static('findByOperationId', function (idOperation, call
  */
 serviceDescriptionSchema.static('findByOperationIds', function (idOperations, callback) {
     this
-        .find({
-                'operations._id': {
-                    $in: idOperations
-                }
-            },
-            {
-                name: 1,
-                type: 1,
-                protocol: 1,
-                category: 1,
-                basePath: 1,
-                operations: {
-                    $elemMatch: {
-                        '_id': {
-                            $in: idOperations
-                        }
-                    }
-                }
-            }, callback);
+        .aggregate(
+            {$unwind: '$operations'},
+            {$match: {'operations._id': {$in: idOperations}}}
+        , callback);
 });
 
 let serviceDescription = mongoose.model('service_description', serviceDescriptionSchema);

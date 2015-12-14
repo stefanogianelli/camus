@@ -219,7 +219,7 @@ let responseType = new GraphQLObjectType({
  * Schema for GraphQL query
  */
 let queryType = new GraphQLObjectType({
-    name: 'Root',
+    name: 'Query',
     description: 'The main type for each operation',
     fields: {
         executeQuery: {
@@ -253,7 +253,7 @@ let queryType = new GraphQLObjectType({
                         return response;
                     })
                     .catch(e => {
-                        return e;
+                        throw new Error(e);
                     });
             }
         }
