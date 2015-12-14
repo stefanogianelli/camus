@@ -108,28 +108,6 @@ let supportItemType = new GraphQLInputObjectType({
 });
 
 /**
- * Context schema
- */
-let contextType = new GraphQLInputObjectType({
-    name: 'Context',
-    description: 'The context item. It describes the user context',
-    fields: {
-        _id: {
-            description: 'The CDT identifier',
-            type: GraphQLString
-        },
-        context: {
-            description: 'The list of context preferences',
-            type: new GraphQLList(contextItemType)
-        },
-        support: {
-            description: 'The list of support services that are requested',
-            type: new GraphQLList(supportItemType)
-        }
-    }
-});
-
-/**
  * Data schema
  */
 let dataType = new GraphQLObjectType({
@@ -226,14 +204,22 @@ let queryType = new GraphQLObjectType({
             type: responseType,
             description: 'The endpoint committed to the query execution',
             args: {
+                _id: {
+                    description: 'The CDT identifier',
+                    type: GraphQLString
+                },
                 context: {
-                    description:'The user context. It will be used for service selection and data filtering',
-                    type: contextType
+                    description: 'The list of context preferences',
+                    type: new GraphQLList(contextItemType)
+                },
+                support: {
+                    description: 'The list of support services that are requested',
+                    type: new GraphQLList(supportItemType)
                 }
             },
-            resolve: (root, context) => {
+            resolve: (root, {_id, context, support}) => {
                 return ContextManager
-                    .getDecoratedCdt(context.context)
+                    .getDecoratedCdt({_id, context, support})
                     .then(decoratedCdt => {
                         return Promise
                             .props({

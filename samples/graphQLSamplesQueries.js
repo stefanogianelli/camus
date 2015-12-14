@@ -4,42 +4,40 @@
 let restaurantContext = `
     query Restaurant {
         executeQuery (
-            context: {
-                _id: "566eec3f21e45748095f1aae",
-                context: [
-                    {
-                        dimension: "InterestTopic",
-                        value: "Restaurant"
-                    },
-                    {
-                        dimension: "Location",
-                        parameters: [
-                            {
-                                name: "CityName",
-                                value: "Chicago"
-                            }
-                        ]
-                    },
-                    {
-                        dimension: "Keyword",
-                        parameters: [
-                            {
-                                name: "SearchKey",
-                                value: "restaurant+in+chicago"
-                            }
-                        ]
-                    },
-                    {
-                        dimension: "Transport",
-                        value: "WithCar"
-                    }
-                ],
-                support: [
-                    {
-                        category: "Transport"
-                    }
-                ]
-            }
+            _id: "566eec3f21e45748095f1aae",
+            context: [
+                {
+                    dimension: "InterestTopic",
+                    value: "Restaurant"
+                },
+                {
+                    dimension: "Location",
+                    parameters: [
+                        {
+                            name: "CityName",
+                            value: "Chicago"
+                        }
+                    ]
+                },
+                {
+                    dimension: "Keyword",
+                    parameters: [
+                        {
+                            name: "SearchKey",
+                            value: "restaurant+in+chicago"
+                        }
+                    ]
+                },
+                {
+                    dimension: "Transport",
+                    value: "WithCar"
+                }
+            ],
+            support: [
+                {
+                    category: "Transport"
+                }
+            ]
         )
         {
             data {
@@ -63,33 +61,31 @@ let restaurantContext = `
 let cinemaContext = `
     query Cinema {
         executeQuery(
-            context: {
-                _id: "566eec3f21e45748095f1aae",
-                context: [
-                    {
-                        dimension: "InterestTopic",
-                        value: "Cinema"
-                    },
-                    {
-                        dimension: "Location",
-                        parameters: [
-                            {
-                                name: "CityName",
-                                value: "Milan"
-                            }
-                        ]
-                    },
-                    {
-                        dimension: "Transport",
-                        value: "WithCar"
-                    }
-                ],
-                support: [
-                    {
-                        category: "Transport"
-                    }
-                ]
-            }
+            _id: "566eec3f21e45748095f1aae",
+            context: [
+                {
+                    dimension: "InterestTopic",
+                    value: "Cinema"
+                },
+                {
+                    dimension: "Location",
+                    parameters: [
+                        {
+                            name: "CityName",
+                            value: "Milan"
+                        }
+                    ]
+                },
+                {
+                    dimension: "Transport",
+                    value: "WithCar"
+                }
+            ],
+            support: [
+                {
+                    category: "Transport"
+                }
+            ]
         )
         {
             data {
@@ -114,33 +110,31 @@ let cinemaContext = `
 let hotelContext = `
     query Hotel {
         executeQuery(
-            context: {
-                _id: "566eec3f21e45748095f1aae",
-                context: [
-                    {
-                        dimension: "InterestTopic",
-                        value: "Hotel"
-                    },
-                    {
-                        dimension: "Location",
-                        parameters: [
-                            {
-                                name: "CityName",
-                                value: "Milan"
-                            }
-                        ]
-                    },
-                    {
-                        dimension: "Tipology",
-                        value: "Taxi"
-                    }
-                ],
-                support: [
-                    {
-                        category: "Transport"
-                    }
-                ]
-            }
+            _id: "566eec3f21e45748095f1aae",
+            context: [
+                {
+                    dimension: "InterestTopic",
+                    value: "Hotel"
+                },
+                {
+                    dimension: "Location",
+                    parameters: [
+                        {
+                            name: "CityName",
+                            value: "Milan"
+                        }
+                    ]
+                },
+                {
+                    dimension: "Tipology",
+                    value: "Taxi"
+                }
+            ],
+            support: [
+                {
+                    category: "Transport"
+                }
+            ]
         )
         {
             data {
@@ -168,33 +162,31 @@ let hotelContext = `
 let museumContext = `
     query Museum {
         executeQuery(
-            context: {
-                _id: "566eec3f21e45748095f1aae",
-                context: [
-                    {
-                        dimension: "InterestTopic",
-                        value: "Museum"
-                    },
-                    {
-                        dimension: "Location",
-                        parameters: [
-                            {
-                                name: "CityName",
-                                value: "Milan"
-                            }
-                        ]
-                    },
-                    {
-                        dimension: "Tipology",
-                        value: "CarSharing"
-                    }
-                ],
-                support: [
-                    {
-                        category: "Transport"
-                    }
-                ]
-            }
+            _id: "566eec3f21e45748095f1aae",
+            context: [
+                {
+                    dimension: "InterestTopic",
+                    value: "Museum"
+                },
+                {
+                    dimension: "Location",
+                    parameters: [
+                        {
+                            name: "CityName",
+                            value: "Milan"
+                        }
+                    ]
+                },
+                {
+                    dimension: "Tipology",
+                    value: "CarSharing"
+                }
+            ],
+            support: [
+                {
+                    category: "Transport"
+                }
+            ]
         )
         {
             data {
@@ -221,42 +213,40 @@ let museumContext = `
 let theaterContext = `
     query Theater {
         executeQuery(
-            context: {
-                _id: "566eec3f21e45748095f1aae",
-                context: [
-                    {
-                        dimension: "InterestTopic",
-                        value: "Theater"
-                    },
-                    {
-                        dimension: "Location",
-                        parameters: [
-                            {
-                                name: "CityCoord",
-                                fields: [
-                                    {
-                                        name: "Latitude",
-                                        value: "45.478869"
-                                    },
-                                    {
-                                        name: "Longitude",
-                                        value: "9.234337"
-                                    }
-                                ]
-                            }
-                        ]
-                    },
-                    {
-                        dimension: "Tipology",
-                        value: "WithDriver"
-                    }
-                ],
-                support: [
-                    {
-                        category: "Transport"
-                    }
-                ]
-            }
+            _id: "566eec3f21e45748095f1aae",
+            context: [
+                {
+                    dimension: "InterestTopic",
+                    value: "Theater"
+                },
+                {
+                    dimension: "Location",
+                    parameters: [
+                        {
+                            name: "CityCoord",
+                            fields: [
+                                {
+                                    name: "Latitude",
+                                    value: "45.478869"
+                                },
+                                {
+                                    name: "Longitude",
+                                    value: "9.234337"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    dimension: "Tipology",
+                    value: "WithDriver"
+                }
+            ],
+            support: [
+                {
+                    category: "Transport"
+                }
+            ]
         )
         {
             data {
