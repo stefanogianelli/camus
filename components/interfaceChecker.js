@@ -24,15 +24,15 @@ Interface.ensureImplements = function(object) {
     }
 
     for (var i = 1, len = arguments.length; i < len; i++) {
-        var interface = arguments[i];
-        if (interface.constructor !== Interface) {
+        var interfaceObject = arguments[i];
+        if (interfaceObject.constructor !== Interface) {
             throw new Error("Function Interface.ensureImplements expects arguments two and above to be instances of Interface.");
         }
 
-        for (var j = 0, methodsLen = interface.methods.length; j < methodsLen; j++) {
-            var method = interface.methods[j];
+        for (var j = 0, methodsLen = interfaceObject.methods.length; j < methodsLen; j++) {
+            var method = interfaceObject.methods[j];
             if (!object.prototype[method] || typeof object.prototype[method] !== 'function') {
-                throw new Error("Function Interface.ensureImplements: object does not implement the " + interface.name + " interface. Method \'" + method + "\' was not found.");
+                throw new Error("Function Interface.ensureImplements: object does not implement the " + interfaceObject.name + " interface. Method \'" + method + "\' was not found.");
             }
         }
     }
