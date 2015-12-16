@@ -1,21 +1,23 @@
 'use strict';
 
-let assert = require('assert');
-let supportServiceSelection = require('../components/supportServiceSelection.js');
-let SupportServiceSelection = new supportServiceSelection();
-let mockData = require('./mockModel.js');
-let mockDatabase = require('./mockDatabaseCreator.js');
-let MockDatabase = new mockDatabase();
-let provider = require('../provider/provider.js');
-let Provider = new provider();
+import assert from 'assert';
+
+import SupportServiceSelection from '../components/supportServiceSelection.js';
+import * as mockData from './mockModel.js';
+import MockDatabase from './mockDatabaseCreator.js';
+import Provider from '../provider/provider.js';
+
+let supportServiceSelection = new SupportServiceSelection();
+let mockDatabase = new MockDatabase();
+let provider = new Provider();
 
 let _idCDT;
 
 describe('Component: SupportServiceSelection', () => {
 
     before(function(done) {
-        Provider.createConnection('mongodb://localhost/camus_test');
-        MockDatabase.createDatabase((err, idCDT) => {
+        provider.createConnection('mongodb://localhost/camus_test');
+        mockDatabase.createDatabase((err, idCDT) => {
             assert.equal(err, null);
             _idCDT = idCDT;
             done();
@@ -24,7 +26,7 @@ describe('Component: SupportServiceSelection', () => {
 
     describe('#selectServices()', () => {
         it('check if correct services are selected', () => {
-            return SupportServiceSelection
+            return supportServiceSelection
                 .selectServices(mockData.decoratedCdt(_idCDT))
                 .then(data => {
                     assert.equal(data.length, 3);
@@ -39,7 +41,7 @@ describe('Component: SupportServiceSelection', () => {
                 });
         });
         it('check response when no support service name is provided', () => {
-            return SupportServiceSelection
+            return supportServiceSelection
                 .selectServices(contextNoSupportName(_idCDT))
                 .then(data => {
                     assert.equal(data.length, 1);
@@ -49,7 +51,7 @@ describe('Component: SupportServiceSelection', () => {
                 });
         });
         it('check response when no support category is provided', () => {
-            return SupportServiceSelection
+            return supportServiceSelection
                 .selectServices(contextNoSupportCategory(_idCDT))
                 .then(data => {
                     assert.equal(data.length, 1);
@@ -58,21 +60,21 @@ describe('Component: SupportServiceSelection', () => {
                 });
         });
         it('check response when the specified service name does not exists', () => {
-            return SupportServiceSelection
+            return supportServiceSelection
                 .selectServices(contextWithInexistentName(_idCDT))
                 .then(data => {
                     assert.equal(data.length, 0);
                 });
         });
         it('check response when the support category does not exists', () => {
-            return SupportServiceSelection
+            return supportServiceSelection
                 .selectServices(contextWithInexistentCategory(_idCDT))
                 .then(data => {
                     assert.equal(data.length, 0);
                 });
         });
         it('check response when multiple service names are provided', () => {
-            return SupportServiceSelection
+            return supportServiceSelection
                 .selectServices(contextMultipleSupportServiceNames(_idCDT))
                 .then(data => {
                     assert.equal(data.length, 2);
@@ -83,7 +85,7 @@ describe('Component: SupportServiceSelection', () => {
                 });
         });
         it('check response when multiple service categories are provided', () => {
-            return SupportServiceSelection
+            return supportServiceSelection
                 .selectServices(contextMultipleSupportServiceCategories(_idCDT))
                 .then(data => {
                     assert.equal(data.length, 2);
@@ -98,9 +100,9 @@ describe('Component: SupportServiceSelection', () => {
     });
 
     after(function (done) {
-        MockDatabase.deleteDatabase(err => {
+        mockDatabase.deleteDatabase(err => {
             assert.equal(err, null);
-            Provider.closeConnection();
+            provider.closeConnection();
             done();
         });
     });

@@ -1,16 +1,18 @@
 'use strict';
 
-let _ = require('lodash');
-let Promise = require('bluebird');
-let Interface = require('./interfaceChecker.js');
-let restBridge = require('../bridges/restBridge.js');
-let RestBridge = new restBridge();
-let provider = require('../provider/provider.js');
-let Provider = new provider();
-let transformResponse = require('./transformResponse.js');
-let TransformResponse = new transformResponse();
+import _ from 'lodash';
+import Promise from 'bluebird';
 
-class QueryHandler {
+import Interface from './interfaceChecker.js';
+import RestBridge from '../bridges/restBridge.js';
+import Provider from '../provider/provider.js';
+import TransformResponse from './transformResponse.js';
+
+let restBridge = new RestBridge();
+let provider = new Provider();
+let transformResponse = new TransformResponse();
+
+export default  class QueryHandler {
 
     constructor () {
         //shortcut to the bridges folder
@@ -32,7 +34,7 @@ class QueryHandler {
                 Promise
                     .map(services, s => {
                         //for each operation identifier retrieve the respective service description
-                        return Provider.getServiceByOperationId(s._idOperation);
+                        return provider.getServiceByOperationId(s._idOperation);
                     })
                     .then(serviceDescriptions => {
                         //execute the queries toward web services
@@ -65,7 +67,7 @@ class QueryHandler {
                     //check if the protocol of the current service is 'rest' o 'query'
                     if (s.protocol === 'rest' || s.protocol === 'query') {
                         //use the rest bridge
-                        promise = RestBridge.executeQuery(s, params);
+                        promise = restBridge.executeQuery(s, params);
                     } else if (s.protocol === 'custom') {
                         //call the custom bridge
                         let bridgeName = s.operations[0].bridgeName;
@@ -83,7 +85,7 @@ class QueryHandler {
                     return promise
                         .then(response => {
                             //transform the response
-                            return TransformResponse.mappingResponse(s.operations[0].responseMapping, response)
+                            return transformResponse.mappingResponse(s.operations[0].responseMapping, response)
                         })
                         .catch(e => {
                             console.log('[' + s.name + '] ERROR: ' + e);
@@ -102,5 +104,3 @@ class QueryHandler {
     }
 
 }
-
-module.exports = QueryHandler;

@@ -4,11 +4,11 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 import agent from 'superagent';
 
-class RestBridge {
+export default class RestBridge {
 
     constructor () {
         //timeout for the requests (in ms)
-        this._timeout = 200;
+        this._timeout = 6000;
     }
 
     /**
@@ -185,5 +185,3 @@ class RestBridge {
         });
     }
 }
-
-module.exports = RestBridge;

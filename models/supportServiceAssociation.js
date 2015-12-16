@@ -1,6 +1,7 @@
 'use strict';
 
-let mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId;
 
@@ -48,4 +49,4 @@ let supportServiceSchema = new Schema ({
 
 let supportServiceAssociation = mongoose.model('support_service', supportServiceSchema);
 
-module.exports = supportServiceAssociation;
+export default supportServiceAssociation;

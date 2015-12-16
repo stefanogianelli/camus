@@ -1,10 +1,10 @@
 'use strict';
 
-let _ = require('lodash');
-let similarityUtils = require('clj-fuzzy');
-let Promise = require('bluebird');
+import _ from 'lodash';
+import similarityUtils from 'clj-fuzzy';
+import Promise from 'bluebird';
 
-class ResponseAggregator {
+export default class ResponseAggregator {
 
     constructor () {
         //this threshold is used for identify a pair of items as similar. Less value are better (0.1 means 90% similarity)
@@ -89,5 +89,3 @@ class ResponseAggregator {
         return similaritySum / count <= this._threshold;
     }
 }
-
-module.exports = ResponseAggregator;

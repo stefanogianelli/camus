@@ -1,6 +1,7 @@
 'use strict';
 
-let mongoose = require('mongoose');
+import mongoose from 'mongoose';
+
 let Schema = mongoose.Schema;
 let ObjectId = Schema.Types.ObjectId;
 
@@ -43,4 +44,4 @@ let primaryServiceSchema = new Schema ({
 
 let primaryServiceAssociation = mongoose.model('primary_service', primaryServiceSchema);
 
-module.exports = primaryServiceAssociation;
+export default primaryServiceAssociation;

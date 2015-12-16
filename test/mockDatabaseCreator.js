@@ -1,17 +1,18 @@
 'use strict';
 
-let _ = require('lodash');
-let async = require('async');
-let assert = require('assert');
-let mockData = require('./mockModel.js');
-let ServiceModel = require('../models/serviceDescription.js');
-let PrimaryServiceModel = require('../models/primaryServiceAssociation.js');
-let SupportServiceModel = require('../models/supportServiceAssociation.js');
-let cdtModel = require('../models/cdtDescription.js');
+import * as _ from 'lodash';
+import * as async from 'async';
+import * as assert from 'assert';
+
+import * as mockData from './mockModel.js';
+import ServiceModel from '../models/serviceDescription.js';
+import PrimaryServiceModel from '../models/primaryServiceAssociation.js';
+import SupportServiceModel from '../models/supportServiceAssociation.js';
+import CdtModel from '../models/cdtDescription.js';
 
 let instance = null;
 
-class MockDatabaseCreator {
+export default class MockDatabaseCreator {
     
     constructor () {
         if (!instance) {
@@ -30,21 +31,21 @@ class MockDatabaseCreator {
         let _idMultipleSonsCdt;
         async.series({
                 one: callback => {
-                    let cdt = new cdtModel(mockData.cdt);
+                    let cdt = new CdtModel(mockData.cdt);
                     cdt.save((err, cdt) => {
                         _idCDT = cdt._id;
                         callback(err, 'done');
                     });
                 },
                 two: callback => {
-                    let cdt = new cdtModel(mockData.nestedCdt);
+                    let cdt = new CdtModel(mockData.nestedCdt);
                     cdt.save((err, cdt) => {
                         _idNestedCdt = cdt._id;
                         callback(err, 'done');
                     });
                 },
                 three: callback => {
-                    let cdt = new cdtModel(mockData.multipleSonsCdt);
+                    let cdt = new CdtModel(mockData.multipleSonsCdt);
                     cdt.save((err, cdt) => {
                         _idMultipleSonsCdt = cdt._id;
                         callback(err, 'done');
@@ -297,7 +298,7 @@ class MockDatabaseCreator {
     deleteDatabase (callback) {
         async.parallel({
                 zero: callback => {
-                    cdtModel.remove({}, err => {
+                    CdtModel.remove({}, err => {
                         callback(err, 'done');
                     })
                 },
@@ -322,5 +323,3 @@ class MockDatabaseCreator {
             });
     }
 }
-
-module.exports = MockDatabaseCreator;

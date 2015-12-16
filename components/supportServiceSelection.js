@@ -1,11 +1,13 @@
 'use strict';
 
-let _ = require('lodash');
-let Promise = require('bluebird');
-let provider = require('../provider/provider.js');
-let Provider = new provider();
+import _ from 'lodash';
+import Promise from 'bluebird';
 
-class SupportServiceSelection {
+import Provider from '../provider/provider.js';
+
+let provider = new Provider();
+
+export default class SupportServiceSelection {
 
     /**
      * Create the list of support services associated to the current context
@@ -40,7 +42,7 @@ class SupportServiceSelection {
     _selectServicesFromName (serviceNames) {
         return new Promise (resolve => {
             if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
-                Provider
+                provider
                 //retrieve the service descriptions
                     .getServicesByNames(serviceNames)
                     .then(services => {
@@ -71,7 +73,7 @@ class SupportServiceSelection {
                     .map(categories, c => {
                         return Promise
                             .join(
-                                Provider
+                                provider
                                     .filterSupportServices(decoratedCdt._id, c, _.union(decoratedCdt.filterNodes, decoratedCdt.rankingNodes)),
                                 this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes),
                                 (filterServices, customServices) => {
@@ -80,7 +82,7 @@ class SupportServiceSelection {
                             )
                             .then(services => {
                                 //retrieve the service descriptions for the found operation identifiers
-                                return Provider.getServicesByOperationIds(services);
+                                return provider.getServicesByOperationIds(services);
                             })
                             .then(services => {
                                 //compose the queries
@@ -252,12 +254,10 @@ class SupportServiceSelection {
      * @private
      */
     _searchByCoordinates (idCdt, node) {
-        return Provider
+        return provider
             .searchSupportByCoordinates(idCdt, node)
             .catch(e => {
                 console.log(e);
             });
     }
 }
-
-module.exports = SupportServiceSelection;

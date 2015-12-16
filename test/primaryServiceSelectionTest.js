@@ -1,12 +1,14 @@
 'use strict';
 
-let assert = require('assert');
-let serviceManager = require('../components/primaryServiceSelection.js');
-let ServiceManager = new serviceManager();
-let mockDatabase = require('./mockDatabaseCreator.js');
-let MockDatabase = new mockDatabase();
-let provider = require('../provider/provider.js');
-let Provider = new provider();
+import assert from 'assert';
+
+import ServiceManager from '../components/primaryServiceSelection.js';
+import MockDatabase from './mockDatabaseCreator.js';
+import Provider from '../provider/provider.js';
+
+let serviceManager = new ServiceManager();
+let mockDatabase = new MockDatabase();
+let provider = new Provider();
 
 let _idCDT;
 let _idNestedCDT;
@@ -15,8 +17,8 @@ let _idMultipleSonCDT;
 describe('Component: PrimaryServiceSelection', () => {
 
     before(function(done) {
-        Provider.createConnection('mongodb://localhost/camus_test');
-        MockDatabase.createDatabase((err, idCDT, idNestedCDT, idMultipleSonCDT) => {
+        provider.createConnection('mongodb://localhost/camus_test');
+        mockDatabase.createDatabase((err, idCDT, idNestedCDT, idMultipleSonCDT) => {
             assert.equal(err, null);
             _idCDT = idCDT;
             _idNestedCDT = idNestedCDT;
@@ -27,18 +29,18 @@ describe('Component: PrimaryServiceSelection', () => {
 
     describe('#selectServices()', () => {
         it('check if correct services are selected', () => {
-            return ServiceManager
+            return serviceManager
                 .selectServices(decoratedCdt(_idCDT))
                 .then(services => {
                     assert.equal(services.length, 2);
                     assert.equal(services[0].rank, 5);
-                    return [services, Provider.getServiceByOperationId(services[0]._idOperation)];
+                    return [services, provider.getServiceByOperationId(services[0]._idOperation)];
                 })
                 .spread((services, data) => {
                     assert.equal(data.name, 'Eventful');
                     assert.equal(data.operations[0].name, 'eventSearch');
                     assert.equal(services[1].rank, 2);
-                    return Provider.getServiceByOperationId(services[1]._idOperation);
+                    return provider.getServiceByOperationId(services[1]._idOperation);
                 })
                 .then(data => {
                     assert.equal(data.name, 'GooglePlaces');
@@ -46,23 +48,23 @@ describe('Component: PrimaryServiceSelection', () => {
                 });
         });
         it('check if correct services are selected for nested CDT dimensions', () => {
-            return ServiceManager
+            return serviceManager
                 .selectServices(nestedContext(_idNestedCDT))
                 .then(services => {
                     assert.equal(services.length, 3);
-                    return [services, Provider.getServiceByOperationId(services[0]._idOperation)];
+                    return [services, provider.getServiceByOperationId(services[0]._idOperation)];
                 })
                 .spread((services, data) => {
                     assert.equal(services[0].rank, 2);
                     assert.equal(data.name, 'GooglePlaces');
                     assert.equal(data.operations[0].name, 'placeTextSearch');
-                    return [services, Provider.getServiceByOperationId(services[1]._idOperation)];
+                    return [services, provider.getServiceByOperationId(services[1]._idOperation)];
                 })
                 .spread((services, data) => {
                     assert.equal(services[1].rank, 2);
                     assert.equal(data.name, 'Eventful');
                     assert.equal(data.operations[0].name, 'eventSearch');
-                    return [services, Provider.getServiceByOperationId(services[2]._idOperation)];
+                    return [services, provider.getServiceByOperationId(services[2]._idOperation)];
                 })
                 .spread((services, data) => {
                     assert.equal(services[2].rank, 2);
@@ -71,23 +73,23 @@ describe('Component: PrimaryServiceSelection', () => {
                 });
         });
         it('check if correct services are selected for multiple son CDT dimensions', () => {
-            return ServiceManager
+            return serviceManager
                 .selectServices(multipleSonContext(_idMultipleSonCDT))
                 .then(services => {
                     assert.equal(services.length, 3);
-                    return [services, Provider.getServiceByOperationId(services[0]._idOperation)];
+                    return [services, provider.getServiceByOperationId(services[0]._idOperation)];
                 })
                 .spread((services, data) => {
                     assert.equal(services[0].rank, 2);
                     assert.equal(data.name, 'GooglePlaces');
                     assert.equal(data.operations[0].name, 'placeTextSearch');
-                    return [services, Provider.getServiceByOperationId(services[1]._idOperation)];
+                    return [services, provider.getServiceByOperationId(services[1]._idOperation)];
                 })
                 .spread((services, data) => {
                     assert.equal(services[1].rank, 2);
                     assert.equal(data.name, 'Eventful');
                     assert.equal(data.operations[0].name, 'eventSearch');
-                    return [services, Provider.getServiceByOperationId(services[2]._idOperation)];
+                    return [services, provider.getServiceByOperationId(services[2]._idOperation)];
                 })
                 .spread((services, data) => {
                     assert.equal(services[2].rank, 2);
@@ -96,7 +98,7 @@ describe('Component: PrimaryServiceSelection', () => {
                 });
         });
         it('check error when no filter nodes selected', () => {
-            return ServiceManager
+            return serviceManager
                 .selectServices(parameterContext(_idCDT))
                 .catch(e => {
                     assert.equal(e.message, 'No filter nodes selected!');
@@ -105,9 +107,9 @@ describe('Component: PrimaryServiceSelection', () => {
     });
 
     after(done => {
-        MockDatabase.deleteDatabase(err => {
+        mockDatabase.deleteDatabase(err => {
             assert.equal(err, null);
-            Provider.closeConnection();
+            provider.closeConnection();
             done();
         });
     });

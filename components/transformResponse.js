@@ -1,9 +1,9 @@
 'use strict';
 
-let _ = require('lodash');
-let Promise = require('bluebird');
+import _ from 'lodash';
+import Promise from 'bluebird';
 
-class TransformResponse {
+export default class TransformResponse {
 
     /**
      * It transforms the response of the service to make it in internal representation
@@ -151,5 +151,3 @@ class TransformResponse {
         return _.isEqual(value, null) || _.isEqual(value, '');
     }
 }
-
-module.exports = TransformResponse;

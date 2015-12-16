@@ -1,11 +1,13 @@
 'use strict';
 
-let _ = require('lodash');
-let Promise = require('bluebird');
-let provider = require('../provider/provider.js');
-let Provider = new provider();
+import _ from 'lodash';
+import Promise from 'bluebird';
 
-class ContextManager {
+import Provider from '../provider/provider.js';
+
+let provider = new Provider();
+
+export default class ContextManager {
 
     /**
      * It takes as input the user's context and transform it into the decorated one.
@@ -57,7 +59,7 @@ class ContextManager {
      */
     _mergeCdtAndContext (context) {
         return new Promise ((resolve, reject) => {
-            Provider
+            provider
                 .getCdt(context._id)
                 .then(cdt => {
                     //check if the related CDT is found
@@ -389,7 +391,7 @@ class ContextManager {
             if (_.isUndefined(nodes) || _.isEmpty(nodes)) {
                 resolve([]);
             }
-            Provider
+            provider
                 .getNodeDescendants(idCDT, nodes)
                 .then(results => {
                     let output = [];
@@ -408,5 +410,3 @@ class ContextManager {
         });
     }
 }
-
-module.exports = ContextManager;

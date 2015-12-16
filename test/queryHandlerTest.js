@@ -1,23 +1,25 @@
 'use strict';
 
-let assert = require('assert');
-let mockDatabase = require('./mockDatabaseCreator.js');
-let MockDatabase = new mockDatabase();
-let mockData = require('./mockModel.js');
-let serviceManager = require('../components/primaryServiceSelection.js');
-let ServiceManager = new serviceManager();
-let queryHandler = require('../components/queryHandler.js');
-let QueryHandler = new queryHandler();
-let provider = require('../provider/provider.js');
-let Provider = new provider();
+import assert from 'assert';
+
+import MockDatabase from './mockDatabaseCreator.js';
+import * as mockData from './mockModel.js';
+import ServiceManager from '../components/primaryServiceSelection.js';
+import QueryHandler from '../components/queryHandler.js';
+import Provider from '../provider/provider.js';
+
+let mockDatabase = new MockDatabase();
+let serviceManager = new ServiceManager();
+let queryHandler = new QueryHandler();
+let provider = new Provider();
 
 let _idCDT;
 
 describe('Component: QueryHandler', () => {
 
     before(function(done) {
-        Provider.createConnection('mongodb://localhost/camus_test');
-        MockDatabase.createDatabase((err, idCDT) => {
+        provider.createConnection('mongodb://localhost/camus_test');
+        mockDatabase.createDatabase((err, idCDT) => {
             assert.equal(err, null);
             _idCDT = idCDT;
             done();
@@ -26,10 +28,10 @@ describe('Component: QueryHandler', () => {
 
     describe('#executeQueries()', () => {
         it('check if correct data are retrieved', () => {
-            return ServiceManager
+            return serviceManager
                 .selectServices(mockData.decoratedCdt(_idCDT))
                 .then(services => {
-                    return QueryHandler.executeQueries(services, mockData.decoratedCdt(_idCDT));
+                    return queryHandler.executeQueries(services, mockData.decoratedCdt(_idCDT));
                 })
                 .then(responses => {
                     assert.equal(responses.length, 2);
@@ -38,10 +40,10 @@ describe('Component: QueryHandler', () => {
                 });
         });
         it('check array composition when one service does not respond to a query', () => {
-            return ServiceManager
+            return serviceManager
                 .selectServices(contextForFakeService(_idCDT))
                 .then(services => {
-                    return QueryHandler.executeQueries(services, contextForFakeService(_idCDT));
+                    return queryHandler.executeQueries(services, contextForFakeService(_idCDT));
                 })
                 .then(responses => {
                     assert.equal(responses.length, 2);
@@ -50,10 +52,10 @@ describe('Component: QueryHandler', () => {
                 });
         });
         it('check correct execution of custom bridge', () => {
-            return ServiceManager
+            return serviceManager
                 .selectServices(testBridgeContext(_idCDT))
                 .then(function(services) {
-                    return QueryHandler.executeQueries(services, testBridgeContext(_idCDT));
+                    return queryHandler.executeQueries(services, testBridgeContext(_idCDT));
                 })
                 .then(responses => {
                     assert.equal(responses.length, 1);
@@ -64,9 +66,9 @@ describe('Component: QueryHandler', () => {
     });
 
     after(done => {
-        MockDatabase.deleteDatabase(err => {
+        mockDatabase.deleteDatabase(err => {
             assert.equal(err, null);
-            Provider.closeConnection();
+            provider.closeConnection();
             done();
         });
     });

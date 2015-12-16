@@ -1,14 +1,16 @@
 'use strict';
 
-let assert = require('assert');
-let responseAggregator = require('../components/responseAggregator.js');
-let ResponseAggregator = new responseAggregator();
+import assert from 'assert';
+
+import ResponseAggregator from '../components/responseAggregator.js';
+
+let responseAggregator = new ResponseAggregator();
 
 describe('Component: ResponseAggregator', () => {
 
     describe('#prepareResponse()', () => {
         it('check correct response aggregation', () => {
-            return ResponseAggregator
+            return responseAggregator
                 .prepareResponse(testSuccessfulMerging, supportResponse)
                 .then(response => {
                     assert.equal(response.data.length, 3);
@@ -16,7 +18,7 @@ describe('Component: ResponseAggregator', () => {
                 });
         });
         it('check correct response when no support services are found', () => {
-            return ResponseAggregator
+            return responseAggregator
                 .prepareResponse(testSuccessfulMerging, [])
                 .then(response => {
                     assert.equal(response.data.length, 3);
@@ -24,7 +26,7 @@ describe('Component: ResponseAggregator', () => {
                 });
         });
         it('check error message when empty response list is sent', () => {
-           return ResponseAggregator
+           return responseAggregator
                .prepareResponse([], [])
                .catch(e => {
                    assert.equal(e, 'No results');
@@ -34,7 +36,7 @@ describe('Component: ResponseAggregator', () => {
 
     describe('#findSimilarities()', () => {
         it('check if similar items are correctly merged', () => {
-            let response = ResponseAggregator._findSimilarities(testSuccessfulMerging);
+            let response = responseAggregator._findSimilarities(testSuccessfulMerging);
             assert.equal(response[0][0].nome, 'Bottega Ghiotta Gourmet');
             assert.equal(response[0][0].tipologia, 'Ristorante Italiano, Pizzeria');
             assert.equal(response[0][0].rating, '5/5');
@@ -60,10 +62,10 @@ describe('Component: ResponseAggregator', () => {
 
     describe('#calculateObjectSimilarity()', () => {
         it('check if similar objects are identified', () => {
-            assert.equal(ResponseAggregator._calculateObjectSimilarity(baseObject, similarObject), true);
+            assert.equal(responseAggregator._calculateObjectSimilarity(baseObject, similarObject), true);
         });
         it('check if different objects are identified', () => {
-            assert.equal(ResponseAggregator._calculateObjectSimilarity(baseObject, differentObject), false);
+            assert.equal(responseAggregator._calculateObjectSimilarity(baseObject, differentObject), false);
         });
     });
 

@@ -1,14 +1,15 @@
 'use strict';
 
-let assert = require('assert');
-let transformResponse = require('../components/transformResponse.js');
-let TransformResponse = new transformResponse();
+import assert from 'assert';
+import TransformResponse from '../components/transformResponse.js';
+
+let transformResponse = new TransformResponse();
 
 describe('Component: TransformResponse', () => {
 
     describe('#mappingResponse()', () => {
         it('check if the mapping is done correctly', () => {
-            return TransformResponse
+            return transformResponse
                 .mappingResponse(googlePlacesMapping, googlePlacesResponse)
                 .then(data => {
                     assert.equal(data[0].title, 'Girl & the Goat');
@@ -22,7 +23,7 @@ describe('Component: TransformResponse', () => {
                 });
         });
         it('check if a custom function on an attribute is correctly executed', () => {
-            return TransformResponse
+            return transformResponse
                 .mappingResponse(mappingWithFunction, googlePlacesResponse)
                 .then(data => {
                     assert.equal(data[0].title, 'Restaurant Girl & the Goat');
@@ -36,7 +37,7 @@ describe('Component: TransformResponse', () => {
                 });
         });
         it('check if a function on a non existent attribute doesn\'t change the response', () => {
-            return TransformResponse
+            return transformResponse
                 .mappingResponse(mappingWithInvalidFunction, googlePlacesResponse)
                 .then(data => {
                     assert.equal(data[0].title, 'Girl & the Goat');
@@ -52,7 +53,7 @@ describe('Component: TransformResponse', () => {
                 });
         });
         it('check if nested base list is correctly handled', () => {
-            return TransformResponse
+            return transformResponse
                 .mappingResponse(eventfulMapping, eventfulResponse)
                 .then(data => {
                     assert.equal(data[0].title, 'Wine Lover\'s New Year\'s Eve at Volo Restaurant Wine Bar');
@@ -66,7 +67,7 @@ describe('Component: TransformResponse', () => {
                 });
         });
         it('check if null values are deleted from the response', () => {
-            return TransformResponse
+            return transformResponse
                 .mappingResponse(mappgingWithNullValue, eventfulResponse)
                 .then(data => {
                     assert.equal(typeof data[0].count, 'undefined');
@@ -74,7 +75,7 @@ describe('Component: TransformResponse', () => {
                 });
         });
         it('check root and non array base list is correctly handled', () => {
-            return TransformResponse
+            return transformResponse
                 .mappingResponse(cinemaMapping, cinemaResponse)
                 .then(data => {
                     assert.equal(data[0].title, 'Cinema Pierrot');

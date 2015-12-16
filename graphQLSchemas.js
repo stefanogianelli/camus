@@ -1,5 +1,6 @@
 'use strict';
 
+import Promise from 'bluebird';
 import {
     GraphQLInputObjectType,
     GraphQLString,
@@ -8,20 +9,17 @@ import {
     GraphQLSchema
 } from 'graphql';
 
-//let Promise = require('bluebird');
-import Promise from 'bluebird';
+import ContextManager from './components/contextManager.js';
+import PrimaryService from './components/primaryServiceSelection.js';
+import QueryHandler from './components/queryHandler.js';
+import SupportService from './components/supportServiceSelection.js';
+import ResponseAggregator from './components/responseAggregator.js';
 
-//components
-let contextManager = require('./components/contextManager.js');
-let ContextManager = new contextManager();
-let primaryService = require('./components/primaryServiceSelection.js');
-let PrimaryService = new primaryService();
-let queryHandler = require('./components/queryHandler.js');
-let QueryHandler = new queryHandler();
-let supportService = require('./components/supportServiceSelection.js');
-let SupportService = new supportService();
-let responseAggregator = require('./components/responseAggregator.js');
-let ResponseAggregator = new responseAggregator();
+let contextManager = new ContextManager();
+let primaryService = new PrimaryService();
+let queryHandler = new QueryHandler();
+let supportService = new SupportService();
+let responseAggregator = new ResponseAggregator();
 
 /**
  * Field schema
@@ -218,22 +216,22 @@ let queryType = new GraphQLObjectType({
                 }
             },
             resolve: (root, {_id, context, support}) => {
-                return ContextManager
+                return contextManager
                     .getDecoratedCdt({_id, context, support})
                     .then(decoratedCdt => {
                         return Promise
                             .props({
-                                primary: PrimaryService
+                                primary: primaryService
                                     .selectServices(decoratedCdt)
                                     .then(services => {
-                                        return QueryHandler
+                                        return queryHandler
                                             .executeQueries(services, decoratedCdt);
                                     }),
-                                support: SupportService.selectServices(decoratedCdt)
+                                support: supportService.selectServices(decoratedCdt)
                             });
                     })
                     .then(result => {
-                        return ResponseAggregator.prepareResponse(result.primary, result.support);
+                        return responseAggregator.prepareResponse(result.primary, result.support);
                     })
                     .catch(e => {
                         throw new Error(e);
@@ -246,6 +244,8 @@ let queryType = new GraphQLObjectType({
 /**
  * The main schema
  */
-export let camusSchema = new GraphQLSchema({
+let camusSchema = new GraphQLSchema({
     query: queryType
 });
+
+export default camusSchema;

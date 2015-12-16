@@ -1,14 +1,14 @@
 'use strict';
 
-var _ = require('lodash');
-var mongoose = require('mongoose');
-var Promise = require('bluebird');
+import _ from 'lodash';
+import mongoose from 'mongoose';
+import Promise from 'bluebird';
 
 //load the models
-var cdtModel = require('../models/cdtDescription.js');
-var serviceModel = require('../models/serviceDescription.js');
-var primaryServiceModel = require('../models/primaryServiceAssociation.js');
-var supportServiceModel = require('../models/supportServiceAssociation.js');
+import cdtModel from '../models/cdtDescription.js';
+import serviceModel from '../models/serviceDescription.js';
+import primaryServiceModel from '../models/primaryServiceAssociation.js';
+import supportServiceModel from '../models/supportServiceAssociation.js';
 
 //promisify the models
 Promise.promisifyAll(cdtModel);
@@ -16,9 +16,11 @@ Promise.promisifyAll(serviceModel);
 Promise.promisifyAll(primaryServiceModel);
 Promise.promisifyAll(supportServiceModel);
 
+//radius for the coordinate search
+const _radius = 1500;
 let instance = null;
 
-class Provider {
+export default class Provider {
 
     constructor () {
         if (!instance) {
@@ -207,7 +209,7 @@ class Provider {
      * @returns {*} The list of operation identifiers found
      */
     searchPrimaryByCoordinates (idCdt, node) {
-        let radius = 1500 / 6371;
+        let radius = _radius / 6371;
         let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
         let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
         return primaryServiceModel.findAsync({
@@ -276,7 +278,7 @@ class Provider {
      * @returns {*} The list of operation identifiers found
      */
     searchSupportByCoordinates (idCdt, node) {
-        let radius = 1500 / 6371;
+        let radius = _radius / 6371;
         let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
         let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
         return supportServiceModel.findAsync({
@@ -288,5 +290,3 @@ class Provider {
         }, {_idOperation: 1, _id: 0});
     }
 }
-
-module.exports = Provider;

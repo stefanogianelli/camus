@@ -1,16 +1,16 @@
-'use strict'
+'use strict';
 
-let _ = require('lodash');
-let async = require('async');
-let Promise = require('bluebird');
+import _ from 'lodash';
+import async from 'async';
+import Promise from 'bluebird';
 
 //models
-let ServiceModel = require('./models/serviceDescription.js');
-let PrimaryServiceModel = require('./models/primaryServiceAssociation.js');
-let SupportServiceModel = require('./models/supportServiceAssociation.js');
-let cdtModel = require('./models/cdtDescription.js');
+import ServiceModel from './models/serviceDescription.js';
+import PrimaryServiceModel from './models/primaryServiceAssociation.js';
+import SupportServiceModel from './models/supportServiceAssociation.js';
+import CdtModel from './models/cdtDescription.js';
 
-class DatabaseHelper {
+export default class DatabaseHelper {
     /**
      * This function adds the entries to the database, from a default model
      * @returns {bluebird|exports|module.exports} Returns the identifier of the created CDT
@@ -20,7 +20,7 @@ class DatabaseHelper {
             async.waterfall([
                 callback => {
                     //create the CDT
-                    new cdtModel(cdt).save((err, savedCdt) => {
+                    new CdtModel(cdt).save((err, savedCdt) => {
                         callback(err, savedCdt._id);
                     });
                 },
@@ -197,7 +197,7 @@ class DatabaseHelper {
         return new Promise((resolve, reject) => {
             async.parallel([
                 callback => {
-                    cdtModel.remove({}, err => {
+                    CdtModel.remove({}, err => {
                         callback(err, 'done');
                     })
                 },
@@ -226,8 +226,6 @@ class DatabaseHelper {
         });
     }
 }
-
-module.exports = DatabaseHelper;
 
 /**
  * MODELS

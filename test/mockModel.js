@@ -1,7 +1,7 @@
 'use strict';
 
 //cdt
-let cdt = {
+export let cdt = {
     _userId: 1,
     context: [
         {
@@ -98,10 +98,8 @@ let cdt = {
     ]
 };
 
-module.exports.cdt = cdt;
-
 //CDT with nested sons
-let nestedCdt = {
+export let nestedCdt = {
     _userId: 1,
     context: [
         {
@@ -134,10 +132,8 @@ let nestedCdt = {
     ]
 };
 
-module.exports.nestedCdt = nestedCdt;
-
 //CDT with multiple sons
-let multipleSonsCdt = {
+export let multipleSonsCdt = {
     _userId: 1,
     context: [
         {
@@ -177,10 +173,8 @@ let multipleSonsCdt = {
     ]
 };
 
-module.exports.multipleSonsCdt = multipleSonsCdt;
-
 //sample decorated CDT
-let decoratedCdt = idCDT => {
+export let decoratedCdt = idCDT => {
     return {
         _id: idCDT,
         interestTopic: 'Restaurant',
@@ -272,10 +266,8 @@ let decoratedCdt = idCDT => {
     }
 };
 
-module.exports.decoratedCdt = decoratedCdt;
-
 //googlePlaces service
-let googlePlaces = {
+export let googlePlaces = {
     name: 'GooglePlaces',
     type: 'primary',
     protocol: 'rest',
@@ -324,10 +316,8 @@ let googlePlaces = {
     ]
 };
 
-module.exports.googlePlaces = googlePlaces;
-
 //eventful service
-let eventful = {
+export let eventful = {
     name: 'Eventful',
     type: 'primary',
     protocol: 'rest',
@@ -384,10 +374,8 @@ let eventful = {
     ]
 };
 
-module.exports.eventful = eventful;
-
 //fake service with wrong URL
-let fakeService = {
+export let fakeService = {
     name: 'fakeService',
     type: 'primary',
     protocol: 'rest',
@@ -444,10 +432,8 @@ let fakeService = {
     ]
 };
 
-module.exports.fakeService = fakeService;
-
 //service created for custom bridge testing
-let testBridge = {
+export let testBridge = {
     name: 'testBridge',
     type: 'primary',
     protocol: 'custom',
@@ -486,10 +472,8 @@ let testBridge = {
     ]
 };
 
-module.exports.testBridge = testBridge;
-
 //wikipedia support service
-let wikipedia = {
+export let wikipedia = {
     name: 'Wikipedia',
     type: 'support',
     protocol: 'query',
@@ -532,10 +516,8 @@ let wikipedia = {
     ]
 };
 
-module.exports.wikipedia = wikipedia;
-
 //google maps support service
-let flickr = {
+export let flickr = {
     name: 'Flickr',
     type: 'support',
     protocol: 'rest',
@@ -556,10 +538,8 @@ let flickr = {
     ]
 };
 
-module.exports.flickr = flickr;
-
 //google maps support service
-let googleMaps = {
+export let googleMaps = {
     name: 'GoogleMaps',
     type: 'support',
     protocol: 'query',
@@ -590,10 +570,8 @@ let googleMaps = {
     ]
 };
 
-module.exports.googleMaps = googleMaps;
-
 //ATM support service
-let atm = {
+export let atm = {
     name: 'ATM',
     type: 'support',
     protocol: 'query',
@@ -628,10 +606,8 @@ let atm = {
     ]
 };
 
-module.exports.atm = atm;
-
 //ATAC support service
-let atac = {
+export let atac = {
     name: 'ATAC',
     type: 'support',
     protocol: 'query',
@@ -666,10 +642,8 @@ let atac = {
     ]
 };
 
-module.exports.atac = atac;
-
 //FS support service
-let fs = {
+export let fs = {
     name: 'FS',
     type: 'support',
     protocol: 'query',
@@ -680,10 +654,8 @@ let fs = {
     ]
 };
 
-module.exports.fs = fs;
-
 //Trenord support service
-let trenord = {
+export let trenord = {
     name: 'Trenord',
     type: 'support',
     protocol: 'rest',
@@ -710,10 +682,8 @@ let trenord = {
     ]
 };
 
-module.exports.trenord = trenord;
-
 //googlePlaces associations
-let googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
+export let googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -757,10 +727,8 @@ let googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCD
     ];
 };
 
-module.exports.googlePlacesAssociations = googlePlacesAssociations;
-
 //eventful associations
-let eventfulAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
+export let eventfulAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -803,10 +771,8 @@ let eventfulAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) =
     ];
 };
 
-module.exports.eventfulAssociations = eventfulAssociations;
-
 //fake service associations
-let fakeServiceAssociation = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
+export let fakeServiceAssociation = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -849,10 +815,8 @@ let fakeServiceAssociation = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT)
     ];
 };
 
-module.exports.fakeServiceAssociation = fakeServiceAssociation;
-
 //test bridge service associations
-let testBridgeAssociation = (idOperation, idCDT) => {
+export let testBridgeAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -868,10 +832,8 @@ let testBridgeAssociation = (idOperation, idCDT) => {
     ];
 };
 
-module.exports.testBridgeAssociation = testBridgeAssociation;
-
 //google maps service associations
-let googleMapsAssociation = (idOperation, idCDT) => {
+export let googleMapsAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -888,10 +850,8 @@ let googleMapsAssociation = (idOperation, idCDT) => {
     ];
 };
 
-module.exports.googleMapsAssociation = googleMapsAssociation;
-
 //ATM service associations
-let atmAssociation = (idOperation, idCDT) => {
+export let atmAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -909,10 +869,8 @@ let atmAssociation = (idOperation, idCDT) => {
     ];
 };
 
-module.exports.atmAssociation = atmAssociation;
-
 //ATAC service associations
-let atacAssociation = (idOperation, idCDT) => {
+export let atacAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -930,10 +888,8 @@ let atacAssociation = (idOperation, idCDT) => {
     ];
 };
 
-module.exports.atacAssociation = atacAssociation;
-
 //FS service associations
-let fsAssociation = (idOperation, idCDT) => {
+export let fsAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -951,10 +907,8 @@ let fsAssociation = (idOperation, idCDT) => {
     ];
 };
 
-module.exports.fsAssociation = fsAssociation;
-
 //Trenord service associations
-let trenordAssociation = (idOperation, idCDT) => {
+export let trenordAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -972,10 +926,8 @@ let trenordAssociation = (idOperation, idCDT) => {
     ];
 };
 
-module.exports.trenordAssociation = trenordAssociation;
-
 //Flickr service associations
-let flickrAssociation = (idOperation, idCDT) => {
+export let flickrAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -991,5 +943,3 @@ let flickrAssociation = (idOperation, idCDT) => {
         }
     ];
 };
-
-module.exports.flickrAssociation = flickrAssociation;

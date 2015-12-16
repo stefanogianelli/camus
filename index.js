@@ -1,29 +1,26 @@
 'use strict';
 
-let express = require('express');
-let bodyParser = require('body-parser');
-let graphqlHTTP = require('express-graphql');
-let Promise = require('bluebird');
-let provider = require('./provider/provider.js');
-let Provider = new provider();
+import express from 'express';
+import bodyParser from 'body-parser';
+import graphqlHTTP from 'express-graphql';
+import Promise from 'bluebird';
 
-//components
-let contextManager = require('./components/contextManager.js');
-let ContextManager = new contextManager();
-let primaryService = require('./components/primaryServiceSelection.js');
-let PrimaryService = new primaryService();
-let queryHandler = require('./components/queryHandler.js');
-let QueryHandler = new queryHandler();
-let supportService = require('./components/supportServiceSelection.js');
-let SupportService = new supportService();
-let responseAggregator = require('./components/responseAggregator.js');
-let ResponseAggregator = new responseAggregator();
-let databaseHelper = require('./databaseHelper.js');
-let DatabaseHelper = new databaseHelper();
+import ContextManager from'./components/contextManager.js';
+import PrimaryService from'./components/primaryServiceSelection.js';
+import QueryHandler from'./components/queryHandler.js';
+import SupportService from'./components/supportServiceSelection.js';
+import ResponseAggregator from'./components/responseAggregator.js';
+import DatabaseHelper from'./databaseHelper.js';
+import Provider from './provider/provider.js';
+import camusSchema from './graphQLSchemas.js';
 
-//load GraphQL schemas
-//let schemas = require('./graphQLSchemas.js');
-import {camusSchema} from './graphQLSchemas.js';
+let provider = new Provider();
+let contextManager = new ContextManager();
+let primaryService = new PrimaryService();
+let queryHandler = new QueryHandler();
+let supportService = new SupportService();
+let responseAggregator = new ResponseAggregator();
+let databaseHelper = new DatabaseHelper();
 
 let app = express();
 
@@ -42,22 +39,22 @@ app.get('/', (req, res) => {
  * It needs a context for Service selection
  */
 app.post('/query', (req, res) => {
-    ContextManager
+    contextManager
         .getDecoratedCdt(req.body)
         .then(decoratedCdt => {
             return Promise
                 .props({
-                    primary: PrimaryService
+                    primary: primaryService
                         .selectServices(decoratedCdt)
                         .then(services => {
-                            return QueryHandler
+                            return queryHandler
                                 .executeQueries(services, decoratedCdt);
                         }),
-                    support: SupportService.selectServices(decoratedCdt)
+                    support: supportService.selectServices(decoratedCdt)
                 });
         })
         .then(result => {
-            return ResponseAggregator.prepareResponse(result.primary, result.support);
+            return responseAggregator.prepareResponse(result.primary, result.support);
         })
         .then(response => {
             res.send(response);
@@ -71,12 +68,12 @@ app.post('/query', (req, res) => {
  * Route used for testing purpose. It deletes and recreates the database from scratch
  */
 app.get('/createDatabase', (req, res) => {
-    DatabaseHelper
+    databaseHelper
         //first I clean the existing database
         .deleteDatabase()
         //recreate the database
         .then(() => {
-            return DatabaseHelper.createDatabase();
+            return databaseHelper.createDatabase();
         })
         .then(idCDT => {
             res.send('Database created!<br/>idCDT: ' + idCDT);
@@ -92,7 +89,7 @@ app.use('/graphql', graphqlHTTP({schema: camusSchema, graphiql: true}));
 //start the server
 let server = app.listen(3001, () => {
     //connect to the DB
-    Provider.createConnection('mongodb://localhost/camus');
+    provider.createConnection('mongodb://localhost/camus');
 
     let host = server.address().address;
     let port = server.address().port;

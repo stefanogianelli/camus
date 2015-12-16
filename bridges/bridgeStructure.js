@@ -1,8 +1,8 @@
 'use strict';
 
-let Promise = require('bluebird');
+import Promise from 'bluebird';
 
-class BridgeStructure {
+export default class BridgeStructure {
     /**
      * It allows to execute custom queries to web service
      * @param parameterNodes The paramater nodes retrieved from the current context
@@ -19,5 +19,3 @@ class BridgeStructure {
         });
     }
 }
-
-module.exports = BridgeStructure;

@@ -1,13 +1,15 @@
 'use strict';
 
-let assert = require('assert');
-var Promise = require('bluebird');
-let contextManager = require('../components/contextManager.js');
-let ContextManager = new contextManager();
-let mockDatabase = require('./mockDatabaseCreator.js');
-let MockDatabase = new mockDatabase();
-let provider = require('../provider/provider.js');
-let Provider = new provider();
+import assert from 'assert';
+import Promise from 'bluebird';
+
+import ContextManager from '../components/contextManager.js';
+import MockDatabase from './mockDatabaseCreator.js';
+import Provider from '../provider/provider.js';
+
+let contextManager = new ContextManager();
+let mockDatabase = new MockDatabase();
+let provider = new Provider();
 
 let _idCDT;
 let _nestedCDT;
@@ -16,8 +18,8 @@ let _multipleSonsCDT;
 describe('Component: ContextManager', () => {
 
     before(done => {
-        Provider.createConnection('mongodb://localhost/camus_test');
-        MockDatabase.createDatabase((err, idCDT, nestedCDT, multipleSonsCDT) => {
+        provider.createConnection('mongodb://localhost/camus_test');
+        mockDatabase.createDatabase((err, idCDT, nestedCDT, multipleSonsCDT) => {
             assert.equal(err, null);
             _idCDT = idCDT;
             _nestedCDT = nestedCDT;
@@ -28,7 +30,7 @@ describe('Component: ContextManager', () => {
 
     describe('#getDecoratedCdt()', () => {
         it('check if correct decorated CDT is generated', () => {
-            return ContextManager
+            return contextManager
                 .getDecoratedCdt(mergedCdt(_idCDT))
                 .then(data => {
                     assert.equal(data.interestTopic, 'Restaurant');
@@ -83,7 +85,7 @@ describe('Component: ContextManager', () => {
 
     describe('#mergeCdtAndContext()', () => {
         it('check if a CDT and a context are correctly merged', () => {
-            return ContextManager
+            return contextManager
                 ._mergeCdtAndContext(context(_idCDT))
                 .then(data => {
                     assert.equal(data.context[0].dimension, 'Location');
@@ -101,7 +103,7 @@ describe('Component: ContextManager', () => {
                 });
         });
         it('check error when an invalid CDT identifier is provided', () => {
-            return ContextManager
+            return contextManager
                 ._mergeCdtAndContext(context(1))
                 .catch(e => {
                     assert.equal(e, 'No CDT found. Check if the ID is correct');
@@ -111,7 +113,7 @@ describe('Component: ContextManager', () => {
 
     describe('#getFilterNodes()', () => {
         it('check if correct filter nodes are returned', () => {
-            return ContextManager
+            return contextManager
                 ._getFilterNodes(_idCDT, mergedCdt(_idCDT).context)
                 .then(results => {
                     assert.equal(results.length, 5);
@@ -131,7 +133,7 @@ describe('Component: ContextManager', () => {
 
     describe('#getRankingNodes()', () => {
         it('check if correct ranking nodes are returned', () => {
-            return ContextManager
+            return contextManager
                 ._getRankingNodes(_idCDT, mergedCdt(_idCDT).context)
                 .then(results => {
                     assert.equal(results.length, 2);
@@ -145,7 +147,7 @@ describe('Component: ContextManager', () => {
 
     describe('#getParameterNodes()', () => {
         it('check if correct parameter nodes are returned', () => {
-            return ContextManager
+            return contextManager
                 ._getParameterNodes(mergedCdt(_idCDT).context)
                 .then(results => {
                     assert.equal(results.length, 4);
@@ -166,7 +168,7 @@ describe('Component: ContextManager', () => {
 
     describe('#getSpecificNodes()', () => {
         it('check if correct specific nodes are returned', () => {
-            return ContextManager
+            return contextManager
                 ._getSpecificNodes(mergedCdt(_idCDT).context)
                 .then(results => {
                     assert.equal(results.length, 1);
@@ -183,47 +185,47 @@ describe('Component: ContextManager', () => {
         it('check empty list when no nodes are selected', () => {
             return Promise
                 .join(
-                    ContextManager
+                    contextManager
                         ._getFilterNodes(_idCDT, onlyParameter(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0);
                         }),
-                    ContextManager
+                    contextManager
                         ._getFilterNodes(_idCDT, onlyRanking(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0);
                         }),
-                    ContextManager
+                    contextManager
                         ._getParameterNodes(_idCDT, onlyFilter(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0);
                         }),
-                    ContextManager
+                    contextManager
                         ._getParameterNodes(_idCDT, onlyRanking(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0);
                         }),
-                    ContextManager
+                    contextManager
                         ._getRankingNodes(_idCDT, onlyFilter(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0);
                         }),
-                    ContextManager
+                    contextManager
                         ._getRankingNodes(_idCDT, onlyParameter(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0);
                         }),
-                    ContextManager
+                    contextManager
                         ._getSpecificNodes(onlyFilter(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0);
                         }),
-                    ContextManager
+                    contextManager
                         ._getSpecificNodes(onlyParameter(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0);
                         }),
-                    ContextManager
+                    contextManager
                         ._getSpecificNodes(onlyRanking(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0);
@@ -231,14 +233,14 @@ describe('Component: ContextManager', () => {
                 );
         });
         it('check error when an invalid type is selected', () => {
-            return ContextManager
+            return contextManager
                 ._getNodes('invalid', onlyFilter(_idCDT).context, false)
                 .catch(e => {
                     assert.equal(e, 'Invalid type selected');
                 });
         });
         it('check error when an empty item list is provided', () => {
-            return ContextManager
+            return contextManager
                 ._getNodes('filter', null, false)
                 .catch(e => {
                     assert.equal(e, 'No items selected');
@@ -248,28 +250,28 @@ describe('Component: ContextManager', () => {
 
     describe('#getInterestTopic()', () => {
         it('check if correct interest topic are returned', () => {
-            return ContextManager
+            return contextManager
                 ._getInterestTopic(mergedCdt(_idCDT))
                 .then(interestTopic => {
                     assert.equal(interestTopic, 'Restaurant');
                 });
         });
         it('check error when sending empty context', () => {
-            return ContextManager
+            return contextManager
                 ._getInterestTopic(emptyContext(_idCDT))
                 .catch(e => {
                     assert.equal(e, 'No context selected');
                 });
         });
         it('check error when sending empty object', () => {
-            return ContextManager
+            return contextManager
                 ._getInterestTopic({ })
                 .catch(e => {
                         assert.equal(e, 'No context selected');
                 });
         });
         it('check error when sending context without interest topic', () => {
-            return ContextManager
+            return contextManager
                 ._getInterestTopic(noInterestTopicContext(_idCDT))
                 .catch(e => {
                     assert.equal(e, 'No interest topic selected');
@@ -279,7 +281,7 @@ describe('Component: ContextManager', () => {
 
     describe('#getSupportServiceCategories()', () => {
         it('check if correct categories are returned', () => {
-            return ContextManager
+            return contextManager
                 ._getSupportServiceCategories(mergedCdt(_idCDT))
                 .then(categories => {
                     assert.equal(categories.length, 1);
@@ -287,14 +289,14 @@ describe('Component: ContextManager', () => {
                 });
         });
         it('check error when sending empty context', () => {
-            return ContextManager
+            return contextManager
                 ._getSupportServiceCategories(emptySupport(_idCDT))
                 .catch(e => {
                     assert.equal(e, 'No support services defined');
                 });
         });
         it('check error when sending empty object', () => {
-            return ContextManager
+            return contextManager
                 ._getSupportServiceCategories({ })
                 .catch(e => {
                     assert.equal(e, 'No support services defined');
@@ -304,7 +306,7 @@ describe('Component: ContextManager', () => {
 
     describe('#getSupportServiceNames()', () => {
         it('check if correct names are returned', () => {
-            return ContextManager
+            return contextManager
                 ._getSupportServiceNames(mergedCdt(_idCDT))
                 .then(names => {
                     assert.notEqual(names, null);
@@ -314,14 +316,14 @@ describe('Component: ContextManager', () => {
                 });
         });
         it('check error when sending empty context', () => {
-            return ContextManager
+            return contextManager
                 ._getSupportServiceNames(emptySupport(_idCDT))
                 .catch(e => {
                     assert.equal(e, 'No support services defined');
                 });
         });
         it('check error when sending empty object', () => {
-            return ContextManager
+            return contextManager
                 ._getSupportServiceNames({ })
                 .catch(e => {
                     assert.equal(e, 'No support services defined');
@@ -331,7 +333,7 @@ describe('Component: ContextManager', () => {
 
     describe('#getDescendants()', () => {
         it('check if correct descendants are returned', () => {
-            return ContextManager
+            return contextManager
                 ._getDescendants(_idCDT, {value: 'PublicTransport'})
                 .then(nodes => {
                     assert.equal(nodes.length, 2);
@@ -342,7 +344,7 @@ describe('Component: ContextManager', () => {
                 });
         });
         it('check if correct nested descendants are returned', () => {
-            return ContextManager
+            return contextManager
                 ._getDescendants(_nestedCDT, {value: 'b'})
                 .then(nodes => {
                     assert.equal(nodes[0].dimension, 'd');
@@ -356,7 +358,7 @@ describe('Component: ContextManager', () => {
                 });
         });
         it('check if correct multiple descendants are returned', () => {
-            return ContextManager
+            return contextManager
                 ._getDescendants(_multipleSonsCDT, [{value: 'd'}, {value: 'e'}])
                 .then(nodes => {
                     assert.equal(nodes[0].dimension, 'g');
@@ -370,21 +372,21 @@ describe('Component: ContextManager', () => {
                 });
         });
         it('check empty list in output when an invalid CDT identifier is provided', () => {
-            return ContextManager
+            return contextManager
                 ._getDescendants(1, {value: 'PublicTransport'})
                 .then(nodes => {
                     assert.equal(nodes.length, 0);
                 });
         });
         it('check empty list in output when an empty node name', () => {
-            return ContextManager
+            return contextManager
                 ._getDescendants(_idCDT, null)
                 .then(nodes => {
                     assert.equal(nodes.length, 0);
                 });
         });
         it('check error with empty CDT identifier', () => {
-            return ContextManager
+            return contextManager
                 ._getDescendants()
                 .catch(e => {
                     assert.equal(e, 'CDT identifier not defined');
@@ -393,9 +395,9 @@ describe('Component: ContextManager', () => {
     });
 
     after(done => {
-        MockDatabase.deleteDatabase(err => {
+        mockDatabase.deleteDatabase(err => {
             assert.equal(err, null);
-            Provider.closeConnection();
+            provider.closeConnection();
             done();
         });
     });

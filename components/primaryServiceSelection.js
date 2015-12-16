@@ -1,11 +1,13 @@
 'use strict';
 
-let _ = require('lodash');
-let Promise = require('bluebird');
-let provider = require('../provider/provider.js');
-let Provider = new provider();
+import * as _ from 'lodash';
+import Promise from 'bluebird';
 
-class PrimaryServiceSelection  {
+import Provider from '../provider/provider.js';
+
+let provider = new Provider();
+
+export default class PrimaryServiceSelection  {
 
     constructor () {
         //number of services to keep
@@ -26,9 +28,9 @@ class PrimaryServiceSelection  {
             Promise
                 .props({
                     //search for services associated to the filter nodes
-                    filter: Provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.filterNodes),
+                    filter: provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.filterNodes),
                     //search for services associated to the ranking nodes
-                    ranking: Provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.rankingNodes),
+                    ranking: provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.rankingNodes),
                     //search for specific associations
                     specific: this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes)
                 })
@@ -161,7 +163,7 @@ class PrimaryServiceSelection  {
      * @private
      */
     _searchByCoordinates (idCdt, node) {
-        return Provider
+        return provider
             .searchPrimaryByCoordinates(idCdt, node)
             .map((result, index) => {
                 return {
@@ -171,5 +173,3 @@ class PrimaryServiceSelection  {
             });
     }
 }
-
-module.exports = PrimaryServiceSelection;
