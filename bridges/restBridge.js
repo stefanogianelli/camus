@@ -1,10 +1,15 @@
 'use strict';
 
-let _ = require('lodash');
-let Promise = require('bluebird');
-let agent = require('superagent');
+import _ from 'lodash';
+import Promise from 'bluebird';
+import agent from 'superagent';
 
 class RestBridge {
+
+    constructor () {
+        //timeout for the requests (in ms)
+        this._timeout = 200;
+    }
 
     /**
      * Default bridge for rest and query services.
@@ -12,21 +17,14 @@ class RestBridge {
      * Then compose the query and invoke the service
      * @param service The service description
      * @param paramNodes The parameter nodes of the CDT
-     * @returns {*|{get}} The promise with the service response
+     * @returns {Promise|Request|Promise.<T>} The promise with the service response
      */
     executeQuery (service, paramNodes) {
-        return new Promise((resolve, reject) => {
-            this._parameterMapping(service, paramNodes)
-                .then(params => {
-                    return this._invokeService(service, params);
-                })
-                .then(response => {
-                    resolve(response);
-                })
-                .catch(e => {
-                    reject(e);
-                });
-        });
+        return this
+            ._parameterMapping(service, paramNodes)
+            .then(params => {
+                return this._invokeService(service, params);
+            })
     }
 
     /**
@@ -134,16 +132,17 @@ class RestBridge {
      */
     _invokeService (service, params) {
         return new Promise ((resolve, reject) => {
+            const operation = service.operations[0];
             let request;
             //setting up the query path and parameters
             if (service.protocol === 'rest') {
-                let address = service.basePath.concat(service.operations[0].path);
+                let address = service.basePath.concat(operation.path);
                 _.forEach(params, p => {
                     address = address.concat('/' + p.name + '/' + p.value);
                 });
                 request = agent.get(address);
             } else if (service.protocol === 'query') {
-                request = agent.get(service.basePath.concat(service.operations[0].path));
+                request = agent.get(service.basePath.concat(operation.path));
                 _.forEach(params, p => {
                     let obj = {};
                     obj[p.name] = p.value;
@@ -151,11 +150,12 @@ class RestBridge {
                 });
             }
             //adding header information
-            _.forEach(service.operations[0].headers, h => {
+            _.forEach(operation.headers, h => {
                 request.set(h.name, h.value);
             });
             //invoke the service and return the response
             request
+                .timeout(this._timeout)
                 .end((err, res) => {
                     if (err) {
                         switch (err.status) {
