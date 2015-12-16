@@ -6,9 +6,9 @@ import ServiceManager from '../components/primaryServiceSelection.js';
 import MockDatabase from './mockDatabaseCreator.js';
 import Provider from '../provider/provider.js';
 
-let serviceManager = new ServiceManager();
-let mockDatabase = new MockDatabase();
-let provider = new Provider();
+const serviceManager = new ServiceManager();
+const mockDatabase = new MockDatabase();
+const provider = new Provider();
 
 let _idCDT;
 let _idNestedCDT;

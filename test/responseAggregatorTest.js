@@ -4,7 +4,7 @@ import assert from 'assert';
 
 import ResponseAggregator from '../components/responseAggregator.js';
 
-let responseAggregator = new ResponseAggregator();
+const responseAggregator = new ResponseAggregator();
 
 describe('Component: ResponseAggregator', () => {
 
@@ -36,7 +36,7 @@ describe('Component: ResponseAggregator', () => {
 
     describe('#findSimilarities()', () => {
         it('check if similar items are correctly merged', () => {
-            let response = responseAggregator._findSimilarities(testSuccessfulMerging);
+            const response = responseAggregator._findSimilarities(testSuccessfulMerging);
             assert.equal(response[0][0].nome, 'Bottega Ghiotta Gourmet');
             assert.equal(response[0][0].tipologia, 'Ristorante Italiano, Pizzeria');
             assert.equal(response[0][0].rating, '5/5');
@@ -72,7 +72,7 @@ describe('Component: ResponseAggregator', () => {
 });
 
 //Base object for similarity testing
-let baseObject = {
+const baseObject = {
     title: 'Spectre',
     director: 'Sam Mendes',
     writtenBy: 'John Logan, Neal Purvis, Robert Wade, Jez Butterworth',
@@ -80,7 +80,7 @@ let baseObject = {
 };
 
 //Example of an object similar to the base one
-let similarObject = {
+const similarObject = {
     title: 'Spectre',
     director: 'Mendes J. Sam',
     writtenBy: 'John Logan, Robert Wade, Jez Butterworth, Neal Purvis',
@@ -88,7 +88,7 @@ let similarObject = {
 };
 
 //Example of an object different from the base one
-let differentObject = {
+const differentObject = {
     title: 'Burnt',
     director: 'John Wells',
     writtenBy: 'Steven Knight',
@@ -96,7 +96,7 @@ let differentObject = {
 };
 
 //response used to test if two similar items are merged correctly
-let testSuccessfulMerging = [
+const testSuccessfulMerging = [
     [
         {
             nome: 'Bottega Ghiotta Gourmet',
@@ -148,7 +148,7 @@ let testSuccessfulMerging = [
 ];
 
 //test response that came from SupportServiceSelection component
-let supportResponse = [
+const supportResponse = [
     {
         name: 'Wikipedia',
         url: 'https://en.wikipedia.org/w/api.php?action=query&titles={search_key}&prop=revisions&rvprop=content&format=json'

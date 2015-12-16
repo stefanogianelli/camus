@@ -15,16 +15,16 @@ import QueryHandler from './components/queryHandler.js';
 import SupportService from './components/supportServiceSelection.js';
 import ResponseAggregator from './components/responseAggregator.js';
 
-let contextManager = new ContextManager();
-let primaryService = new PrimaryService();
-let queryHandler = new QueryHandler();
-let supportService = new SupportService();
-let responseAggregator = new ResponseAggregator();
+const contextManager = new ContextManager();
+const primaryService = new PrimaryService();
+const queryHandler = new QueryHandler();
+const supportService = new SupportService();
+const responseAggregator = new ResponseAggregator();
 
 /**
  * Field schema
  */
-let fieldItemType = new GraphQLInputObjectType({
+const fieldItemType = new GraphQLInputObjectType({
     name: 'FieldItem',
     description: 'A sub-parameter item',
     fields: {
@@ -42,7 +42,7 @@ let fieldItemType = new GraphQLInputObjectType({
 /**
  * Parameter schema
  */
-let parameterItemType = new GraphQLInputObjectType({
+const parameterItemType = new GraphQLInputObjectType({
     name: 'ParameterItem',
     description: 'It define a single parameter associated to the node. It\'s possible to define nested sub-parameters',
     fields: {
@@ -64,7 +64,7 @@ let parameterItemType = new GraphQLInputObjectType({
 /**
  * Context item
  */
-let contextItemType = new GraphQLInputObjectType({
+const contextItemType = new GraphQLInputObjectType({
     name: 'ContextItem',
     description: 'A context item is a single selection made by the user',
     fields: {
@@ -86,7 +86,7 @@ let contextItemType = new GraphQLInputObjectType({
 /**
  * Support item
  */
-let supportItemType = new GraphQLInputObjectType({
+const supportItemType = new GraphQLInputObjectType({
     name: 'SupportItem',
     description: 'Support service item. It allows the definition of the requested support service name or category. If a service is requested by the name the fields name and operation are mandatory. Otherwise it\'s sufficient to specify a category' ,
     fields: {
@@ -108,7 +108,7 @@ let supportItemType = new GraphQLInputObjectType({
 /**
  * Data schema
  */
-let dataType = new GraphQLObjectType({
+const dataType = new GraphQLObjectType({
     name: 'DataItem',
     description: 'A single result item',
     fields: {
@@ -150,7 +150,7 @@ let dataType = new GraphQLObjectType({
 /**
  * Support response schema
  */
-let supportResponseType = new GraphQLObjectType ({
+const supportResponseType = new GraphQLObjectType ({
     name: 'SupportResponse',
     description: 'It contains list of support service descriptions',
     fields: {
@@ -176,7 +176,7 @@ let supportResponseType = new GraphQLObjectType ({
 /**
  * Response schema
  */
-let responseType = new GraphQLObjectType({
+const responseType = new GraphQLObjectType({
     name: 'Response',
     description: 'The response type. It contains the information retrieved by the services',
     fields: {
@@ -194,7 +194,7 @@ let responseType = new GraphQLObjectType({
 /**
  * Schema for GraphQL query
  */
-let queryType = new GraphQLObjectType({
+const queryType = new GraphQLObjectType({
     name: 'Query',
     description: 'The main type for each operation',
     fields: {
@@ -244,7 +244,7 @@ let queryType = new GraphQLObjectType({
 /**
  * The main schema
  */
-let camusSchema = new GraphQLSchema({
+const camusSchema = new GraphQLSchema({
     query: queryType
 });
 

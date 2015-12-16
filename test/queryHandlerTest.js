@@ -8,10 +8,10 @@ import ServiceManager from '../components/primaryServiceSelection.js';
 import QueryHandler from '../components/queryHandler.js';
 import Provider from '../provider/provider.js';
 
-let mockDatabase = new MockDatabase();
-let serviceManager = new ServiceManager();
-let queryHandler = new QueryHandler();
-let provider = new Provider();
+const mockDatabase = new MockDatabase();
+const serviceManager = new ServiceManager();
+const queryHandler = new QueryHandler();
+const provider = new Provider();
 
 let _idCDT;
 
@@ -76,7 +76,7 @@ describe('Component: QueryHandler', () => {
 });
 
 //Context that involve the fake service
-let contextForFakeService = idCDT => {
+const contextForFakeService = idCDT => {
     return {
         _id: idCDT,
         interestTopic: 'Restaurant',
@@ -116,7 +116,7 @@ let contextForFakeService = idCDT => {
 };
 
 //context for test the correct execution of custom bridge
-let testBridgeContext = idCDT => {
+const testBridgeContext = idCDT => {
     return {
         _id: idCDT,
         interestTopic: 'Restaurant',

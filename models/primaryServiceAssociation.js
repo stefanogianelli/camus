@@ -2,13 +2,13 @@
 
 import mongoose from 'mongoose';
 
-let Schema = mongoose.Schema;
-let ObjectId = Schema.Types.ObjectId;
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
 /**
  * Schema for associations
  */
-let associationSchema = new Schema({
+const associationSchema = new Schema({
     dimension: {
         type: String,
         required: true
@@ -26,7 +26,7 @@ let associationSchema = new Schema({
 /**
  * Schema for primary services associations with the CDT nodes
  */
-let primaryServiceSchema = new Schema ({
+const primaryServiceSchema = new Schema ({
     _idOperation: {
         type: ObjectId,
         required: true
@@ -42,6 +42,6 @@ let primaryServiceSchema = new Schema ({
     }
 });
 
-let primaryServiceAssociation = mongoose.model('primary_service', primaryServiceSchema);
+const primaryServiceAssociation = mongoose.model('primary_service', primaryServiceSchema);
 
 export default primaryServiceAssociation;

@@ -7,9 +7,9 @@ import * as mockData from './mockModel.js';
 import MockDatabase from './mockDatabaseCreator.js';
 import Provider from '../provider/provider.js';
 
-let supportServiceSelection = new SupportServiceSelection();
-let mockDatabase = new MockDatabase();
-let provider = new Provider();
+const supportServiceSelection = new SupportServiceSelection();
+const mockDatabase = new MockDatabase();
+const provider = new Provider();
 
 let _idCDT;
 
@@ -109,7 +109,7 @@ describe('Component: SupportServiceSelection', () => {
 });
 
 //context without service names
-let contextNoSupportName = idCDT => {
+const contextNoSupportName = idCDT => {
     return {
         _id: idCDT,
         filterNodes: [
@@ -161,7 +161,7 @@ let contextNoSupportName = idCDT => {
 };
 
 //context without support categories
-let contextNoSupportCategory = idCDT => {
+const contextNoSupportCategory = idCDT => {
     return {
         _id: idCDT,
         supportServiceNames: [
@@ -174,7 +174,7 @@ let contextNoSupportCategory = idCDT => {
 };
 
 //context with inexistent support category
-let contextWithInexistentCategory = idCDT => {
+const contextWithInexistentCategory = idCDT => {
     return {
         _id: idCDT,
         supportServiceCategories: [ 'Sport' ]
@@ -182,7 +182,7 @@ let contextWithInexistentCategory = idCDT => {
 };
 
 //context with inexistent support service name
-let contextWithInexistentName = idCDT => {
+const contextWithInexistentName = idCDT => {
     return {
         _id: idCDT,
         supportServiceNames: [
@@ -195,7 +195,7 @@ let contextWithInexistentName = idCDT => {
 };
 
 //context with multiple support service names
-let contextMultipleSupportServiceNames = idCDT => {
+const contextMultipleSupportServiceNames = idCDT => {
     return {
         _id: idCDT,
         supportServiceNames: [
@@ -212,7 +212,7 @@ let contextMultipleSupportServiceNames = idCDT => {
 };
 
 //context with multiple support service categories
-let contextMultipleSupportServiceCategories = idCDT => {
+const contextMultipleSupportServiceCategories = idCDT => {
     return {
         _id: idCDT,
         interestTopic: 'Restaurant',

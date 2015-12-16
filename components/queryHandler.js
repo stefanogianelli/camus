@@ -8,9 +8,9 @@ import RestBridge from '../bridges/restBridge.js';
 import Provider from '../provider/provider.js';
 import TransformResponse from './transformResponse.js';
 
-let restBridge = new RestBridge();
-let provider = new Provider();
-let transformResponse = new TransformResponse();
+const restBridge = new RestBridge();
+const provider = new Provider();
+const transformResponse = new TransformResponse();
 
 export default  class QueryHandler {
 
@@ -63,6 +63,7 @@ export default  class QueryHandler {
         return new Promise(resolve => {
             Promise
                 .mapSeries(services, s => {
+                    const operation = s.operations[0];
                     let promise;
                     //check if the protocol of the current service is 'rest' o 'query'
                     if (s.protocol === 'rest' || s.protocol === 'query') {
@@ -70,7 +71,7 @@ export default  class QueryHandler {
                         promise = restBridge.executeQuery(s, params);
                     } else if (s.protocol === 'custom') {
                         //call the custom bridge
-                        let bridgeName = s.operations[0].bridgeName;
+                        let bridgeName = operation.bridgeName;
                         //check if a bridge name is defined
                         if (!_.isUndefined(bridgeName) && !_.isEmpty(bridgeName)) {
                             //load the module
@@ -85,7 +86,7 @@ export default  class QueryHandler {
                     return promise
                         .then(response => {
                             //transform the response
-                            return transformResponse.mappingResponse(s.operations[0].responseMapping, response)
+                            return transformResponse.mappingResponse(operation.responseMapping, response)
                         })
                         .catch(e => {
                             console.log('[' + s.name + '] ERROR: ' + e);

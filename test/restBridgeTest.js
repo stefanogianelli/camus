@@ -5,7 +5,7 @@ import assert from 'assert';
 import RestBridge from '../bridges/restBridge.js';
 import * as mockModel from './mockModel.js';
 
-let restBridge = new RestBridge();
+const restBridge = new RestBridge();
 
 describe('Component: RestBridge', () => {
 
@@ -43,28 +43,28 @@ describe('Component: RestBridge', () => {
 
     describe('#searchMapping()', () => {
         it('check if simple attribute are correctly handled', () => {
-            let value = restBridge._searchMapping(simpleParameters, 'CityName');
+            const value = restBridge._searchMapping(simpleParameters, 'CityName');
             assert.equal(value, 'Milan');
         });
         it('check if composite attributes are correctly handled', () => {
-            let latitude = restBridge._searchMapping(compositeParameters, 'CityCoord.Latitude');
+            const latitude = restBridge._searchMapping(compositeParameters, 'CityCoord.Latitude');
             assert.equal(latitude, 45.478906);
-            let longitude = restBridge._searchMapping(compositeParameters, 'CityCoord.Longitude');
+            const longitude = restBridge._searchMapping(compositeParameters, 'CityCoord.Longitude');
             assert.equal(longitude, 9.234297);
         });
         it('check value if a non valid mapping is provided', () => {
-            let value =  restBridge._searchMapping(simpleParameters, 'Budget');
+            const value =  restBridge._searchMapping(simpleParameters, 'Budget');
             assert.equal(typeof value, 'undefined');
         });
         it('check value if dot notation mapping is provided but the object doesn\'t have fields', () => {
-            let value =  restBridge._searchMapping(simpleParameters, 'Budget.Name');
+            const value =  restBridge._searchMapping(simpleParameters, 'Budget.Name');
             assert.equal(typeof value, 'undefined');
         });
     });
 
 });
 
-let noDefaultParameterService = {
+const noDefaultParameterService = {
     name: 'eventful',
     type: 'primary',
     protocol: 'rest',
@@ -121,7 +121,7 @@ let noDefaultParameterService = {
     ]
 };
 
-let noValueParameterService = {
+const noValueParameterService = {
     name: 'eventful',
     type: 'primary',
     protocol: 'rest',
@@ -179,7 +179,7 @@ let noValueParameterService = {
     ]
 };
 
-let wrongBasePath = {
+const wrongBasePath = {
     name: 'eventful',
     type: 'primary',
     protocol: 'rest',
@@ -237,14 +237,14 @@ let wrongBasePath = {
     ]
 };
 
-let simpleParameters = [
+const simpleParameters = [
     {
         dimension: 'CityName',
         value: 'Milan'
     }
 ];
 
-let compositeParameters = [
+const compositeParameters = [
     {
         dimension: 'CityCoord',
         fields: [

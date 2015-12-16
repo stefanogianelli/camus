@@ -232,7 +232,7 @@ export default class DatabaseHelper {
  */
 
 //CDT
-let cdt = {
+const cdt = {
     _userId: 1,
     context: [
         {
@@ -302,7 +302,7 @@ let cdt = {
 };
 
 //googlePlaces service
-let googlePlaces = {
+const googlePlaces = {
     name: 'GooglePlaces',
     type: 'primary',
     protocol: 'query',
@@ -363,7 +363,7 @@ let googlePlaces = {
 };
 
 //googlePlaces associations
-let googlePlacesAssociations = (idOperation, idCDT) => {
+const googlePlacesAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -380,7 +380,7 @@ let googlePlacesAssociations = (idOperation, idCDT) => {
 };
 
 //eventful service
-let eventful = {
+const eventful = {
     name: 'eventful',
     type: 'primary',
     protocol: 'query',
@@ -439,7 +439,7 @@ let eventful = {
 };
 
 //eventful associations
-let eventfulAssociations = (idOperation, idCDT) => {
+const eventfulAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -456,7 +456,7 @@ let eventfulAssociations = (idOperation, idCDT) => {
 };
 
 //wikipedia support service
-let wikipedia = {
+const wikipedia = {
     name: 'Wikipedia',
     type: 'support',
     protocol: 'query',
@@ -509,7 +509,7 @@ let wikipedia = {
 };
 
 //google maps support service
-let googleMaps = {
+const googleMaps = {
     name: 'GoogleMaps',
     type: 'support',
     protocol: 'query',
@@ -541,7 +541,7 @@ let googleMaps = {
 };
 
 //google maps service associations
-let googleMapsAssociation = (idOperation, idCDT) => {
+const googleMapsAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -559,7 +559,7 @@ let googleMapsAssociation = (idOperation, idCDT) => {
 };
 
 //cinema stub service
-let cinemaStub = {
+const cinemaStub = {
     name: 'cinemaStub',
     type: 'primary',
     protocol: 'query',
@@ -611,7 +611,7 @@ let cinemaStub = {
 };
 
 //cinema stub associations
-let cinemaStubAssociations = (idOperation, idCDT) => {
+const cinemaStubAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -628,7 +628,7 @@ let cinemaStubAssociations = (idOperation, idCDT) => {
 };
 
 //theater stub service
-let theaterStub = {
+const theaterStub = {
     name: 'theaterStub',
     type: 'primary',
     protocol: 'query',
@@ -689,7 +689,7 @@ let theaterStub = {
 };
 
 //theater stub associations
-let theaterStubAssociations = (idOperation, idCDT) => {
+const theaterStubAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -707,7 +707,7 @@ let theaterStubAssociations = (idOperation, idCDT) => {
 };
 
 //merici primary service
-let mericiPrimary = {
+const mericiPrimary = {
     name: 'mericiPrimary',
     type: 'primary',
     protocol: 'query',
@@ -1005,7 +1005,7 @@ let mericiPrimary = {
 };
 
 //merici primary service associations
-let mericiPrimaryAssociations = (idCDT, idHotel, idFood, idTheater, idMuseum) => {
+const mericiPrimaryAssociations = (idCDT, idHotel, idFood, idTheater, idMuseum) => {
     return [
         {
             _idOperation: idHotel,
@@ -1055,7 +1055,7 @@ let mericiPrimaryAssociations = (idCDT, idHotel, idFood, idTheater, idMuseum) =>
 };
 
 //merici support service
-let mericiSupport = {
+const mericiSupport = {
     name: 'mericiSupport',
     type: 'support',
     protocol: 'query',
@@ -1146,7 +1146,7 @@ let mericiSupport = {
 };
 
 //merici support service associations
-let mericiSupportAssociation = (idCDT, idTaxi, idCarSharing, idDriver) => {
+const mericiSupportAssociation = (idCDT, idTaxi, idCarSharing, idDriver) => {
     return [
         {
             _idOperation: idTaxi,

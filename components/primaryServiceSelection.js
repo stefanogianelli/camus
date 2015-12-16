@@ -1,11 +1,11 @@
 'use strict';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 import Promise from 'bluebird';
 
 import Provider from '../provider/provider.js';
 
-let provider = new Provider();
+const provider = new Provider();
 
 export default class PrimaryServiceSelection  {
 

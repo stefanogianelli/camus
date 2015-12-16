@@ -2,17 +2,17 @@
 
 import  mongoose from 'mongoose';
 
-let Schema = mongoose.Schema;
-let ObjectId = Schema.Types.ObjectId;
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
-let types = 'primary support'.split(' ');
-let separators = 'csv ssv tsv pipes'.split(' ');
-let protocols = 'rest query custom'.split(' ');
+const types = 'primary support'.split(' ');
+const separators = 'csv ssv tsv pipes'.split(' ');
+const protocols = 'rest query custom'.split(' ');
 
 /**
  * Parameter schema
  */
-let parameterSchema = new Schema({
+const parameterSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -35,7 +35,7 @@ let parameterSchema = new Schema({
 /**
  * Header schema
  */
-let headerSchema = new Schema({
+const headerSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -49,7 +49,7 @@ let headerSchema = new Schema({
 /**
  * Item schema
  */
-let itemSchema = new Schema({
+const itemSchema = new Schema({
     termName: {
         type: String,
         required: true
@@ -63,7 +63,7 @@ let itemSchema = new Schema({
 /**
  * Operate schema
  */
-let operateSchema = new Schema({
+const operateSchema = new Schema({
     run: {
         type: String,
         required: true
@@ -77,7 +77,7 @@ let operateSchema = new Schema({
 /**
  * Response schema
  */
-let responseSchema = new Schema({
+const responseSchema = new Schema({
     list: String,
     items: [itemSchema],
     functions: [operateSchema]
@@ -86,7 +86,7 @@ let responseSchema = new Schema({
 /**
  * Operation schema
  */
-let operationSchema = new Schema({
+const operationSchema = new Schema({
     _id: {
         type: ObjectId,
         default: function () {
@@ -108,7 +108,7 @@ let operationSchema = new Schema({
 /**
  * Description schema
  */
-let serviceDescriptionSchema = new Schema({
+const serviceDescriptionSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -160,6 +160,6 @@ serviceDescriptionSchema.static('findByOperationIds', function (idOperations, ca
         , callback);
 });
 
-let serviceDescription = mongoose.model('service_description', serviceDescriptionSchema);
+const serviceDescription = mongoose.model('service_description', serviceDescriptionSchema);
 
 export default serviceDescription;

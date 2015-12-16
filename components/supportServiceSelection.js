@@ -5,7 +5,7 @@ import Promise from 'bluebird';
 
 import Provider from '../provider/provider.js';
 
-let provider = new Provider();
+const provider = new Provider();
 
 export default class SupportServiceSelection {
 

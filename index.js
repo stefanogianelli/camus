@@ -14,15 +14,15 @@ import DatabaseHelper from'./databaseHelper.js';
 import Provider from './provider/provider.js';
 import camusSchema from './graphQLSchemas.js';
 
-let provider = new Provider();
-let contextManager = new ContextManager();
-let primaryService = new PrimaryService();
-let queryHandler = new QueryHandler();
-let supportService = new SupportService();
-let responseAggregator = new ResponseAggregator();
-let databaseHelper = new DatabaseHelper();
+const provider = new Provider();
+const contextManager = new ContextManager();
+const primaryService = new PrimaryService();
+const queryHandler = new QueryHandler();
+const supportService = new SupportService();
+const responseAggregator = new ResponseAggregator();
+const databaseHelper = new DatabaseHelper();
 
-let app = express();
+const app = express();
 
 //register middleware
 app.use(bodyParser.json());
@@ -92,7 +92,7 @@ let server = app.listen(3001, () => {
     provider.createConnection('mongodb://localhost/camus');
 
     let host = server.address().address;
-    let port = server.address().port;
+    const port = server.address().port;
     if (host === '::') {
         host = 'localhost';
     }

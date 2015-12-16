@@ -3,7 +3,7 @@
 import assert from 'assert';
 import TransformResponse from '../components/transformResponse.js';
 
-let transformResponse = new TransformResponse();
+const transformResponse = new TransformResponse();
 
 describe('Component: TransformResponse', () => {
 
@@ -99,7 +99,7 @@ describe('Component: TransformResponse', () => {
 
 });
 
-let googlePlacesMapping = {
+const googlePlacesMapping = {
     list: 'results',
     items: [
         {
@@ -121,7 +121,7 @@ let googlePlacesMapping = {
     ]
 };
 
-let mappingWithFunction = {
+const mappingWithFunction = {
     list: 'results',
     items: [
         {
@@ -149,7 +149,7 @@ let mappingWithFunction = {
     ]
 };
 
-let mappingWithInvalidFunction = {
+const mappingWithInvalidFunction = {
     list: 'results',
     items: [
         {
@@ -177,7 +177,7 @@ let mappingWithInvalidFunction = {
     ]
 };
 
-let eventfulMapping = {
+const eventfulMapping = {
     list: 'events.event',
     items: [
         {
@@ -199,7 +199,7 @@ let eventfulMapping = {
     ]
 };
 
-let mappgingWithNullValue = {
+const mappgingWithNullValue = {
     list: 'events.event',
     items: [
         {
@@ -225,7 +225,7 @@ let mappgingWithNullValue = {
     ]
 };
 
-let cinemaMapping = {
+const cinemaMapping = {
     items: [
         {
             termName: 'title',
@@ -254,7 +254,7 @@ let cinemaMapping = {
     ]
 };
 
-let googlePlacesResponse = {
+const googlePlacesResponse = {
     "html_attributions": [],
     "results": [
         {
@@ -322,7 +322,7 @@ let googlePlacesResponse = {
     ]
 };
 
-let eventfulResponse = {
+const eventfulResponse = {
     "last_item":null,
     "total_items":"235",
     "first_item":null,
@@ -465,7 +465,7 @@ let eventfulResponse = {
     }
 };
 
-let cinemaResponse = {
+const cinemaResponse = {
     "0": {
         "idCinema":65,
         "nome":"Cinema Pierrot",

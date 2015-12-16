@@ -2,13 +2,13 @@
 
 import mongoose from 'mongoose';
 
-let Schema = mongoose.Schema;
-let ObjectId = Schema.Types.ObjectId;
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
 
 /**
  * Schema for associations
  */
-let associationSchema = new Schema({
+const associationSchema = new Schema({
     dimension: {
         type: String,
         required: true
@@ -22,7 +22,7 @@ let associationSchema = new Schema({
 /**
  * Schema for support services associations with the CDT nodes
  */
-let supportServiceSchema = new Schema ({
+const supportServiceSchema = new Schema ({
     _idCDT: {
         type: ObjectId,
         required: true
@@ -47,6 +47,6 @@ let supportServiceSchema = new Schema ({
     }
 });
 
-let supportServiceAssociation = mongoose.model('support_service', supportServiceSchema);
+const supportServiceAssociation = mongoose.model('support_service', supportServiceSchema);
 
 export default supportServiceAssociation;

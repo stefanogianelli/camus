@@ -1,7 +1,7 @@
 'use strict';
 
 //cdt
-export let cdt = {
+export const cdt = {
     _userId: 1,
     context: [
         {
@@ -99,7 +99,7 @@ export let cdt = {
 };
 
 //CDT with nested sons
-export let nestedCdt = {
+export const nestedCdt = {
     _userId: 1,
     context: [
         {
@@ -133,7 +133,7 @@ export let nestedCdt = {
 };
 
 //CDT with multiple sons
-export let multipleSonsCdt = {
+export const multipleSonsCdt = {
     _userId: 1,
     context: [
         {
@@ -174,7 +174,7 @@ export let multipleSonsCdt = {
 };
 
 //sample decorated CDT
-export let decoratedCdt = idCDT => {
+export const decoratedCdt = idCDT => {
     return {
         _id: idCDT,
         interestTopic: 'Restaurant',
@@ -267,7 +267,7 @@ export let decoratedCdt = idCDT => {
 };
 
 //googlePlaces service
-export let googlePlaces = {
+export const googlePlaces = {
     name: 'GooglePlaces',
     type: 'primary',
     protocol: 'rest',
@@ -317,7 +317,7 @@ export let googlePlaces = {
 };
 
 //eventful service
-export let eventful = {
+export const eventful = {
     name: 'Eventful',
     type: 'primary',
     protocol: 'rest',
@@ -375,7 +375,7 @@ export let eventful = {
 };
 
 //fake service with wrong URL
-export let fakeService = {
+export const fakeService = {
     name: 'fakeService',
     type: 'primary',
     protocol: 'rest',
@@ -433,7 +433,7 @@ export let fakeService = {
 };
 
 //service created for custom bridge testing
-export let testBridge = {
+export const testBridge = {
     name: 'testBridge',
     type: 'primary',
     protocol: 'custom',
@@ -473,7 +473,7 @@ export let testBridge = {
 };
 
 //wikipedia support service
-export let wikipedia = {
+export const wikipedia = {
     name: 'Wikipedia',
     type: 'support',
     protocol: 'query',
@@ -517,7 +517,7 @@ export let wikipedia = {
 };
 
 //google maps support service
-export let flickr = {
+export const flickr = {
     name: 'Flickr',
     type: 'support',
     protocol: 'rest',
@@ -539,7 +539,7 @@ export let flickr = {
 };
 
 //google maps support service
-export let googleMaps = {
+export const googleMaps = {
     name: 'GoogleMaps',
     type: 'support',
     protocol: 'query',
@@ -571,7 +571,7 @@ export let googleMaps = {
 };
 
 //ATM support service
-export let atm = {
+export const atm = {
     name: 'ATM',
     type: 'support',
     protocol: 'query',
@@ -607,7 +607,7 @@ export let atm = {
 };
 
 //ATAC support service
-export let atac = {
+export const atac = {
     name: 'ATAC',
     type: 'support',
     protocol: 'query',
@@ -643,7 +643,7 @@ export let atac = {
 };
 
 //FS support service
-export let fs = {
+export const fs = {
     name: 'FS',
     type: 'support',
     protocol: 'query',
@@ -655,7 +655,7 @@ export let fs = {
 };
 
 //Trenord support service
-export let trenord = {
+export const trenord = {
     name: 'Trenord',
     type: 'support',
     protocol: 'rest',
@@ -683,7 +683,7 @@ export let trenord = {
 };
 
 //googlePlaces associations
-export let googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
+export const googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -728,7 +728,7 @@ export let googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMultip
 };
 
 //eventful associations
-export let eventfulAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
+export const eventfulAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -772,7 +772,7 @@ export let eventfulAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSo
 };
 
 //fake service associations
-export let fakeServiceAssociation = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
+export const fakeServiceAssociation = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -816,7 +816,7 @@ export let fakeServiceAssociation = (idOperation, idCDT, idNestedCDT, idMultiple
 };
 
 //test bridge service associations
-export let testBridgeAssociation = (idOperation, idCDT) => {
+export const testBridgeAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -833,7 +833,7 @@ export let testBridgeAssociation = (idOperation, idCDT) => {
 };
 
 //google maps service associations
-export let googleMapsAssociation = (idOperation, idCDT) => {
+export const googleMapsAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -851,7 +851,7 @@ export let googleMapsAssociation = (idOperation, idCDT) => {
 };
 
 //ATM service associations
-export let atmAssociation = (idOperation, idCDT) => {
+export const atmAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -870,7 +870,7 @@ export let atmAssociation = (idOperation, idCDT) => {
 };
 
 //ATAC service associations
-export let atacAssociation = (idOperation, idCDT) => {
+export const atacAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -889,7 +889,7 @@ export let atacAssociation = (idOperation, idCDT) => {
 };
 
 //FS service associations
-export let fsAssociation = (idOperation, idCDT) => {
+export const fsAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -908,7 +908,7 @@ export let fsAssociation = (idOperation, idCDT) => {
 };
 
 //Trenord service associations
-export let trenordAssociation = (idOperation, idCDT) => {
+export const trenordAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -927,7 +927,7 @@ export let trenordAssociation = (idOperation, idCDT) => {
 };
 
 //Flickr service associations
-export let flickrAssociation = (idOperation, idCDT) => {
+export const flickrAssociation = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,

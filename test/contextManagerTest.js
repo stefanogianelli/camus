@@ -7,9 +7,9 @@ import ContextManager from '../components/contextManager.js';
 import MockDatabase from './mockDatabaseCreator.js';
 import Provider from '../provider/provider.js';
 
-let contextManager = new ContextManager();
-let mockDatabase = new MockDatabase();
-let provider = new Provider();
+const contextManager = new ContextManager();
+const mockDatabase = new MockDatabase();
+const provider = new Provider();
 
 let _idCDT;
 let _nestedCDT;
