@@ -2,8 +2,8 @@
 
 import _ from 'lodash';
 import Promise from 'bluebird';
+import System from 'systemjs';
 
-import Interface from './interfaceChecker.js';
 import RestBridge from '../bridges/restBridge.js';
 import Provider from '../provider/provider.js';
 import TransformResponse from './transformResponse.js';
@@ -12,13 +12,21 @@ const restBridge = new RestBridge();
 const provider = new Provider();
 const transformResponse = new TransformResponse();
 
-export default  class QueryHandler {
+System.config({
+    baseURL: '../',
+    transpiler: 'traceur',
+    defaultJSExtensions: true,
+    map: {
+        bluebird: '../node_modules/bluebird/js/release/bluebird.js',
+        lodash: '../node_modules/lodash/index.js'
+    }
+});
+
+export default class QueryHandler {
 
     constructor () {
         //shortcut to the bridges folder
-        this._bridgeFolder = '../bridges/';
-        //every bridge must implement the 'executeQuery' method
-        this._bridgeInterface = new Interface('bridgeInterface', ['executeQuery']);
+        this._bridgeFolder = '../camus/bridges/';
     }
 
     /**
@@ -75,10 +83,12 @@ export default  class QueryHandler {
                         //check if a bridge name is defined
                         if (!_.isUndefined(bridgeName) && !_.isEmpty(bridgeName)) {
                             //load the module
-                            let module = require(this._bridgeFolder + bridgeName + '.js');
-                            //check if the module implements the bridge interface
-                            Interface.ensureImplements(module, this._bridgeInterface);
-                            promise = new module().executeQuery(params);
+                            promise = System
+                                .import(this._bridgeFolder + bridgeName)
+                                .then(Module => {
+                                    const module = new Module.default();
+                                    return module.executeQuery(params);
+                                });
                         } else {
                             console.log('ERROR: The service \'' + s.name + '\' must define a custom bridge');
                         }
