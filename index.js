@@ -5,14 +5,14 @@ import bodyParser from 'body-parser';
 import graphqlHTTP from 'express-graphql';
 import Promise from 'bluebird';
 
-import ContextManager from'./components/contextManager.js';
-import PrimaryService from'./components/primaryServiceSelection.js';
-import QueryHandler from'./components/queryHandler.js';
-import SupportService from'./components/supportServiceSelection.js';
-import ResponseAggregator from'./components/responseAggregator.js';
-import DatabaseHelper from'./databaseHelper.js';
-import Provider from './provider/provider.js';
-import camusSchema from './graphQLSchemas.js';
+import ContextManager from'./components/contextManager';
+import PrimaryService from'./components/primaryServiceSelection';
+import QueryHandler from'./components/queryHandler';
+import SupportService from'./components/supportServiceSelection';
+import ResponseAggregator from'./components/responseAggregator';
+import DatabaseHelper from'./databaseHelper';
+import Provider from './provider/provider';
+import camusSchema from './graphQLSchemas';
 
 const provider = new Provider();
 const contextManager = new ContextManager();

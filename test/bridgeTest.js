@@ -27,19 +27,11 @@ describe('Component: Bridge', () => {
 
 class ValidBridge extends Bridge {
 
-    constructor () {
-        super();
-    }
-
     executeQuery () {}
 
 }
 
 class InvalidBridge extends Bridge {
-
-    constructor () {
-        super();
-    }
 
     pippo () {}
 

@@ -4,9 +4,9 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 import System from 'systemjs';
 
-import RestBridge from '../bridges/restBridge.js';
-import Provider from '../provider/provider.js';
-import TransformResponse from './transformResponse.js';
+import RestBridge from '../bridges/restBridge';
+import Provider from '../provider/provider';
+import TransformResponse from './transformResponse';
 
 const restBridge = new RestBridge();
 const provider = new Provider();

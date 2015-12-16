@@ -3,9 +3,9 @@
 import assert from 'assert';
 import Promise from 'bluebird';
 
-import ContextManager from '../components/contextManager.js';
-import MockDatabase from './mockDatabaseCreator.js';
-import Provider from '../provider/provider.js';
+import ContextManager from '../components/contextManager';
+import MockDatabase from './mockDatabaseCreator';
+import Provider from '../provider/provider';
 
 const contextManager = new ContextManager();
 const mockDatabase = new MockDatabase();

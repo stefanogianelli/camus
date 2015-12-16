@@ -2,10 +2,10 @@
 
 import assert from 'assert';
 
-import SupportServiceSelection from '../components/supportServiceSelection.js';
-import * as mockData from './mockModel.js';
-import MockDatabase from './mockDatabaseCreator.js';
-import Provider from '../provider/provider.js';
+import SupportServiceSelection from '../components/supportServiceSelection';
+import * as mockData from './mockModel';
+import MockDatabase from './mockDatabaseCreator';
+import Provider from '../provider/provider';
 
 const supportServiceSelection = new SupportServiceSelection();
 const mockDatabase = new MockDatabase();

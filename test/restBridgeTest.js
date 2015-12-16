@@ -2,8 +2,8 @@
 
 import assert from 'assert';
 
-import RestBridge from '../bridges/restBridge.js';
-import * as mockModel from './mockModel.js';
+import RestBridge from '../bridges/restBridge';
+import * as mockModel from './mockModel';
 
 const restBridge = new RestBridge();
 

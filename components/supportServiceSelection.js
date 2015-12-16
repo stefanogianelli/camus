@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import Promise from 'bluebird';
 
-import Provider from '../provider/provider.js';
+import Provider from '../provider/provider';
 
 const provider = new Provider();
 

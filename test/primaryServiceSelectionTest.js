@@ -2,9 +2,9 @@
 
 import assert from 'assert';
 
-import ServiceManager from '../components/primaryServiceSelection.js';
-import MockDatabase from './mockDatabaseCreator.js';
-import Provider from '../provider/provider.js';
+import ServiceManager from '../components/primaryServiceSelection';
+import MockDatabase from './mockDatabaseCreator';
+import Provider from '../provider/provider';
 
 const serviceManager = new ServiceManager();
 const mockDatabase = new MockDatabase();

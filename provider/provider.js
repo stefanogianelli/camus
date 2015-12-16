@@ -5,10 +5,10 @@ import mongoose from 'mongoose';
 import Promise from 'bluebird';
 
 //load the models
-import cdtModel from '../models/cdtDescription.js';
-import serviceModel from '../models/serviceDescription.js';
-import primaryServiceModel from '../models/primaryServiceAssociation.js';
-import supportServiceModel from '../models/supportServiceAssociation.js';
+import cdtModel from '../models/cdtDescription';
+import serviceModel from '../models/serviceDescription';
+import primaryServiceModel from '../models/primaryServiceAssociation';
+import supportServiceModel from '../models/supportServiceAssociation';
 
 //promisify the models
 Promise.promisifyAll(cdtModel);

@@ -9,11 +9,11 @@ import {
     GraphQLSchema
 } from 'graphql';
 
-import ContextManager from './components/contextManager.js';
-import PrimaryService from './components/primaryServiceSelection.js';
-import QueryHandler from './components/queryHandler.js';
-import SupportService from './components/supportServiceSelection.js';
-import ResponseAggregator from './components/responseAggregator.js';
+import ContextManager from './components/contextManager';
+import PrimaryService from './components/primaryServiceSelection';
+import QueryHandler from './components/queryHandler';
+import SupportService from './components/supportServiceSelection';
+import ResponseAggregator from './components/responseAggregator';
 
 const contextManager = new ContextManager();
 const primaryService = new PrimaryService();

@@ -2,7 +2,7 @@
 
 import assert from 'assert';
 
-import ResponseAggregator from '../components/responseAggregator.js';
+import ResponseAggregator from '../components/responseAggregator';
 
 const responseAggregator = new ResponseAggregator();
 

@@ -4,10 +4,6 @@ import Bridge from './bridge';
 
 export default class TestBridge extends Bridge {
 
-    constructor () {
-        super();
-    }
-
     /**
      * It allows to execute custom queries to web service
      * @returns {bluebird|exports|module.exports} The response provided by the service, in JSON format

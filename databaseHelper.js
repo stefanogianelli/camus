@@ -5,10 +5,10 @@ import async from 'async';
 import Promise from 'bluebird';
 
 //models
-import ServiceModel from './models/serviceDescription.js';
-import PrimaryServiceModel from './models/primaryServiceAssociation.js';
-import SupportServiceModel from './models/supportServiceAssociation.js';
-import CdtModel from './models/cdtDescription.js';
+import ServiceModel from './models/serviceDescription';
+import PrimaryServiceModel from './models/primaryServiceAssociation';
+import SupportServiceModel from './models/supportServiceAssociation';
+import CdtModel from './models/cdtDescription';
 
 export default class DatabaseHelper {
     /**

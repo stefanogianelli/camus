@@ -1,7 +1,8 @@
 'use strict';
 
 import assert from 'assert';
-import TransformResponse from '../components/transformResponse.js';
+
+import TransformResponse from '../components/transformResponse';
 
 const transformResponse = new TransformResponse();
 

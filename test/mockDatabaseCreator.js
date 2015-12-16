@@ -4,11 +4,11 @@ import * as _ from 'lodash';
 import * as async from 'async';
 import * as assert from 'assert';
 
-import * as mockData from './mockModel.js';
-import ServiceModel from '../models/serviceDescription.js';
-import PrimaryServiceModel from '../models/primaryServiceAssociation.js';
-import SupportServiceModel from '../models/supportServiceAssociation.js';
-import CdtModel from '../models/cdtDescription.js';
+import * as mockData from './mockModel';
+import ServiceModel from '../models/serviceDescription';
+import PrimaryServiceModel from '../models/primaryServiceAssociation';
+import SupportServiceModel from '../models/supportServiceAssociation';
+import CdtModel from '../models/cdtDescription';
 
 let instance = null;
 
