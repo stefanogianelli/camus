@@ -15,7 +15,7 @@ export default class TransformResponse {
         return new Promise ((resolve, reject) => {
             if (!_.isUndefined(response) && _.isObject(response)) {
                 if (!_.isUndefined(mapping)) {
-                    let transformedResponse = _.map(this._retrieveListOfResults(response, mapping.list), i => {
+                    let transformedResponse = _.map(response, i => {
                         return this._transformItem(i, mapping);
                     });
                     transformedResponse = this._executeFunctions(transformedResponse, mapping);
@@ -40,25 +40,26 @@ export default class TransformResponse {
      * If the specified path is not an array it converts it to an array.
      * @param response The response received from the web service
      * @param listItem The base path where find the items. If the root of the document if the base path leave this field empty
-     * @returns {Array} The array of items
-     * @private
+     * @returns {Promise<T>} The array of items
      */
-    _retrieveListOfResults (response, listItem) {
-        let list = [];
-        if (!_.isUndefined(listItem) && !_.isEmpty(listItem)) {
-            //it was defined a base list item so consider it as root for the transformation
-            list = this._getItemValue(response, listItem);
-        } else {
-            //start at the root element
-            list = response;
-        }
-        //check if the current list is an array, otherwise I transform it in a list from the current set of objects
-        if (!_.isArray(list)) {
-            list = _.map(list, item => {
-                return item;
-            });
-        }
-        return list;
+    retrieveListOfResults (response, listItem) {
+        return new Promise(resolve => {
+            let list = [];
+            if (!_.isUndefined(listItem) && !_.isEmpty(listItem)) {
+                //it was defined a base list item so consider it as root for the transformation
+                list = this._getItemValue(response, listItem);
+            } else {
+                //start at the root element
+                list = response;
+            }
+            //check if the current list is an array, otherwise I transform it in a list from the current set of objects
+            if (!_.isArray(list)) {
+                list = _.map(list, item => {
+                    return item;
+                });
+            }
+            resolve(list);
+        });
     }
 
     /**

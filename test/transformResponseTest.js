@@ -11,7 +11,10 @@ describe('Component: TransformResponse', () => {
     describe('#mappingResponse()', () => {
         it('check if the mapping is done correctly', () => {
             return transformResponse
-                .mappingResponse(googlePlacesMapping, googlePlacesResponse)
+                .retrieveListOfResults(googlePlacesResponse, googlePlacesMapping.list)
+                .then(array => {
+                    return transformResponse.mappingResponse(googlePlacesMapping, array);
+                })
                 .then(data => {
                     assert.equal(data[0].title, 'Girl & the Goat');
                     assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
@@ -25,7 +28,10 @@ describe('Component: TransformResponse', () => {
         });
         it('check if a custom function on an attribute is correctly executed', () => {
             return transformResponse
-                .mappingResponse(mappingWithFunction, googlePlacesResponse)
+                .retrieveListOfResults(googlePlacesResponse, mappingWithFunction.list)
+                .then(array => {
+                    return transformResponse.mappingResponse(mappingWithFunction, array);
+                })
                 .then(data => {
                     assert.equal(data[0].title, 'Restaurant Girl & the Goat');
                     assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
@@ -39,7 +45,10 @@ describe('Component: TransformResponse', () => {
         });
         it('check if a function on a non existent attribute doesn\'t change the response', () => {
             return transformResponse
-                .mappingResponse(mappingWithInvalidFunction, googlePlacesResponse)
+                .retrieveListOfResults(googlePlacesResponse, mappingWithInvalidFunction.list)
+                .then(array => {
+                    return transformResponse.mappingResponse(mappingWithInvalidFunction, array);
+                })
                 .then(data => {
                     assert.equal(data[0].title, 'Girl & the Goat');
                     assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
@@ -55,7 +64,10 @@ describe('Component: TransformResponse', () => {
         });
         it('check if nested base list is correctly handled', () => {
             return transformResponse
-                .mappingResponse(eventfulMapping, eventfulResponse)
+                .retrieveListOfResults(eventfulResponse, eventfulMapping.list)
+                .then(array => {
+                    return transformResponse.mappingResponse(eventfulMapping, array);
+                })
                 .then(data => {
                     assert.equal(data[0].title, 'Wine Lover\'s New Year\'s Eve at Volo Restaurant Wine Bar');
                     assert.equal(data[0].address, '2008 West Roscoe');
@@ -69,7 +81,10 @@ describe('Component: TransformResponse', () => {
         });
         it('check if null values are deleted from the response', () => {
             return transformResponse
-                .mappingResponse(mappgingWithNullValue, eventfulResponse)
+                .retrieveListOfResults(eventfulResponse, mappgingWithNullValue.list)
+                .then(array => {
+                    return transformResponse.mappingResponse(mappgingWithNullValue, array);
+                })
                 .then(data => {
                     assert.equal(typeof data[0].count, 'undefined');
                     assert.equal(typeof data[1].count, 'undefined');
@@ -77,7 +92,10 @@ describe('Component: TransformResponse', () => {
         });
         it('check root and non array base list is correctly handled', () => {
             return transformResponse
-                .mappingResponse(cinemaMapping, cinemaResponse)
+                .retrieveListOfResults(cinemaResponse, cinemaMapping.list)
+                .then(array => {
+                    return transformResponse.mappingResponse(cinemaMapping, array);
+                })
                 .then(data => {
                     assert.equal(data[0].title, 'Cinema Pierrot');
                     assert.equal(data[0].address, 'Via Camillo De Meis, 58');

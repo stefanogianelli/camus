@@ -95,8 +95,12 @@ export default class QueryHandler {
                     }
                     return promise
                         .then(response => {
+                            //create the list of items
+                            return transformResponse.retrieveListOfResults(response, operation.responseMapping.list)
+                        })
+                        .then(itemArray => {
                             //transform the response
-                            return transformResponse.mappingResponse(operation.responseMapping, response)
+                            return transformResponse.mappingResponse(operation.responseMapping, itemArray)
                         })
                         .catch(e => {
                             console.log('[' + s.name + '] ERROR: ' + e);
