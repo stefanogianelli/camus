@@ -61,7 +61,7 @@ export default class RestBridge extends Bridge {
                     }
                 } else {
                     //search for the value(s) in the CDT
-                    let values;
+                    let values = [];
                     let separator = ',';
                     switch (p.collectionFormat) {
                         case 'csv':
