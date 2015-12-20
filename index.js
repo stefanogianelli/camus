@@ -12,7 +12,7 @@ import SupportService from'./components/supportServiceSelection';
 import ResponseAggregator from'./components/responseAggregator';
 import DatabaseHelper from'./databaseHelper';
 import Provider from './provider/provider';
-import camusSchema from './graphQLSchemas';
+import camusSchema from './models/graphql/graphQLSchemas';
 
 const provider = new Provider();
 const contextManager = new ContextManager();
