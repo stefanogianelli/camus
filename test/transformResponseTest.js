@@ -8,6 +8,23 @@ const transformResponse = new TransformResponse();
 
 describe('Component: TransformResponse', () => {
 
+    describe('#retrieveListOfResults()', () => {
+        it('check if the transform operation is done correctly', () => {
+            return transformResponse
+                .retrieveListOfResults(googlePlacesResponse, googlePlacesMapping.list)
+                .then(array => {
+                    assert.equal(array.length, 2);
+                });
+        });
+        it('check error message when no response is specified', () => {
+            return transformResponse
+                .retrieveListOfResults()
+                .catch(e => {
+                    assert.equal(e, 'Empty response. Please add a response to be mapped');
+                })
+        });
+    });
+
     describe('#mappingResponse()', () => {
         it('check if the mapping is done correctly', () => {
             return transformResponse
@@ -112,6 +129,27 @@ describe('Component: TransformResponse', () => {
                     assert.equal(data[2].telephone, '+39 081 5563999');
                     assert.equal(data[2].latitude, '40.849546');
                     assert.equal(data[2].longitude, '14.230291');
+                });
+        });
+        it('check error message when no response is specified', () => {
+            return transformResponse
+                .mappingResponse()
+                .catch(e => {
+                    assert.equal(e, 'Empty response. Please add a response to be mapped');
+                });
+        });
+        it('check error message when the response is not an array', () => {
+            return transformResponse
+                .mappingResponse(googlePlacesResponse, googlePlacesMapping)
+                .catch(e => {
+                    assert.equal(e, 'The response must be an array');
+                });
+        });
+        it('check error when no mapping is defined', () => {
+            return transformResponse
+                .mappingResponse(googlePlacesResponse)
+                .catch(e => {
+                    assert.equal(e, 'Empty response. Please add a response to be mapped');
                 });
         });
     });
