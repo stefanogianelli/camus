@@ -37,85 +37,72 @@ export default class QueryHandler {
      * @returns {bluebird|exports|module.exports} The list of responses received by the services, already transformed in internal representation
      */
     executeQueries (services, decoratedCdt) {
-        return new Promise((resolve, reject) => {
-            if (!_.isEmpty(services)) {
-                Promise
-                    .map(services, s => {
-                        //for each operation identifier retrieve the respective service description
-                        return provider.getServiceByOperationId(s._idOperation);
-                    })
-                    .then(serviceDescriptions => {
-                        //execute the queries toward web services
-                        return this._callServices(serviceDescriptions, decoratedCdt.parameterNodes);
-                    })
-                    .then(responses => {
-                        resolve(responses);
-                    })
-                    .catch(e => {
-                        reject(e);
-                    });
-            } else {
+        return new Promise(resolve => {
+            //if no service was selected, return an empty object
+            if (_.isEmpty(services)) {
                 resolve();
             }
+            return provider
+                //acquire the service descriptions from the DB
+                .getServicesByOperationIds(_.pluck(services, '_idOperation'))
+                .mapSeries(service => {
+                    //make call to the current service
+                    return this._callService(service, decoratedCdt.parameterNodes);
+                })
+                .then(responses => {
+                    //clean the response from undefined objects
+                    responses = _.filter(responses, item => {
+                        return !_.isUndefined(item) && !_.isEmpty(item);
+                    });
+                    resolve(responses);
+                });
         });
     }
 
     /**
-     * Call the service bridges and collect the responses
-     * @param services The list of services to be queried
+     * Call the correct service's bridge and transform the response to make an array of items
+     * @param service The service description
      * @param params The list of parameters from the CDT
-     * @returns {bluebird|exports|module.exports} The list of the responses, in order of service ranking
+     * @returns {Promise.<T>} The list of the responses, in order of service ranking
      * @private
      */
-    _callServices (services, params) {
-        return new Promise(resolve => {
-            Promise
-                .mapSeries(services, s => {
-                    const operation = s.operations[0];
-                    let promise;
-                    //check if the protocol of the current service is 'rest' o 'query'
-                    if (s.protocol === 'rest' || s.protocol === 'query') {
-                        //use the rest bridge
-                        promise = restBridge.executeQuery(s, params);
-                    } else if (s.protocol === 'custom') {
-                        //call the custom bridge
-                        let bridgeName = operation.bridgeName;
-                        //check if a bridge name is defined
-                        if (!_.isUndefined(bridgeName) && !_.isEmpty(bridgeName)) {
-                            //load the module
-                            promise = System
-                                .import(this._bridgeFolder + bridgeName)
-                                .then(Module => {
-                                    const module = new Module.default();
-                                    return module.executeQuery(params);
-                                });
-                        } else {
-                            console.log('ERROR: The service \'' + s.name + '\' must define a custom bridge');
-                        }
-                    }
-                    return promise
-                        .then(response => {
-                            //create the list of items
-                            return transformResponse.retrieveListOfResults(response, operation.responseMapping.list)
-                        })
-                        .then(itemArray => {
-                            //transform the response
-                            return transformResponse.mappingResponse(operation.responseMapping, itemArray)
-                        })
-                        .catch(e => {
-                            console.log('[' + s.name + '] ERROR: ' + e);
-                        });
-                })
-                .then(responses => {
-                    //leave the undefined responses
-                    responses = _(responses)
-                        .filter(item => {
-                            return !_.isUndefined(item) && !_.isEmpty(item);
-                        })
-                        .value();
-                    resolve(responses);
-                });
-        });
+    _callService (service, params) {
+        const operation = service.operations;
+        let promise;
+        //check if the protocol of the current service is 'rest' o 'query'
+        if (service.protocol === 'rest' || service.protocol === 'query') {
+            //use the rest bridge
+            promise = restBridge.executeQuery(service, params);
+        } else if (service.protocol === 'custom') {
+            //call the custom bridge
+            let bridgeName = operation.bridgeName;
+            //check if a bridge name is defined
+            if (!_.isUndefined(bridgeName) && !_.isEmpty(bridgeName)) {
+                //load the module
+                promise = System
+                    .import(this._bridgeFolder + bridgeName)
+                    .then(Module => {
+                        const module = new Module.default();
+                        return module.executeQuery(params);
+                    });
+            } else {
+                console.log('ERROR: The service \'' + service.name + '\' must define a custom bridge');
+                return Promise.resolve();
+            }
+        }
+        return promise
+            .then(response => {
+                //create the list of items
+                return transformResponse.retrieveListOfResults(response, operation.responseMapping.list)
+            })
+            .then(itemArray => {
+                //transform the response
+                return transformResponse.mappingResponse(operation.responseMapping, itemArray)
+            })
+            .catch(e => {
+                console.log('[' + service.name + '] ERROR: ' + e);
+                return Promise.resolve();
+            });
     }
 
 }

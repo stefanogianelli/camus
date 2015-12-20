@@ -45,7 +45,7 @@ export default class RestBridge extends Bridge {
     _parameterMapping (service, paramNodes) {
         return new Promise((resolve, reject) => {
             let params = [];
-            _.forEach(service.operations[0].parameters, p => {
+            _.forEach(service.operations.parameters, p => {
                 if (_.isEmpty(p.mappingCDT)) {
                     //use default value if the parameter is required and no mapping on the CDT was added
                     if (!_.isUndefined(p.default)) {
@@ -135,7 +135,7 @@ export default class RestBridge extends Bridge {
      */
     _invokeService (service, params) {
         return new Promise ((resolve, reject) => {
-            const operation = service.operations[0];
+            const operation = service.operations;
             let request;
             //setting up the query path and parameters
             if (service.protocol === 'rest') {
