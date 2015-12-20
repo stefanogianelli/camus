@@ -3,24 +3,15 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import graphqlHTTP from 'express-graphql';
-import Promise from 'bluebird';
 
-import ContextManager from'./components/contextManager';
-import PrimaryService from'./components/primaryServiceSelection';
-import QueryHandler from'./components/queryHandler';
-import SupportService from'./components/supportServiceSelection';
-import ResponseAggregator from'./components/responseAggregator';
 import DatabaseHelper from'./databaseHelper';
 import Provider from './provider/provider';
+import ExecutionHelper from './components/executionHelper';
 import camusSchema from './models/graphql/graphQLSchemas';
 
 const provider = new Provider();
-const contextManager = new ContextManager();
-const primaryService = new PrimaryService();
-const queryHandler = new QueryHandler();
-const supportService = new SupportService();
-const responseAggregator = new ResponseAggregator();
 const databaseHelper = new DatabaseHelper();
+const executionHelper = new ExecutionHelper();
 
 const app = express();
 
@@ -39,23 +30,8 @@ app.get('/', (req, res) => {
  * It needs a context for Service selection
  */
 app.post('/query', (req, res) => {
-    contextManager
-        .getDecoratedCdt(req.body)
-        .then(decoratedCdt => {
-            return Promise
-                .props({
-                    primary: primaryService
-                        .selectServices(decoratedCdt)
-                        .then(services => {
-                            return queryHandler
-                                .executeQueries(services, decoratedCdt);
-                        }),
-                    support: supportService.selectServices(decoratedCdt)
-                });
-        })
-        .then(result => {
-            return responseAggregator.prepareResponse(result.primary, result.support);
-        })
+    executionHelper
+        .prepareResponse(req.body)
         .then(response => {
             res.send(response);
         })
@@ -83,7 +59,7 @@ app.get('/createDatabase', (req, res) => {
         });
 });
 
-//register graphql endpoint
+//register the graphql endpoint
 app.use('/graphql', graphqlHTTP({schema: camusSchema, graphiql: true}));
 
 //start the server

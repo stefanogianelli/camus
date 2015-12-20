@@ -1,6 +1,5 @@
 'use strict';
 
-import Promise from 'bluebird';
 import {
     GraphQLInputObjectType,
     GraphQLString,
@@ -9,17 +8,9 @@ import {
     GraphQLSchema
 } from 'graphql';
 
-import ContextManager from './../../components/contextManager';
-import PrimaryService from './../../components/primaryServiceSelection';
-import QueryHandler from './../../components/queryHandler';
-import SupportService from './../../components/supportServiceSelection';
-import ResponseAggregator from './../../components/responseAggregator';
+import ExecutionHelper from './../../components/executionHelper';
 
-const contextManager = new ContextManager();
-const primaryService = new PrimaryService();
-const queryHandler = new QueryHandler();
-const supportService = new SupportService();
-const responseAggregator = new ResponseAggregator();
+const executionHelper = new ExecutionHelper();
 
 /**
  * Field schema
@@ -216,23 +207,8 @@ const queryType = new GraphQLObjectType({
                 }
             },
             resolve: (root, {_id, context, support}) => {
-                return contextManager
-                    .getDecoratedCdt({_id, context, support})
-                    .then(decoratedCdt => {
-                        return Promise
-                            .props({
-                                primary: primaryService
-                                    .selectServices(decoratedCdt)
-                                    .then(services => {
-                                        return queryHandler
-                                            .executeQueries(services, decoratedCdt);
-                                    }),
-                                support: supportService.selectServices(decoratedCdt)
-                            });
-                    })
-                    .then(result => {
-                        return responseAggregator.prepareResponse(result.primary, result.support);
-                    })
+                return executionHelper
+                    .prepareResponse({_id, context, support})
                     .catch(e => {
                         throw new Error(e);
                     });
