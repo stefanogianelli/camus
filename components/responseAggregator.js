@@ -22,7 +22,9 @@ export default class ResponseAggregator {
             if (!_.isUndefined(responses) && !_.isEmpty(responses)) {
                 let response = {};
                 response['data'] = _.flatten(this._findSimilarities(responses));
-                response['support'] = supportServices;
+                if (!_.isUndefined(supportServices)) {
+                    response['support'] = supportServices;
+                }
                 resolve(response);
             } else {
                 //nothing found

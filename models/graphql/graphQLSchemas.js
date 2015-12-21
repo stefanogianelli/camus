@@ -8,9 +8,9 @@ import {
     GraphQLSchema
 } from 'graphql';
 
-import ExecutionHelper from './../../components/executionHelper';
-
-const executionHelper = new ExecutionHelper();
+import {
+    prepareResponse
+} from './../../components/executionHelper';
 
 /**
  * Field schema
@@ -207,8 +207,7 @@ const queryType = new GraphQLObjectType({
                 }
             },
             resolve: (root, {_id, context, support}) => {
-                return executionHelper
-                    .prepareResponse({_id, context, support})
+                return prepareResponse({_id, context, support})
                     .catch(e => {
                         throw new Error(e);
                     });

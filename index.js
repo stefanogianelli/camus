@@ -6,12 +6,14 @@ import graphqlHTTP from 'express-graphql';
 
 import DatabaseHelper from'./databaseHelper';
 import Provider from './provider/provider';
-import ExecutionHelper from './components/executionHelper';
 import camusSchema from './models/graphql/graphQLSchemas';
+import {
+    prepareResponse
+} from './components/executionHelper';
+
 
 const provider = new Provider();
 const databaseHelper = new DatabaseHelper();
-const executionHelper = new ExecutionHelper();
 
 const app = express();
 
@@ -30,14 +32,13 @@ app.get('/', (req, res) => {
  * It needs a context for Service selection
  */
 app.post('/query', (req, res) => {
-    executionHelper
-        .prepareResponse(req.body)
-        .then(response => {
-            res.send(response);
-        })
-        .catch(e => {
-            res.status(500).send(e);
-        });
+    prepareResponse(req.body)
+    .then(response => {
+        res.send(response);
+    })
+    .catch(e => {
+        res.status(500).send(e);
+    });
 });
 
 /**

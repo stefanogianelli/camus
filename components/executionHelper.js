@@ -14,31 +14,65 @@ const queryHandler = new QueryHandler();
 const supportService = new SupportService();
 const responseAggregator = new ResponseAggregator();
 
-export default class ExecutionHelper {
+/**
+ * Given a user context, it invokes the components in the correct order, then return the final response
+ * @param context The user context
+ * @returns {Promise|Request|Promise.<T>} The final response
+ */
+export function prepareResponse (context) {
+    return contextManager
+        .getDecoratedCdt(context)
+        .then(decoratedCdt => {
+            return Promise
+                .props({
+                    primary: primaryService
+                        .selectServices(decoratedCdt)
+                        .then(services => {
+                            return queryHandler
+                                .executeQueries(services, decoratedCdt);
+                        }),
+                    support: supportService.selectServices(decoratedCdt)
+                });
+        })
+        .then(result => {
+            return responseAggregator.prepareResponse(result.primary, result.support);
+        });
+}
 
-    /**
-     * Given a user context, it invokes the components in the correct order, then return the final response
-     * @param context The user context
-     * @returns {Promise|Request|Promise.<T>} The final response
-     */
-    prepareResponse (context) {
-        return contextManager
-            .getDecoratedCdt(context)
-            .then(decoratedCdt => {
-                return Promise
-                    .props({
-                        primary: primaryService
-                            .selectServices(decoratedCdt)
-                            .then(services => {
-                                return queryHandler
-                                    .executeQueries(services, decoratedCdt);
-                            }),
-                        support: supportService.selectServices(decoratedCdt)
-                    });
-            })
-            .then(result => {
-                return responseAggregator.prepareResponse(result.primary, result.support);
-            });
-    }
-    
+/**
+ * Given a user context, it returns the associated decorated CDT
+ * @param context The user context
+ * @returns {Promise|Request|Promise.<T>} The decorated CDT
+ */
+export function getDecoratedCdt (context) {
+    return contextManager
+        .getDecoratedCdt(context);
+}
+
+/**
+ * From a decorated CDT, it returns the list of responses from the primary services
+ * @param decoratedCdt The decorated CDT
+ * @returns {*|Promise|Request|Promise.<T>} The list of items found
+ */
+export function getPrimaryData (decoratedCdt) {
+    return primaryService
+        .selectServices(decoratedCdt)
+        .then(services => {
+            return queryHandler
+                .executeQueries(services, decoratedCdt);
+        })
+        .then(responses => {
+            return responseAggregator
+                .prepareResponse(responses);
+        });
+}
+
+/**
+ * From a decorated CDT, it returns the list of support services
+ * @param decoratedCdt The decorated CDT
+ * @returns {bluebird|exports|module.exports} The list of support services found
+ */
+export function getSupportData (decoratedCdt) {
+    return supportService
+        .selectServices(decoratedCdt);
 }
