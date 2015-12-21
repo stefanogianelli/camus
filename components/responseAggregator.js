@@ -20,10 +20,12 @@ export default class ResponseAggregator {
     prepareResponse (responses, supportServices) {
         return new Promise ((resolve, reject) => {
             if (!_.isUndefined(responses) && !_.isEmpty(responses)) {
-                let response = {};
-                response['data'] = _.flatten(this._findSimilarities(responses));
+                let response;
                 if (!_.isUndefined(supportServices)) {
+                    response['data'] = _.flatten(this._findSimilarities(responses));
                     response['support'] = supportServices;
+                } else {
+                    response = _.flatten(this._findSimilarities(responses));
                 }
                 resolve(response);
             } else {

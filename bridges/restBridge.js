@@ -11,7 +11,7 @@ export default class RestBridge extends Bridge {
     constructor () {
         super();
         //timeout for the requests (in ms)
-        this._timeout = 6000;
+        this._timeout = 4000;
     }
 
     /**

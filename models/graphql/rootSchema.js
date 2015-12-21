@@ -8,13 +8,19 @@ import {
 } from 'graphql';
 
 import {
-    prepareResponse
+    getDecoratedCdt,
+    getPrimaryData,
+    getSupportData
 } from './../../components/executionHelper';
 
 import {
     contextItemType,
     supportItemType
 } from './contextSchema';
+
+import {
+    base64
+} from '../../utils/base64';
 
 import dataType from './primaryDataSchema';
 
@@ -27,13 +33,25 @@ const responseType = new GraphQLObjectType({
     name: 'Response',
     description: 'The response type. It contains the information retrieved by the services',
     fields: () => ({
+        id: {
+            type: GraphQLString,
+            resolve: (decoratedCdt) => {
+                return base64(JSON.stringify(decoratedCdt));
+            }
+        },
         data: {
             description: 'Provide the list of result items',
-            type: new GraphQLList(dataType)
+            type: new GraphQLList(dataType),
+            resolve: (decoratedCdt) => {
+                return getPrimaryData(decoratedCdt);
+            }
         },
         support: {
             description: 'Provide the URL of the requested support services',
-            type: new GraphQLList(supportResponseType)
+            type: new GraphQLList(supportResponseType),
+            resolve: (decoratedCdt) => {
+                return getSupportData(decoratedCdt);
+            }
         }
     })
 });
@@ -63,7 +81,7 @@ const queryType = new GraphQLObjectType({
                 }
             },
             resolve: (root, {_id, context, support}) => {
-                return prepareResponse({_id, context, support})
+                return getDecoratedCdt({_id, context, support})
                     .catch(e => {
                         throw new Error(e);
                     });
