@@ -26,7 +26,7 @@ import supportResponseType from './supportDataSchema';
 const responseType = new GraphQLObjectType({
     name: 'Response',
     description: 'The response type. It contains the information retrieved by the services',
-    fields: {
+    fields: () => ({
         data: {
             description: 'Provide the list of result items',
             type: new GraphQLList(dataType)
@@ -35,7 +35,7 @@ const responseType = new GraphQLObjectType({
             description: 'Provide the URL of the requested support services',
             type: new GraphQLList(supportResponseType)
         }
-    }
+    })
 });
 
 /**
@@ -44,7 +44,7 @@ const responseType = new GraphQLObjectType({
 const queryType = new GraphQLObjectType({
     name: 'Query',
     description: 'The main type for each operation',
-    fields: {
+    fields: () => ({
         executeQuery: {
             type: responseType,
             description: 'The endpoint committed to the query execution',
@@ -69,14 +69,12 @@ const queryType = new GraphQLObjectType({
                     });
             }
         }
-    }
+    })
 });
 
 /**
  * The main schema
  */
-const camusSchema = new GraphQLSchema({
+export default new GraphQLSchema({
     query: queryType
 });
-
-export default camusSchema;

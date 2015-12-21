@@ -9,7 +9,7 @@ import {
 export default new GraphQLObjectType ({
     name: 'SupportResponse',
     description: 'It contains list of support service descriptions',
-    fields: {
+    fields: () => ({
         name: {
             description: 'The name of the service',
             type: GraphQLString
@@ -26,5 +26,5 @@ export default new GraphQLObjectType ({
             description: 'The service URL',
             type: GraphQLString
         }
-    }
+    })
 });

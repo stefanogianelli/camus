@@ -9,7 +9,7 @@ import {
 export default new GraphQLObjectType({
     name: 'DataItem',
     description: 'A single result item',
-    fields: {
+    fields: () => ({
         title: {
             description: 'The title of the item',
             type: GraphQLString
@@ -42,5 +42,5 @@ export default new GraphQLObjectType({
             description: 'The longitude of the item',
             type: GraphQLString
         }
-    }
+    })
 });
