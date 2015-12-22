@@ -6,7 +6,11 @@ import graphqlHTTP from 'express-graphql';
 
 import DatabaseHelper from'./databaseHelper';
 import Provider from './provider/provider';
-import camusSchema from './models/graphql/rootSchema';
+
+import {
+    camusSchema
+} from './models/graphql/rootSchema';
+
 import {
     prepareResponse
 } from './components/executionHelper';

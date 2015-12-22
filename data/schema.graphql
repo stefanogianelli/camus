@@ -1,0 +1,82 @@
+input ContextItem {
+  dimension: String
+  value: String
+  parameters: [ParameterItem]
+}
+
+type DataItem {
+  title: String
+  address: String
+  telephone: String
+  website: String
+  city: String
+  email: String
+  latitude: String
+  longitude: String
+}
+
+input FieldItem {
+  name: String
+  value: String
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+input ParameterItem {
+  name: String
+  value: String
+  fields: [FieldItem]
+}
+
+type PrimaryConnection {
+  pageInfo: PageInfo!
+  edges: [PrimaryEdge]
+}
+
+type PrimaryEdge {
+  node: DataItem
+  cursor: String!
+}
+
+type Query {
+  executeQuery(_id: String!, context: [ContextItem]!, support: [SupportItem]): Response
+  node(id: ID!): Node
+}
+
+type Response implements Node {
+  id: ID!
+  primaryResults(after: String, first: Int, before: String, last: Int): PrimaryConnection
+  supportResults(after: String, first: Int, before: String, last: Int): SupportConnection
+}
+
+type SupportConnection {
+  pageInfo: PageInfo!
+  edges: [SupportEdge]
+}
+
+type SupportEdge {
+  node: SupportResponse
+  cursor: String!
+}
+
+input SupportItem {
+  name: String
+  operation: String
+  category: String
+}
+
+type SupportResponse {
+  name: String
+  category: String
+  service: String
+  url: String
+}

@@ -90,6 +90,6 @@ const queryType = new GraphQLObjectType({
 /**
  * The main schema
  */
-export default new GraphQLSchema({
+export const camusSchema = new GraphQLSchema({
     query: queryType
 });
