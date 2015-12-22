@@ -4,6 +4,8 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 import agent from 'superagent';
 
+import util from 'util';
+
 import Bridge from './bridge';
 
 export default class RestBridge extends Bridge {
@@ -61,7 +63,7 @@ export default class RestBridge extends Bridge {
                     }
                 } else {
                     //search for the value(s) in the CDT
-                    let values = [];
+                    let values;
                     let separator = ',';
                     switch (p.collectionFormat) {
                         case 'csv':
@@ -136,22 +138,26 @@ export default class RestBridge extends Bridge {
     _invokeService (service, params) {
         return new Promise ((resolve, reject) => {
             const operation = service.operations;
-            let request;
-            //setting up the query path and parameters
+            //configure parameters (the default ones are useful for standard query composition)
+            let start = '?';
+            let assign = '=';
+            let separator = '&';
+            //change parameter value if the service is REST
             if (service.protocol === 'rest') {
-                let address = service.basePath.concat(operation.path);
-                _.forEach(params, p => {
-                    address = address.concat('/' + p.name + '/' + p.value);
-                });
-                request = agent.get(address);
-            } else if (service.protocol === 'query') {
-                request = agent.get(service.basePath.concat(operation.path));
-                _.forEach(params, p => {
-                    let obj = {};
-                    obj[p.name] = p.value;
-                    request.query(obj);
-                });
+                start = assign = separator = '/';
             }
+            //setting up the query path and parameters
+            let address = service.basePath + operation.path + start;
+            let parameters = _.reduce(params, (output, p) => {
+                //add the value(s) to the query
+                if (_.isEmpty(output)) {
+                    return p.name + assign + p.value;
+                } else {
+                    return output + separator + p.name + assign + p.value;
+                }
+            }, '');
+            //add the address to the request object
+            let request = agent.get(address + parameters);
             //adding header information
             _.forEach(operation.headers, h => {
                 request.set(h.name, h.value);
