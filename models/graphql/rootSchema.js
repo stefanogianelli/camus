@@ -4,19 +4,29 @@ import {
     GraphQLString,
     GraphQLList,
     GraphQLObjectType,
-    GraphQLSchema
+    GraphQLSchema,
+    GraphQLID,
+    GraphQLNonNull
 } from 'graphql';
 
 import {
-    getDecoratedCdt,
-    getPrimaryData,
-    getSupportData
+    getDecoratedCdt
 } from './../../components/executionHelper';
 
 import {
     contextItemType,
     supportItemType
 } from './contextSchema';
+
+import {
+    nodeField,
+    nodeInterface
+} from './relayNode';
+
+import {
+    primaryConnection,
+    supportConnection
+} from './connections';
 
 import {
     base64
@@ -29,31 +39,20 @@ import supportResponseType from './supportDataSchema';
 /**
  * Response schema
  */
-const responseType = new GraphQLObjectType({
+export const responseType = new GraphQLObjectType({
     name: 'Response',
     description: 'The response type. It contains the information retrieved by the services',
     fields: () => ({
         id: {
-            type: GraphQLString,
+            type: new GraphQLNonNull(GraphQLID),
             resolve: (decoratedCdt) => {
                 return base64(JSON.stringify(decoratedCdt));
             }
         },
-        data: {
-            description: 'Provide the list of result items',
-            type: new GraphQLList(dataType),
-            resolve: (decoratedCdt) => {
-                return getPrimaryData(decoratedCdt);
-            }
-        },
-        support: {
-            description: 'Provide the URL of the requested support services',
-            type: new GraphQLList(supportResponseType),
-            resolve: (decoratedCdt) => {
-                return getSupportData(decoratedCdt);
-            }
-        }
-    })
+        primaryResults: primaryConnection(),
+        supportResults: supportConnection()
+    }),
+    interfaces: () => [nodeInterface]
 });
 
 /**
@@ -69,11 +68,11 @@ const queryType = new GraphQLObjectType({
             args: {
                 _id: {
                     description: 'The CDT identifier',
-                    type: GraphQLString
+                    type: new GraphQLNonNull(GraphQLString)
                 },
                 context: {
                     description: 'The list of context preferences',
-                    type: new GraphQLList(contextItemType)
+                    type: new GraphQLNonNull(new GraphQLList(contextItemType))
                 },
                 support: {
                     description: 'The list of support services that are requested',
@@ -83,7 +82,8 @@ const queryType = new GraphQLObjectType({
             resolve: (root, {_id, context, support}) => {
                 return getDecoratedCdt({_id, context, support});
             }
-        }
+        },
+        node: nodeField
     })
 });
 

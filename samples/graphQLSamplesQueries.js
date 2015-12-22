@@ -40,16 +40,24 @@ let restaurantContext = `
             ]
         )
         {
-            data {
-                title
-                address
-                latitude
-                longitude
+            primaryResults {
+                edges {
+                    node {
+                        title
+                        address
+                        latitude
+                        longitude
+                    }
+                }
             }
-            support {
-                category
-                service
-                url
+            supportResults {
+                edges {
+                    node {
+                        category
+                        service
+                        url
+                    }
+                }
             }
         }
     }
@@ -88,17 +96,25 @@ let cinemaContext = `
             ]
         )
         {
-            data {
-                title
-                address
-                telephone
-                latitude
-                longitude
+            primaryResults {
+                edges {
+                    node {
+                        title
+                        address
+                        telephone
+                        latitude
+                        longitude
+                    }
+                }
             }
-            support {
-                category
-                service
-                url
+            supportResults {
+                edges {
+                    node {
+                        category
+                        service
+                        url
+                    }
+                }
             }
         }
     }
@@ -137,20 +153,28 @@ let hotelContext = `
             ]
         )
         {
-            data {
-                title
-                address
-                telephone
-                city
-                website
-                email
-                latitude
-                longitude
+            primaryResults {
+                edges {
+                    node {
+                        title
+                        address
+                        telephone
+                        city
+                        website
+                        email
+                        latitude
+                        longitude
+                    }
+                }
             }
-            support {
-                category
-                service
-                url
+            supportResults {
+                edges {
+                    node {
+                        category
+                        service
+                        url
+                    }
+                }
             }
         }
     }
@@ -189,19 +213,27 @@ let museumContext = `
             ]
         )
         {
-            data {
-                title
-                address
-                city
-                website
-                email
-                latitude
-                longitude
+            primaryResults {
+                edges {
+                    node {
+                        title
+                        address
+                        city
+                        website
+                        email
+                        latitude
+                        longitude
+                    }
+                }
             }
-            support {
-                category
-                service
-                url
+            supportResults {
+                edges {
+                    node {
+                        category
+                        service
+                        url
+                    }
+                }
             }
         }
     }
@@ -249,18 +281,26 @@ let theaterContext = `
             ]
         )
         {
-            data {
-                title
-                address
-                telephone
-                website
-                latitude
-                longitude
+            primaryResults {
+                edges {
+                    node {
+                        title
+                        address
+                        telephone
+                        website
+                        latitude
+                        longitude
+                    }
+                }
             }
-            support {
-                category
-                service
-                url
+            supportResults {
+                edges {
+                    node {
+                        category
+                        service
+                        url
+                    }
+                }
             }
         }
     }
