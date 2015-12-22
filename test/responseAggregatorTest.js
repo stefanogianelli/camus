@@ -11,23 +11,14 @@ describe('Component: ResponseAggregator', () => {
     describe('#prepareResponse()', () => {
         it('check correct response aggregation', () => {
             return responseAggregator
-                .prepareResponse(testSuccessfulMerging, supportResponse)
+                .prepareResponse(testSuccessfulMerging)
                 .then(response => {
-                    assert.equal(response.data.length, 3);
-                    assert.equal(response.support.length, 3);
-                });
-        });
-        it('check correct response when no support services are found', () => {
-            return responseAggregator
-                .prepareResponse(testSuccessfulMerging, [])
-                .then(response => {
-                    assert.equal(response.data.length, 3);
-                    assert.equal(response.support.length, 0);
+                    assert.equal(response.length, 3);
                 });
         });
         it('check error message when empty response list is sent', () => {
            return responseAggregator
-               .prepareResponse([], [])
+               .prepareResponse([])
                .catch(e => {
                    assert.equal(e, 'No results');
                })
@@ -145,22 +136,4 @@ const testSuccessfulMerging = [
             tipologia: 'Ristorante Italiano'
         }
     ]
-];
-
-//test response that came from SupportServiceSelection component
-const supportResponse = [
-    {
-        name: 'Wikipedia',
-        url: 'https://en.wikipedia.org/w/api.php?action=query&titles={search_key}&prop=revisions&rvprop=content&format=json'
-    },
-    {
-        category: 'Transport',
-        service: 'ATM',
-        url: 'http://api.atm-mi.it/searchAddress'
-    },
-    {
-        category: 'Transport',
-        service: 'Trenord',
-        url: NaN
-    }
 ];

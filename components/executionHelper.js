@@ -25,17 +25,18 @@ export function prepareResponse (context) {
         .then(decoratedCdt => {
             return Promise
                 .props({
-                    primary: primaryService
+                    data: primaryService
                         .selectServices(decoratedCdt)
                         .then(services => {
                             return queryHandler
                                 .executeQueries(services, decoratedCdt);
+                        })
+                        .then(responses => {
+                            return responseAggregator
+                                .prepareResponse(responses);
                         }),
                     support: supportService.selectServices(decoratedCdt)
                 });
-        })
-        .then(result => {
-            return responseAggregator.prepareResponse(result.primary, result.support);
         });
 }
 

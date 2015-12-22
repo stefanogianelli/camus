@@ -29,15 +29,16 @@ app.get('/', (req, res) => {
 /**
  * Route necessary by the mobile app to retrieve the data
  * It needs a context for Service selection
+ * @deprecated
  */
 app.post('/query', (req, res) => {
     prepareResponse(req.body)
-    .then(response => {
-        res.send(response);
-    })
-    .catch(e => {
-        res.status(500).send(e);
-    });
+        .then(response => {
+            res.send(response);
+        })
+        .catch(e => {
+            res.status(500).send(e);
+        });
 });
 
 /**

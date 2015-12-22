@@ -12,22 +12,14 @@ export default class ResponseAggregator {
     }
 
     /**
-     * Remove duplicate items from the responses lists and append the information for retrieve information by the support services
+     * Remove duplicate items from the responses lists
      * @param responses The list of responses
-     * @param supportServices The list of support service descriptions
      * @returns {bluebird|exports|module.exports} The aggregated and cleaned response
      */
-    prepareResponse (responses, supportServices) {
+    prepareResponse (responses) {
         return new Promise ((resolve, reject) => {
             if (!_.isUndefined(responses) && !_.isEmpty(responses)) {
-                let response;
-                if (!_.isUndefined(supportServices)) {
-                    response = {};
-                    response['data'] = _.flatten(this._findSimilarities(responses));
-                    response['support'] = supportServices;
-                } else {
-                    response = _.flatten(this._findSimilarities(responses));
-                }
+                let response = _.flatten(this._findSimilarities(responses));
                 resolve(response);
             } else {
                 //nothing found
