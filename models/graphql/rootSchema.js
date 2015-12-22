@@ -81,10 +81,7 @@ const queryType = new GraphQLObjectType({
                 }
             },
             resolve: (root, {_id, context, support}) => {
-                return getDecoratedCdt({_id, context, support})
-                    .catch(e => {
-                        throw new Error(e);
-                    });
+                return getDecoratedCdt({_id, context, support});
             }
         }
     })

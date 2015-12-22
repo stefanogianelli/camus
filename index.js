@@ -11,7 +11,6 @@ import {
     prepareResponse
 } from './components/executionHelper';
 
-
 const provider = new Provider();
 const databaseHelper = new DatabaseHelper();
 
