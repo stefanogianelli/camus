@@ -18,7 +18,7 @@ import supportData from './supportDataSchema';
 export const { nodeInterface, nodeField } = nodeDefinitions(
     (globalId) => {
         const {type, id} = fromGlobalId(globalId);
-        const decoratedCdt = unbase64(id);
+        const decoratedCdt = JSON.parse(unbase64(id));
         switch (type) {
             case 'primary':
                 return getPrimaryData(decoratedCdt);

@@ -4,8 +4,6 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 import agent from 'superagent';
 
-import util from 'util';
-
 import Bridge from './bridge';
 
 export default class RestBridge extends Bridge {
