@@ -19,18 +19,9 @@ import {
 } from './contextSchema';
 
 import {
-    nodeField,
-    nodeInterface
-} from './relayNode';
-
-import {
     primaryConnection,
     supportConnection
 } from './connections';
-
-import {
-    base64
-} from '../../utils/base64';
 
 import dataType from './primaryDataSchema';
 
@@ -51,8 +42,7 @@ export const responseType = new GraphQLObjectType({
         },
         primaryResults: primaryConnection(),
         supportResults: supportConnection()
-    }),
-    interfaces: () => [nodeInterface]
+    })
 });
 
 /**
@@ -82,8 +72,7 @@ const queryType = new GraphQLObjectType({
             resolve: (root, {_id, context, support}) => {
                 return getDecoratedCdt({_id, context, support});
             }
-        },
-        node: nodeField
+        }
     })
 });
 

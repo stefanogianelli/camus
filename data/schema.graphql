@@ -20,10 +20,6 @@ input FieldItem {
   value: String
 }
 
-interface Node {
-  id: ID!
-}
-
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -49,10 +45,9 @@ type PrimaryEdge {
 
 type Query {
   executeQuery(_id: String!, context: [ContextItem]!, support: [SupportItem]): Response
-  node(id: ID!): Node
 }
 
-type Response implements Node {
+type Response {
   id: ID!
   primaryResults(after: String, first: Int, before: String, last: Int): PrimaryConnection
   supportResults(after: String, first: Int, before: String, last: Int): SupportConnection
