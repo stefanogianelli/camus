@@ -34,12 +34,6 @@ export const responseType = new GraphQLObjectType({
     name: 'Response',
     description: 'The response type. It contains the information retrieved by the services',
     fields: () => ({
-        id: {
-            type: new GraphQLNonNull(GraphQLID),
-            resolve: (decoratedCdt) => {
-                return base64(JSON.stringify(decoratedCdt));
-            }
-        },
         primaryResults: primaryConnection(),
         supportResults: supportConnection()
     })
