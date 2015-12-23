@@ -48,7 +48,6 @@ type Query {
 }
 
 type Response {
-  id: ID!
   primaryResults(after: String, first: Int, before: String, last: Int): PrimaryConnection
   supportResults(after: String, first: Int, before: String, last: Int): SupportConnection
 }
