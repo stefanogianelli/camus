@@ -6,8 +6,7 @@
   "scripts": {
     "start": "babel-node ./index.js",
     "test": "babel-node ./node_modules/.bin/_mocha",
-    "cover": "babel-node ./node_modules/.bin/isparta cover _mocha",
-    "update-schema": "babel-node ./scripts/updateSchema.js"
+    "cover": "babel-node ./node_modules/.bin/isparta cover _mocha"
   },
   "repository": {
     "type": "git",
