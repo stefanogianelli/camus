@@ -10,7 +10,7 @@ export default class TestBridge extends Bridge {
      */
     executeQuery () {
         return new Promise (resolve => {
-            resolve({
+            resolve([{
                 "results": [
                     {
                         "formatted_address": "809 W Randolph St, Chicago, IL 60607, Stati Uniti",
@@ -86,7 +86,7 @@ export default class TestBridge extends Bridge {
                         ]
                     }
                 ]
-            });
+            }]);
         });
     }
 }

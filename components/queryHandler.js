@@ -26,7 +26,7 @@ export default class QueryHandler {
 
     constructor () {
         //shortcut to the bridges folder
-        this._bridgeFolder = '../camus/bridges/';
+        this._bridgeFolder = '../camusServer/bridges/';
     }
 
     /**
@@ -72,6 +72,7 @@ export default class QueryHandler {
         //check if the protocol of the current service is 'rest' o 'query'
         if (service.protocol === 'rest' || service.protocol === 'query') {
             //use the rest bridge
+            console.log('starting REST bridge ...');
             promise = restBridge.executeQuery(service, params);
         } else if (service.protocol === 'custom') {
             //call the custom bridge
@@ -79,6 +80,7 @@ export default class QueryHandler {
             //check if a bridge name is defined
             if (!_.isUndefined(bridgeName) && !_.isEmpty(bridgeName)) {
                 //load the module
+                console.log('starting custom bridge \'' + bridgeName + '\' ...');
                 promise = System
                     .import(this._bridgeFolder + bridgeName)
                     .then(Module => {
@@ -91,9 +93,18 @@ export default class QueryHandler {
             }
         }
         return promise
-            .then(response => {
+            .then(responses => {
                 //create the list of items
-                return transformResponse.retrieveListOfResults(response, operation.responseMapping.list)
+                return Promise
+                    .reduce(responses, (output, response) => {
+                        return transformResponse
+                            .retrieveListOfResults(response, operation.responseMapping.list)
+                            .then(itemList => {
+                               if (!_.isEmpty(itemList)) {
+                                   return _.union(output, itemList);
+                               }
+                            });
+                    }, []);
             })
             .then(itemArray => {
                 //transform the response

@@ -203,7 +203,7 @@ export const decoratedCdt = idCDT => {
         rankingNodes: [
             {
                 dimension: 'CityName',
-                value: 'Milan'
+                value: 'Chicago'
             },
             {
                 dimension: 'Festivita',
@@ -236,11 +236,11 @@ export const decoratedCdt = idCDT => {
             },
             {
                 dimension: 'CityName',
-                value: 'Milan'
+                value: 'Chicago'
             },
             {
                 dimension: 'SearchKey',
-                value: 'restaurantinnewyork'
+                value: 'restaurantinchicago'
             },
             {
                 dimension: 'CityCoord',
@@ -311,6 +311,11 @@ export const googlePlaces = {
                         path: 'geometry.location.lng'
                     }
                 ]
+            },
+            pagination: {
+                attributeName: 'pagetoken',
+                type: 'token',
+                tokenAttribute: 'next_page_token'
             }
         }
     ]
@@ -369,6 +374,11 @@ export const eventful = {
                         path: 'longitude'
                     }
                 ]
+            },
+            pagination: {
+                attributeName: 'page_number',
+                type: 'number',
+                pageCountAttribute: 'page_count'
             }
         }
     ]

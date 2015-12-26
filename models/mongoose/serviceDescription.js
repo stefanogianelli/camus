@@ -8,6 +8,7 @@ const ObjectId = Schema.Types.ObjectId;
 const types = 'primary support'.split(' ');
 const separators = 'csv ssv tsv pipes'.split(' ');
 const protocols = 'rest query custom'.split(' ');
+const paginationTypes = 'number token'.split(' ');
 
 /**
  * Parameter schema
@@ -84,6 +85,23 @@ const responseSchema = new Schema({
 });
 
 /**
+ * Pagination Schema
+ */
+const paginationSchema = new Schema({
+    attributeName: {
+        type: String,
+        required: true
+    },
+    type: {
+        type: String,
+        required: true,
+        enum: paginationTypes
+    },
+    tokenAttribute: String,
+    pageCountAttribute: String
+});
+
+/**
  * Operation schema
  */
 const operationSchema = new Schema({
@@ -102,7 +120,8 @@ const operationSchema = new Schema({
     bridgeName: String,
     parameters: [parameterSchema],
     headers: [headerSchema],
-    responseMapping: responseSchema
+    responseMapping: responseSchema,
+    pagination: paginationSchema
 });
 
 /**

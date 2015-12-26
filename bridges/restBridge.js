@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import Promise from 'bluebird';
 import agent from 'superagent';
+import async from 'async';
 
 import Bridge from './bridge';
 
@@ -20,13 +21,14 @@ export default class RestBridge extends Bridge {
      * Then compose the query and invoke the service
      * @param service The service description
      * @param paramNodes The parameter nodes of the CDT
-     * @returns {Promise|Request|Promise.<T>} The promise with the service response
+     * @param paginationArgs Define the starting point for pagination and how many pages retrieve, if they are available
+     * @returns {Promise|Request|Promise.<T>} The promise with the service responses
      */
-    executeQuery (service, paramNodes) {
+    executeQuery (service, paramNodes, paginationArgs) {
         return this
             ._parameterMapping(service, paramNodes)
             .then(params => {
-                return this._invokeService(service, params);
+                return this._invokeService(service, params, paginationArgs);
             })
     }
 
@@ -130,65 +132,184 @@ export default class RestBridge extends Bridge {
      * Then return the service response (parsed)
      * @param service The service description
      * @param params The parameters that will be used for query composition
+     * @param pagination Define the starting point for pagination and how many pages retrieve, if they are available
      * @returns {bluebird|exports|module.exports} The parsed response
      * @private
      */
-    _invokeService (service, params) {
+    _invokeService (service, params, pagination) {
         return new Promise ((resolve, reject) => {
             const operation = service.operations;
             //configure parameters (the default ones are useful for standard query composition)
-            let start = '?';
-            let assign = '=';
-            let separator = '&';
+            let querySymbols = {
+                start: '?',
+                assign: '=',
+                separator: '&'
+            };
             //change parameter value if the service is REST
             if (service.protocol === 'rest') {
-                start = assign = separator = '/';
+                querySymbols.start = querySymbols.assign = querySymbols.separator = '/';
             }
             //setting up the query path and parameters
-            let address = service.basePath + operation.path + start;
+            let address = service.basePath + operation.path + querySymbols.start;
             let parameters = _.reduce(params, (output, p) => {
                 //add the value(s) to the query
                 if (_.isEmpty(output)) {
-                    return p.name + assign + p.value;
+                    return p.name + querySymbols.assign + p.value;
                 } else {
-                    return output + separator + p.name + assign + p.value;
+                    return output + querySymbols.separator + p.name + querySymbols.assign + p.value;
                 }
             }, '');
-            //add the address to the request object
-            let request = agent.get(address + parameters);
-            //adding header information
-            _.forEach(operation.headers, h => {
-                request.set(h.name, h.value);
-            });
-            //invoke the service and return the response
-            request
-                .timeout(this._timeout)
-                .end((err, res) => {
+            //acquire pagination parameters
+            let {startPage, numOfPages} = this._getPaginationInitialConfig(service, pagination);
+            let count = 0;
+            let hasNextPage = false;
+            let currentPageAddress = null;
+            let currentPageIdentifier = startPage;
+            let paginationStatus = {};
+            let responses = [];
+            async.doWhilst(
+                (callback) => {
+                    //check if next page is defined
+                    if (!_.isNull(currentPageIdentifier) && _.has(operation, 'pagination')) {
+                        currentPageAddress = operation.pagination.attributeName + querySymbols.assign + currentPageIdentifier;
+                    }
+                    //add the address to the request object
+                    let request;
+                    if (!_.isNull(currentPageAddress)) {
+                        request = agent.get(address + parameters + querySymbols.separator + currentPageAddress);
+                        console.log('Querying service \'' + service.name + '\' #' + (count + 1) + ': ' + address + parameters + querySymbols.separator + currentPageAddress);
+                    } else {
+                        request = agent.get(address + parameters);
+                        console.log('Querying service \'' + service.name + '\' #' + (count + 1) + ': ' + address + parameters);
+                    }
+                    //adding header information
+                    _.forEach(operation.headers, h => {
+                        request.set(h.name, h.value);
+                    });
+                    //invoke the service and return the response
+                    request
+                        .timeout(this._timeout)
+                        .end((err, res) => {
+                            if (err) {
+                                switch (err.status) {
+                                    case 400:
+                                        callback('bad request. Check the address and parameters (400)');
+                                        break;
+                                    case 401:
+                                        callback('access to a restricted resource (401)');
+                                        break;
+                                    case 404:
+                                        callback('service not found (404)');
+                                        break;
+                                    case 500:
+                                        callback('server error (500)');
+                                        break;
+                                    default:
+                                        callback(err);
+                                }
+                            } else {
+                                if (!_.isEmpty(res.body)) {
+                                    responses.push(res.body);
+                                } else {
+                                    responses.push(JSON.parse(res.text));
+                                }
+                                //acquire next page information
+                                paginationStatus = this._getPaginationStatus(service, currentPageIdentifier, responses[responses.length - 1]);
+                                hasNextPage = paginationStatus.hasNextPage;
+                                currentPageIdentifier = paginationStatus.nextPage;
+                                count++;
+                                callback(null);
+                            }
+                        });
+                },
+                () => count < numOfPages && hasNextPage,
+                (err) => {
                     if (err) {
-                        switch (err.status) {
-                            case 400:
-                                reject('bad request. Check the address and parameters (400)');
-                                break;
-                            case 401:
-                                reject('access to a restricted resource (401)');
-                                break;
-                            case 404:
-                                reject('service not found (404)');
-                                break;
-                            case 500:
-                                reject('server error (500)');
-                                break;
-                            default:
-                                reject(err);
+                        //if some responses are correctly retrieved I mask the error
+                        if (responses.length > 0) {
+                            resolve(responses);
+                        } else {
+                            reject(err);
                         }
                     } else {
-                        if (!_.isEmpty(res.body)) {
-                            resolve(res.body);
-                        } else {
-                            resolve(JSON.parse(res.text));
-                        }
+                        resolve(responses);
                     }
-                });
+                }
+            );
         });
+    }
+
+    /**
+     * Check if can be requested a new page from the current service
+     * @param service The service description
+     * @param currentPage The last page queried
+     * @param response The last responses received by the service
+     * @returns {{hasNextPage: boolean, nextPage: *}} hasNextPage is a boolean attribute that specify if exists another page to be queried; nextPage define the identifier of the following page, and can be a number or a token depends on the service implementation.
+     * @private
+     */
+    _getPaginationStatus (service, currentPage, response) {
+        let hasNextPage = false;
+        let nextPage = null;
+        //check if the service has pagination parameters associated
+        if (_.has(service.operations, 'pagination')) {
+            const paginationConfig = service.operations.pagination;
+            //acquire the next page identifier
+            if (paginationConfig.type === 'number') {
+                //initialize the first page
+                if (_.isNull(currentPage)) {
+                    currentPage = 1;
+                }
+                //get the pages count
+                try {
+                    let count = Number(response[paginationConfig.pageCountAttribute]);
+                    //check if can I acquire a new page
+                    if (currentPage + 1 <= count) {
+                        nextPage = currentPage + 1;
+                        hasNextPage = true;
+                    }
+                } catch (e) {
+                    console.log('Invalid page count value');
+                }
+            } else if (paginationConfig.type === 'token') {
+                //get the next token
+                let nextToken = response[paginationConfig.tokenAttribute];
+                //check if the token is valid
+                if (!_.isUndefined(nextToken) && !_.isEmpty(nextToken)) {
+                    nextPage = nextToken;
+                    hasNextPage = true;
+                }
+            }
+        }
+        return {
+            hasNextPage,
+            nextPage
+        };
+    }
+
+    /**
+     * Define the initial status of pagination attributes
+     * @param service The service description
+     * @param paginationArgs The pagination arguments received by the caller
+     * @returns {{startPage: *, numOfPages: number}} The startPage attribute defines the starting identifier that will be queried; the numOfPages attribute defines the number of pages to be queried.
+     * @private
+     */
+    _getPaginationInitialConfig (service, paginationArgs) {
+        let startPage = null;
+        let numOfPages = 1;
+        //check if the service has pagination parameters associated
+        if (_.has(service.operations, 'pagination') && !_.isUndefined(paginationArgs)) {
+            //check if exists a start page placeholder
+            if (!_.isUndefined(paginationArgs.startPage)) {
+                startPage = paginationArgs.startPage;
+            }
+            //acquire the number of pages to be queried
+            if (!_.isUndefined(paginationArgs.numOfPages) && _.isNumber(paginationArgs.numOfPages)) {
+                numOfPages = paginationArgs.numOfPages;
+            }
+        }
+        return {
+            startPage,
+            numOfPages
+        };
     }
 }
