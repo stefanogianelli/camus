@@ -105,6 +105,10 @@ export default class {
                                 } else {
                                     return output;
                                 }
+                            })
+                            .catch(e => {
+                                console.log('[' + service.name + '] ERROR: ' + e);
+                                return output;
                             });
                     }, []);
             })

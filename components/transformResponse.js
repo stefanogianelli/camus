@@ -15,18 +15,15 @@ export default class {
      * @returns {bluebird|exports|module.exports}
      */
     mappingResponse (mapping, response) {
-        return new Promise (resolve => {
+        return new Promise ((resolve, reject) => {
             if (_.isUndefined(response)) {
-                console.log('Empty response. Please add a response to be mapped');
-                return resolve();
+                reject('Empty response. Please add a response to be mapped');
             }
             if (!_.isArray(response)) {
-                console.log('The response must be an array');
-                return resolve();
+                reject('The response must be an array');
             }
             if (_.isUndefined(mapping)) {
-                console.log('No mapping defined. Please add a mapping for the current service');
-                return resolve();
+                reject('No mapping defined. Please add a mapping for the current service');
             }
             //transform each item of the response
             let transformedResponse = _.map(response, i => {

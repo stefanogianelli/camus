@@ -28,7 +28,6 @@ describe('Component: ResponseAggregator', () => {
     describe('#findSimilarities()', () => {
         it('check if similar items are correctly merged', () => {
             const response = responseAggregator._findSimilarities(testSuccessfulMerging);
-            console.log(response);
             assert.equal(response.length, 3);
             assert.equal(response[0].nome, 'Bottega Ghiotta Gourmet');
             assert.equal(response[0].tipologia, 'Ristorante Italiano, Pizzeria');
