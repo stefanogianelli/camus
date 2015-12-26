@@ -28,26 +28,28 @@ describe('Component: ResponseAggregator', () => {
     describe('#findSimilarities()', () => {
         it('check if similar items are correctly merged', () => {
             const response = responseAggregator._findSimilarities(testSuccessfulMerging);
-            assert.equal(response[0][0].nome, 'Bottega Ghiotta Gourmet');
-            assert.equal(response[0][0].tipologia, 'Ristorante Italiano, Pizzeria');
-            assert.equal(response[0][0].rating, '5/5');
-            assert.equal(response[0][0].recensioni, 24);
-            assert.equal(response[0][0].indirizzo, 'Corso Sempione, 5, 20154 Milano, Italia');
-            assert.equal(response[0][0].telefono, '+39 02 3956 6018');
-            assert.equal(response[0][0].website, 'http://www.bottegaghiotta.it/');
-            assert.equal(response[0][1].nome, 'Savana Ristorante Eritreo');
-            assert.equal(response[0][1].rating, '5/5');
-            assert.equal(response[0][1].recensioni, 61);
-            assert.equal(response[0][1].indirizzo, 'Via Luigi Canonica 45, 20154 Milano, Italia');
-            assert.equal(response[0][1].telefono, '393664073136');
-            assert.equal(response[0][1].website, 'http://www.ristoranteritreosavana.com/');
-            assert.equal(response[1][0].nome, 'Nerino Dieci Trattoria');
-            assert.equal(response[1][0].rating, '4.5/5');
-            assert.equal(response[1][0].recensioni, 2502);
-            assert.equal(response[1][0].indirizzo, 'Via Nerino 10, 20123 Milano, Italia');
-            assert.equal(response[1][0].telefono, '+39 02 3983 1019');
-            assert.equal(response[1][0].website, 'http://www.nerinodieci.it/');
-            assert.equal(response[1][0].tipologia, 'Ristorante Italiano');
+            console.log(response);
+            assert.equal(response.length, 3);
+            assert.equal(response[0].nome, 'Bottega Ghiotta Gourmet');
+            assert.equal(response[0].tipologia, 'Ristorante Italiano, Pizzeria');
+            assert.equal(response[0].rating, '5/5');
+            assert.equal(response[0].recensioni, 24);
+            assert.equal(response[0].indirizzo, 'Corso Sempione, 5, 20154 Milano, Italia');
+            assert.equal(response[0].telefono, '+39 02 3956 6018');
+            assert.equal(response[0].website, 'http://www.bottegaghiotta.it/');
+            assert.equal(response[1].nome, 'Savana Ristorante Eritreo');
+            assert.equal(response[1].rating, '5/5');
+            assert.equal(response[1].recensioni, 61);
+            assert.equal(response[1].indirizzo, 'Via Luigi Canonica 45, 20154 Milano, Italia');
+            assert.equal(response[1].telefono, '393664073136');
+            assert.equal(response[1].website, 'http://www.ristoranteritreosavana.com/');
+            assert.equal(response[2].nome, 'Nerino Dieci Trattoria');
+            assert.equal(response[2].rating, '4.5/5');
+            assert.equal(response[2].recensioni, 2502);
+            assert.equal(response[2].indirizzo, 'Via Nerino 10, 20123 Milano, Italia');
+            assert.equal(response[2].telefono, '+39 02 3983 1019');
+            assert.equal(response[2].website, 'http://www.nerinodieci.it/');
+            assert.equal(response[2].tipologia, 'Ristorante Italiano');
         });
     });
 
@@ -88,52 +90,46 @@ const differentObject = {
 
 //response used to test if two similar items are merged correctly
 const testSuccessfulMerging = [
-    [
-        {
-            nome: 'Bottega Ghiotta Gourmet',
-            rating: '5/5',
-            recensioni: 24,
-            indirizzo: 'Corso Sempione, 5, 20154 Milano, Italia',
-            telefono: '+39 02 3956 6018',
-            website: 'http://www.bottegaghiotta.it/'
-        },
-        {
-            nome: 'Savana Ristorante Eritreo',
-            rating: '5/5',
-            recensioni: 61,
-            indirizzo: 'Via Luigi Canonica 45, 20154 Milano, Italia',
-            telefono: '393664073136',
-            website: 'http://www.ristoranteritreosavana.com/'
-        }
-    ],
-    [
-        {
-            nome: 'Bottega Ghiotta Gourmet',
-            tipologia: 'Ristorante Italiano, Pizzeria',
-            rating: '5/5',
-            recensioni: 21,
-            indirizzo: 'Corso Sempione 5, Milano',
-            telefono: '02 3956 6018',
-            website: 'http://www.bottegaghiotta.it/'
-        },
-        {
-            nome: 'Nerino Dieci Trattoria',
-            rating: '4.5/5',
-            recensioni: 2502,
-            indirizzo: 'Via Nerino 10, 20123 Milano, Italia',
-            telefono: '+39 02 3983 1019',
-            website: 'http://www.nerinodieci.it/'
-        }
-    ],
-    [
-        {
-            nome: 'Nerino Dieci Trattoria',
-            rating: '4.5/5',
-            recensioni: 502,
-            indirizzo: 'Via Nerino 10, 20123 Milano, Italia',
-            telefono: '+39 02 3983 1019',
-            website: 'http://www.nerinodieci.it/',
-            tipologia: 'Ristorante Italiano'
-        }
-    ]
+    {
+        nome: 'Bottega Ghiotta Gourmet',
+        rating: '5/5',
+        recensioni: 24,
+        indirizzo: 'Corso Sempione, 5, 20154 Milano, Italia',
+        telefono: '+39 02 3956 6018',
+        website: 'http://www.bottegaghiotta.it/'
+    },
+    {
+        nome: 'Savana Ristorante Eritreo',
+        rating: '5/5',
+        recensioni: 61,
+        indirizzo: 'Via Luigi Canonica 45, 20154 Milano, Italia',
+        telefono: '393664073136',
+        website: 'http://www.ristoranteritreosavana.com/'
+    },
+    {
+        nome: 'Bottega Ghiotta Gourmet',
+        tipologia: 'Ristorante Italiano, Pizzeria',
+        rating: '5/5',
+        recensioni: 21,
+        indirizzo: 'Corso Sempione 5, Milano',
+        telefono: '02 3956 6018',
+        website: 'http://www.bottegaghiotta.it/'
+    },
+    {
+        nome: 'Nerino Dieci Trattoria',
+        rating: '4.5/5',
+        recensioni: 2502,
+        indirizzo: 'Via Nerino 10, 20123 Milano, Italia',
+        telefono: '+39 02 3983 1019',
+        website: 'http://www.nerinodieci.it/'
+    },
+    {
+        nome: 'Nerino Dieci Trattoria',
+        rating: '4.5/5',
+        recensioni: 502,
+        indirizzo: 'Via Nerino 10, 20123 Milano, Italia',
+        telefono: '+39 02 3983 1019',
+        website: 'http://www.nerinodieci.it/',
+        tipologia: 'Ristorante Italiano'
+    }
 ];

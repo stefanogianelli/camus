@@ -22,8 +22,7 @@ export default class {
     prepareResponse (responses) {
         return new Promise ((resolve, reject) => {
             if (!_.isUndefined(responses) && !_.isEmpty(responses)) {
-                let response = _.flatten(this._findSimilarities(responses));
-                resolve(response);
+                resolve(this._findSimilarities(responses));
             } else {
                 //nothing found
                 reject('No results');
@@ -39,22 +38,16 @@ export default class {
      * @private
      */
     _findSimilarities (responses) {
-        //analyze all pairs of responses
         for (let i = 0; i < responses.length - 1; i++) {
             for (let j = i + 1; j < responses.length; j++) {
-                //compare every items
-                for (let a = 0; a < responses[i].length; a++) {
-                    for (let b = 0; b < responses[j].length; b++) {
-                        //calculate a similarity index
-                        if (this._calculateObjectSimilarity(responses[i][a], responses[j][b])) {
-                            //merge the two items
-                            responses[i][a] = _.assign(responses[j][b], responses[i][a]);
-                            //delete the item from the second array
-                            responses[j].splice(b, 1);
-                            //if I found a similar item I skip the analysis of the rest of array
-                            break;
-                        }
-                    }
+                //calculate a similarity index
+                if (this._calculateObjectSimilarity(responses[i], responses[j])) {
+                    //merge the two items
+                    responses[i] = _.assign(responses[j], responses[i]);
+                    //delete the item from the second array
+                    responses.splice(j, 1);
+                    //if I found a similar item I skip the analysis of the rest of array
+                    break;
                 }
             }
         }
