@@ -12,18 +12,35 @@ Installation requirements
 Installing and running
 ======================
 
-Make sure that a mongodb daemon instance is running. Then:
+Clone the repository and execute
 
     npm install
+    
+to install the dependencies.
+    
+Running
+=======
+
+Make sure that a mongodb daemon instance is running. Then:
+
     npm start
 
 Test
-======================
+====
+
+For running the test cases execute:
 
     npm test
     
+To produce a coverage report execute:
+
+    npm run cover
+    
+The report will be created in the folder called 'coverage' inside the project's root folder.
+Test services for testing purposes will be available soon.
+    
 Endpoints
-======================
+=========
 
 By default the server's address is [http://localhost:3001](http://localhost:3001)
 
