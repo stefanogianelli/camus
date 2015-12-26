@@ -7,7 +7,10 @@ import Provider from '../provider/provider';
 
 const provider = new Provider();
 
-export default class SupportServiceSelection {
+/**
+ * SupportServiceSelection
+ */
+export default class {
 
     /**
      * Create the list of support services associated to the current context

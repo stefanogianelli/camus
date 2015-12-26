@@ -12,7 +12,10 @@ import CdtModel from '../models/mongoose/cdtDescription';
 
 let instance = null;
 
-export default class MockDatabaseCreator {
+/**
+ * MockDatabaseCreator
+ */
+export default class {
     
     constructor () {
         if (!instance) {

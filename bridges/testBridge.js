@@ -2,7 +2,10 @@ import Promise from 'bluebird';
 
 import Bridge from './bridge';
 
-export default class TestBridge extends Bridge {
+/**
+ * TestBridge
+ */
+export default class extends Bridge {
 
     /**
      * It allows to execute custom queries to web service

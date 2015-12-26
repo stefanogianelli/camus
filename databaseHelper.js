@@ -10,7 +10,10 @@ import PrimaryServiceModel from './models/mongoose/primaryServiceAssociation';
 import SupportServiceModel from './models/mongoose/supportServiceAssociation';
 import CdtModel from './models/mongoose/cdtDescription';
 
-export default class DatabaseHelper {
+/**
+ * DatabaseHelper
+ */
+export default class {
     /**
      * This function adds the entries to the database, from a default model
      * @returns {bluebird|exports|module.exports} Returns the identifier of the created CDT

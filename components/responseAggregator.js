@@ -4,7 +4,10 @@ import _ from 'lodash';
 import similarityUtils from 'clj-fuzzy';
 import Promise from 'bluebird';
 
-export default class ResponseAggregator {
+/**
+ * ResponseAggregator
+ */
+export default class {
 
     constructor () {
         //this threshold is used for identify a pair of items as similar. Less value are better (0.1 means 90% similarity)

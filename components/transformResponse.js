@@ -3,7 +3,10 @@
 import _ from 'lodash';
 import Promise from 'bluebird';
 
-export default class TransformResponse {
+/**
+ * TransformResponse
+ */
+export default class {
 
     /**
      * It transforms the response of the service to make it in internal representation

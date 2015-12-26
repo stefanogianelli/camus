@@ -7,7 +7,10 @@ import Provider from '../provider/provider';
 
 const provider = new Provider();
 
-export default class PrimaryServiceSelection  {
+/**
+ * PrimaryServiceSelection
+ */
+export default class  {
 
     constructor () {
         //number of services to keep

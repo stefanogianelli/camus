@@ -22,7 +22,10 @@ System.config({
     }
 });
 
-export default class QueryHandler {
+/**
+ * QueryHandler
+ */
+export default class {
 
     constructor () {
         //shortcut to the bridges folder

@@ -7,7 +7,10 @@ import async from 'async';
 
 import Bridge from './bridge';
 
-export default class RestBridge extends Bridge {
+/**
+ * REST Bridge
+ */
+export default class extends Bridge {
 
     constructor () {
         super();

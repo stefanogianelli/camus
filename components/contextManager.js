@@ -7,7 +7,10 @@ import Provider from '../provider/provider';
 
 const provider = new Provider();
 
-export default class ContextManager {
+/**
+ * ContextManager
+ */
+export default class {
 
     /**
      * It takes as input the user's context and transform it into the decorated one.

@@ -20,7 +20,10 @@ Promise.promisifyAll(supportServiceModel);
 const _radius = 1500;
 let instance = null;
 
-export default class Provider {
+/**
+ * Provider
+ */
+export default class {
 
     constructor () {
         if (!instance) {
