@@ -357,6 +357,11 @@ const googlePlaces = {
                         run: 'return String(value);'
                     }
                 ]
+            },
+            pagination: {
+                attributeName: 'pagetoken',
+                type: 'token',
+                tokenAttribute: 'next_page_token'
             }
         }
     ]
@@ -433,6 +438,11 @@ const eventful = {
                         path: 'longitude'
                     }
                 ]
+            },
+            pagination: {
+                attributeName: 'page_number',
+                type: 'number',
+                pageCountAttribute: 'page_count'
             }
         }
     ]

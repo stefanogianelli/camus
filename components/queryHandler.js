@@ -73,7 +73,10 @@ export default class QueryHandler {
         if (service.protocol === 'rest' || service.protocol === 'query') {
             //use the rest bridge
             console.log('starting REST bridge ...');
-            promise = restBridge.executeQuery(service, params);
+            const paginationArgs = {
+                numOfPages: 2
+            };
+            promise = restBridge.executeQuery(service, params, paginationArgs);
         } else if (service.protocol === 'custom') {
             //call the custom bridge
             let bridgeName = operation.bridgeName;
@@ -100,15 +103,18 @@ export default class QueryHandler {
                         return transformResponse
                             .retrieveListOfResults(response, operation.responseMapping.list)
                             .then(itemList => {
-                               if (!_.isEmpty(itemList)) {
-                                   return _.union(output, itemList);
-                               }
+                                if (!_.isUndefined(itemList) && !_.isEmpty(itemList)) {
+                                    return _.union(output, itemList);
+                                } else {
+                                    return output;
+                                }
                             });
                     }, []);
             })
             .then(itemArray => {
                 //transform the response
-                return transformResponse.mappingResponse(operation.responseMapping, itemArray)
+                return transformResponse
+                    .mappingResponse(operation.responseMapping, itemArray)
             })
             .catch(e => {
                 console.log('[' + service.name + '] ERROR: ' + e);
