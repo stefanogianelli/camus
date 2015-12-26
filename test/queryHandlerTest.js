@@ -34,9 +34,11 @@ describe('Component: QueryHandler', () => {
                     return queryHandler.executeQueries(services, mockData.decoratedCdt(_idCDT));
                 })
                 .then(responses => {
-                    assert.equal(responses.length, 2);
-                    assert.equal(responses[0][0].title, 'Girl & the Goat');
-                    assert.equal(responses[1][0].title, 'National Restaurant Association');
+                    assert.equal(responses.length, 60);
+                    assert.equal(responses[0].title, 'Girl & the Goat');
+                    assert.equal(responses[20].title, 'Sapori Trattoria');
+                    assert.equal(responses[40].title, 'National Restaurant Association');
+                    assert.equal(responses[50].title, 'New Years Eve 2016 Party at Standard Bar and Grill Chicago NYE 2015');
                 });
         });
         it('check array composition when one service does not respond to a query', () => {
@@ -46,9 +48,7 @@ describe('Component: QueryHandler', () => {
                     return queryHandler.executeQueries(services, contextForFakeService(_idCDT));
                 })
                 .then(responses => {
-                    assert.equal(responses.length, 2);
-                    assert.equal(responses[0][0].title, 'Bouley');
-                    assert.equal(responses[1][0].title, 'International Restaurant & Foodservice Show-New York');
+                    assert.equal(responses.length, 30);
                 });
         });
         it('check correct execution of custom bridge', () => {
@@ -58,9 +58,9 @@ describe('Component: QueryHandler', () => {
                     return queryHandler.executeQueries(services, testBridgeContext(_idCDT));
                 })
                 .then(responses => {
-                    assert.equal(responses.length, 1);
-                    assert.equal(responses[0][0].title, 'Restaurant Girl & the Goat');
-                    assert.equal(responses[0][1].title, 'Restaurant The Purple Pig');
+                    assert.equal(responses.length, 2);
+                    assert.equal(responses[0].title, 'Restaurant Girl & the Goat');
+                    assert.equal(responses[1].title, 'Restaurant The Purple Pig');
                 });
         });
     });

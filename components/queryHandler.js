@@ -37,26 +37,20 @@ export default class QueryHandler {
      * @returns {bluebird|exports|module.exports} The list of responses received by the services, already transformed in internal representation
      */
     executeQueries (services, decoratedCdt) {
-        return new Promise(resolve => {
-            //if no service was selected, return an empty object
-            if (_.isEmpty(services)) {
-                resolve();
-            }
-            return provider
-                //acquire the service descriptions from the DB
-                .getServicesByOperationIds(_.pluck(services, '_idOperation'))
-                .mapSeries(service => {
-                    //make call to the current service
-                    return this._callService(service, decoratedCdt.parameterNodes);
-                })
-                .then(responses => {
-                    //clean the response from undefined objects
-                    responses = _.filter(responses, item => {
-                        return !_.isUndefined(item) && !_.isEmpty(item);
-                    });
-                    resolve(responses);
-                });
-        });
+        //if no service was selected, return an empty object
+        if (_.isEmpty(services)) {
+            return Promise.resolve();
+        }
+        return provider
+            //acquire the service descriptions from the DB
+            .getServicesByOperationIds(_.pluck(services, '_idOperation'))
+            .mapSeries(service => {
+                //make call to the current service
+                return this._callService(service, decoratedCdt.parameterNodes);
+            })
+            .reduce((a, b) => {
+                return _.union(a,b);
+            });
     }
 
     /**
