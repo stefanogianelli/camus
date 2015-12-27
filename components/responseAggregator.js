@@ -42,6 +42,11 @@ export default class {
             for (let j = i + 1; j < responses.length; j++) {
                 //calculate a similarity index
                 if (this._calculateObjectSimilarity(responses[i], responses[j])) {
+                    if (!_.isUndefined(responses[i].title)) {
+                        console.log('Found similar object: \'' + responses[i].title + '\' and \'' + responses[j].title + '\'');
+                    } else {
+                        console.log('Found similar object: \'' + responses[i].nome + '\' and \'' + responses[j].nome + '\'');
+                    }
                     //merge the two items
                     responses[i] = _.assign(responses[j], responses[i]);
                     //delete the item from the second array
