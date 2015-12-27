@@ -51,8 +51,6 @@ export default class {
                     responses[i] = _.assign(responses[j], responses[i]);
                     //delete the item from the second array
                     responses.splice(j, 1);
-                    //if I found a similar item I skip the analysis of the rest of array
-                    break;
                 }
             }
         }
