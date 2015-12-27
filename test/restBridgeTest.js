@@ -143,7 +143,8 @@ const eventful = {
         pagination: {
             attributeName: 'page_number',
             type: 'number',
-            pageCountAttribute: 'page_count'
+            pageCountAttribute: 'page_count',
+            delay: 0
         }
     }
 };

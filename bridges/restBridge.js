@@ -189,40 +189,32 @@ export default class extends Bridge {
                     _.forEach(operation.headers, h => {
                         request.set(h.name, h.value);
                     });
-                    //invoke the service and return the response
-                    request
-                        .timeout(this._timeout)
-                        .end((err, res) => {
-                            if (err) {
-                                switch (err.status) {
-                                    case 400:
-                                        callback('bad request. Check the address and parameters (400)');
-                                        break;
-                                    case 401:
-                                        callback('access to a restricted resource (401)');
-                                        break;
-                                    case 404:
-                                        callback('service not found (404)');
-                                        break;
-                                    case 500:
-                                        callback('server error (500)');
-                                        break;
-                                    default:
-                                        callback(err);
-                                }
-                            } else {
-                                if (!_.isEmpty(res.body)) {
-                                    responses.push(res.body);
-                                } else {
-                                    responses.push(JSON.parse(res.text));
-                                }
-                                //acquire next page information
-                                paginationStatus = this._getPaginationStatus(service, currentPageIdentifier, responses[responses.length - 1]);
-                                hasNextPage = paginationStatus.hasNextPage;
-                                currentPageIdentifier = paginationStatus.nextPage;
-                                count++;
-                                callback(null);
-                            }
+                    let callPromise = null;
+                    //configure timeout between following requests, if needed
+                    if (count > 0) {
+                        console.log('Delaying request by: ' + operation.pagination.delay + ' ms');
+                        callPromise = Promise
+                            .delay(operation.pagination.delay)
+                            .then(() => {
+                                return this._makeCall(request)
+                            });
+                    } else {
+                        callPromise = this._makeCall(request);
+                    }
+                    //invoke the service and wait for the response, then acquire information for querying the next page
+                    callPromise
+                        .then(response => {
+                            //collect the response
+                            responses.push(response);
+                            //acquire next page information
+                            paginationStatus = this._getPaginationStatus(service, currentPageIdentifier, response);
+                            hasNextPage = paginationStatus.hasNextPage;
+                            currentPageIdentifier = paginationStatus.nextPage;
+                            count++;
+                            callback(null);
+                        })
+                        .catch(e => {
+                            callback(e);
                         });
                 },
                 () => count < numOfPages && hasNextPage,
@@ -239,6 +231,46 @@ export default class extends Bridge {
                     }
                 }
             );
+        });
+    }
+
+    /**
+     * Make a request to the current web service and retrieve the response
+     * @param request The request object, already initilized
+     * @returns {Object} The received response
+     * @private
+     */
+    _makeCall (request) {
+        return new Promise ((resolve, reject) => {
+            //invoke the service and return the response
+            request
+                .timeout(this._timeout)
+                .end((err, res) => {
+                    if (err) {
+                        switch (err.status) {
+                            case 400:
+                                reject('bad request. Check the address and parameters (400)');
+                                break;
+                            case 401:
+                                reject('access to a restricted resource (401)');
+                                break;
+                            case 404:
+                                reject('service not found (404)');
+                                break;
+                            case 500:
+                                reject('server error (500)');
+                                break;
+                            default:
+                                reject(err);
+                        }
+                    } else {
+                        if (!_.isEmpty(res.body)) {
+                            resolve(res.body);
+                        } else {
+                            resolve(JSON.parse(res.text));
+                        }
+                    }
+                });
         });
     }
 

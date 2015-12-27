@@ -364,7 +364,8 @@ const googlePlaces = {
             pagination: {
                 attributeName: 'pagetoken',
                 type: 'token',
-                tokenAttribute: 'next_page_token'
+                tokenAttribute: 'next_page_token',
+                delay: 2000
             }
         }
     ]
