@@ -19,6 +19,7 @@ export default class {
      */
     selectServices (decoratedCdt) {
         return new Promise ((resolve, reject) => {
+            const startTime = Date.now();
             Promise
                 .props({
                     //acquire the URLs for the services requested by name and operation
@@ -32,6 +33,10 @@ export default class {
                 })
                 .catch(e => {
                     reject(e);
+                })
+                .finally(() => {
+                    const endTime = Date.now();
+                    console.log('Support service selection took ' + (endTime - startTime) + ' ms');
                 });
         });
     }

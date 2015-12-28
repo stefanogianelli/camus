@@ -27,6 +27,7 @@ export default class {
      * @returns {Promise|Request|Promise.<T>} The decorated CDT
      */
     getDecoratedCdt (context) {
+        const startTime = Date.now();
         return this
             //merge the CDT full description with the values from the user's context
             ._mergeCdtAndContext(context)
@@ -51,6 +52,10 @@ export default class {
                         //add the CDT identifier
                         _id: mergedCdt._id
                     })
+            })
+            .finally(() => {
+                const endTime = Date.now();
+                console.log('Context parsing took ' + (endTime - startTime) + ' ms');
             });
     }
 

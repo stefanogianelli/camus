@@ -28,6 +28,7 @@ export default class  {
      */
     selectServices (decoratedCdt) {
         return new Promise(resolve => {
+            const startTime = Date.now();
             Promise
                 .props({
                     //search for services associated to the filter nodes
@@ -55,6 +56,10 @@ export default class  {
                 .catch(e => {
                     console.log(e);
                     resolve();
+                })
+                .finally(() => {
+                    const endTime = Date.now();
+                    console.log('Service selection took ' + (endTime - startTime) + ' ms');
                 });
         })
     }

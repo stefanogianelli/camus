@@ -28,11 +28,16 @@ export default class extends Bridge {
      * @returns {Promise|Request|Promise.<T>} The promise with the service responses
      */
     executeQuery (service, paramNodes, paginationArgs) {
+        const startTime = Date.now();
         return this
             ._parameterMapping(service, paramNodes)
             .then(params => {
                 return this._invokeService(service, params, paginationArgs);
             })
+            .finally(() => {
+                const endTime = Date.now();
+                console.log('Querying service \'' + service.name + '\' took ' + (endTime - startTime) + ' ms');
+            });
     }
 
     /**

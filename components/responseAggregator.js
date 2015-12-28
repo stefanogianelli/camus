@@ -38,6 +38,7 @@ export default class {
      * @private
      */
     _findSimilarities (responses) {
+        const startTime = Date.now();
         for (let i = 0; i < responses.length - 1; i++) {
             for (let j = i + 1; j < responses.length; j++) {
                 //calculate a similarity index
@@ -54,6 +55,8 @@ export default class {
                 }
             }
         }
+        const endTime = Date.now();
+        console.log('Find similar items took ' + (endTime - startTime) + ' ms');
         return responses;
     }
 

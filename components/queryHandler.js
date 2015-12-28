@@ -44,6 +44,7 @@ export default class {
         if (_.isEmpty(services)) {
             return Promise.resolve();
         }
+        const startTime = Date.now();
         return provider
             //acquire the service descriptions from the DB
             .getServicesByOperationIds(_.pluck(services, '_idOperation'))
@@ -53,6 +54,10 @@ export default class {
             })
             .reduce((a, b) => {
                 return _.union(a,b);
+            })
+            .finally(() => {
+                const endTime = Date.now();
+                console.log('Queries took ' + (endTime - startTime) + ' ms')
             });
     }
 
@@ -69,7 +74,6 @@ export default class {
         //check if the protocol of the current service is 'rest' o 'query'
         if (service.protocol === 'rest' || service.protocol === 'query') {
             //use the rest bridge
-            console.log('starting REST bridge ...');
             const paginationArgs = {
                 numOfPages: 3
             };
@@ -80,7 +84,6 @@ export default class {
             //check if a bridge name is defined
             if (!_.isUndefined(bridgeName) && !_.isEmpty(bridgeName)) {
                 //load the module
-                console.log('starting custom bridge \'' + bridgeName + '\' ...');
                 promise = System
                     .import(this._bridgeFolder + bridgeName)
                     .then(Module => {
