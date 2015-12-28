@@ -19,6 +19,8 @@ export default class extends Bridge {
         super();
         //timeout for the requests (in ms)
         this._timeout = 4000;
+        //validity time for cache content (in s)
+        this._cacheTTL = 20;
     }
 
     /**
@@ -290,8 +292,7 @@ export default class extends Bridge {
                                         response = JSON.parse(res.text);
                                     }
                                     //caching the response
-                                    redis
-                                        .set(address, res.text);
+                                    redis.set(address, res.text, 'EX', this._cacheTTL);
                                     return resolve(response);
                                 }
                             });
