@@ -194,23 +194,12 @@ export default class extends Bridge {
                         fullAddress = address + parameters;
                     }
                     console.log('Querying service \'' + service.name + '\' #' + (count + 1) + ': ' + fullAddress);
-                    //creating the agent
-                    let request = agent.get(fullAddress);
-                    //adding header information
-                    _.forEach(operation.headers, h => {
-                        request.set(h.name, h.value);
-                    });
                     let callPromise = null;
                     //configure timeout between following requests, if needed
-                    if (count > 0) {
-                        console.log('Delaying request by: ' + operation.pagination.delay + ' ms');
-                        callPromise = Promise
-                            .delay(operation.pagination.delay)
-                            .then(() => {
-                                return this._makeCall(request, fullAddress)
-                            });
+                    if (count > 0 && operation.pagination.delay > 0) {
+                        callPromise = this._makeCall(fullAddress, operation.headers, operation.pagination.delay)
                     } else {
-                        callPromise = this._makeCall(request, fullAddress);
+                        callPromise = this._makeCall(fullAddress, operation.headers);
                     }
                     //invoke the service and wait for the response, then acquire information for querying the next page
                     callPromise
@@ -247,54 +236,70 @@ export default class extends Bridge {
 
     /**
      * Make a request to the current web service and retrieve the response
-     * @param request The request object, already initialized
      * @param address The service's address
+     * @param headers The headers to be appended to the request
+     * @param delay (Optional) The delay time (in ms) before send the request
      * @returns {Object} The received response
      * @private
      */
-    _makeCall (request, address) {
+    _makeCall (address, headers, delay) {
         return new Promise ((resolve, reject) => {
             //check if a copy of the response exists in the cache
             redis
                 .get(address)
                 .then((result) => {
                     if (result) {
-                        console.log('Using cached response');
+                        //return immediatly the cached response
                         return resolve(JSON.parse(result));
                     } else {
-                        console.log('Send new request ...');
+                        //send a new request
+                        if (!_.isUndefined(delay) && _.isNumber(delay)) {
+                            console.log('Delaying request by: ' + delay + ' ms');
+                        } else {
+                            delay = 0;
+                        }
+                        //creating the agent
+                        let request = agent.get(address);
+                        //adding header information
+                        _.forEach(headers, h => {
+                            request.set(h.name, h.value);
+                        });
+                        //setting timeout
+                        request.timeout(this._timeout);
                         //invoke the service and return the response
-                        request
-                            .timeout(this._timeout)
-                            .end((err, res) => {
-                                if (err) {
-                                    switch (err.status) {
-                                        case 400:
-                                            reject('bad request. Check the address and parameters (400)');
-                                            break;
-                                        case 401:
-                                            reject('access to a restricted resource (401)');
-                                            break;
-                                        case 404:
-                                            reject('service not found (404)');
-                                            break;
-                                        case 500:
-                                            reject('server error (500)');
-                                            break;
-                                        default:
-                                            reject(err);
-                                    }
-                                } else {
-                                    let response;
-                                    if (!_.isEmpty(res.body)) {
-                                        response = res.body;
+                        Promise
+                            .delay(delay)
+                            .then(() => {
+                                request.end((err, res) => {
+                                    if (err) {
+                                        switch (err.status) {
+                                            case 400:
+                                                reject('bad request. Check the address and parameters (400)');
+                                                break;
+                                            case 401:
+                                                reject('access to a restricted resource (401)');
+                                                break;
+                                            case 404:
+                                                reject('service not found (404)');
+                                                break;
+                                            case 500:
+                                                reject('server error (500)');
+                                                break;
+                                            default:
+                                                reject(err);
+                                        }
                                     } else {
-                                        response = JSON.parse(res.text);
+                                        let response;
+                                        if (!_.isEmpty(res.body)) {
+                                            response = res.body;
+                                        } else {
+                                            response = JSON.parse(res.text);
+                                        }
+                                        //caching the response (with associated TTL)
+                                        redis.set(address, res.text, 'EX', this._cacheTTL);
+                                        return resolve(response);
                                     }
-                                    //caching the response
-                                    redis.set(address, res.text, 'EX', this._cacheTTL);
-                                    return resolve(response);
-                                }
+                                });
                             });
                     }
                 });
