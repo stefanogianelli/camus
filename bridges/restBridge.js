@@ -4,8 +4,11 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 import agent from 'superagent';
 import async from 'async';
+import Redis from 'ioredis';
 
 import Bridge from './bridge';
+
+let redis = new Redis(6379, 'localhost');
 
 /**
  * REST Bridge
@@ -182,14 +185,15 @@ export default class extends Bridge {
                         currentPageAddress = operation.pagination.attributeName + querySymbols.assign + currentPageIdentifier;
                     }
                     //add the address to the request object
-                    let request;
+                    let fullAddress = '';
                     if (!_.isNull(currentPageAddress)) {
-                        request = agent.get(address + parameters + querySymbols.separator + currentPageAddress);
-                        console.log('Querying service \'' + service.name + '\' #' + (count + 1) + ': ' + address + parameters + querySymbols.separator + currentPageAddress);
+                        fullAddress = address + parameters + querySymbols.separator + currentPageAddress;
                     } else {
-                        request = agent.get(address + parameters);
-                        console.log('Querying service \'' + service.name + '\' #' + (count + 1) + ': ' + address + parameters);
+                        fullAddress = address + parameters;
                     }
+                    console.log('Querying service \'' + service.name + '\' #' + (count + 1) + ': ' + fullAddress);
+                    //creating the agent
+                    let request = agent.get(fullAddress);
                     //adding header information
                     _.forEach(operation.headers, h => {
                         request.set(h.name, h.value);
@@ -201,10 +205,10 @@ export default class extends Bridge {
                         callPromise = Promise
                             .delay(operation.pagination.delay)
                             .then(() => {
-                                return this._makeCall(request)
+                                return this._makeCall(request, fullAddress)
                             });
                     } else {
-                        callPromise = this._makeCall(request);
+                        callPromise = this._makeCall(request, fullAddress);
                     }
                     //invoke the service and wait for the response, then acquire information for querying the next page
                     callPromise
@@ -241,39 +245,56 @@ export default class extends Bridge {
 
     /**
      * Make a request to the current web service and retrieve the response
-     * @param request The request object, already initilized
+     * @param request The request object, already initialized
+     * @param address The service's address
      * @returns {Object} The received response
      * @private
      */
-    _makeCall (request) {
+    _makeCall (request, address) {
         return new Promise ((resolve, reject) => {
-            //invoke the service and return the response
-            request
-                .timeout(this._timeout)
-                .end((err, res) => {
-                    if (err) {
-                        switch (err.status) {
-                            case 400:
-                                reject('bad request. Check the address and parameters (400)');
-                                break;
-                            case 401:
-                                reject('access to a restricted resource (401)');
-                                break;
-                            case 404:
-                                reject('service not found (404)');
-                                break;
-                            case 500:
-                                reject('server error (500)');
-                                break;
-                            default:
-                                reject(err);
-                        }
+            //check if a copy of the response exists in the cache
+            redis
+                .get(address)
+                .then((result) => {
+                    if (result) {
+                        console.log('Using cached response');
+                        return resolve(JSON.parse(result));
                     } else {
-                        if (!_.isEmpty(res.body)) {
-                            resolve(res.body);
-                        } else {
-                            resolve(JSON.parse(res.text));
-                        }
+                        console.log('Send new request ...');
+                        //invoke the service and return the response
+                        request
+                            .timeout(this._timeout)
+                            .end((err, res) => {
+                                if (err) {
+                                    switch (err.status) {
+                                        case 400:
+                                            reject('bad request. Check the address and parameters (400)');
+                                            break;
+                                        case 401:
+                                            reject('access to a restricted resource (401)');
+                                            break;
+                                        case 404:
+                                            reject('service not found (404)');
+                                            break;
+                                        case 500:
+                                            reject('server error (500)');
+                                            break;
+                                        default:
+                                            reject(err);
+                                    }
+                                } else {
+                                    let response;
+                                    if (!_.isEmpty(res.body)) {
+                                        response = res.body;
+                                    } else {
+                                        response = JSON.parse(res.text);
+                                    }
+                                    //caching the response
+                                    redis
+                                        .set(address, res.text);
+                                    return resolve(response);
+                                }
+                            });
                     }
                 });
         });

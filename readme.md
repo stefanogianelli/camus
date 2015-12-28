@@ -7,6 +7,7 @@ Installation requirements
 =========================
 
 -   Mongodb (\^3.0.6)
+-   Redis (\^3.0.6)
 -   Nodejs (\^4.0.0)
 
 Installing and running
@@ -21,7 +22,7 @@ to install the dependencies.
 Running
 =======
 
-Make sure that a mongodb daemon instance is running. Then:
+Make sure that a mongodb and redis daemon instances are running. Then:
 
     npm start
 

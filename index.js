@@ -41,6 +41,7 @@ app.post('/query', (req, res) => {
             res.send(response);
         })
         .catch(e => {
+            console.log('ERROR: ' + e);
             res.status(500).send(e);
         });
 });
