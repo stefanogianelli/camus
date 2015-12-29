@@ -18,9 +18,9 @@ export default class extends Bridge {
     constructor () {
         super();
         //timeout for the requests (in ms)
-        this._timeout = 4000;
+        this._timeout = 6000;
         //validity time for cache content (in s)
-        this._cacheTTL = 20;
+        this._cacheTTL = 3600;
     }
 
     /**
