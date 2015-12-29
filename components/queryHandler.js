@@ -48,7 +48,7 @@ export default class {
         return provider
             //acquire the service descriptions from the DB
             .getServicesByOperationIds(_.pluck(services, '_idOperation'))
-            .mapSeries(service => {
+            .map(service => {
                 //make call to the current service
                 return this._callService(service, decoratedCdt.parameterNodes);
             })
