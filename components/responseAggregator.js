@@ -1,8 +1,11 @@
 'use strict';
 
 import _ from 'lodash';
-import similarityUtils from 'clj-fuzzy';
 import Promise from 'bluebird';
+import {
+    SoundEx,
+    DiceCoefficient
+} from 'natural';
 
 /**
  * ResponseAggregator
@@ -10,19 +13,19 @@ import Promise from 'bluebird';
 export default class {
 
     constructor () {
-        //this threshold is used for identify a pair of items as similar. Less value are better (0.1 means 90% similarity)
-        this._threshold = 0.1;
+        //this threshold is used for identify a pair of items as similar. Greater value is better (0.9 means 90% similarity)
+        this._threshold = 0.85;
     }
 
     /**
-     * Remove duplicate items from the responses lists
-     * @param responses The list of responses
+     * Remove duplicate items from the response list
+     * @param response The list of items
      * @returns {bluebird|exports|module.exports} The aggregated and cleaned response
      */
-    prepareResponse (responses) {
+    prepareResponse (response) {
         return new Promise ((resolve, reject) => {
-            if (!_.isUndefined(responses) && !_.isEmpty(responses)) {
-                resolve(this._findSimilarities(responses));
+            if (!_.isUndefined(response) && !_.isEmpty(response)) {
+                resolve(this._findSimilarities(response));
             } else {
                 //nothing found
                 reject('No results');
@@ -31,43 +34,72 @@ export default class {
     }
 
     /**
-     * Check if different arrays contain the same item.
-     * When a similar pair is found, the two items are merged and the second instance is removed.
-     * @param responses The array that contains all the responses
-     * @returns {*} The responses list without duplicate items
+     * Find similar items.
+     * It first creates clusters of probable similar items using their phonetics as key, with SoundEx algorithm on the 'title' attribute.
+     * Then in depth pairwise comparisons are made inside each cluster to find similar objects.
+     * If similar objects are found they will be merged in one single item.
+     * @param response The list of items
+     * @returns {Array} The list of items without duplicates (the duplicate items are merged in a unique item)
      * @private
      */
-    _findSimilarities (responses) {
+    _findSimilarities (response) {
         const startTime = Date.now();
-        for (let i = 0; i < responses.length - 1; i++) {
-            for (let j = i + 1; j < responses.length; j++) {
-                //calculate a similarity index
-                if (this._calculateObjectSimilarity(responses[i], responses[j])) {
-                    if (!_.isUndefined(responses[i].title)) {
-                        console.log('Found similar object: \'' + responses[i].title + '\' and \'' + responses[j].title + '\'');
-                    } else {
-                        console.log('Found similar object: \'' + responses[i].nome + '\' and \'' + responses[j].nome + '\'');
-                    }
-                    //merge the two items
-                    responses[i] = _.assign(responses[j], responses[i]);
-                    //delete the item from the second array
-                    responses.splice(j, 1);
-                }
+        //create a map of items that sounds similar (using SoundEx algorithm)
+        let clusters = new Map();
+        _.forEach(response, item => {
+            const phonetic = SoundEx.process(item.title);
+            if (clusters.has(phonetic)) {
+                //add the current item to the cluster
+                clusters.get(phonetic).push(item);
+            } else {
+                //create new entry (casted as array)
+                clusters.set(phonetic, [item]);
             }
-        }
+        });
+        //scan the clusters and perform merge if similar items are found
+        let output = [];
+        clusters.forEach(items => {
+            if (items.length > 1) {
+                //doing comparisons between each item belongs to the current cluster
+                let i = 0;
+                let len = items.length;
+                while (i < len) {
+                    let j = i + 1;
+                    while (j < len) {
+                        //calculate the similarity index
+                        //if the similarity is greater or equal of the threshold, then merge the two items
+                        if (this._calculateObjectSimilarity(items[i], items[j])) {
+                            console.log('Found similar items \'' + items[i].title + '\' and \'' + items[j].title + '\'');
+                            //merge the two items
+                            items[i] = _.assign(items[j], items[i]);
+                            //delete the item from the second array
+                            items.splice(j, 1);
+                            len -= 1;
+                        } else {
+                            j++;
+                        }
+                    }
+                    //add the current item to the response
+                    output.push(items[i]);
+                    i++;
+                }
+            } else {
+                //add the item to the response
+                output.push(items[0]);
+            }
+        });
         const endTime = Date.now();
         console.log('Find similar items took ' + (endTime - startTime) + ' ms');
-        return responses;
+        return output;
     }
 
     /**
-     * Calculate the similarity of two objects.
-     * It takes the intersection of common attributes of the two objects. Only string values are take in consideration.
-     * It uses the {@link https://en.wikipedia.org/wiki/Jaccard_index|Jaccard Distance} to calculate the strings similarity.
-     * To be similar, the calculated index must be less or equal than a predefined threshold.
+     * Perform a similarity check of two objects based on attributes that they have in common.
+     * Only string values are taken into account.
+     * It uses the Dice Coefficient as similarity index algorithm.
      * @param obj1 The first object
      * @param obj2 The second object
-     * @returns {boolean} True if the two objects are similar, false otherwise
+     * @returns {boolean} True if the similarity index is greater or equal of the threshold value, false otherwise.
      * @private
      */
     _calculateObjectSimilarity (obj1, obj2) {
@@ -79,12 +111,12 @@ export default class {
             if (_.isString(obj1[i]) && _.isString(obj2[i])) {
                 count++;
                 //calculate the similarity index for the attribute's pair and sum to the accumulator
-                return sum + similarityUtils.metrics.jaccard(obj1[i], obj2[i]);
+                return sum + DiceCoefficient(obj1[i], obj2[i]);
             } else {
                 return sum;
             }
         }, 0);
-        //return true if the average similarity is less than the threshold value
-        return similaritySum / count <= this._threshold;
+        //return true if the average similarity is greater or equal than the threshold value
+        return similaritySum / count >= this._threshold;
     }
 }

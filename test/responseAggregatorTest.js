@@ -29,20 +29,20 @@ describe('Component: ResponseAggregator', () => {
         it('check if similar items are correctly merged', () => {
             const response = responseAggregator._findSimilarities(testSuccessfulMerging);
             assert.equal(response.length, 3);
-            assert.equal(response[0].nome, 'Bottega Ghiotta Gourmet');
+            assert.equal(response[0].title, 'Bottega Ghiotta Gourmet');
             assert.equal(response[0].tipologia, 'Ristorante Italiano, Pizzeria');
             assert.equal(response[0].rating, '5/5');
             assert.equal(response[0].recensioni, 24);
             assert.equal(response[0].indirizzo, 'Corso Sempione, 5, 20154 Milano, Italia');
             assert.equal(response[0].telefono, '+39 02 3956 6018');
             assert.equal(response[0].website, 'http://www.bottegaghiotta.it/');
-            assert.equal(response[1].nome, 'Savana Ristorante Eritreo');
+            assert.equal(response[1].title, 'Savana Ristorante Eritreo');
             assert.equal(response[1].rating, '5/5');
             assert.equal(response[1].recensioni, 61);
             assert.equal(response[1].indirizzo, 'Via Luigi Canonica 45, 20154 Milano, Italia');
             assert.equal(response[1].telefono, '393664073136');
             assert.equal(response[1].website, 'http://www.ristoranteritreosavana.com/');
-            assert.equal(response[2].nome, 'Nerino Dieci Trattoria');
+            assert.equal(response[2].title, 'Nerino Dieci Trattoria');
             assert.equal(response[2].rating, '4.5/5');
             assert.equal(response[2].recensioni, 2502);
             assert.equal(response[2].indirizzo, 'Via Nerino 10, 20123 Milano, Italia');
@@ -90,7 +90,7 @@ const differentObject = {
 //response used to test if two similar items are merged correctly
 const testSuccessfulMerging = [
     {
-        nome: 'Bottega Ghiotta Gourmet',
+        title: 'Bottega Ghiotta Gourmet',
         rating: '5/5',
         recensioni: 24,
         indirizzo: 'Corso Sempione, 5, 20154 Milano, Italia',
@@ -98,7 +98,7 @@ const testSuccessfulMerging = [
         website: 'http://www.bottegaghiotta.it/'
     },
     {
-        nome: 'Savana Ristorante Eritreo',
+        title: 'Savana Ristorante Eritreo',
         rating: '5/5',
         recensioni: 61,
         indirizzo: 'Via Luigi Canonica 45, 20154 Milano, Italia',
@@ -106,7 +106,7 @@ const testSuccessfulMerging = [
         website: 'http://www.ristoranteritreosavana.com/'
     },
     {
-        nome: 'Bottega Ghiotta Gourmet',
+        title: 'Bottega Ghiotta Gourmet',
         tipologia: 'Ristorante Italiano, Pizzeria',
         rating: '5/5',
         recensioni: 21,
@@ -115,7 +115,7 @@ const testSuccessfulMerging = [
         website: 'http://www.bottegaghiotta.it/'
     },
     {
-        nome: 'Nerino Dieci Trattoria',
+        title: 'Nerino Dieci Trattoria',
         rating: '4.5/5',
         recensioni: 2502,
         indirizzo: 'Via Nerino 10, 20123 Milano, Italia',
@@ -123,7 +123,7 @@ const testSuccessfulMerging = [
         website: 'http://www.nerinodieci.it/'
     },
     {
-        nome: 'Nerino Dieci Trattoria',
+        title: 'Nerino Dieci Trattoria',
         rating: '4.5/5',
         recensioni: 502,
         indirizzo: 'Via Nerino 10, 20123 Milano, Italia',
