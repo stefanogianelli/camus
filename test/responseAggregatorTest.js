@@ -54,10 +54,10 @@ describe('Component: ResponseAggregator', () => {
 
     describe('#calculateObjectSimilarity()', () => {
         it('check if similar objects are identified', () => {
-            assert.equal(responseAggregator._calculateObjectSimilarity(baseObject, similarObject), true);
+            assert.equal(responseAggregator._calculateObjectSimilarity(baseObject, similarObject) >= 0.85, true);
         });
         it('check if different objects are identified', () => {
-            assert.equal(responseAggregator._calculateObjectSimilarity(baseObject, differentObject), false);
+            assert.equal(responseAggregator._calculateObjectSimilarity(baseObject, differentObject) >= 0.85, false);
         });
     });
 

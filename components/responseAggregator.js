@@ -60,19 +60,20 @@ export default class {
         let output = [];
         clusters.forEach(items => {
             if (items.length > 1) {
-                //doing comparisons between each item belongs to the current cluster
+                //doing comparisons between each item belonging to the current cluster
                 let i = 0;
                 let len = items.length;
                 while (i < len) {
                     let j = i + 1;
                     while (j < len) {
                         //calculate the similarity index
+                        const sim = this._calculateObjectSimilarity(items[i], items[j]);
                         //if the similarity is greater or equal of the threshold, then merge the two items
-                        if (this._calculateObjectSimilarity(items[i], items[j])) {
-                            console.log('Found similar items \'' + items[i].title + '\' and \'' + items[j].title + '\'');
+                        if (sim >= this._threshold) {
+                            console.log('Found similar items \'' + items[i].title + '\' and \'' + items[j].title + '\' (' + sim + ')');
                             //merge the two items
                             items[i] = _.assign(items[j], items[i]);
-                            //delete the item from the second array
+                            //delete the item from array
                             items.splice(j, 1);
                             len -= 1;
                         } else {
@@ -99,7 +100,7 @@ export default class {
      * It uses the Dice Coefficient as similarity index algorithm.
      * @param obj1 The first object
      * @param obj2 The second object
-     * @returns {boolean} True if the similarity index is greater or equal of the threshold value, false otherwise.
+     * @returns {number} The similarity index of the two objects
      * @private
      */
     _calculateObjectSimilarity (obj1, obj2) {
@@ -116,7 +117,7 @@ export default class {
                 return sum;
             }
         }, 0);
-        //return true if the average similarity is greater or equal than the threshold value
-        return similaritySum / count >= this._threshold;
+        //compute the final similarity dividend by the count of attributes taken into account
+        return similaritySum / count;
     }
 }
