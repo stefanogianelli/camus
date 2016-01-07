@@ -7,8 +7,12 @@ import async from 'async';
 import Redis from 'ioredis';
 
 import Bridge from './bridge';
+import Metrics from '../utils/MetricsUtils';
 
-let redis = new Redis(6379, 'localhost');
+const redis = new Redis(6379, 'localhost');
+
+const filePath = __dirname.replace('bridges', '') + '/metrics/RestBridge.txt';
+const metrics = new Metrics(filePath);
 
 /**
  * REST Bridge
@@ -40,8 +44,8 @@ export default class extends Bridge {
                 return this._invokeService(service, params, paginationArgs);
             })
             .finally(() => {
-                const endTime = Date.now();
-                console.log('Querying service \'' + service.name + '\' took ' + (endTime - startTime) + ' ms');
+                metrics.record('executeQuery/' + service.name, startTime, Date.now());
+                metrics.saveResults();
             });
     }
 

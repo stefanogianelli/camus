@@ -4,8 +4,12 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 
 import Provider from '../provider/provider';
+import Metrics from '../utils/MetricsUtils';
 
 const provider = new Provider();
+
+const filePath = __dirname.replace('components', '') + '/metrics/ContextManager.txt';
+const metrics = new Metrics(filePath);
 
 /**
  * ContextManager
@@ -54,8 +58,8 @@ export default class {
                     })
             })
             .finally(() => {
-                const endTime = Date.now();
-                console.log('Context parsing took ' + (endTime - startTime) + ' ms');
+                metrics.record('getDecoratedCdt', startTime, Date.now());
+                metrics.saveResults();
             });
     }
 
@@ -66,10 +70,12 @@ export default class {
      * @private
      */
     _mergeCdtAndContext (context) {
+        const startTime = Date.now();
         return new Promise ((resolve, reject) => {
             provider
                 .getCdt(context._id)
                 .then(cdt => {
+                    metrics.record('getCdt', startTime, Date.now());
                     //check if the related CDT is found
                     if (!_.isNull(cdt)) {
                         let mergedCdt = [];
@@ -107,6 +113,9 @@ export default class {
                     } else {
                         reject('No CDT found. Check if the ID is correct');
                     }
+                })
+                .finally(() => {
+                    metrics.record('mergeCdtAndContext', startTime, Date.now());
                 });
         });
     }
@@ -173,6 +182,7 @@ export default class {
      * @private
      */
     _getFilterNodes (idCdt, mergedCdt) {
+        const startTime = Date.now();
         return this
             ._getNodes('filter', mergedCdt, false)
             .then(filter => {
@@ -180,6 +190,9 @@ export default class {
             })
             .spread((filter, descendants) => {
                 return _.union(filter, descendants);
+            })
+            .finally(() => {
+                metrics.record('getFilterNodes', startTime, Date.now());
             });
     }
 
@@ -191,6 +204,7 @@ export default class {
      * @private
      */
     _getRankingNodes (idCdt, mergedCdt) {
+        const startTime = Date.now();
         return this
             ._getNodes('ranking', mergedCdt, false)
             .then(ranking => {
@@ -198,6 +212,9 @@ export default class {
             })
             .spread((ranking, descendants) => {
                 return _.union(ranking, descendants);
+            })
+            .finally(() => {
+                metrics.record('getRankingNodes', startTime, Date.now());
             });
     }
 
@@ -208,13 +225,17 @@ export default class {
      * @private
      */
     _getParameterNodes (mergedCdt) {
+        const startTime = Date.now();
         return Promise
             .join(
                 this._getNodes('parameter', mergedCdt, false),
                 this._getNodes('parameter', mergedCdt, true),
                 (parameterNodes, specificNodes) => {
                     return _.union(parameterNodes, specificNodes);
-                });
+                })
+            .finally(() => {
+                metrics.record('getParameterNodes', startTime, Date.now());
+            });
     }
 
     /**
@@ -225,7 +246,12 @@ export default class {
      * @private
      */
     _getSpecificNodes (mergedCdt) {
-        return this._getNodes('ranking', mergedCdt, true);
+        const startTime = Date.now();
+        return this
+            ._getNodes('ranking', mergedCdt, true)
+            .finally(() => {
+                metrics.record('getSpecificNodes', startTime, Date.now());
+            });
     }
 
     /**
@@ -326,11 +352,13 @@ export default class {
      * @private
      */
     _getInterestTopic (mergedCdt) {
+        const startTime = Date.now();
         return new Promise((resolve, reject) => {
             let context = mergedCdt.context;
             if (!_.isEmpty(context)) {
                 let r = _.find(context, {dimension: 'InterestTopic'});
                 if (!_.isUndefined(r)) {
+                    metrics.record('getInterestTopic', startTime, Date.now());
                     resolve(r.value);
                 } else {
                     reject('No interest topic selected');
@@ -348,12 +376,14 @@ export default class {
      * @private
      */
     _getSupportServiceCategories (mergedCdt) {
+        const startTime = Date.now();
         return new Promise (resolve => {
             let support = mergedCdt.support;
             if (!_.isEmpty(support)) {
                 let categories = _.map(_.filter(support, 'category'), s => {
                     return s.category;
                 });
+                metrics.record('getSupportServiceCategories', startTime, Date.now());
                 resolve(categories);
             } else {
                 resolve();
@@ -368,12 +398,14 @@ export default class {
      * @private
      */
     _getSupportServiceNames (mergedCdt) {
+        const startTime = Date.now();
         return new Promise (resolve => {
             let support = mergedCdt.support;
             if (!_.isEmpty(support)) {
                 let names = _.map(_.filter(support, 'name' && 'operation'), s => {
                     return s;
                 });
+                metrics.record('getSupportServiceNames', startTime, Date.now());
                 resolve(names);
             } else {
                 resolve();
@@ -390,6 +422,7 @@ export default class {
      * @private
      */
     _getDescendants (idCDT, nodes) {
+        const startTime = Date.now();
         return new Promise ((resolve, reject) => {
             //check if the CDT identifier is defined
             if (_.isUndefined(idCDT)) {
@@ -414,6 +447,9 @@ export default class {
                         });
                     }
                     resolve(output);
+                })
+                .finally(() => {
+                    metrics.record('getDescendants', startTime, Date.now());
                 });
         });
     }

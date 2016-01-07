@@ -7,6 +7,11 @@ import {
     DiceCoefficient
 } from 'natural';
 
+import Metrics from '../utils/MetricsUtils';
+
+const filePath = __dirname.replace('components', '') + '/metrics/ResponseAggregator.txt';
+const metrics = new Metrics(filePath);
+
 /**
  * ResponseAggregator
  */
@@ -89,8 +94,8 @@ export default class {
                 output.push(items[0]);
             }
         });
-        const endTime = Date.now();
-        console.log('Find similar items took ' + (endTime - startTime) + ' ms');
+        metrics.record('findSimilarities', startTime, Date.now());
+        metrics.saveResults();
         return output;
     }
 

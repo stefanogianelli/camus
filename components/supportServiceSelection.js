@@ -4,8 +4,12 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 
 import Provider from '../provider/provider';
+import Metrics from '../utils/MetricsUtils';
 
 const provider = new Provider();
+
+const filePath = __dirname.replace('components', '') + '/metrics/SupportServiceSelection.txt';
+const metrics = new Metrics(filePath);
 
 /**
  * SupportServiceSelection
@@ -18,8 +22,8 @@ export default class {
      * @returns {bluebird|exports|module.exports} The list of services, with the query associated
      */
     selectServices (decoratedCdt) {
+        const startTime = Date.now();
         return new Promise ((resolve, reject) => {
-            const startTime = Date.now();
             Promise
                 .props({
                     //acquire the URLs for the services requested by name and operation
@@ -35,8 +39,8 @@ export default class {
                     reject(e);
                 })
                 .finally(() => {
-                    const endTime = Date.now();
-                    console.log('Support service selection took ' + (endTime - startTime) + ' ms');
+                    metrics.record('selectServices', startTime, Date.now());
+                    metrics.saveResults();
                 });
         });
     }

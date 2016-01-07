@@ -4,8 +4,12 @@ import _ from 'lodash';
 import Promise from 'bluebird';
 
 import Provider from '../provider/provider';
+import Metrics from '../utils/MetricsUtils';
 
 const provider = new Provider();
+
+const filePath = __dirname.replace('components', '') + '/metrics/PrimaryServiceSelection.txt';
+const metrics = new Metrics(filePath);
 
 /**
  * PrimaryServiceSelection
@@ -27,8 +31,8 @@ export default class  {
      * @returns {bluebird|exports|module.exports} The ordered operations id
      */
     selectServices (decoratedCdt) {
+        const startTime = Date.now();
         return new Promise(resolve => {
-            const startTime = Date.now();
             Promise
                 .props({
                     //search for services associated to the filter nodes
@@ -58,8 +62,8 @@ export default class  {
                     resolve();
                 })
                 .finally(() => {
-                    const endTime = Date.now();
-                    console.log('Service selection took ' + (endTime - startTime) + ' ms');
+                    metrics.record('selectServices', startTime, Date.now());
+                    metrics.saveResults();
                 });
         })
     }

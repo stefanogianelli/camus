@@ -7,10 +7,14 @@ import System from 'systemjs';
 import RestBridge from '../bridges/restBridge';
 import Provider from '../provider/provider';
 import TransformResponse from './transformResponse';
+import Metrics from '../utils/MetricsUtils';
 
 const restBridge = new RestBridge();
 const provider = new Provider();
 const transformResponse = new TransformResponse();
+
+const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt';
+const metrics = new Metrics(filePath);
 
 System.config({
     baseURL: '../',
@@ -29,7 +33,7 @@ export default class {
 
     constructor () {
         //shortcut to the bridges folder
-        this._bridgeFolder = '../camusServer/bridges/';
+        this._bridgeFolder = '../server/bridges/';
     }
 
     /**
@@ -56,8 +60,8 @@ export default class {
                 return _.union(a,b);
             })
             .finally(() => {
-                const endTime = Date.now();
-                console.log('Queries took ' + (endTime - startTime) + ' ms')
+                metrics.record('executeQueries', startTime, Date.now());
+                metrics.saveResults();
             });
     }
 
