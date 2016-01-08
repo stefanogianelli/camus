@@ -7,6 +7,7 @@ import PrimaryService from './primaryServiceSelection';
 import QueryHandler from './queryHandler';
 import SupportService from './supportServiceSelection';
 import ResponseAggregator from './responseAggregator';
+import Metrics from '../utils/MetricsUtils';
 
 const contextManager = new ContextManager();
 const primaryService = new PrimaryService();
@@ -14,12 +15,16 @@ const queryHandler = new QueryHandler();
 const supportService = new SupportService();
 const responseAggregator = new ResponseAggregator();
 
+const filePath = __dirname.replace('components', '') + '/metrics/ExecutionHelper.txt';
+const metrics = new Metrics(filePath);
+
 /**
  * Given a user context, it invokes the components in the correct order, then return the final response
  * @param context The user context
  * @returns {Promise|Request|Promise.<T>} The final response
  */
 export function prepareResponse (context) {
+    const start = Date.now();
     return contextManager
         .getDecoratedCdt(context)
         .then(decoratedCdt => {
@@ -37,6 +42,10 @@ export function prepareResponse (context) {
                         }),
                     support: supportService.selectServices(decoratedCdt)
                 });
+        })
+        .finally(() => {
+            metrics.record('executionTime', start, Date.now());
+            metrics.saveResults();
         });
 }
 
