@@ -62,6 +62,7 @@ export default class extends Bridge {
      * @private
      */
     _parameterMapping (service, paramNodes) {
+        const start = Date.now();
         return new Promise((resolve, reject) => {
             let params = [];
             _.forEach(service.operations.parameters, p => {
@@ -119,6 +120,7 @@ export default class extends Bridge {
                     }
                 }
             });
+            metrics.record('parameterMapping/' + service.name, start, Date.now());
             resolve(params);
         });
     }
@@ -154,6 +156,7 @@ export default class extends Bridge {
      * @private
      */
     _invokeService (service, params, pagination) {
+        const start = Date.now();
         return new Promise ((resolve, reject) => {
             const operation = service.operations;
             //configure parameters (the default ones are useful for standard query composition)
@@ -176,6 +179,7 @@ export default class extends Bridge {
                     return output + querySymbols.separator + p.name + querySymbols.assign + p.value;
                 }
             }, '');
+            metrics.record('addressComposition/' + service.name, start, Date.now());
             //acquire pagination parameters
             let {startPage, numOfPages} = this._getPaginationInitialConfig(service, pagination);
             let count = 0;
@@ -184,6 +188,7 @@ export default class extends Bridge {
             let currentPageIdentifier = startPage;
             let paginationStatus = {};
             let responses = [];
+            const startAsync = Date.now();
             async.doWhilst(
                 (callback) => {
                     //check if next page is defined
@@ -223,6 +228,8 @@ export default class extends Bridge {
                 },
                 () => count < numOfPages && hasNextPage,
                 (err) => {
+                    metrics.record('asyncTask/' + service.name, startAsync, Date.now());
+                    metrics.record('invokeService/' + service.name, start, Date.now());
                     if (err) {
                         //if some responses are correctly retrieved I mask the error
                         if (responses.length > 0) {
@@ -247,11 +254,13 @@ export default class extends Bridge {
      * @private
      */
     _makeCall (address, headers, delay) {
+        const start = Date.now();
         return new Promise ((resolve, reject) => {
             //check if a copy of the response exists in the cache
             redis
                 .get(address)
                 .then((result) => {
+                    metrics.record('accessCache', start, Date.now());
                     if (result) {
                         //return immediatly the cached response
                         return resolve(JSON.parse(result));
@@ -301,6 +310,7 @@ export default class extends Bridge {
                                         }
                                         //caching the response (with associated TTL)
                                         redis.set(address, res.text, 'EX', this._cacheTTL);
+                                        metrics.record('makeCall', start, Date.now());
                                         return resolve(response);
                                     }
                                 });
@@ -319,6 +329,7 @@ export default class extends Bridge {
      * @private
      */
     _getPaginationStatus (service, currentPage, response) {
+        const start = Date.now();
         let hasNextPage = false;
         let nextPage = null;
         //check if the service has pagination parameters associated
@@ -351,6 +362,7 @@ export default class extends Bridge {
                 }
             }
         }
+        metrics.record('getPaginationStatus/' + service.name, start, Date.now());
         return {
             hasNextPage,
             nextPage
@@ -365,6 +377,7 @@ export default class extends Bridge {
      * @private
      */
     _getPaginationInitialConfig (service, paginationArgs) {
+        const start = Date.now();
         let startPage = null;
         let numOfPages = 1;
         //check if the service has pagination parameters associated
@@ -378,6 +391,7 @@ export default class extends Bridge {
                 numOfPages = paginationArgs.numOfPages;
             }
         }
+        metrics.record('getPaginationInitialConfig/' + service.name, start, Date.now());
         return {
             startPage,
             numOfPages
