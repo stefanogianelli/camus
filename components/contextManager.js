@@ -114,6 +114,9 @@ export default class {
                         reject('No CDT found. Check if the ID is correct');
                     }
                 })
+                .catch(err => {
+                    reject(err);
+                })
                 .finally(() => {
                     metrics.record('mergeCdtAndContext', startTime, Date.now());
                 });

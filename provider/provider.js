@@ -66,7 +66,17 @@ export default class {
      * @returns {*} Returns the CDT schema
      */
     getCdt (idCDT) {
-        return cdtModel.findOneAsync({_id: mongoose.Types.ObjectId(idCDT)});
+        return new Promise ((resolve, reject) => {
+            cdtModel
+                .findOne({_id: mongoose.Types.ObjectId(idCDT)})
+                .lean()
+                .exec((err, result) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    return resolve(result);
+                });
+        });
     }
 
     /**
