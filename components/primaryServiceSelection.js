@@ -135,7 +135,7 @@ export default class  {
         //sort the list by the rank in descending order
         rankedList = _.sortByOrder(rankedList, 'rank', 'desc');
         //take only the first N services
-        _.take(rankedList, this._n);
+        rankedList = _.take(rankedList, this._n);
         return rankedList;
     }
 
