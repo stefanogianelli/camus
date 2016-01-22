@@ -48,8 +48,8 @@ export default class  {
 
     /**
      * Search the services that best fit the current context
-     * @param decoratedCdt The decorated CDT
-     * @returns {bluebird|exports|module.exports} The ordered operations id
+     * @param {Object} decoratedCdt - The decorated CDT
+     * @returns {Object[]} The ordered operations id
      */
     selectServices (decoratedCdt) {
         const startTime = process.hrtime();
@@ -86,7 +86,7 @@ export default class  {
                 })
                 .catch(e => {
                     console.log('[ERROR]' + e);
-                    resolve();
+                    resolve([]);
                 })
                 .finally(() => {
                     if (debug) {
@@ -100,9 +100,9 @@ export default class  {
     /**
      * This function dispatch the specific nodes to the correct search function.
      * It collects the results and return them to the main method
-     * @param idCdt The CDT identifier
-     * @param nodes The list of specific ndoes
-     * @returns {bluebird|exports|module.exports} The list of associations found. Each association must be composed of an operation identifier and a ranking (starting from 1)
+     * @param {ObjectId} idCdt - The CDT identifier
+     * @param {Object[]} nodes - The list of specific nodes
+     * @returns {Object[]} The list of associations found. Each association must be composed of an operation identifier and a ranking (starting from 1)
      * @private
      */
     _specificSearch (idCdt, nodes) {
@@ -137,8 +137,8 @@ export default class  {
 
     /**
      * Compute the ranking of each operation found by the previous steps
-     * @param services The list of services, with own rank and weight
-     * @returns {Array} The ranked list of Top-N services
+     * @param {Object} services - The list of services, with own rank and weight
+     * @returns {Object[]} The ranked list of Top-N services
      * @private
      */
     _calculateRanking (services) {
@@ -184,9 +184,9 @@ export default class  {
     /**
      * Search associations by coordinates.
      * It also assigns a ranking starting from the nearest service
-     * @param idCdt The CDT identifier
-     * @param node The node with the coordinates
-     * @returns {Promise.<T>} The list of operation identifiers with ranking
+     * @param {ObjectId} idCdt - The CDT identifier
+     * @param {Object} node - The node with the coordinates
+     * @returns {Object[]} The list of operation identifiers with ranking
      * @private
      */
     _searchByCoordinates (idCdt, node) {
