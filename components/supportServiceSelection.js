@@ -25,15 +25,13 @@ export default class {
         const startTime = Date.now();
         return new Promise ((resolve, reject) => {
             Promise
-                .props({
+                .join(
                     //acquire the URLs for the services requested by name and operation
-                    servicesByName: this._selectServicesFromName(decoratedCdt.supportServiceNames),
+                    this._selectServicesFromName(decoratedCdt.supportServiceNames),
                     //acquire the URLs for the services requested by categories
-                    serviceByCategory: this._selectServiceFromCategory(decoratedCdt.supportServiceCategories, decoratedCdt)
-                })
-                .then(result => {
-                    //return the union of the two lists
-                    resolve(_.union(result.servicesByName, result.serviceByCategory));
+                    this._selectServiceFromCategory(decoratedCdt.supportServiceCategories, decoratedCdt),
+                (servicesByName, serviceByCategory) => {
+                    resolve(_.concat(servicesByName, serviceByCategory));
                 })
                 .catch(e => {
                     reject(e);
@@ -66,7 +64,7 @@ export default class {
                         resolve();
                     });
             } else {
-                resolve();
+                resolve([]);
             }
         });
     }
@@ -81,12 +79,16 @@ export default class {
     _selectServiceFromCategory (categories, decoratedCdt) {
         return new Promise (resolve => {
             if (!_.isUndefined(categories) && !_.isEmpty(categories) && !_.isEmpty(decoratedCdt.filterNodes)) {
+                let nodes = decoratedCdt.filterNodes;
+                if (!_.isEmpty(decoratedCdt.rankingNodes)) {
+                    nodes = _.concat(decoratedCdt.filterNodes, decoratedCdt.rankingNodes);
+                }
                 Promise
                     .map(categories, c => {
                         return Promise
                             .join(
                                 provider
-                                    .filterSupportServices(decoratedCdt._id, c, _.union(decoratedCdt.filterNodes, decoratedCdt.rankingNodes)),
+                                    .filterSupportServices(decoratedCdt._id, c, nodes),
                                 this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes),
                                 (filterServices, customServices) => {
                                     return this._mergeResults(filterServices, customServices);
@@ -108,7 +110,7 @@ export default class {
                         resolve(_.flatten(output));
                     });
             } else {
-                resolve();
+                resolve([]);
             }
         });
     }
@@ -122,7 +124,7 @@ export default class {
      */
     _mergeResults (filterServices, customServices) {
         let results = [];
-        _.forEach(_.union(filterServices, customServices), s => {
+        _.forEach(_.concat(filterServices, customServices), s => {
             //search if the current operation already exists in the results collection
             let index = _.findIndex(results, i => {
                 return i._idOperation.equals(s._idOperation);
@@ -140,12 +142,12 @@ export default class {
             }
         });
         //get the maximum value of the count attribute
-        let maxCount = _.max(_.pluck(results, 'count'));
+        let maxCount = _.max(_.map(results, 'count'));
         //filter out the operations with the maximum count value and that respect their total constraint counter
         results = _.filter(results, r => {
             return r.count === maxCount && r.constraintCount === r.count;
         });
-        return _.pluck(results, '_idOperation');
+        return _.map(results, '_idOperation');
     }
 
     /**

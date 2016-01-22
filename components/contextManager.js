@@ -192,7 +192,7 @@ export default class {
                 return [filter, this._getDescendants(idCdt, filter)];
             })
             .spread((filter, descendants) => {
-                return _.union(filter, descendants);
+                return _.concat(filter, descendants);
             })
             .finally(() => {
                 metrics.record('getFilterNodes', startTime, Date.now());
@@ -214,7 +214,7 @@ export default class {
                 return [ranking, this._getDescendants(idCdt, ranking)];
             })
             .spread((ranking, descendants) => {
-                return _.union(ranking, descendants);
+                return _.concat(ranking, descendants);
             })
             .finally(() => {
                 metrics.record('getRankingNodes', startTime, Date.now());
@@ -234,7 +234,7 @@ export default class {
                 this._getNodes('parameter', mergedCdt, false),
                 this._getNodes('parameter', mergedCdt, true),
                 (parameterNodes, specificNodes) => {
-                    return _.union(parameterNodes, specificNodes);
+                    return _.concat(parameterNodes, specificNodes);
                 })
             .finally(() => {
                 metrics.record('getParameterNodes', startTime, Date.now());

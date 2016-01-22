@@ -51,7 +51,7 @@ export default class {
         const startTime = Date.now();
         return provider
             //acquire the service descriptions from the DB
-            .getServicesByOperationIds(_.pluck(services, '_idOperation'))
+            .getServicesByOperationIds(_.map(services, '_idOperation'))
             .map(service => {
                 //make call to the current service
                 return this._callService(service, decoratedCdt.parameterNodes);
@@ -108,7 +108,7 @@ export default class {
                             .retrieveListOfResults(response, operation.responseMapping.list)
                             .then(itemList => {
                                 if (!_.isUndefined(itemList) && !_.isEmpty(itemList)) {
-                                    return _.union(output, itemList);
+                                    return _.concat(output, itemList);
                                 } else {
                                     return output;
                                 }

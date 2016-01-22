@@ -92,7 +92,7 @@ export default class {
             if (!_.isArray(nodes)) {
                 nodes = _.toArray(nodes);
             } else {
-                nodes = _.pluck(nodes, 'value');
+                nodes = _.map(nodes, 'value');
             }
             return cdtModel
                 .aggregateAsync(

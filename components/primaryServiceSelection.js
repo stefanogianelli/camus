@@ -44,7 +44,7 @@ export default class  {
                 })
                 .then(results => {
                     //merge the ranking and specific list (specific searches are considered ranking)
-                    results.ranking = _.union(results.ranking, results.specific);
+                    results.ranking = _.concat(results.ranking, results.specific);
                     //discard the ranking nodes that haven't a correspondence in the filter nodes list
                     results.ranking = this._intersect(results.filter, results.ranking);
                     //add the weight values for each item
@@ -55,7 +55,7 @@ export default class  {
                         i['weight'] = this._rankingWeight;
                     });
                     //calculate the ranking of the merged list
-                    resolve(this._calculateRanking(_.union(results.filter, results.ranking)));
+                    resolve(this._calculateRanking(_.concat(results.filter, results.ranking)));
                 })
                 .catch(e => {
                     console.log(e);
@@ -133,7 +133,7 @@ export default class  {
             }
         });
         //sort the list by the rank in descending order
-        rankedList = _.sortByOrder(rankedList, 'rank', 'desc');
+        rankedList = _.orderBy(rankedList, 'rank', 'desc');
         //take only the first N services
         rankedList = _.take(rankedList, this._n);
         return rankedList;

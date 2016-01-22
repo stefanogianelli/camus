@@ -393,7 +393,7 @@ const eventful = {
     name: 'eventful',
     type: 'primary',
     protocol: 'query',
-    basePath: 'http://api.eventful.com//json',
+    basePath: 'http://api.eventful.com/json',
     operations: [
         {
             name: 'eventSearch',
