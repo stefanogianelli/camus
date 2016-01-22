@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import Promise from 'bluebird';
+import config from 'config';
 import {
     SoundEx,
     DiceCoefficient
@@ -19,7 +20,11 @@ export default class {
 
     constructor () {
         //this threshold is used for identify a pair of items as similar. Greater value is better (0.9 means 90% similarity)
-        this._threshold = 0.85;
+        if (config.has('similarity.threshold')) {
+            this._threshold = config.get('similarity.threshold');
+        } else {
+            this._threshold = 0.85;
+        }
     }
 
     /**

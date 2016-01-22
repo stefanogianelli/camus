@@ -5,11 +5,23 @@ import Promise from 'bluebird';
 import agent from 'superagent';
 import async from 'async';
 import Redis from 'ioredis';
+import config from 'config';
 
 import Bridge from './bridge';
 import Metrics from '../utils/MetricsUtils';
 
-const redis = new Redis(6379, 'localhost');
+//acquire redis configuration
+let port = 6379;
+if (config.has('redis.port')) {
+    port = config.get('redis.port');
+}
+
+let address = 'localhost';
+if (config.has('redis.address')) {
+    address = config.get('redis.address');
+}
+
+const redis = new Redis(port, address);
 
 const filePath = __dirname.replace('bridges', '') + '/metrics/RestBridge.txt';
 const metrics = new Metrics(filePath);
@@ -22,9 +34,17 @@ export default class extends Bridge {
     constructor () {
         super();
         //timeout for the requests (in ms)
-        this._timeout = 6000;
+        if (config.has('rest.timeout.service')) {
+            this._timeout = config.get('rest.timeout.service');
+        } else {
+            this._timeout = 6000;
+        }
         //validity time for cache content (in s)
-        this._cacheTTL = 3600;
+        if (config.has('rest.timeout.cache')) {
+            this._cacheTTL = config.get('rest.timeout.cache');
+        } else {
+            this._cacheTTL = 3600;
+        }
     }
 
     /**

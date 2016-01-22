@@ -28,7 +28,7 @@ export default class {
     constructor () {
         if (!instance) {
             mongoose.connection.on('error', function (err) {
-                console.log('Mongoose default connection error: ' + err);
+                console.log('[ERROR] Mongoose default connection error: ' + err);
             });
             instance = this;
         }
@@ -42,8 +42,9 @@ export default class {
     createConnection (url) {
         if (!_.isUndefined(url)) {
             mongoose.connect(url);
+            console.log('[INFO] Successfully connected to the database');
         } else {
-            throw Error('No dabatase URL specified');
+            throw Error('No database URL specified');
         }
     }
 

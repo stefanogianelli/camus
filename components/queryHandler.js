@@ -57,7 +57,7 @@ export default class {
                 return this._callService(service, decoratedCdt.parameterNodes);
             })
             .reduce((a, b) => {
-                return _.union(a,b);
+                return _.concat(a,b);
             })
             .finally(() => {
                 metrics.record('executeQueries', startTime, Date.now());
@@ -96,7 +96,7 @@ export default class {
                     });
             } else {
                 console.log('ERROR: The service \'' + service.name + '\' must define a custom bridge');
-                return Promise.resolve();
+                return Promise.resolve([]);
             }
         }
         return promise
@@ -126,7 +126,7 @@ export default class {
             })
             .catch(e => {
                 console.log('[' + service.name + '] ERROR: ' + e);
-                return Promise.resolve();
+                return Promise.resolve([]);
             });
     }
 

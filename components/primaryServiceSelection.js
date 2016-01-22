@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import Promise from 'bluebird';
+import config from 'config';
 
 import Provider from '../provider/provider';
 import Metrics from '../utils/MetricsUtils';
@@ -18,11 +19,23 @@ export default class  {
 
     constructor () {
         //number of services to keep
-        this._n = 3;
+        if (config.has('primaryService.n')) {
+            this._n = config.get('primaryService.n');
+        } else {
+            this._n = 3;
+        }
         //filter nodes weight
-        this._filterWeight = 2;
+        if (config.has('primaryService.weight.filter')) {
+            this._filterWeight = config.get('primaryService.weight.filter');
+        } else {
+            this._filterWeight = 2;
+        }
         //ranking nodes weight
-        this._rankingWeight = 4;
+        if (config.has('primaryService.weight.ranking')) {
+            this._rankingWeight = config.get('primaryService.weight.ranking');
+        } else {
+            this._rankingWeight = 4;
+        }
     }
 
     /**

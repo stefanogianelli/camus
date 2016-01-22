@@ -3,6 +3,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import graphqlHTTP from 'express-graphql';
+import config from 'config';
 
 import DatabaseHelper from'./databaseHelper';
 import Provider from './provider/provider';
@@ -41,7 +42,7 @@ app.post('/query', (req, res) => {
             res.send(response);
         })
         .catch(e => {
-            console.log('ERROR: ' + e);
+            console.log('[ERROR] ' + e);
             res.status(500).send(e);
         });
 });
@@ -68,16 +69,28 @@ app.get('/createDatabase', (req, res) => {
 //register the graphql endpoint
 app.use('/graphql', graphqlHTTP({schema: camusSchema, graphiql: true}));
 
+//acquire server configuration
+let port = 3001;
+if (config.has('server.port')) {
+    port = config.get('server.port');
+}
+
+let hostname = 'localhost';
+if (config.has('server.hostname')) {
+    hostname = config.get('server.hostname');
+}
+
+let dbUrl = '';
+if (config.has('database.address')) {
+    dbUrl = config.get('database.address');
+} else {
+    throw Error('[ERROR] No database URL defined in the config file!');
+}
+
 //start the server
-let server = app.listen(3001, () => {
+let server = app.listen(port, hostname, () => {
     //connect to the DB
-    provider.createConnection('mongodb://localhost/camus');
-
-    let host = server.address().address;
-    const port = server.address().port;
-    if (host === '::') {
-        host = 'localhost';
-    }
-
-    console.log('Server running at http://%s:%s', host, port);
+    provider.createConnection(dbUrl);
+    //print the server stats
+    console.log('[INFO] Server running at http://%s:%s', hostname, port);
 });
