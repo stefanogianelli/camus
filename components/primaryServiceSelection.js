@@ -139,7 +139,9 @@ export default class  {
      * @private
      */
     _calculateRanking (services) {
-        console.log('Found ' + services.length + ' service/s');
+        if (debug) {
+            console.log('Found ' + services.length + ' service/s');
+        }
         const start = process.hrtime();
         let rankedList = [];
         _.forEach(services, s => {
@@ -219,7 +221,9 @@ export default class  {
                 if (debug) {
                     metrics.record('dbCoordinatesSearch', start);
                 }
-                console.log('Found ' + results.length + ' services near the position');
+                if (debug) {
+                    console.log('Found ' + results.length + ' services near the position');
+                }
                 return results;
             })
             .map((result, index) => {

@@ -88,7 +88,9 @@ export default class {
                         const sim = this._calculateObjectSimilarity(items[i], items[j]);
                         //if the similarity is greater or equal of the threshold, then merge the two items
                         if (sim >= this._threshold) {
-                            console.log('Found similar items \'' + items[i].title + '\' and \'' + items[j].title + '\' (' + sim + ')');
+                            if (debug) {
+                                console.log('Found similar items \'' + items[i].title + '\' and \'' + items[j].title + '\' (' + sim + ')');
+                            }
                             //merge the two items
                             items[i] = _.assign(items[j], items[i]);
                             //delete the item from array

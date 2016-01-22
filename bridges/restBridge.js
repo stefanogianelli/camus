@@ -228,7 +228,9 @@ export default class extends Bridge {
                     } else {
                         fullAddress = address + parameters;
                     }
-                    console.log('Querying service \'' + service.name + '\' #' + (count + 1) + ': ' + fullAddress);
+                    if (debug) {
+                        console.log('Querying service \'' + service.name + '\' #' + (count + 1) + ': ' + fullAddress);
+                    }
                     let callPromise = null;
                     //configure timeout between following requests, if needed
                     if (count > 0 && operation.pagination.delay > 0) {
@@ -297,7 +299,9 @@ export default class extends Bridge {
                     } else {
                         //send a new request
                         if (!_.isUndefined(delay) && _.isNumber(delay)) {
-                            console.log('Delaying request by: ' + delay + ' ms');
+                            if (debug) {
+                                console.log('Delaying request by: ' + delay + ' ms');
+                            }
                         } else {
                             delay = 0;
                         }
