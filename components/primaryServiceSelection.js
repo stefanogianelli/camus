@@ -67,11 +67,13 @@ export default class  {
                         metrics.record('getAssociations', startTime);
                     }
                     //merge the ranking and specific list (specific searches are considered ranking)
-                    ranking = _.concat(ranking, specific);
                     //discard the ranking nodes that haven't a correspondence in the filter nodes list
-                    ranking = _.intersectionWith(ranking, filter, (s, i) => {
-                        return s._idOperation.equals(i._idOperation);
-                    });
+                        ranking = _(ranking)
+                            .concat(specific)
+                            .intersectionWith(filter, (s, i) => {
+                                return s._idOperation.equals(i._idOperation);
+                            })
+                            .value();
                     //add the weight values for each item
                     _.forEach(filter, i => {
                         i['weight'] = this._filterWeight;
