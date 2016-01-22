@@ -25,6 +25,10 @@ let instance = null;
  */
 export default class {
 
+    /**
+     * Create the instance
+     * @constructor
+     */
     constructor () {
         if (!instance) {
             mongoose.connection.on('error', function (err) {
@@ -37,7 +41,7 @@ export default class {
 
     /**
      * Create a connection to MongoDB
-     * @param url The database url
+     * @param {String} url - The database url
      */
     createConnection (url) {
         if (!_.isUndefined(url)) {
@@ -63,8 +67,9 @@ export default class {
 
     /**
      * Retrieve the CDT schema associated to the current identifier
-     * @param idCDT The CDT identifier
-     * @returns {*} Returns the CDT schema
+     * @param {String} idCDT - The CDT identifier
+     * @returns {Object} Returns the CDT schema
+     * @throws {Error} If the identifier does not exists in the database
      */
     getCdt (idCDT) {
         return new Promise ((resolve, reject) => {
@@ -83,9 +88,9 @@ export default class {
     /**
      * Create the list of descendant nodes of the specified nodes.
      * These nodes must have the 'value' attribute defined
-     * @param idCDT The CDT identifier
-     * @param nodes The node or the list of nodes
-     * @returns {*} The list of son nodes
+     * @param {ObjectId} idCDT - The CDT identifier
+     * @param {Object[]} nodes - The node or the list of nodes
+     * @returns {Object[]} The list of son nodes
      */
     getNodeDescendants (idCDT, nodes) {
         if (!_.isUndefined(idCDT) && !_.isUndefined(nodes) && !_.isEmpty(nodes)) {
@@ -112,6 +117,8 @@ export default class {
                         }
                     }
                 );
+        } else {
+            return [];
         }
     }
 
@@ -124,32 +131,36 @@ export default class {
     /**
      * Retrieve the service description for the requested operation.
      * This schema contains only the requested operation.
-     * @param idOperation The operation identifier
-     * @returns {*} Returns the service and operation schema
+     * @param {ObjectId} idOperation - The operation identifier
+     * @returns {Object} Returns the service and operation schema
      */
     getServiceByOperationId (idOperation) {
         if (!_.isUndefined(idOperation)) {
             return serviceModel.findByOperationIdAsync(idOperation);
+        } else {
+            return {};
         }
     }
 
     /**
      * Retrieve the service descriptions for the requested operations.
      * This schema contains only the requested operations.
-     * @param idOperations The list of operation identifiers
-     * @returns {*} Returns the service list with only the requested operations
+     * @param {ObjectId} idOperations - The list of operation identifiers
+     * @returns {Object[]} Returns the service list with only the requested operations
      */
     getServicesByOperationIds (idOperations) {
         if (!_.isUndefined(idOperations)) {
             return serviceModel.findByOperationIdsAsync(idOperations);
+        } else {
+            return [];
         }
     }
 
     /**
      * Retrieve a service description by it's name and operation name.
-     * @param serviceNames The object containing the service and operation names.
+     * @param {Object} serviceNames - The object containing the service and operation names.
      * This object must be in form { name: 'service name', operation: 'operation name' }
-     * @returns {*} The service and operation description
+     * @returns {Object[]} The service and operation description
      */
     getServicesByNames (serviceNames) {
         if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
@@ -165,6 +176,8 @@ export default class {
                 };
             });
             return serviceModel.findAsync(whereClause);
+        } else {
+            return [];
         }
     }
 
@@ -178,9 +191,9 @@ export default class {
      * Search the services that are associated to the specified attributes.
      * These attributes must have this format:
      * { dimension: 'dimension name', value: 'associated value' }
-     * @param idCDT The CDT identifier
-     * @param attributes The list of filter nodes selected
-     * @returns {*} The list of operation id, with ranking and weight, of the found services
+     * @param {ObjectId} idCDT - The CDT identifier
+     * @param {Object[]} attributes - The list of filter nodes selected
+     * @returns {Object[]} The list of operation id, with ranking and weight, of the found services
      */
     filterPrimaryServices (idCDT, attributes) {
         if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
@@ -220,21 +233,25 @@ export default class {
 
     /**
      * Search the primary services that are associated near the current position
-     * @param idCdt The CDT identifier
-     * @param node The current position node
-     * @returns {*} The list of operation identifiers found
+     * @param {ObjectId} idCdt - The CDT identifier
+     * @param {Object} node - The current position node
+     * @returns {Object[]} The list of operation identifiers found
      */
     searchPrimaryByCoordinates (idCdt, node) {
-        let radius = _radius / 6371;
-        let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
-        let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
-        return primaryServiceModel.findAsync({
-            _idCDT: idCdt,
-            loc: {
-                $near: [longitude, latitude],
-                $maxDistance: radius
-            }
-        }, {_idOperation: 1, _id: 0});
+        if (!_.isUndefined(idCdt) && !_.isUndefined(node)) {
+            let radius = _radius / 6371;
+            let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
+            let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
+            return primaryServiceModel.findAsync({
+                _idCDT: idCdt,
+                loc: {
+                    $near: [longitude, latitude],
+                    $maxDistance: radius
+                }
+            }, {_idOperation: 1, _id: 0});
+        } else {
+            return [];
+        }
     }
 
     /**
@@ -245,10 +262,10 @@ export default class {
 
     /**
      * Search the support services associated to specific attributes
-     * @param idCDT The CDT identifier
-     * @param category The service category
-     * @param attributes The list of attributes
-     * @returns {*} The list of services found, with the number of constraints defined for each operation and the count of constraint that are satisfied
+     * @param {ObjectId} idCDT - The CDT identifier
+     * @param {String} category - The service category
+     * @param {Object[]} attributes - The list of attributes
+     * @returns {Object[]} The list of services found, with the number of constraints defined for each operation and the count of constraint that are satisfied
      */
     filterSupportServices (idCDT, category, attributes) {
         if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
@@ -284,14 +301,16 @@ export default class {
                 }
             ];
             return supportServiceModel.aggregateAsync(clause);
+        } else {
+            return [];
         }
     }
 
     /**
      * Search the support services that are associated near the current position
-     * @param idCdt The CDT identifier
-     * @param node The current position node
-     * @returns {*} The list of operation identifiers found
+     * @param {ObjectId} idCdt - The CDT identifier
+     * @param {Object} node - The current position node
+     * @returns {Object[]} The list of operation identifiers found
      */
     searchSupportByCoordinates (idCdt, node) {
         let radius = _radius / 6371;
