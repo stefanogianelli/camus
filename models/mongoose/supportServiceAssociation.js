@@ -19,13 +19,16 @@ const associationSchema = new Schema({
     }
 });
 
+associationSchema.index({ dimension: 1, value: 1});
+
 /**
  * Schema for support services associations with the CDT nodes
  */
 const supportServiceSchema = new Schema ({
     _idCDT: {
         type: ObjectId,
-        required: true
+        required: true,
+        index: true
     },
     _idOperation: {
         type: ObjectId,

@@ -23,6 +23,8 @@ const associationSchema = new Schema({
     }
 });
 
+associationSchema.index({ dimension: 1, value: 1 });
+
 /**
  * Schema for primary services associations with the CDT nodes
  */
@@ -33,7 +35,8 @@ const primaryServiceSchema = new Schema ({
     },
     _idCDT: {
         type: ObjectId,
-        required: true
+        required: true,
+        index: true
     },
     associations: [associationSchema],
     loc: {

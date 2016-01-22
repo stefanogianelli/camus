@@ -114,7 +114,8 @@ const operationSchema = new Schema({
         type: ObjectId,
         default: function () {
             return new mongoose.Types.ObjectId()
-        }
+        },
+        index: true
     },
     name: {
         type: String,
