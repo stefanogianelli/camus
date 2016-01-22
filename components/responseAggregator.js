@@ -10,8 +10,16 @@ import {
 
 import Metrics from '../utils/MetricsUtils';
 
-const filePath = __dirname.replace('components', '') + '/metrics/ResponseAggregator.txt';
-const metrics = new Metrics(filePath);
+let debug = false;
+if (config.has('debug')) {
+    debug = config.get('debug');
+}
+
+let metrics = null;
+if (debug) {
+    const filePath = __dirname.replace('components', '') + '/metrics/ResponseAggregator.txt';
+    metrics = new Metrics(filePath);
+}
 
 /**
  * ResponseAggregator
@@ -53,7 +61,7 @@ export default class {
      * @private
      */
     _findSimilarities (response) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         //create a map of items that sounds similar (using SoundEx algorithm)
         let clusters = new Map();
         _.forEach(response, item => {
@@ -99,8 +107,10 @@ export default class {
                 output.push(items[0]);
             }
         });
-        metrics.record('findSimilarities', startTime, Date.now());
-        metrics.saveResults();
+        if (debug) {
+            metrics.record('findSimilarities', startTime);
+            metrics.saveResults();
+        }
         return output;
     }
 

@@ -2,6 +2,20 @@
 
 import _ from 'lodash';
 import Promise from 'bluebird';
+import config from 'config';
+
+import Metrics from '../utils/MetricsUtils';
+
+let debug = false;
+if (config.has('debug')) {
+    debug = config.get('debug');
+}
+
+let metrics = null;
+if (debug) {
+    const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt';
+    metrics = new Metrics(filePath);
+}
 
 /**
  * TransformResponse
@@ -15,6 +29,7 @@ export default class {
      * @returns {bluebird|exports|module.exports}
      */
     mappingResponse (mapping, response) {
+        const start = process.hrtime();
         return new Promise ((resolve, reject) => {
             if (_.isUndefined(response)) {
                 reject('Empty response. Please add a response to be mapped');
@@ -35,6 +50,10 @@ export default class {
             transformedResponse = _.filter(transformedResponse, item => {
                 return !_.isUndefined(item) && !_.isEmpty(item);
             });
+            if (debug) {
+                metrics.record('mappingResponse', start);
+                metrics.saveResults();
+            }
             resolve(transformedResponse);
         })
     }

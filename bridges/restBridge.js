@@ -23,8 +23,16 @@ if (config.has('redis.address')) {
 
 const redis = new Redis(port, address);
 
-const filePath = __dirname.replace('bridges', '') + '/metrics/RestBridge.txt';
-const metrics = new Metrics(filePath);
+let debug = false;
+if (config.has('debug')) {
+    debug = config.get('debug');
+}
+
+let metrics = null;
+if (debug) {
+    const filePath = __dirname.replace('bridges', '') + '/metrics/RestBridge.txt';
+    metrics = new Metrics(filePath);
+}
 
 /**
  * REST Bridge
@@ -57,15 +65,17 @@ export default class extends Bridge {
      * @returns {Promise|Request|Promise.<T>} The promise with the service responses
      */
     executeQuery (service, paramNodes, paginationArgs) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return this
             ._parameterMapping(service, paramNodes)
             .then(params => {
                 return this._invokeService(service, params, paginationArgs);
             })
             .finally(() => {
-                metrics.record('executeQuery/' + service.name, startTime, Date.now());
-                metrics.saveResults();
+                if (debug) {
+                    metrics.record('executeQuery/' + service.name, startTime);
+                    metrics.saveResults();
+                }
             });
     }
 
@@ -82,7 +92,6 @@ export default class extends Bridge {
      * @private
      */
     _parameterMapping (service, paramNodes) {
-        const start = Date.now();
         return new Promise((resolve, reject) => {
             let params = [];
             _.forEach(service.operations.parameters, p => {
@@ -140,7 +149,6 @@ export default class extends Bridge {
                     }
                 }
             });
-            metrics.record('parameterMapping/' + service.name, start, Date.now());
             resolve(params);
         });
     }
@@ -176,7 +184,7 @@ export default class extends Bridge {
      * @private
      */
     _invokeService (service, params, pagination) {
-        const start = Date.now();
+        const start = process.hrtime();
         return new Promise ((resolve, reject) => {
             const operation = service.operations;
             //configure parameters (the default ones are useful for standard query composition)
@@ -199,7 +207,6 @@ export default class extends Bridge {
                     return output + querySymbols.separator + p.name + querySymbols.assign + p.value;
                 }
             }, '');
-            metrics.record('addressComposition/' + service.name, start, Date.now());
             //acquire pagination parameters
             let {startPage, numOfPages} = this._getPaginationInitialConfig(service, pagination);
             let count = 0;
@@ -208,7 +215,6 @@ export default class extends Bridge {
             let currentPageIdentifier = startPage;
             let paginationStatus = {};
             let responses = [];
-            const startAsync = Date.now();
             async.doWhilst(
                 (callback) => {
                     //check if next page is defined
@@ -226,9 +232,9 @@ export default class extends Bridge {
                     let callPromise = null;
                     //configure timeout between following requests, if needed
                     if (count > 0 && operation.pagination.delay > 0) {
-                        callPromise = this._makeCall(fullAddress, operation.headers, operation.pagination.delay)
+                        callPromise = this._makeCall(fullAddress, operation.headers, operation.pagination.delay, service.name);
                     } else {
-                        callPromise = this._makeCall(fullAddress, operation.headers);
+                        callPromise = this._makeCall(fullAddress, operation.headers, service.name);
                     }
                     //invoke the service and wait for the response, then acquire information for querying the next page
                     callPromise
@@ -248,8 +254,9 @@ export default class extends Bridge {
                 },
                 () => count < numOfPages && hasNextPage,
                 (err) => {
-                    metrics.record('asyncTask/' + service.name, startAsync, Date.now());
-                    metrics.record('invokeService/' + service.name, start, Date.now());
+                    if (debug) {
+                        metrics.record('invokeService/' + service.name, start);
+                    }
                     if (err) {
                         //if some responses are correctly retrieved I mask the error
                         if (responses.length > 0) {
@@ -270,17 +277,20 @@ export default class extends Bridge {
      * @param address The service's address
      * @param headers The headers to be appended to the request
      * @param delay (Optional) The delay time (in ms) before send the request
+     * @param service The service name
      * @returns {Object} The received response
      * @private
      */
-    _makeCall (address, headers, delay) {
-        const start = Date.now();
+    _makeCall (address, headers, delay, service) {
+        const start = process.hrtime();
         return new Promise ((resolve, reject) => {
             //check if a copy of the response exists in the cache
             redis
                 .get(address)
                 .then((result) => {
-                    metrics.record('accessCache', start, Date.now());
+                    if (debug) {
+                        metrics.record('accessCache/' + service, start);
+                    }
                     if (result) {
                         //return immediatly the cached response
                         return resolve(JSON.parse(result));
@@ -330,7 +340,9 @@ export default class extends Bridge {
                                         }
                                         //caching the response (with associated TTL)
                                         redis.set(address, res.text, 'EX', this._cacheTTL);
-                                        metrics.record('makeCall', start, Date.now());
+                                        if (debug) {
+                                            metrics.record('makeCall/' + service, start);
+                                        }
                                         return resolve(response);
                                     }
                                 });
@@ -349,7 +361,6 @@ export default class extends Bridge {
      * @private
      */
     _getPaginationStatus (service, currentPage, response) {
-        const start = Date.now();
         let hasNextPage = false;
         let nextPage = null;
         //check if the service has pagination parameters associated
@@ -382,7 +393,6 @@ export default class extends Bridge {
                 }
             }
         }
-        metrics.record('getPaginationStatus/' + service.name, start, Date.now());
         return {
             hasNextPage,
             nextPage
@@ -397,7 +407,6 @@ export default class extends Bridge {
      * @private
      */
     _getPaginationInitialConfig (service, paginationArgs) {
-        const start = Date.now();
         let startPage = null;
         let numOfPages = 1;
         //check if the service has pagination parameters associated
@@ -411,7 +420,6 @@ export default class extends Bridge {
                 numOfPages = paginationArgs.numOfPages;
             }
         }
-        metrics.record('getPaginationInitialConfig/' + service.name, start, Date.now());
         return {
             startPage,
             numOfPages

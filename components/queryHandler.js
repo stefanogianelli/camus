@@ -3,6 +3,7 @@
 import _ from 'lodash';
 import Promise from 'bluebird';
 import System from 'systemjs';
+import config from 'config';
 
 import RestBridge from '../bridges/restBridge';
 import Provider from '../provider/provider';
@@ -13,8 +14,16 @@ const restBridge = new RestBridge();
 const provider = new Provider();
 const transformResponse = new TransformResponse();
 
-const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt';
-const metrics = new Metrics(filePath);
+let debug = false;
+if (config.has('debug')) {
+    debug = config.get('debug');
+}
+
+let metrics = null;
+if (debug) {
+    const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt';
+    metrics = new Metrics(filePath);
+}
 
 System.config({
     baseURL: '../',
@@ -48,10 +57,16 @@ export default class {
         if (_.isEmpty(services)) {
             return Promise.resolve();
         }
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return provider
             //acquire the service descriptions from the DB
             .getServicesByOperationIds(_.map(services, '_idOperation'))
+            .then(services => {
+                if (debug) {
+                    metrics.record('getDescriptions', startTime);
+                }
+                return services;
+            })
             .map(service => {
                 //make call to the current service
                 return this._callService(service, decoratedCdt.parameterNodes);
@@ -60,8 +75,10 @@ export default class {
                 return _.concat(a,b);
             })
             .finally(() => {
-                metrics.record('executeQueries', startTime, Date.now());
-                metrics.saveResults();
+                if (debug) {
+                    metrics.record('executeQueries', startTime);
+                    metrics.saveResults();
+                }
             });
     }
 
@@ -99,8 +116,13 @@ export default class {
                 return Promise.resolve([]);
             }
         }
+        const start = process.hrtime();
         return promise
             .then(responses => {
+                if (debug) {
+                    metrics.record('bridgeExecution', start);
+                }
+                const startAggr = process.hrtime();
                 //create the list of items
                 return Promise
                     .reduce(responses, (output, response) => {
@@ -117,7 +139,12 @@ export default class {
                                 console.log('[' + service.name + '] ERROR: ' + e);
                                 return output;
                             });
-                    }, []);
+                    }, [])
+                    .finally(() => {
+                        if (debug) {
+                            metrics.record('transformResponse', startAggr);
+                        }
+                    });
             })
             .then(itemArray => {
                 //transform the response

@@ -29,23 +29,14 @@ export default class {
      * This function records a value.
      * The times are collected by the label name.
      * @param label The label name
-     * @param startTime The start time (in ms)
-     * @param endTime The end time (in ms)
+     * @param start The start time acquired by process.hrtime()
      */
-    record (label, startTime, endTime) {
+    record (label, start) {
         if (_.isUndefined(label) || !_.isString(label)) {
             throw new Error('Invalid label');
         }
-        if (_.isUndefined(startTime) || !_.isNumber(startTime)) {
-            throw new Error('Invalid start time');
-        }
-        if (_.isUndefined(endTime) || !_.isNumber(endTime)) {
-            throw new Error('Invalid end time');
-        }
-        if (startTime > endTime) {
-            throw new Error('The end time must be less or equal than the start time!');
-        }
-        const time = endTime - startTime;
+        const end = process.hrtime(start);
+        const time = end[0] * 1000 + end[1] / 1000000;
         if (this._map.has(label)) {
             this._map.get(label).push(time);
         } else {

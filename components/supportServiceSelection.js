@@ -2,14 +2,23 @@
 
 import _ from 'lodash';
 import Promise from 'bluebird';
+import config from 'config';
 
 import Provider from '../provider/provider';
 import Metrics from '../utils/MetricsUtils';
 
 const provider = new Provider();
 
-const filePath = __dirname.replace('components', '') + '/metrics/SupportServiceSelection.txt';
-const metrics = new Metrics(filePath);
+let debug = false;
+if (config.has('debug')) {
+    debug = config.get('debug');
+}
+
+let metrics = null;
+if (debug) {
+    const filePath = __dirname.replace('components', '') + '/metrics/SupportServiceSelection.txt';
+    metrics = new Metrics(filePath);
+}
 
 /**
  * SupportServiceSelection
@@ -22,7 +31,7 @@ export default class {
      * @returns {bluebird|exports|module.exports} The list of services, with the query associated
      */
     selectServices (decoratedCdt) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return new Promise ((resolve, reject) => {
             Promise
                 .join(
@@ -37,8 +46,10 @@ export default class {
                     reject(e);
                 })
                 .finally(() => {
-                    metrics.record('selectServices', startTime, Date.now());
-                    metrics.saveResults();
+                    if (debug) {
+                        metrics.record('selectServices', startTime);
+                        metrics.saveResults();
+                    }
                 });
         });
     }
@@ -50,12 +61,16 @@ export default class {
      * @private
      */
     _selectServicesFromName (serviceNames) {
+        const start = process.hrtime();
         return new Promise (resolve => {
             if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
                 provider
                 //retrieve the service descriptions
                     .getServicesByNames(serviceNames)
                     .then(services => {
+                        if (debug) {
+                            metrics.record('getServicesByName', start);
+                        }
                         //compose the queries
                         resolve(this._composeQueries(services));
                     })
@@ -77,6 +92,7 @@ export default class {
      * @private
      */
     _selectServiceFromCategory (categories, decoratedCdt) {
+        const start = process.hrtime();
         return new Promise (resolve => {
             if (!_.isUndefined(categories) && !_.isEmpty(categories) && !_.isEmpty(decoratedCdt.filterNodes)) {
                 let nodes = decoratedCdt.filterNodes;
@@ -91,6 +107,9 @@ export default class {
                                     .filterSupportServices(decoratedCdt._id, c, nodes),
                                 this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes),
                                 (filterServices, customServices) => {
+                                    if (debug) {
+                                        metrics.record('getAssociations', start);
+                                    }
                                     return this._mergeResults(filterServices, customServices);
                                 }
                             )
@@ -123,6 +142,7 @@ export default class {
      * @private
      */
     _mergeResults (filterServices, customServices) {
+        const start = process.hrtime();
         let results = [];
         _.forEach(_.concat(filterServices, customServices), s => {
             //search if the current operation already exists in the results collection
@@ -147,6 +167,9 @@ export default class {
         results = _.filter(results, r => {
             return r.count === maxCount && r.constraintCount === r.count;
         });
+        if (debug) {
+            metrics.record('mergeResults', start);
+        }
         return _.map(results, '_idOperation');
     }
 

@@ -9,8 +9,16 @@ import Metrics from '../utils/MetricsUtils';
 
 const provider = new Provider();
 
-const filePath = __dirname.replace('components', '') + '/metrics/PrimaryServiceSelection.txt';
-const metrics = new Metrics(filePath);
+let debug = false;
+if (config.has('debug')) {
+    debug = config.get('debug');
+}
+
+let metrics = null;
+if (debug) {
+    const filePath = __dirname.replace('components', '') + '/metrics/PrimaryServiceSelection.txt';
+    metrics = new Metrics(filePath);
+}
 
 /**
  * PrimaryServiceSelection
@@ -44,7 +52,7 @@ export default class  {
      * @returns {bluebird|exports|module.exports} The ordered operations id
      */
     selectServices (decoratedCdt) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return new Promise(resolve => {
             Promise
                 .props({
@@ -56,6 +64,9 @@ export default class  {
                     specific: this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes)
                 })
                 .then(results => {
+                    if (debug) {
+                        metrics.record('getAssociations', startTime);
+                    }
                     //merge the ranking and specific list (specific searches are considered ranking)
                     results.ranking = _.concat(results.ranking, results.specific);
                     //discard the ranking nodes that haven't a correspondence in the filter nodes list
@@ -75,8 +86,10 @@ export default class  {
                     resolve();
                 })
                 .finally(() => {
-                    metrics.record('selectServices', startTime, Date.now());
-                    metrics.saveResults();
+                    if (debug) {
+                        metrics.record('selectServices', startTime);
+                        metrics.saveResults();
+                    }
                 });
         })
     }
@@ -90,6 +103,7 @@ export default class  {
      * @private
      */
     _specificSearch (idCdt, nodes) {
+        const start = process.hrtime();
         return new Promise (resolve => {
             let promises = [];
             //check if the node dimension have a specific search associated
@@ -109,6 +123,11 @@ export default class  {
                 .catch(e => {
                     console.log(e);
                     resolve();
+                })
+                .finally(() => {
+                    if (debug) {
+                        metrics.record('specificSearches', start);
+                    }
                 });
         });
     }
@@ -120,6 +139,8 @@ export default class  {
      * @private
      */
     _calculateRanking (services) {
+        console.log('Found ' + services.length + ' service/s');
+        const start = process.hrtime();
         let rankedList = [];
         _.forEach(services, s => {
             //calculate the ranking of the current service
@@ -149,6 +170,9 @@ export default class  {
         rankedList = _.orderBy(rankedList, 'rank', 'desc');
         //take only the first N services
         rankedList = _.take(rankedList, this._n);
+        if (debug) {
+            metrics.record('calculateRanking', start);
+        }
         return rankedList;
     }
 
@@ -188,13 +212,26 @@ export default class  {
      * @private
      */
     _searchByCoordinates (idCdt, node) {
+        const start = process.hrtime();
         return provider
             .searchPrimaryByCoordinates(idCdt, node)
+            .then(results => {
+                if (debug) {
+                    metrics.record('dbCoordinatesSearch', start);
+                }
+                console.log('Found ' + results.length + ' services near the position');
+                return results;
+            })
             .map((result, index) => {
                 return {
                     _idOperation: result._idOperation,
                     ranking: index + 1
                 };
+            })
+            .finally(() => {
+                if (debug) {
+                    metrics.record('searchByCoordinates', start);
+                }
             });
     }
 }

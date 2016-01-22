@@ -2,14 +2,23 @@
 
 import _ from 'lodash';
 import Promise from 'bluebird';
+import config from 'config';
 
 import Provider from '../provider/provider';
 import Metrics from '../utils/MetricsUtils';
 
 const provider = new Provider();
 
-const filePath = __dirname.replace('components', '') + '/metrics/ContextManager.txt';
-const metrics = new Metrics(filePath);
+let debug = false;
+if (config.has('debug')) {
+    debug = config.get('debug');
+}
+
+let metrics = null;
+if (debug) {
+    const filePath = __dirname.replace('components', '') + '/metrics/ContextManager.txt';
+    metrics = new Metrics(filePath);
+}
 
 /**
  * ContextManager
@@ -31,7 +40,7 @@ export default class {
      * @returns {Promise|Request|Promise.<T>} The decorated CDT
      */
     getDecoratedCdt (context) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return this
             //merge the CDT full description with the values from the user's context
             ._mergeCdtAndContext(context)
@@ -58,8 +67,10 @@ export default class {
                     })
             })
             .finally(() => {
-                metrics.record('getDecoratedCdt', startTime, Date.now());
-                metrics.saveResults();
+                if (debug) {
+                    metrics.record('getDecoratedCdt', startTime);
+                    metrics.saveResults();
+                }
             });
     }
 
@@ -70,12 +81,14 @@ export default class {
      * @private
      */
     _mergeCdtAndContext (context) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return new Promise ((resolve, reject) => {
             provider
                 .getCdt(context._id)
                 .then(cdt => {
-                    metrics.record('getCdt', startTime, Date.now());
+                    if (debug) {
+                        metrics.record('getCdt', startTime);
+                    }
                     //check if the related CDT is found
                     if (!_.isNull(cdt)) {
                         let mergedCdt = [];
@@ -118,7 +131,9 @@ export default class {
                     reject(err);
                 })
                 .finally(() => {
-                    metrics.record('mergeCdtAndContext', startTime, Date.now());
+                    if (debug) {
+                        metrics.record('mergeCdtAndContext', startTime);
+                    }
                 });
         });
     }
@@ -185,7 +200,7 @@ export default class {
      * @private
      */
     _getFilterNodes (idCdt, mergedCdt) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return this
             ._getNodes('filter', mergedCdt, false)
             .then(filter => {
@@ -195,7 +210,9 @@ export default class {
                 return _.concat(filter, descendants);
             })
             .finally(() => {
-                metrics.record('getFilterNodes', startTime, Date.now());
+                if (debug) {
+                    metrics.record('getFilterNodes', startTime);
+                }
             });
     }
 
@@ -207,7 +224,7 @@ export default class {
      * @private
      */
     _getRankingNodes (idCdt, mergedCdt) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return this
             ._getNodes('ranking', mergedCdt, false)
             .then(ranking => {
@@ -217,7 +234,9 @@ export default class {
                 return _.concat(ranking, descendants);
             })
             .finally(() => {
-                metrics.record('getRankingNodes', startTime, Date.now());
+                if (debug) {
+                    metrics.record('getRankingNodes', startTime);
+                }
             });
     }
 
@@ -228,7 +247,7 @@ export default class {
      * @private
      */
     _getParameterNodes (mergedCdt) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return Promise
             .join(
                 this._getNodes('parameter', mergedCdt, false),
@@ -237,7 +256,9 @@ export default class {
                     return _.concat(parameterNodes, specificNodes);
                 })
             .finally(() => {
-                metrics.record('getParameterNodes', startTime, Date.now());
+                if (debug) {
+                    metrics.record('getParameterNodes', startTime);
+                }
             });
     }
 
@@ -249,11 +270,13 @@ export default class {
      * @private
      */
     _getSpecificNodes (mergedCdt) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return this
             ._getNodes('ranking', mergedCdt, true)
             .finally(() => {
-                metrics.record('getSpecificNodes', startTime, Date.now());
+                if (debug) {
+                    metrics.record('getSpecificNodes', startTime);
+                }
             });
     }
 
@@ -355,13 +378,15 @@ export default class {
      * @private
      */
     _getInterestTopic (mergedCdt) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return new Promise((resolve, reject) => {
             let context = mergedCdt.context;
             if (!_.isEmpty(context)) {
                 let r = _.find(context, {dimension: 'InterestTopic'});
                 if (!_.isUndefined(r)) {
-                    metrics.record('getInterestTopic', startTime, Date.now());
+                    if (debug) {
+                        metrics.record('getInterestTopic', startTime);
+                    }
                     resolve(r.value);
                 } else {
                     reject('No interest topic selected');
@@ -379,14 +404,16 @@ export default class {
      * @private
      */
     _getSupportServiceCategories (mergedCdt) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return new Promise (resolve => {
             let support = mergedCdt.support;
             if (!_.isEmpty(support)) {
                 let categories = _.map(_.filter(support, 'category'), s => {
                     return s.category;
                 });
-                metrics.record('getSupportServiceCategories', startTime, Date.now());
+                if (debug) {
+                    metrics.record('getSupportServiceCategories', startTime);
+                }
                 resolve(categories);
             } else {
                 resolve();
@@ -401,14 +428,16 @@ export default class {
      * @private
      */
     _getSupportServiceNames (mergedCdt) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return new Promise (resolve => {
             let support = mergedCdt.support;
             if (!_.isEmpty(support)) {
                 let names = _.map(_.filter(support, 'name' && 'operation'), s => {
                     return s;
                 });
-                metrics.record('getSupportServiceNames', startTime, Date.now());
+                if (debug) {
+                    metrics.record('getSupportServiceNames', startTime);
+                }
                 resolve(names);
             } else {
                 resolve();
@@ -425,7 +454,7 @@ export default class {
      * @private
      */
     _getDescendants (idCDT, nodes) {
-        const startTime = Date.now();
+        const startTime = process.hrtime();
         return new Promise ((resolve, reject) => {
             //check if the CDT identifier is defined
             if (_.isUndefined(idCDT)) {
@@ -452,7 +481,9 @@ export default class {
                     resolve(output);
                 })
                 .finally(() => {
-                    metrics.record('getDescendants', startTime, Date.now());
+                    if (debug) {
+                        metrics.record('getDescendants', startTime);
+                    }
                 });
         });
     }

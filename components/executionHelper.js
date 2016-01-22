@@ -8,6 +8,7 @@ import QueryHandler from './queryHandler';
 import SupportService from './supportServiceSelection';
 import ResponseAggregator from './responseAggregator';
 import Metrics from '../utils/MetricsUtils';
+import config from 'config';
 
 const contextManager = new ContextManager();
 const primaryService = new PrimaryService();
@@ -15,8 +16,16 @@ const queryHandler = new QueryHandler();
 const supportService = new SupportService();
 const responseAggregator = new ResponseAggregator();
 
-const filePath = __dirname.replace('components', '') + '/metrics/ExecutionHelper.txt';
-const metrics = new Metrics(filePath);
+let debug = false;
+if (config.has('debug')) {
+    debug = config.get('debug');
+}
+
+let metrics = null;
+if (debug) {
+    const filePath = __dirname.replace('components', '') + '/metrics/ExecutionHelper.txt';
+    metrics = new Metrics(filePath);
+}
 
 /**
  * Given a user context, it invokes the components in the correct order, then return the final response
@@ -24,7 +33,7 @@ const metrics = new Metrics(filePath);
  * @returns {Promise|Request|Promise.<T>} The final response
  */
 export function prepareResponse (context) {
-    const start = Date.now();
+    const start = process.hrtime();
     return contextManager
         .getDecoratedCdt(context)
         .then(decoratedCdt => {
@@ -44,8 +53,10 @@ export function prepareResponse (context) {
                 });
         })
         .finally(() => {
-            metrics.record('executionTime', start, Date.now());
-            metrics.saveResults();
+            if (debug) {
+                metrics.record('executionTime', start);
+                metrics.saveResults();
+            }
         });
 }
 
