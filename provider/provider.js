@@ -213,6 +213,8 @@ export default class {
                 }
             ];
             return primaryServiceModel.aggregateAsync(clause);
+        } else {
+            return [];
         }
     }
 

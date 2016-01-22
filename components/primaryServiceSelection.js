@@ -55,34 +55,35 @@ export default class  {
         const startTime = process.hrtime();
         return new Promise(resolve => {
             Promise
-                .props({
+                .join(
                     //search for services associated to the filter nodes
-                    filter: provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.filterNodes),
+                    provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.filterNodes),
                     //search for services associated to the ranking nodes
-                    ranking: provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.rankingNodes),
+                    provider.filterPrimaryServices(decoratedCdt._id, decoratedCdt.rankingNodes),
                     //search for specific associations
-                    specific: this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes)
-                })
-                .then(results => {
+                    this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes)
+                ,(filter, ranking, specific) => {
                     if (debug) {
                         metrics.record('getAssociations', startTime);
                     }
                     //merge the ranking and specific list (specific searches are considered ranking)
-                    results.ranking = _.concat(results.ranking, results.specific);
+                    ranking = _.concat(ranking, specific);
                     //discard the ranking nodes that haven't a correspondence in the filter nodes list
-                    results.ranking = this._intersect(results.filter, results.ranking);
+                    ranking = _.intersectionWith(ranking, filter, (s, i) => {
+                        return s._idOperation.equals(i._idOperation);
+                    });
                     //add the weight values for each item
-                    _.forEach(results.filter, i => {
+                    _.forEach(filter, i => {
                         i['weight'] = this._filterWeight;
                     });
-                    _.forEach(results.ranking, i => {
+                    _.forEach(ranking, i => {
                         i['weight'] = this._rankingWeight;
                     });
                     //calculate the ranking of the merged list
-                    resolve(this._calculateRanking(_.concat(results.filter, results.ranking)));
+                    resolve(this._calculateRanking(_.concat(filter, ranking)));
                 })
                 .catch(e => {
-                    console.log(e);
+                    console.log('[ERROR]' + e);
                     resolve();
                 })
                 .finally(() => {
@@ -176,33 +177,6 @@ export default class  {
             metrics.record('calculateRanking', start);
         }
         return rankedList;
-    }
-
-    /**
-     * Return the intersection of two arrays.
-     * The base item for comparison is the Operation Identifier
-     * @param array1 The first array
-     * @param array2 The second array
-     * @returns {Array} The array intersection of the input ones
-     * @private
-     */
-    _intersect (array1, array2) {
-        if (!_.isUndefined(array1) && !_.isUndefined(array2)) {
-            let first, second;
-            if (array1.length < array2.length) {
-                first = array1;
-                second = array2;
-            } else {
-                first = array2;
-                second = array1;
-            }
-            return _.filter(first, i => {
-                let index = _.findIndex(second, s => {
-                    return s._idOperation.equals(i._idOperation);
-                });
-                return index !== -1;
-            });
-        }
     }
 
     /**

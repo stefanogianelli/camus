@@ -320,9 +320,9 @@ export default class {
                             list[index++] = item;
                         } else if (_.has(item, 'parameters')) {
                             _.forEach(item.parameters, p => {
-                               if (!_.has(p, 'fields')) {
-                                   list[index++] = p;
-                               }
+                                if (!_.has(p, 'fields')) {
+                                    list[index++] = p;
+                                }
                             });
                         }
                     });
@@ -335,7 +335,7 @@ export default class {
                                 dimension: item.dimension || item.name,
                                 value: item.value
                             };
-                        //if the parameter has fields, return them without modifications
+                            //if the parameter has fields, return them without modifications
                         } else if (_.has(item, 'fields')) {
                             return {
                                 dimension: item.name,
