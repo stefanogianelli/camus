@@ -318,14 +318,14 @@ const wrongBasePath = {
 
 const simpleParameters = [
     {
-        dimension: 'CityName',
+        name: 'CityName',
         value: 'Milan'
     }
 ];
 
 const compositeParameters = [
     {
-        dimension: 'CityCoord',
+        name: 'CityCoord',
         fields: [
             {
                 name: 'Longitude',

@@ -268,7 +268,7 @@ export default class {
             let promises = [];
             //check if the node dimension have a specific search associated
             _.forEach(nodes, node => {
-                switch (node.dimension) {
+                switch (node.name) {
                     case 'CityCoord':
                         //load specific coordinates search
                         promises.push(this._searchByCoordinates(idCdt, node));

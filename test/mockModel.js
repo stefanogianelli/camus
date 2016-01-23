@@ -180,39 +180,39 @@ export const decoratedCdt = idCDT => {
         interestTopic: 'Restaurant',
         filterNodes: [
             {
-                dimension: 'InterestTopic',
+                name: 'InterestTopic',
                 value: 'Restaurant'
             },
             {
-                dimension: 'Budget',
+                name: 'Budget',
                 value: 'Low'
             },
             {
-                dimension: 'Transport',
+                name: 'Transport',
                 value: 'PublicTransport'
             },
             {
-                dimension: 'Tipology',
+                name: 'Tipology',
                 value: 'Bus'
             },
             {
-                dimension: 'Tipology',
+                name: 'Tipology',
                 value: 'Train'
             }
         ],
         rankingNodes: [
             {
-                dimension: 'CityName',
+                name: 'CityName',
                 value: 'Chicago'
             },
             {
-                dimension: 'Festivita',
+                name: 'Festivita',
                 value: 'Capodanno'
             }
         ],
         specificNodes: [
             {
-                dimension: 'CityCoord',
+                name: 'CityCoord',
                 fields: [
                     {
                         name: 'Longitude',
@@ -227,23 +227,23 @@ export const decoratedCdt = idCDT => {
         ],
         parameterNodes: [
             {
-                dimension: 'Number',
+                name: 'Number',
                 value: 4
             },
             {
-                dimension: 'Budget',
+                name: 'Budget',
                 value: 'Low'
             },
             {
-                dimension: 'CityName',
+                name: 'CityName',
                 value: 'Chicago'
             },
             {
-                dimension: 'SearchKey',
+                name: 'SearchKey',
                 value: 'restaurantinchicago'
             },
             {
-                dimension: 'CityCoord',
+                name: 'CityCoord',
                 fields: [
                     {
                         name: 'Longitude',

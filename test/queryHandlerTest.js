@@ -82,33 +82,33 @@ const contextForFakeService = idCDT => {
         interestTopic: 'Restaurant',
         filterNodes: [
             {
-                dimension: 'InterestTopic',
+                name: 'InterestTopic',
                 value: 'Restaurant'
             },
             {
-                dimension: 'Budget',
+                name: 'Budget',
                 value: 'Low'
             },
             {
-                dimension: 'Tipology',
+                name: 'Tipology',
                 value: 'DinnerWithFriends'
             },
             {
-                dimension: 'TestServizio',
+                name: 'TestServizio',
                 value: 'TestSenzaRisposta'
             }
         ],
         parameterNodes: [
             {
-                dimension: 'Budget',
+                name: 'Budget',
                 value: 'Low'
             },
             {
-                dimension: 'CityName',
+                name: 'CityName',
                 value: 'Milan'
             },
             {
-                dimension: 'SearchKey',
+                name: 'SearchKey',
                 value: 'restaurantinnewyork'
             }
         ]
@@ -122,7 +122,7 @@ const testBridgeContext = idCDT => {
         interestTopic: 'Restaurant',
         filterNodes: [
             {
-                dimension: 'TestBridge',
+                name: 'TestBridge',
                 value: 'TestBridge'
             }
         ]

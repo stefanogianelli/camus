@@ -164,7 +164,7 @@ export default class extends Bridge {
         let names = name.split('.');
         let obj = {};
         if (names.length > 0) {
-            obj = _.find(nodes, {dimension: names[0]});
+            obj = _.find(nodes, {name: names[0]});
         }
         if (!_.isUndefined(obj)) {
             if (names.length > 1) {

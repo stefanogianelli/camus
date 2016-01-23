@@ -110,7 +110,7 @@ export default class {
                             _id: '$_id',
                             context: {
                                 $push: {
-                                    dimension: '$context.name',
+                                    name: '$context.name',
                                     values: '$context.values'
                                 }
                             }
@@ -145,8 +145,8 @@ export default class {
     /**
      * Retrieve the service descriptions for the requested operations.
      * This schema contains only the requested operations.
-     * @param {ObjectId} idOperations - The list of operation identifiers
-     * @returns {Object[]} Returns the service list with only the requested operations
+     * @param {Array} idOperations - The list of operation identifiers
+     * @returns {Array} Returns the service list with only the requested operations
      */
     getServicesByOperationIds (idOperations) {
         if (!_.isUndefined(idOperations)) {
@@ -190,7 +190,7 @@ export default class {
     /**
      * Search the services that are associated to the specified attributes.
      * These attributes must have this format:
-     * { dimension: 'dimension name', value: 'associated value' }
+     * { name: 'dimension name', value: 'associated value' }
      * @param {ObjectId} idCDT - The CDT identifier
      * @param {Object[]} attributes - The list of filter nodes selected
      * @returns {Object[]} The list of operation id, with ranking and weight, of the found services
@@ -199,7 +199,7 @@ export default class {
         if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
             let associations = _.map(attributes, a => {
                 return {
-                    'associations.dimension': a.dimension,
+                    'associations.dimension': a.name,
                     'associations.value': a.value
                 }
             });
@@ -271,7 +271,7 @@ export default class {
         if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
             let associations = _.map(attributes, a => {
                 return {
-                    'associations.dimension': a.dimension,
+                    'associations.dimension': a.name,
                     'associations.value': a.value
                 }
             });

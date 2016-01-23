@@ -121,7 +121,7 @@ let parameterContext = idCDT => {
         _id: idCDT,
         parameterNodes: [
             {
-                dimension: 'Number',
+                name: 'Number',
                 value: '4'
             }
         ]
@@ -134,23 +134,23 @@ let nestedContext = idCDT => {
         _id: idCDT,
         filterNodes: [
             {
-                dimension: 'a',
+                name: 'a',
                 value: 'b'
             },
             {
-                dimension: 'd',
+                name: 'd',
                 value: 'e'
             },
             {
-                dimension: 'd',
+                name: 'd',
                 value: 'f'
             },
             {
-                dimension: 'g',
+                name: 'g',
                 value: 'h'
             },
             {
-                dimension: 'g',
+                name: 'g',
                 value: 'i'
             }
         ]
@@ -163,27 +163,27 @@ let multipleSonContext = idCDT => {
         _id: idCDT,
         filterNodes: [
             {
-                dimension: 'a',
+                name: 'a',
                 value: 'd'
             },
             {
-                dimension: 'b',
+                name: 'b',
                 value: 'e'
             },
             {
-                dimension: 'g',
+                name: 'g',
                 value: 'i'
             },
             {
-                dimension: 'g',
+                name: 'g',
                 value: 'l'
             },
             {
-                dimension: 'h',
+                name: 'h',
                 value: 'm'
             },
             {
-                dimension: 'h',
+                name: 'h',
                 value: 'n'
             }
         ]
@@ -197,13 +197,13 @@ let decoratedCdt = idCDT => {
         interestTopic: 'Restaurant',
         filterNodes: [
             {
-                dimension: 'InterestTopic',
+                name: 'InterestTopic',
                 value: 'Restaurant'
             }
         ],
         rankingNodes: [
             {
-                dimension: 'Festivita',
+                name: 'Festivita',
                 value: 'Capodanno'
             }
         ]

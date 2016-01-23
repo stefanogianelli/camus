@@ -29,6 +29,7 @@ describe('Component: SupportServiceSelection', () => {
             return supportServiceSelection
                 .selectServices(mockData.decoratedCdt(_idCDT))
                 .then(data => {
+                    console.log(data);
                     assert.equal(data.length, 3);
                     assert.equal(data[0].name, 'Wikipedia');
                     assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={SearchKey}&prop=revisions&rvprop=content&format=json');
@@ -114,21 +115,21 @@ const contextNoSupportName = idCDT => {
         _id: idCDT,
         filterNodes: [
             {
-                dimension: 'Transport',
+                name: 'Transport',
                 value: 'PublicTransport'
             },
             {
-                dimension: 'Tipology',
+                name: 'Tipology',
                 value: 'Bus'
             },
             {
-                dimension: 'Tipology',
+                name: 'Tipology',
                 value: 'Train'
             }
         ],
         parameterNodes: [
             {
-                dimension: 'CityCoord',
+                name: 'CityCoord',
                 fields: [
                     {
                         name: 'Longitude',
@@ -143,7 +144,7 @@ const contextNoSupportName = idCDT => {
         ],
         specificNodes: [
             {
-                dimension: 'CityCoord',
+                name: 'CityCoord',
                 fields: [
                     {
                         name: 'Longitude',
@@ -218,11 +219,11 @@ const contextMultipleSupportServiceCategories = idCDT => {
         interestTopic: 'Restaurant',
         filterNodes: [
             {
-                dimension: 'Transport',
+                name: 'Transport',
                 value: 'WithCar'
             },
             {
-                dimension: 'Tipology',
+                name: 'Tipology',
                 value: 'DinnerWithFriends'
             }
         ],

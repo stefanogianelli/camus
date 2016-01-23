@@ -91,38 +91,19 @@ export default class {
                     }
                     //check if the related CDT is found
                     if (!_.isNull(cdt)) {
-                        let mergedCdt = [];
-                        //merge the dimensions
-                        _.forEach(context.context, c => {
-                            let cdtItem = _.find(cdt.context, {name: c.dimension});
-                            if (!_.isUndefined(cdtItem)) {
-                                let obj = {
-                                    dimension: cdtItem.name,
-                                    for: cdtItem.for
-                                };
-                                //add the context value, if defined
-                                if (_.has(c, 'value')) {
-                                    obj['value'] = c.value;
-                                }
-                                //check if the item have some parameters
-                                if (!_.isUndefined(cdtItem.parameters) && _.has(c, 'parameters')) {
-                                    obj['parameters'] = this._mergeParameters(cdtItem.parameters, c.parameters);
-                                }
-                                mergedCdt.push(obj);
-                            }
-                        });
+                        //create the map of user context values
+                        let mapContext = this._createMap(context.context);
+                        //merging the CDT description with the user context
+                        let mergedCdt = this._mergeObjects(cdt.context, mapContext);
+                        //create the final object
+                        let obj = {
+                            _id: cdt._id,
+                            context: mergedCdt
+                        };
                         if (_.has(context, 'support')) {
-                            resolve({
-                                _id: cdt._id,
-                                context: mergedCdt,
-                                support: context.support
-                            });
-                        } else {
-                            resolve({
-                                _id: cdt._id,
-                                context: mergedCdt
-                            });
+                            obj.support = context.support;
                         }
+                        resolve(obj);
                     } else {
                         reject('No CDT found. Check if the ID is correct');
                     }
@@ -139,57 +120,100 @@ export default class {
     }
 
     /**
-     * Merge the parameters of a single parameter
-     * @param cdtParameters The CDT's parameters
-     * @param contextParameters The context's parameters
-     * @returns {Array} The merged parameters
+     * Create a map of the user's context values
+     * @param {Array} list - The user context
+     * @returns {Map} The map with all the active selection made by the user
      * @private
      */
-    _mergeParameters (cdtParameters, contextParameters) {
-        let parameters = [];
-        _.forEach(contextParameters, p => {
-            let cdtParam = _.find(cdtParameters, {name: p.name});
-            if (!_.isUndefined(cdtParam)) {
-                let obj = {
-                    name: cdtParam.name
-                };
-                if (!_.isUndefined(cdtParam.type)) {
-                    obj['type'] = cdtParam.type;
+    _createMap (list) {
+        let map = new Map();
+        list.forEach (item => {
+            if (_.has(item, 'dimension') && _.has(item, 'value')) {
+                if (!map.has(item.dimension)) {
+                    map.set(item.dimension, item.value);
                 }
-                if (_.has(p, 'value')) {
-                    obj['value'] = p.value;
-                }
-                if (!_.isUndefined(cdtParam.fields) && _.has(p, 'fields')) {
-                    obj['fields'] = this._mergeFields(cdtParam.fields, p.fields);
-                }
-                parameters.push(obj);
+            }
+            if (_.has(item, 'parameters')) {
+                item.parameters.forEach(param => {
+                    if (_.has(param, 'name') && _.has(param, 'value')) {
+                        if (!map.has(param.name)) {
+                            map.set(param.name, param.value);
+                        }
+                    }
+                    if (_.has(param, 'fields')) {
+                        param.fields.forEach(field => {
+                           if (_.has(field, 'name') && _.has(field, 'value')) {
+                               if (!map.has(field.name)) {
+                                   map.set(field.name, field.value);
+                               }
+                           }
+                        });
+                    }
+                });
             }
         });
-        return parameters;
+        return map;
     }
 
     /**
-     * Merge the field of a single parameter
-     * @param cdtFields The CDT's fields
-     * @param contextFields The context's fields
-     * @returns {Array} The merged fields
+     * Merge the CDT description with the user's context values
+     * @param {Array} list - The list of CDT items (context, parameter, field)
+     * @param {Map} map - The map containing the user's context
+     * @returns {Array} The merged list of CDT items
      * @private
      */
-    _mergeFields (cdtFields, contextFields) {
-        let fields = [];
-        _.forEach(contextFields, f => {
-            let cdtField = _.find(cdtFields, {name: f.name});
-            if (!_.isUndefined(cdtField)) {
-                let obj = {
-                    name: cdtField.name
-                };
-                if (_.has(f, 'value')) {
-                    obj['value'] = f.value;
+    _mergeObjects (list, map) {
+        let output = [];
+        list.forEach(item => {
+            let addObject = false;
+            //get the dimension name
+            let dim = item.dimension || item.name;
+            //acquire the value from the user context, if exists
+            let value = undefined;
+            if (map.has(dim)) {
+                value = map.get(dim);
+                addObject = true;
+            }
+            //check if the item has parameters
+            let parameters = [];
+            if (!_.isEmpty(item.parameters)) {
+                parameters = this._mergeObjects(item.parameters, map);
+                if (!_.isEmpty(parameters)) {
+                    addObject = true;
                 }
-                fields.push(obj);
+            }
+            //check if the item has fields
+            let fields = [];
+            if (!_.isEmpty(item.fields)) {
+                fields = this._mergeObjects(item.fields, map);
+                if (!_.isEmpty(fields)) {
+                    addObject = true;
+                }
+            }
+            //create the resultant object
+            if (addObject) {
+                let obj = {
+                    name: dim
+                };
+                if (_.has(item, 'for')) {
+                    obj.for = item.for;
+                }
+                if (_.has(item, 'parents')) {
+                    obj.parents = item.parents;
+                }
+                if (!_.isUndefined(value)) {
+                    obj.value = value;
+                }
+                if (!_.isEmpty(parameters)) {
+                    obj.parameters = parameters;
+                }
+                if (!_.isEmpty(fields)) {
+                    obj.fields = fields;
+                }
+                output.push(obj);
             }
         });
-        return fields;
+        return output;
     }
 
     /**
@@ -332,13 +356,13 @@ export default class {
                         //return the value
                         if (_.has(item, 'value')) {
                             return {
-                                dimension: item.dimension || item.name,
+                                name: item.dimension || item.name,
                                 value: item.value
                             };
                             //if the parameter has fields, return them without modifications
                         } else if (_.has(item, 'fields')) {
                             return {
-                                dimension: item.name,
+                                name: item.name,
                                 fields: item.fields
                             };
                         }
@@ -382,7 +406,7 @@ export default class {
         return new Promise((resolve, reject) => {
             let context = mergedCdt.context;
             if (!_.isEmpty(context)) {
-                let r = _.find(context, {dimension: 'InterestTopic'});
+                let r = _.find(context, {name: 'InterestTopic'});
                 if (!_.isUndefined(r)) {
                     if (debug) {
                         metrics.record('getInterestTopic', startTime);
@@ -450,7 +474,7 @@ export default class {
      * These nodes must have at least the 'value' attribute defined.
      * @param idCDT The CDT identifier
      * @param nodes The parent nodes
-     * @returns {*} The list of son nodes, formatted in dimension and value
+     * @returns {*} The list of son nodes, formatted in name and value
      * @private
      */
     _getDescendants (idCDT, nodes) {
@@ -472,7 +496,7 @@ export default class {
                         _.forEach(results[0].context, c => {
                             _.forEach(c.values, v => {
                                 output.push({
-                                    dimension: c.dimension,
+                                    name: c.name,
                                     value: v
                                 });
                             });

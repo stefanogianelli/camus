@@ -31,47 +31,47 @@ describe('Component: ContextManager', () => {
     describe('#getDecoratedCdt()', () => {
         it('check if correct decorated CDT is generated', () => {
             return contextManager
-                .getDecoratedCdt(mergedCdt(_idCDT))
+                .getDecoratedCdt(context(_idCDT))
                 .then(data => {
                     assert.equal(data.interestTopic, 'Restaurant');
                     //filter nodes
                     assert.equal(data.filterNodes.length, 5);
-                    assert.equal(data.filterNodes[0].dimension, 'InterestTopic');
+                    assert.equal(data.filterNodes[0].name, 'InterestTopic');
                     assert.equal(data.filterNodes[0].value, 'Restaurant');
-                    assert.equal(data.filterNodes[1].dimension, 'Budget');
+                    assert.equal(data.filterNodes[1].name, 'Budget');
                     assert.equal(data.filterNodes[1].value, 'Low');
-                    assert.equal(data.filterNodes[2].dimension, 'Transport');
+                    assert.equal(data.filterNodes[2].name, 'Transport');
                     assert.equal(data.filterNodes[2].value, 'PublicTransport');
-                    assert.equal(data.filterNodes[3].dimension, 'Tipology');
+                    assert.equal(data.filterNodes[3].name, 'Tipology');
                     assert.equal(data.filterNodes[3].value, 'Bus');
-                    assert.equal(data.filterNodes[4].dimension, 'Tipology');
+                    assert.equal(data.filterNodes[4].name, 'Tipology');
                     assert.equal(data.filterNodes[4].value, 'Train');
                     //ranking nodes
                     assert.equal(data.rankingNodes.length, 2);
-                    assert.equal(data.rankingNodes[0].dimension, 'CityName');
-                    assert.equal(data.rankingNodes[0].value, 'Milan');
-                    assert.equal(data.rankingNodes[1].dimension, 'Festivita');
-                    assert.equal(data.rankingNodes[1].value, 'Capodanno');
+                    assert.equal(data.rankingNodes[0].name, 'Festivita');
+                    assert.equal(data.rankingNodes[0].value, 'Capodanno');
+                    assert.equal(data.rankingNodes[1].name, 'CityName');
+                    assert.equal(data.rankingNodes[1].value, 'Milan');
                     //specific nodes
                     assert.equal(data.specificNodes.length, 1);
-                    assert.equal(data.specificNodes[0].dimension, 'CityCoord');
-                    assert.equal(data.specificNodes[0].fields[0].name, 'Longitude');
-                    assert.equal(data.specificNodes[0].fields[0].value, '9.234297');
-                    assert.equal(data.specificNodes[0].fields[1].name, 'Latitude');
-                    assert.equal(data.specificNodes[0].fields[1].value, '45.478906');
+                    assert.equal(data.specificNodes[0].name, 'CityCoord');
+                    assert.equal(data.specificNodes[0].fields[0].name, 'Latitude');
+                    assert.equal(data.specificNodes[0].fields[0].value, '45.478906');
+                    assert.equal(data.specificNodes[0].fields[1].name, 'Longitude');
+                    assert.equal(data.specificNodes[0].fields[1].value, '9.234297');
                     //parameter nodes
                     assert.equal(data.parameterNodes.length, 4);
-                    assert.equal(data.parameterNodes[0].dimension, 'CityName');
+                    assert.equal(data.parameterNodes[0].name, 'CityName');
                     assert.equal(data.parameterNodes[0].value, 'Milan');
-                    assert.equal(data.parameterNodes[1].dimension, 'Number');
+                    assert.equal(data.parameterNodes[1].name, 'Number');
                     assert.equal(data.parameterNodes[1].value, 4);
-                    assert.equal(data.parameterNodes[2].dimension, 'Budget');
+                    assert.equal(data.parameterNodes[2].name, 'Budget');
                     assert.equal(data.parameterNodes[2].value, 'Low');
-                    assert.equal(data.parameterNodes[3].dimension, 'CityCoord');
-                    assert.equal(data.parameterNodes[3].fields[0].name, 'Longitude');
-                    assert.equal(data.parameterNodes[3].fields[0].value, '9.234297');
-                    assert.equal(data.parameterNodes[3].fields[1].name, 'Latitude');
-                    assert.equal(data.parameterNodes[3].fields[1].value, '45.478906');
+                    assert.equal(data.parameterNodes[3].name, 'CityCoord');
+                    assert.equal(data.parameterNodes[3].fields[0].name, 'Latitude');
+                    assert.equal(data.parameterNodes[3].fields[0].value, '45.478906');
+                    assert.equal(data.parameterNodes[3].fields[1].name, 'Longitude');
+                    assert.equal(data.parameterNodes[3].fields[1].value, '9.234297');
                     //support service categories
                     assert.equal(data.supportServiceCategories.length, 1);
                     assert.equal(data.supportServiceCategories[0], 'Transport');
@@ -88,18 +88,31 @@ describe('Component: ContextManager', () => {
             return contextManager
                 ._mergeCdtAndContext(context(_idCDT))
                 .then(data => {
-                    assert.equal(data.context[0].dimension, 'Location');
-                    assert.equal(data.context[0].for, 'ranking|parameter');
-                    assert.equal(data.context[0].parameters[0].name, 'CityName');
-                    assert.equal(data.context[0].parameters[0].value, 'Milan');
-                    assert.equal(data.context[0].parameters[1].name, 'CityCoord');
-                    assert.equal(data.context[0].parameters[1].fields[0].name, 'Longitude');
-                    assert.equal(data.context[0].parameters[1].fields[0].value, '9.234297');
-                    assert.equal(data.context[0].parameters[1].fields[1].name, 'Latitude');
-                    assert.equal(data.context[0].parameters[1].fields[1].value, '45.478906');
-                    assert.equal(data.context[1].dimension, 'InterestTopic');
-                    assert.equal(data.context[1].for, 'filter');
-                    assert.equal(data.context[1].value, 'Restaurant');
+                    assert.equal(data.context[0].name, 'InterestTopic');
+                    assert.equal(data.context[0].for, 'filter');
+                    assert.equal(data.context[0].value, 'Restaurant');
+                    assert.equal(data.context[1].name, 'Festivita');
+                    assert.equal(data.context[1].for, 'ranking');
+                    assert.equal(data.context[1].value, 'Capodanno');
+                    assert.equal(data.context[2].name, 'Location');
+                    assert.equal(data.context[2].for, 'ranking|parameter');
+                    assert.equal(data.context[2].parameters[0].name, 'CityName');
+                    assert.equal(data.context[2].parameters[0].value, 'Milan');
+                    assert.equal(data.context[2].parameters[1].name, 'CityCoord');
+                    assert.equal(data.context[2].parameters[1].fields[0].name, 'Latitude');
+                    assert.equal(data.context[2].parameters[1].fields[0].value, '45.478906');
+                    assert.equal(data.context[2].parameters[1].fields[1].name, 'Longitude');
+                    assert.equal(data.context[2].parameters[1].fields[1].value, '9.234297');
+                    assert.equal(data.context[3].name, 'Guests');
+                    assert.equal(data.context[3].for, 'parameter');
+                    assert.equal(data.context[3].parameters[0].name, 'Number');
+                    assert.equal(data.context[3].parameters[0].value, 4);
+                    assert.equal(data.context[4].name, 'Budget');
+                    assert.equal(data.context[4].for, 'filter|parameter');
+                    assert.equal(data.context[4].value, 'Low');
+                    assert.equal(data.context[5].name, 'Transport');
+                    assert.equal(data.context[5].for, 'filter');
+                    assert.equal(data.context[5].value, 'PublicTransport');
                 });
         });
         it('check error when an invalid CDT identifier is provided', () => {
@@ -117,15 +130,15 @@ describe('Component: ContextManager', () => {
                 ._getFilterNodes(_idCDT, mergedCdt(_idCDT).context)
                 .then(results => {
                     assert.equal(results.length, 5);
-                    assert.equal(results[0].dimension, 'InterestTopic');
+                    assert.equal(results[0].name, 'InterestTopic');
                     assert.equal(results[0].value, 'Restaurant');
-                    assert.equal(results[1].dimension, 'Budget');
+                    assert.equal(results[1].name, 'Budget');
                     assert.equal(results[1].value, 'Low');
-                    assert.equal(results[2].dimension, 'Transport');
+                    assert.equal(results[2].name, 'Transport');
                     assert.equal(results[2].value, 'PublicTransport');
-                    assert.equal(results[3].dimension, 'Tipology');
+                    assert.equal(results[3].name, 'Tipology');
                     assert.equal(results[3].value, 'Bus');
-                    assert.equal(results[4].dimension, 'Tipology');
+                    assert.equal(results[4].name, 'Tipology');
                     assert.equal(results[4].value, 'Train');
                 });
         });
@@ -137,9 +150,9 @@ describe('Component: ContextManager', () => {
                 ._getRankingNodes(_idCDT, mergedCdt(_idCDT).context)
                 .then(results => {
                     assert.equal(results.length, 2);
-                    assert.equal(results[0].dimension, 'CityName');
+                    assert.equal(results[0].name, 'CityName');
                     assert.equal(results[0].value, 'Milan');
-                    assert.equal(results[1].dimension, 'Festivita');
+                    assert.equal(results[1].name, 'Festivita');
                     assert.equal(results[1].value, 'Capodanno');
                 });
         });
@@ -151,13 +164,13 @@ describe('Component: ContextManager', () => {
                 ._getParameterNodes(mergedCdt(_idCDT).context)
                 .then(results => {
                     assert.equal(results.length, 4);
-                    assert.equal(results[0].dimension, 'CityName');
+                    assert.equal(results[0].name, 'CityName');
                     assert.equal(results[0].value, 'Milan');
-                    assert.equal(results[1].dimension, 'Number');
+                    assert.equal(results[1].name, 'Number');
                     assert.equal(results[1].value, 4);
-                    assert.equal(results[2].dimension, 'Budget');
+                    assert.equal(results[2].name, 'Budget');
                     assert.equal(results[2].value, 'Low');
-                    assert.equal(results[3].dimension, 'CityCoord');
+                    assert.equal(results[3].name, 'CityCoord');
                     assert.equal(results[3].fields[0].name, 'Longitude');
                     assert.equal(results[3].fields[0].value, '9.234297');
                     assert.equal(results[3].fields[1].name, 'Latitude');
@@ -172,7 +185,7 @@ describe('Component: ContextManager', () => {
                 ._getSpecificNodes(mergedCdt(_idCDT).context)
                 .then(results => {
                     assert.equal(results.length, 1);
-                    assert.equal(results[0].dimension, 'CityCoord');
+                    assert.equal(results[0].name, 'CityCoord');
                     assert.equal(results[0].fields[0].name, 'Longitude');
                     assert.equal(results[0].fields[0].value, '9.234297');
                     assert.equal(results[0].fields[1].name, 'Latitude');
@@ -337,9 +350,9 @@ describe('Component: ContextManager', () => {
                 ._getDescendants(_idCDT, {value: 'PublicTransport'})
                 .then(nodes => {
                     assert.equal(nodes.length, 2);
-                    assert.equal(nodes[0].dimension, 'Tipology');
+                    assert.equal(nodes[0].name, 'Tipology');
                     assert.equal(nodes[0].value, 'Bus');
-                    assert.equal(nodes[1].dimension, 'Tipology');
+                    assert.equal(nodes[1].name, 'Tipology');
                     assert.equal(nodes[1].value, 'Train');
                 });
         });
@@ -347,13 +360,13 @@ describe('Component: ContextManager', () => {
             return contextManager
                 ._getDescendants(_nestedCDT, {value: 'b'})
                 .then(nodes => {
-                    assert.equal(nodes[0].dimension, 'd');
+                    assert.equal(nodes[0].name, 'd');
                     assert.equal(nodes[0].value, 'e');
-                    assert.equal(nodes[1].dimension, 'd');
+                    assert.equal(nodes[1].name, 'd');
                     assert.equal(nodes[1].value, 'f');
-                    assert.equal(nodes[2].dimension, 'g');
+                    assert.equal(nodes[2].name, 'g');
                     assert.equal(nodes[2].value, 'h');
-                    assert.equal(nodes[3].dimension, 'g');
+                    assert.equal(nodes[3].name, 'g');
                     assert.equal(nodes[3].value, 'i');
                 });
         });
@@ -361,13 +374,13 @@ describe('Component: ContextManager', () => {
             return contextManager
                 ._getDescendants(_multipleSonsCDT, [{value: 'd'}, {value: 'e'}])
                 .then(nodes => {
-                    assert.equal(nodes[0].dimension, 'g');
+                    assert.equal(nodes[0].name, 'g');
                     assert.equal(nodes[0].value, 'i');
-                    assert.equal(nodes[1].dimension, 'g');
+                    assert.equal(nodes[1].name, 'g');
                     assert.equal(nodes[1].value, 'l');
-                    assert.equal(nodes[2].dimension, 'h');
+                    assert.equal(nodes[2].name, 'h');
                     assert.equal(nodes[2].value, 'm');
-                    assert.equal(nodes[3].dimension, 'h');
+                    assert.equal(nodes[3].name, 'h');
                     assert.equal(nodes[3].value, 'n');
                 });
         });
@@ -475,6 +488,40 @@ let context = idCDT => {
             {
                 dimension: 'InterestTopic',
                 value: 'Restaurant'
+            },
+            {
+                dimension: 'Festivita',
+                value: 'Capodanno'
+            },
+            {
+                dimension: 'InterestTopic',
+                value: 'Restaurant'
+            },
+            {
+                dimension: 'Guests',
+                parameters: [
+                    {
+                        name: 'Number',
+                        value: 4
+                    }
+                ]
+            },
+            {
+                dimension: 'Budget',
+                value: 'Low'
+            },
+            {
+                dimension: 'Transport',
+                value: 'PublicTransport'
+            }
+        ],
+        support: [
+            {
+                category: 'Transport'
+            },
+            {
+                name: 'Wikipedia',
+                operation: 'search'
             }
         ]
     }
@@ -486,7 +533,7 @@ let mergedCdt = idCDT => {
         _id: idCDT,
         context: [
             {
-                dimension: 'Location',
+                name: 'Location',
                 for: 'ranking|parameter',
                 parameters: [
                     {
@@ -509,17 +556,17 @@ let mergedCdt = idCDT => {
                 ]
             },
             {
-                dimension: 'Festivita',
+                name: 'Festivita',
                 for: 'ranking',
                 value: 'Capodanno'
             },
             {
-                dimension: 'InterestTopic',
+                name: 'InterestTopic',
                 for: 'filter',
                 value: 'Restaurant'
             },
             {
-                dimension: 'Guests',
+                name: 'Guests',
                 for: 'parameter',
                 parameters: [
                     {
@@ -529,12 +576,12 @@ let mergedCdt = idCDT => {
                 ]
             },
             {
-                dimension: 'Budget',
+                name: 'Budget',
                 for: 'filter|parameter',
                 value: 'Low'
             },
             {
-                dimension: 'Transport',
+                name: 'Transport',
                 for: 'filter',
                 value: 'PublicTransport'
             }
