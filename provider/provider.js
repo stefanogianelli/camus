@@ -86,43 +86,6 @@ export default class {
     }
 
     /**
-     * Create the list of descendant nodes of the specified nodes.
-     * These nodes must have the 'value' attribute defined
-     * @param {ObjectId} idCDT - The CDT identifier
-     * @param {Array} nodes - The node or the list of nodes
-     * @returns {Array} The list of son nodes
-     */
-    getNodeDescendants (idCDT, nodes) {
-        if (!_.isUndefined(idCDT) && !_.isUndefined(nodes) && !_.isEmpty(nodes)) {
-            //adapt the inputs for the search
-            if (!_.isArray(nodes)) {
-                nodes = _.toArray(nodes);
-            } else {
-                nodes = _.map(nodes, 'value');
-            }
-            return cdtModel
-                .aggregateAsync(
-                    {$match: {_id: idCDT}},
-                    {$unwind: '$context'},
-                    {$match: {'context.parents': {$in: nodes}}},
-                    {
-                        $group: {
-                            _id: '$_id',
-                            context: {
-                                $push: {
-                                    name: '$context.name',
-                                    values: '$context.values'
-                                }
-                            }
-                        }
-                    }
-                );
-        } else {
-            return [];
-        }
-    }
-
-    /**
      * -------------------------------------
      * SERVICE DESCRIPTION METHODS
      * -------------------------------------

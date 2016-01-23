@@ -5,6 +5,7 @@ import Promise from 'bluebird';
 
 import ContextManager from '../components/contextManager';
 import MockDatabase from './mockDatabaseCreator';
+import * as mockModel from './mockModel';
 import Provider from '../provider/provider';
 
 const contextManager = new ContextManager();
@@ -87,32 +88,32 @@ describe('Component: ContextManager', () => {
         it('check if a CDT and a context are correctly merged', () => {
             return contextManager
                 ._mergeCdtAndContext(context(_idCDT))
-                .then(data => {
-                    assert.equal(data.context[0].name, 'InterestTopic');
-                    assert.equal(data.context[0].for, 'filter');
-                    assert.equal(data.context[0].value, 'Restaurant');
-                    assert.equal(data.context[1].name, 'Festivita');
-                    assert.equal(data.context[1].for, 'ranking');
-                    assert.equal(data.context[1].value, 'Capodanno');
-                    assert.equal(data.context[2].name, 'Location');
-                    assert.equal(data.context[2].for, 'ranking|parameter');
-                    assert.equal(data.context[2].parameters[0].name, 'CityName');
-                    assert.equal(data.context[2].parameters[0].value, 'Milan');
-                    assert.equal(data.context[2].parameters[1].name, 'CityCoord');
-                    assert.equal(data.context[2].parameters[1].fields[0].name, 'Latitude');
-                    assert.equal(data.context[2].parameters[1].fields[0].value, '45.478906');
-                    assert.equal(data.context[2].parameters[1].fields[1].name, 'Longitude');
-                    assert.equal(data.context[2].parameters[1].fields[1].value, '9.234297');
-                    assert.equal(data.context[3].name, 'Guests');
-                    assert.equal(data.context[3].for, 'parameter');
-                    assert.equal(data.context[3].parameters[0].name, 'Number');
-                    assert.equal(data.context[3].parameters[0].value, 4);
-                    assert.equal(data.context[4].name, 'Budget');
-                    assert.equal(data.context[4].for, 'filter|parameter');
-                    assert.equal(data.context[4].value, 'Low');
-                    assert.equal(data.context[5].name, 'Transport');
-                    assert.equal(data.context[5].for, 'filter');
-                    assert.equal(data.context[5].value, 'PublicTransport');
+                .then(({cdt, mergedCdt}) => {
+                    assert.equal(mergedCdt.context[0].name, 'InterestTopic');
+                    assert.equal(mergedCdt.context[0].for, 'filter');
+                    assert.equal(mergedCdt.context[0].value, 'Restaurant');
+                    assert.equal(mergedCdt.context[1].name, 'Festivita');
+                    assert.equal(mergedCdt.context[1].for, 'ranking');
+                    assert.equal(mergedCdt.context[1].value, 'Capodanno');
+                    assert.equal(mergedCdt.context[2].name, 'Location');
+                    assert.equal(mergedCdt.context[2].for, 'ranking|parameter');
+                    assert.equal(mergedCdt.context[2].parameters[0].name, 'CityName');
+                    assert.equal(mergedCdt.context[2].parameters[0].value, 'Milan');
+                    assert.equal(mergedCdt.context[2].parameters[1].name, 'CityCoord');
+                    assert.equal(mergedCdt.context[2].parameters[1].fields[0].name, 'Latitude');
+                    assert.equal(mergedCdt.context[2].parameters[1].fields[0].value, '45.478906');
+                    assert.equal(mergedCdt.context[2].parameters[1].fields[1].name, 'Longitude');
+                    assert.equal(mergedCdt.context[2].parameters[1].fields[1].value, '9.234297');
+                    assert.equal(mergedCdt.context[3].name, 'Guests');
+                    assert.equal(mergedCdt.context[3].for, 'parameter');
+                    assert.equal(mergedCdt.context[3].parameters[0].name, 'Number');
+                    assert.equal(mergedCdt.context[3].parameters[0].value, 4);
+                    assert.equal(mergedCdt.context[4].name, 'Budget');
+                    assert.equal(mergedCdt.context[4].for, 'filter|parameter');
+                    assert.equal(mergedCdt.context[4].value, 'Low');
+                    assert.equal(mergedCdt.context[5].name, 'Transport');
+                    assert.equal(mergedCdt.context[5].for, 'filter');
+                    assert.equal(mergedCdt.context[5].value, 'PublicTransport');
                 });
         });
         it('check error when an invalid CDT identifier is provided', () => {
@@ -129,17 +130,13 @@ describe('Component: ContextManager', () => {
             return contextManager
                 ._getFilterNodes(_idCDT, mergedCdt(_idCDT).context)
                 .then(results => {
-                    assert.equal(results.length, 5);
+                    assert.equal(results.length, 3);
                     assert.equal(results[0].name, 'InterestTopic');
                     assert.equal(results[0].value, 'Restaurant');
                     assert.equal(results[1].name, 'Budget');
                     assert.equal(results[1].value, 'Low');
                     assert.equal(results[2].name, 'Transport');
                     assert.equal(results[2].value, 'PublicTransport');
-                    assert.equal(results[3].name, 'Tipology');
-                    assert.equal(results[3].value, 'Bus');
-                    assert.equal(results[4].name, 'Tipology');
-                    assert.equal(results[4].value, 'Train');
                 });
         });
     });
@@ -346,64 +343,38 @@ describe('Component: ContextManager', () => {
 
     describe('#getDescendants()', () => {
         it('check if correct descendants are returned', () => {
-            return contextManager
-                ._getDescendants(_idCDT, {value: 'PublicTransport'})
-                .then(nodes => {
-                    assert.equal(nodes.length, 2);
-                    assert.equal(nodes[0].name, 'Tipology');
-                    assert.equal(nodes[0].value, 'Bus');
-                    assert.equal(nodes[1].name, 'Tipology');
-                    assert.equal(nodes[1].value, 'Train');
-                });
+            const nodes = contextManager._getDescendants(mockModel.cdt, [{value: 'PublicTransport'}]);
+            assert.equal(nodes.length, 2);
+            assert.equal(nodes[0].name, 'Tipology');
+            assert.equal(nodes[0].value, 'Bus');
+            assert.equal(nodes[1].name, 'Tipology');
+            assert.equal(nodes[1].value, 'Train');
         });
         it('check if correct nested descendants are returned', () => {
-            return contextManager
-                ._getDescendants(_nestedCDT, {value: 'b'})
-                .then(nodes => {
-                    assert.equal(nodes[0].name, 'd');
-                    assert.equal(nodes[0].value, 'e');
-                    assert.equal(nodes[1].name, 'd');
-                    assert.equal(nodes[1].value, 'f');
-                    assert.equal(nodes[2].name, 'g');
-                    assert.equal(nodes[2].value, 'h');
-                    assert.equal(nodes[3].name, 'g');
-                    assert.equal(nodes[3].value, 'i');
-                });
+            const nodes = contextManager._getDescendants(mockModel.nestedCdt, [{value: 'b'}]);
+            assert.equal(nodes[0].name, 'd');
+            assert.equal(nodes[0].value, 'e');
+            assert.equal(nodes[1].name, 'd');
+            assert.equal(nodes[1].value, 'f');
+            assert.equal(nodes[2].name, 'g');
+            assert.equal(nodes[2].value, 'h');
+            assert.equal(nodes[3].name, 'g');
+            assert.equal(nodes[3].value, 'i');
         });
         it('check if correct multiple descendants are returned', () => {
-            return contextManager
-                ._getDescendants(_multipleSonsCDT, [{value: 'd'}, {value: 'e'}])
-                .then(nodes => {
-                    assert.equal(nodes[0].name, 'g');
-                    assert.equal(nodes[0].value, 'i');
-                    assert.equal(nodes[1].name, 'g');
-                    assert.equal(nodes[1].value, 'l');
-                    assert.equal(nodes[2].name, 'h');
-                    assert.equal(nodes[2].value, 'm');
-                    assert.equal(nodes[3].name, 'h');
-                    assert.equal(nodes[3].value, 'n');
-                });
+            const nodes = contextManager._getDescendants(mockModel.multipleSonsCdt, [{value: 'd'}, {value: 'e'}]);
+            assert.equal(nodes[0].name, 'g');
+            assert.equal(nodes[0].value, 'i');
+            assert.equal(nodes[1].name, 'g');
+            assert.equal(nodes[1].value, 'l');
+            assert.equal(nodes[2].name, 'h');
+            assert.equal(nodes[2].value, 'm');
+            assert.equal(nodes[3].name, 'h');
+            assert.equal(nodes[3].value, 'n');
         });
-        it('check empty list in output when an invalid CDT identifier is provided', () => {
-            return contextManager
-                ._getDescendants(1, {value: 'PublicTransport'})
-                .then(nodes => {
-                    assert.equal(nodes.length, 0);
-                });
-        });
-        it('check empty list in output when an empty node name', () => {
-            return contextManager
-                ._getDescendants(_idCDT, null)
-                .then(nodes => {
-                    assert.equal(nodes.length, 0);
-                });
-        });
-        it('check error with empty CDT identifier', () => {
-            return contextManager
-                ._getDescendants()
-                .catch(e => {
-                    assert.equal(e, 'CDT identifier not defined');
-                });
+        it('check empty list in output when no nodes are specified', () => {
+            const nodes = contextManager._getDescendants(mockModel.cdt, []);
+            assert.equal(nodes.length, 0);
         });
     });
 

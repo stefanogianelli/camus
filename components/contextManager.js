@@ -44,27 +44,40 @@ export default class {
         return this
             //merge the CDT full description with the values from the user's context
             ._mergeCdtAndContext(context)
-            .then(mergedCdt => {
-                //find the filter nodes (plus their respective descendants)
+            .then(({cdt, mergedCdt}) => {
                 return Promise
-                    .props({
+                    .join(
                         //get the interest topic
-                        interestTopic: this._getInterestTopic(mergedCdt),
-                        //find the filter nodes (plus their respective descendants)
-                        filterNodes: this._getFilterNodes(mergedCdt._id, mergedCdt.context),
-                        //find the ranking nodes (plus their respective descendants)
-                        rankingNodes: this._getRankingNodes(mergedCdt._id, mergedCdt.context),
+                        this._getInterestTopic(mergedCdt),
+                        //find the filter nodes
+                        this._getFilterNodes(mergedCdt._id, mergedCdt.context),
+                        //find the ranking nodes
+                        this._getRankingNodes(mergedCdt._id, mergedCdt.context),
                         //find the specific nodes
-                        specificNodes: this._getSpecificNodes(mergedCdt.context),
+                        this._getSpecificNodes(mergedCdt.context),
                         //find the parameter nodes
-                        parameterNodes: this._getParameterNodes(mergedCdt.context),
+                        this._getParameterNodes(mergedCdt.context),
                         //find the support service categories requested
-                        supportServiceCategories: this._getSupportServiceCategories(mergedCdt),
+                        this._getSupportServiceCategories(mergedCdt),
                         //find the support service names and operations requested
-                        supportServiceNames: this._getSupportServiceNames(mergedCdt),
-                        //add the CDT identifier
-                        _id: mergedCdt._id
-                    })
+                        this._getSupportServiceNames(mergedCdt),
+                        (interestTopic, filterNodes, rankingNodes, specificNodes, parameterNodes, supportServiceCategories, supportServiceNames) => {
+                            //acquire the descendants of the selected filter nodes
+                            filterNodes = _.concat(filterNodes, this._getDescendants(cdt, filterNodes));
+                            //acquire the descendants of the selected ranking nodes
+                            rankingNodes = _.concat(rankingNodes, this._getDescendants(cdt, rankingNodes));
+                            return {
+                                interestTopic: interestTopic,
+                                filterNodes: filterNodes,
+                                rankingNodes: rankingNodes,
+                                specificNodes: specificNodes,
+                                parameterNodes: parameterNodes,
+                                supportServiceCategories: supportServiceCategories,
+                                supportServiceNames: supportServiceNames,
+                                _id: mergedCdt._id
+                            }
+                        }
+                    )
             })
             .finally(() => {
                 if (debug) {
@@ -95,16 +108,16 @@ export default class {
                         //create the map of user context values
                         let mapContext = this._createMap(context.context);
                         //merging the CDT description with the user context
-                        let mergedCdt = this._mergeObjects(cdt.context, mapContext);
+                        let mergedContext = this._mergeObjects(cdt.context, mapContext);
                         //create the final object
-                        let obj = {
+                        let mergedCdt = {
                             _id: cdt._id,
-                            context: mergedCdt
+                            context: mergedContext
                         };
                         if (_.has(context, 'support')) {
-                            obj.support = context.support;
+                            mergedCdt.support = context.support;
                         }
-                        resolve(obj);
+                        resolve({cdt, mergedCdt});
                     } else {
                         reject('No CDT found. Check if the ID is correct');
                     }
@@ -218,7 +231,7 @@ export default class {
     }
 
     /**
-     * Return the list of filter nodes, plus their descendants
+     * Return the list of filter nodes
      * @param {ObjectId} idCdt - The CDT identifier
      * @param {Object} mergedCdt - The merged CDT
      * @returns {Array} The list of filter nodes
@@ -228,12 +241,6 @@ export default class {
         const startTime = process.hrtime();
         return this
             ._getNodes('filter', mergedCdt, false)
-            .then(filter => {
-                return [filter, this._getDescendants(idCdt, filter)];
-            })
-            .spread((filter, descendants) => {
-                return _.concat(filter, descendants);
-            })
             .finally(() => {
                 if (debug) {
                     metrics.record('getFilterNodes', startTime);
@@ -242,7 +249,7 @@ export default class {
     }
 
     /**
-     * Return the list of ranking nodes, plus their descendants
+     * Return the list of ranking nodes
      * @param {ObjectId} idCdt - The CDT identifier
      * @param {Object} mergedCdt - The merged CDT
      * @returns {Array} The list of ranking nodes
@@ -252,12 +259,6 @@ export default class {
         const startTime = process.hrtime();
         return this
             ._getNodes('ranking', mergedCdt, false)
-            .then(ranking => {
-                return [ranking, this._getDescendants(idCdt, ranking)];
-            })
-            .spread((ranking, descendants) => {
-                return _.concat(ranking, descendants);
-            })
             .finally(() => {
                 if (debug) {
                     metrics.record('getRankingNodes', startTime);
@@ -471,45 +472,28 @@ export default class {
     }
 
     /**
-     * Search all the son nodes of the specified nodes.
-     * These nodes must have at least the 'value' attribute defined.
-     * @param {ObjectId} idCDT The CDT identifier
-     * @param {Array} nodes The parent nodes
-     * @returns {Array} The list of son nodes, formatted in name and value
+     * Retrieve the list of descendant nodes for the selected list of nodes
+     * @param {Object} cdt - The full CDT description
+     * @param {Array} nodes - The list of nodes found
+     * @returns {Array} The list of descendant nodes
      * @private
      */
-    _getDescendants (idCDT, nodes) {
+    _getDescendants (cdt, nodes) {
         const startTime = process.hrtime();
-        return new Promise ((resolve, reject) => {
-            //check if the CDT identifier is defined
-            if (_.isUndefined(idCDT)) {
-                reject('CDT identifier not defined');
-            }
-            //if the node list is empty return
-            if (_.isUndefined(nodes) || _.isEmpty(nodes)) {
-                resolve([]);
-            }
-            provider
-                .getNodeDescendants(idCDT, nodes)
-                .then(results => {
-                    let output = [];
-                    if (!_.isUndefined(results) && !_.isEmpty(results)) {
-                        _.forEach(results[0].context, c => {
-                            _.forEach(c.values, v => {
-                                output.push({
-                                    name: c.name,
-                                    value: v
-                                });
-                            });
-                        });
-                    }
-                    resolve(output);
-                })
-                .finally(() => {
-                    if (debug) {
-                        metrics.record('getDescendants', startTime);
-                    }
+        let output = [];
+        const nodeValues = _.map(nodes, 'value');
+        cdt.context.forEach(item => {
+            const intersect = _.intersection(item.parents, nodeValues);
+            if (!_.isEmpty(intersect) && _.has(item, 'values')) {
+                item.values.forEach(value => {
+                    output.push({
+                        name: item.name,
+                        value: value
+                    });
                 });
+            }
         });
+        metrics.record('getDescendants', startTime);
+        return output;
     }
 }

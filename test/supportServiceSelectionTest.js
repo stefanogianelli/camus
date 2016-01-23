@@ -29,7 +29,6 @@ describe('Component: SupportServiceSelection', () => {
             return supportServiceSelection
                 .selectServices(mockData.decoratedCdt(_idCDT))
                 .then(data => {
-                    console.log(data);
                     assert.equal(data.length, 3);
                     assert.equal(data[0].name, 'Wikipedia');
                     assert.equal(data[0].url, 'https://en.wikipedia.org/w/api.php?action=query&titles={SearchKey}&prop=revisions&rvprop=content&format=json');
