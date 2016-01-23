@@ -43,7 +43,6 @@ const NodeSchema = new Schema({
     },
     values: [String],
     parameters: [ParameterSchema],
-    forbidden: [String],
     parents: [String],
     parent: String
 });
