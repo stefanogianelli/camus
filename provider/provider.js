@@ -89,8 +89,8 @@ export default class {
      * Create the list of descendant nodes of the specified nodes.
      * These nodes must have the 'value' attribute defined
      * @param {ObjectId} idCDT - The CDT identifier
-     * @param {Object[]} nodes - The node or the list of nodes
-     * @returns {Object[]} The list of son nodes
+     * @param {Array} nodes - The node or the list of nodes
+     * @returns {Array} The list of son nodes
      */
     getNodeDescendants (idCDT, nodes) {
         if (!_.isUndefined(idCDT) && !_.isUndefined(nodes) && !_.isEmpty(nodes)) {
@@ -160,7 +160,7 @@ export default class {
      * Retrieve a service description by it's name and operation name.
      * @param {Object} serviceNames - The object containing the service and operation names.
      * This object must be in form { name: 'service name', operation: 'operation name' }
-     * @returns {Object[]} The service and operation description
+     * @returns {Array} The service and operation description
      */
     getServicesByNames (serviceNames) {
         if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
@@ -192,8 +192,8 @@ export default class {
      * These attributes must have this format:
      * { name: 'dimension name', value: 'associated value' }
      * @param {ObjectId} idCDT - The CDT identifier
-     * @param {Object[]} attributes - The list of filter nodes selected
-     * @returns {Object[]} The list of operation id, with ranking and weight, of the found services
+     * @param {Array} attributes - The list of filter nodes selected
+     * @returns {Array} The list of operation id, with ranking and weight, of the found services
      */
     filterPrimaryServices (idCDT, attributes) {
         if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
@@ -235,7 +235,7 @@ export default class {
      * Search the primary services that are associated near the current position
      * @param {ObjectId} idCdt - The CDT identifier
      * @param {Object} node - The current position node
-     * @returns {Object[]} The list of operation identifiers found
+     * @returns {Array} The list of operation identifiers found
      */
     searchPrimaryByCoordinates (idCdt, node) {
         if (!_.isUndefined(idCdt) && !_.isUndefined(node)) {
@@ -264,8 +264,8 @@ export default class {
      * Search the support services associated to specific attributes
      * @param {ObjectId} idCDT - The CDT identifier
      * @param {String} category - The service category
-     * @param {Object[]} attributes - The list of attributes
-     * @returns {Object[]} The list of services found, with the number of constraints defined for each operation and the count of constraint that are satisfied
+     * @param {Array} attributes - The list of attributes
+     * @returns {Array} The list of services found, with the number of constraints defined for each operation and the count of constraint that are satisfied
      */
     filterSupportServices (idCDT, category, attributes) {
         if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
@@ -310,7 +310,7 @@ export default class {
      * Search the support services that are associated near the current position
      * @param {ObjectId} idCdt - The CDT identifier
      * @param {Object} node - The current position node
-     * @returns {Object[]} The list of operation identifiers found
+     * @returns {Array} The list of operation identifiers found
      */
     searchSupportByCoordinates (idCdt, node) {
         let radius = _radius / 6371;

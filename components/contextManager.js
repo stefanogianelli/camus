@@ -36,8 +36,8 @@ export default class {
      * - parametersNodes: the list of parameter nodes
      * - supportServiceCategories: the list of categories for which retrieve the support services
      * - supportServiceNames: the list of names and operations for selected the correct support services
-     * @param context The user's context
-     * @returns {Promise|Request|Promise.<T>} The decorated CDT
+     * @param {Object} context - The user's context
+     * @returns {Object} The decorated CDT
      */
     getDecoratedCdt (context) {
         const startTime = process.hrtime();
@@ -76,8 +76,9 @@ export default class {
 
     /**
      * Find the current CDT and add values for the dimension and parameters node from the user context
-     * @param context The user context
-     * @returns {bluebird|exports|module.exports} The merged CDT
+     * @param {Object} context - The user context
+     * @returns {Object} The merged CDT
+     * @throws {Error} If the CDT is not found in the database
      * @private
      */
     _mergeCdtAndContext (context) {
@@ -218,9 +219,9 @@ export default class {
 
     /**
      * Return the list of filter nodes, plus their descendants
-     * @param idCdt The CDT identifier
-     * @param mergedCdt The merged CDT
-     * @returns {Function|*} The list of filter nodes
+     * @param {ObjectId} idCdt - The CDT identifier
+     * @param {Object} mergedCdt - The merged CDT
+     * @returns {Array} The list of filter nodes
      * @private
      */
     _getFilterNodes (idCdt, mergedCdt) {
@@ -242,9 +243,9 @@ export default class {
 
     /**
      * Return the list of ranking nodes, plus their descendants
-     * @param idCdt The CDT identifier
-     * @param mergedCdt The merged CDT
-     * @returns {Function|*} The list of ranking nodes
+     * @param {ObjectId} idCdt - The CDT identifier
+     * @param {Object} mergedCdt - The merged CDT
+     * @returns {Array} The list of ranking nodes
      * @private
      */
     _getRankingNodes (idCdt, mergedCdt) {
@@ -266,8 +267,8 @@ export default class {
 
     /**
      * The list of parameter nodes. Are also taken into account the specific nodes
-     * @param mergedCdt The merged CDT
-     * @returns The list of parameter nodes
+     * @param {Object} mergedCdt - The merged CDT
+     * @returns {Array} The list of parameter nodes
      * @private
      */
     _getParameterNodes (mergedCdt) {
@@ -289,8 +290,8 @@ export default class {
     /**
      * Return the list of specific nodes.
      * It assumes that the specific nodes belong to the ranking category
-     * @param mergedCdt The list of items (the merged CDT)
-     * @returns {Promise|Request} The list of specific nodes
+     * @param {Object} mergedCdt The list of items (the merged CDT)
+     * @returns {Array} The list of specific nodes
      * @private
      */
     _getSpecificNodes (mergedCdt) {
@@ -310,10 +311,10 @@ export default class {
      * The parameter attached to a dimension are flattened to the root level.
      * Instead, the internal fields of a parameter are leave as they are.
      * This function doesn't take into account the dimensions that are labelled as specific, except when the specific flag is not set.
-     * @param type The type of nodes
-     * @param items The list of item (the merged CDT)
-     * @param specificFlag If true it searches for specific nodes
-     * @returns {Promise|Request} The list of nodes found
+     * @param {String} type - The type of nodes
+     * @param {Array} items - The list of item (the merged CDT)
+     * @param {Boolean} specificFlag - If true it searches for specific nodes
+     * @returns {Array} The list of nodes found
      * @private
      */
     _getNodes (type, items, specificFlag) {
@@ -397,8 +398,8 @@ export default class {
 
     /**
      * Search the selected interest topic
-     * @param mergedCdt The merged CDT
-     * @returns {bluebird|exports|module.exports} The interest topic name
+     * @param {Object} mergedCdt - The merged CDT
+     * @returns {String} The interest topic name
      * @private
      */
     _getInterestTopic (mergedCdt) {
@@ -423,8 +424,8 @@ export default class {
 
     /**
      * Return the support service categories to be researched
-     * @param mergedCdt The merged CDT
-     * @returns {bluebird|exports|module.exports} The list of categories
+     * @param {Object} mergedCdt - The merged CDT
+     * @returns {Array} The list of categories
      * @private
      */
     _getSupportServiceCategories (mergedCdt) {
@@ -447,8 +448,8 @@ export default class {
 
     /**
      * Return the support service names
-     * @param mergedCdt The merged CDT
-     * @returns {bluebird|exports|module.exports} The list of services name and operation
+     * @param {Object} mergedCdt - The merged CDT
+     * @returns {Array} The list of services name and operation
      * @private
      */
     _getSupportServiceNames (mergedCdt) {
@@ -472,9 +473,9 @@ export default class {
     /**
      * Search all the son nodes of the specified nodes.
      * These nodes must have at least the 'value' attribute defined.
-     * @param idCDT The CDT identifier
-     * @param nodes The parent nodes
-     * @returns {*} The list of son nodes, formatted in name and value
+     * @param {ObjectId} idCDT The CDT identifier
+     * @param {Array} nodes The parent nodes
+     * @returns {Array} The list of son nodes, formatted in name and value
      * @private
      */
     _getDescendants (idCDT, nodes) {
