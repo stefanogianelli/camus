@@ -48,10 +48,10 @@ export default class {
      * This function saves the collected results into the specified file
      */
     saveResults () {
-        let output = '';
+        let output = 'function\ttime\n';
         this._map.forEach((item, key) => {
             item.forEach(time => {
-                output += key + '\t' + time + '\n';
+                output += key + '\t' + time.toString().replace('.', ',') + '\n';
             })
         });
         this._map.clear();
