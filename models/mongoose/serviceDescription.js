@@ -1,6 +1,6 @@
 'use strict';
 
-import  mongoose from 'mongoose';
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
@@ -150,46 +150,6 @@ const serviceDescriptionSchema = new Schema({
     },
     basePath: String,
     operations: [operationSchema]
-});
-
-/**
- * Define the 'findByOperationId' method
- */
-/*serviceDescriptionSchema.static('findByOperationId', function (idOperation, callback) {
-    this
-        .findOne({
-            'operations._id': idOperation
-        },
-        {
-            name: 1,
-            type: 1,
-            protocol: 1,
-            category: 1,
-            basePath: 1,
-            operations: {
-                $elemMatch: {
-                    '_id': idOperation
-                }
-            }
-        }, callback);
-})*/
-serviceDescriptionSchema.static('findByOperationId', function (idOperation, callback) {
-    this
-        .aggregate(
-            {$unwind: '$operations'},
-            {$match: {'operations._id': idOperation}}
-            , callback);
-});
-
-/**
- * Define the 'findByOperationIds' method
- */
-serviceDescriptionSchema.static('findByOperationIds', function (idOperations, callback) {
-    this
-        .aggregate(
-            {$unwind: '$operations'},
-            {$match: {'operations._id': {$in: idOperations}}}
-        , callback);
 });
 
 const serviceDescription = mongoose.model('service_description', serviceDescriptionSchema);

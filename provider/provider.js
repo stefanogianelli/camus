@@ -10,12 +10,6 @@ import serviceModel from '../models/mongoose/serviceDescription';
 import primaryServiceModel from '../models/mongoose/primaryServiceAssociation';
 import supportServiceModel from '../models/mongoose/supportServiceAssociation';
 
-//promisify the models
-Promise.promisifyAll(cdtModel);
-Promise.promisifyAll(serviceModel);
-Promise.promisifyAll(primaryServiceModel);
-Promise.promisifyAll(supportServiceModel);
-
 //radius for the coordinate search
 const _radius = 1500;
 let instance = null;
@@ -80,7 +74,7 @@ export default class {
                     if (err) {
                         reject(err);
                     }
-                    return resolve(result);
+                    resolve(result);
                 });
         });
     }
@@ -98,17 +92,21 @@ export default class {
      * @returns {Object} Returns the service and operation schema
      */
     getServiceByOperationId (idOperation) {
-        if (!_.isUndefined(idOperation)) {
-            return serviceModel
-                .aggregateAsync(
+        return new Promise ((resolve, reject) => {
+            if (!_.isUndefined(idOperation)) {
+                serviceModel.aggregate(
                     {$unwind: '$operations'},
-                    {$match: {'operations._id': idOperation}})
-                .then(results => {
-                    return results[0];
-                })
-        } else {
-            return {};
-        }
+                    {$match: {'operations._id': idOperation}}
+                    ,(err, results) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        resolve(results[0]);
+                    });
+            } else {
+                resolve({});
+            }
+        });
     }
 
     /**
@@ -118,11 +116,21 @@ export default class {
      * @returns {Array} Returns the service list with only the requested operations
      */
     getServicesByOperationIds (idOperations) {
-        if (!_.isUndefined(idOperations)) {
-            return serviceModel.findByOperationIdsAsync(idOperations);
-        } else {
-            return [];
-        }
+        return new Promise ((resolve, reject) => {
+            if (!_.isUndefined(idOperations)) {
+                serviceModel.aggregate(
+                    {$unwind: '$operations'},
+                    {$match: {'operations._id': {$in: idOperations}}}
+                    ,(err, results) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        resolve(results);
+                    });
+            } else {
+                resolve([]);
+            }
+        });
     }
 
     /**
@@ -132,22 +140,29 @@ export default class {
      * @returns {Array} The service and operation description
      */
     getServicesByNames (serviceNames) {
-        if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
-            let whereClause = {
-                $or: []
-            };
-            whereClause.$or = _.map(serviceNames, s => {
-                return {
-                    $and: [{
-                        name: s.name,
-                        'operations.name': s.operation
-                    }]
+        return new Promise ((resolve, reject) => {
+            if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
+                let whereClause = {
+                    $or: []
                 };
-            });
-            return serviceModel.findAsync(whereClause);
-        } else {
-            return [];
-        }
+                whereClause.$or = _.map(serviceNames, s => {
+                    return {
+                        $and: [{
+                            name: s.name,
+                            'operations.name': s.operation
+                        }]
+                    };
+                });
+                serviceModel.find(whereClause, (err, results) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(results);
+                });
+            } else {
+                resolve([]);
+            }
+        });
     }
 
     /**
@@ -165,39 +180,46 @@ export default class {
      * @returns {Array} The list of operation id, with ranking and weight, of the found services
      */
     filterPrimaryServices (idCDT, attributes) {
-        if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
-            let associations = _.map(attributes, a => {
-                return {
-                    'associations.dimension': a.name,
-                    'associations.value': a.value
-                }
-            });
-            let clause = [
-                {
-                    $match: {
-                        _idCDT: idCDT
+        return new Promise ((resolve, reject) => {
+            if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
+                let associations = _.map(attributes, a => {
+                    return {
+                        'associations.dimension': a.name,
+                        'associations.value': a.value
                     }
-                },
-                {
-                    $unwind: '$associations'
-                },
-                {
-                    $match: {
-                        $or: associations
+                });
+                let clause = [
+                    {
+                        $match: {
+                            _idCDT: idCDT
+                        }
+                    },
+                    {
+                        $unwind: '$associations'
+                    },
+                    {
+                        $match: {
+                            $or: associations
+                        }
+                    },
+                    {
+                        $project: {
+                            _idOperation: '$_idOperation',
+                            ranking: '$associations.ranking',
+                            _id: 0
+                        }
                     }
-                },
-                {
-                    $project: {
-                        _idOperation: '$_idOperation',
-                        ranking: '$associations.ranking',
-                        _id: 0
+                ];
+                primaryServiceModel.aggregate(clause, (err, results) => {
+                    if (err) {
+                        reject(err);
                     }
-                }
-            ];
-            return primaryServiceModel.aggregateAsync(clause);
-        } else {
-            return [];
-        }
+                    resolve(results);
+                });
+            } else {
+                resolve([]);
+            }
+        });
     }
 
     /**
@@ -207,20 +229,28 @@ export default class {
      * @returns {Array} The list of operation identifiers found
      */
     searchPrimaryByCoordinates (idCdt, node) {
-        let radius = _radius / 6371;
-        let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
-        let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
-        if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
-            return primaryServiceModel.findAsync({
-                _idCDT: idCdt,
-                loc: {
-                    $near: [longitude, latitude],
-                    $maxDistance: radius
-                }
-            }, {_idOperation: 1, _id: 0});
-        } else {
-            return Promise.resolve([]);
-        }
+        return new Promise ((resolve, reject) => {
+            const radius = _radius / 6371;
+            const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
+            const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
+            if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
+                primaryServiceModel.find({
+                    _idCDT: idCdt,
+                    loc: {
+                        $near: [longitude, latitude],
+                        $maxDistance: radius
+                    }
+                }, {_idOperation: 1, _id: 0}
+                , (err, results) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(results);
+                });
+            } else {
+                resolve([]);
+            }
+        });
     }
 
     /**
@@ -237,42 +267,49 @@ export default class {
      * @returns {Array} The list of services found, with the number of constraints defined for each operation and the count of constraint that are satisfied
      */
     filterSupportServices (idCDT, category, attributes) {
-        if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
-            let associations = _.map(attributes, a => {
-                return {
-                    'associations.dimension': a.name,
-                    'associations.value': a.value
-                }
-            });
-            let clause = [
-                {
-                    $match: {
-                        _idCDT: idCDT,
-                        category: category
+        return new Promise ((resolve, reject) => {
+            if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
+                let associations = _.map(attributes, a => {
+                    return {
+                        'associations.dimension': a.name,
+                        'associations.value': a.value
                     }
-                },
-                {
-                    $unwind: '$associations'
-                },
-                {
-                    $match: {
-                        $or: associations
+                });
+                let clause = [
+                    {
+                        $match: {
+                            _idCDT: idCDT,
+                            category: category
+                        }
+                    },
+                    {
+                        $unwind: '$associations'
+                    },
+                    {
+                        $match: {
+                            $or: associations
+                        }
+                    },
+                    {
+                        $project: {
+                            _idOperation: '$_idOperation',
+                            dimension: '$associations.dimension',
+                            value: '$associations.value',
+                            constraintCount: '$constraintCount',
+                            _id: 0
+                        }
                     }
-                },
-                {
-                    $project: {
-                        _idOperation: '$_idOperation',
-                        dimension: '$associations.dimension',
-                        value: '$associations.value',
-                        constraintCount: '$constraintCount',
-                        _id: 0
+                ];
+                supportServiceModel.aggregate(clause, (err, results) => {
+                    if (err) {
+                        reject(err);
                     }
-                }
-            ];
-            return supportServiceModel.aggregateAsync(clause);
-        } else {
-            return [];
-        }
+                    resolve(results);
+                });
+            } else {
+                resolve([]);
+            }
+        });
     }
 
     /**
@@ -282,19 +319,27 @@ export default class {
      * @returns {Array} The list of operation identifiers found
      */
     searchSupportByCoordinates (idCdt, node) {
-        let radius = _radius / 6371;
-        let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
-        let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
-        if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
-            return supportServiceModel.findAsync({
-                _idCDT: idCdt,
-                loc: {
-                    $near: [longitude, latitude],
-                    $maxDistance: radius
-                }
-            }, {_idOperation: 1, _id: 0});
-        } else {
-            return Promise.resolve([]);
-        }
+        return new Promise ((resolve, reject) => {
+            const radius = _radius / 6371;
+            const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
+            const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
+            if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
+                supportServiceModel.find({
+                    _idCDT: idCdt,
+                    loc: {
+                        $near: [longitude, latitude],
+                        $maxDistance: radius
+                    }
+                }, {_idOperation: 1, _id: 0}
+                , (err, results) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve(results);
+                });
+            } else {
+                resolve([]);
+            }
+        });
     }
 }
