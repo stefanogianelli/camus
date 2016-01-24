@@ -99,7 +99,13 @@ export default class {
      */
     getServiceByOperationId (idOperation) {
         if (!_.isUndefined(idOperation)) {
-            return serviceModel.findByOperationIdAsync(idOperation);
+            return serviceModel
+                .aggregateAsync(
+                    {$unwind: '$operations'},
+                    {$match: {'operations._id': idOperation}})
+                .then(results => {
+                    return results[0];
+                })
         } else {
             return {};
         }

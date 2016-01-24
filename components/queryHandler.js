@@ -58,7 +58,7 @@ export default class {
             return Promise.resolve();
         }
         const startTime = process.hrtime();
-        return provider
+        /*return provider
             //acquire the service descriptions from the DB
             .getServicesByOperationIds(_.map(services, '_idOperation'))
             .then(services => {
@@ -70,6 +70,35 @@ export default class {
             .map(service => {
                 //make call to the current service
                 return this._callService(service, decoratedCdt.parameterNodes);
+            })
+            .reduce((a, b) => {
+                return _.concat(a,b);
+            })
+            .finally(() => {
+                if (debug) {
+                    metrics.record('executeQueries', startTime);
+                    metrics.saveResults();
+                }
+            });*/
+        return Promise
+            .map(services, service => {
+                //acquire the service descriptions from the DB
+                return provider
+                    .getServiceByOperationId(service._idOperation)
+                    .then(serviceDescriptor => {
+                        if (_.isUndefined(serviceDescriptor)) {
+                            return [];
+                        }
+                        if (debug) {
+                            metrics.record('getDescription/' + serviceDescriptor.name, startTime);
+                        }
+                        //add the ranking value
+                        serviceDescriptor.rank = service.rank;
+                        console.log('DESCRIPTOR');
+                        console.log(serviceDescriptor);
+                        //make call to the current service
+                        return this._callService(serviceDescriptor, decoratedCdt.parameterNodes);
+                    });
             })
             .reduce((a, b) => {
                 return _.concat(a,b);
@@ -96,7 +125,7 @@ export default class {
         if (service.protocol === 'rest' || service.protocol === 'query') {
             //use the rest bridge
             const paginationArgs = {
-                numOfPages: 3
+                numOfPages: 1
             };
             promise = restBridge.executeQuery(service, params, paginationArgs);
         } else if (service.protocol === 'custom') {

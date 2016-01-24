@@ -155,7 +155,7 @@ const serviceDescriptionSchema = new Schema({
 /**
  * Define the 'findByOperationId' method
  */
-serviceDescriptionSchema.static('findByOperationId', function (idOperation, callback) {
+/*serviceDescriptionSchema.static('findByOperationId', function (idOperation, callback) {
     this
         .findOne({
             'operations._id': idOperation
@@ -172,6 +172,13 @@ serviceDescriptionSchema.static('findByOperationId', function (idOperation, call
                 }
             }
         }, callback);
+})*/
+serviceDescriptionSchema.static('findByOperationId', function (idOperation, callback) {
+    this
+        .aggregate(
+            {$unwind: '$operations'},
+            {$match: {'operations._id': idOperation}}
+            , callback);
 });
 
 /**
