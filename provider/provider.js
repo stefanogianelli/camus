@@ -201,10 +201,10 @@ export default class {
      * @returns {Array} The list of operation identifiers found
      */
     searchPrimaryByCoordinates (idCdt, node) {
-        if (!_.isUndefined(idCdt) && !_.isUndefined(node)) {
-            let radius = _radius / 6371;
-            let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
-            let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
+        let radius = _radius / 6371;
+        let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
+        let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
+        if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
             return primaryServiceModel.findAsync({
                 _idCDT: idCdt,
                 loc: {
@@ -213,7 +213,7 @@ export default class {
                 }
             }, {_idOperation: 1, _id: 0});
         } else {
-            return [];
+            return Promise.resolve([]);
         }
     }
 
@@ -279,12 +279,16 @@ export default class {
         let radius = _radius / 6371;
         let latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
         let longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
-        return supportServiceModel.findAsync({
-            _idCDT: idCdt,
-            loc: {
-                $near: [longitude, latitude],
-                $maxDistance: radius
-            }
-        }, {_idOperation: 1, _id: 0});
+        if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
+            return supportServiceModel.findAsync({
+                _idCDT: idCdt,
+                loc: {
+                    $near: [longitude, latitude],
+                    $maxDistance: radius
+                }
+            }, {_idOperation: 1, _id: 0});
+        } else {
+            return Promise.resolve([]);
+        }
     }
 }
