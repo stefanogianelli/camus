@@ -103,7 +103,7 @@ export default class {
         if (service.protocol === 'rest' || service.protocol === 'query') {
             //use the rest bridge
             const paginationArgs = {
-                numOfPages: 3
+                numOfPages: 1
             };
             promise = restBridge.executeQuery(service, params, paginationArgs);
         } else if (service.protocol === 'custom') {

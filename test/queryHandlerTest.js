@@ -34,11 +34,9 @@ describe('Component: QueryHandler', () => {
                     return queryHandler.executeQueries(services, mockData.decoratedCdt(_idCDT));
                 })
                 .then(responses => {
-                    assert.equal(responses.length, 60);
+                    assert.equal(responses.length, 30);
                     assert.equal(responses[0].title, 'Girl & the Goat');
-                    assert.equal(responses[20].title, 'Sapori Trattoria');
-                    assert.equal(responses[40].title, 'National Restaurant Association');
-                    assert.equal(responses[50].title, 'New Years Eve 2016 Party at Standard Bar and Grill Chicago NYE 2015');
+                    assert.equal(responses[20].title, 'National Restaurant Association');
                 });
         });
         it('check array composition when one service does not respond to a query', () => {
