@@ -236,7 +236,7 @@ export default class extends Bridge {
                     if (count > 0 && operation.pagination.delay > 0) {
                         callPromise = this._makeCall(fullAddress, operation.headers, operation.pagination.delay, service.name);
                     } else {
-                        callPromise = this._makeCall(fullAddress, operation.headers, service.name);
+                        callPromise = this._makeCall(fullAddress, operation.headers, 0, service.name);
                     }
                     //invoke the service and wait for the response, then acquire information for querying the next page
                     callPromise
