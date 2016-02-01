@@ -7,16 +7,19 @@ import {
     GraphQLList
 } from 'graphql';
 
+/**
+ * Meta schema
+ */
 const metaObject = new GraphQLObjectType({
     name: 'MetaItem',
     description: 'Provides additional information about the service that the data come from',
     fields: () => ({
         name: {
-            description: 'The service\'s name',
+            description: 'The services names',
             type: new GraphQLList(GraphQLString)
         },
         rank: {
-            description: 'The service\'s rank',
+            description: 'The service\'s rank. If multiple services are specified, it returns the max rank for the current set of services',
             type: GraphQLInt
         }
     })

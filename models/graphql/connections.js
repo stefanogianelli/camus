@@ -1,8 +1,14 @@
+'use strict';
+
 import {
     connectionFromPromisedArray,
     connectionArgs,
     connectionDefinitions,
 } from 'graphql-relay';
+
+import {
+    GraphQLList
+} from 'graphql';
 
 import primaryData from './primaryDataSchema';
 import supportData from './supportDataSchema';
@@ -19,7 +25,13 @@ import {
 export function primaryConnection () {
     const {connectionType} = connectionDefinitions({
         name: 'Primary',
-        nodeType: primaryData
+        nodeType: primaryData,
+        connectionFields: () => ({
+            data: {
+                type: new GraphQLList(primaryData),
+                resolve: (conn) => conn.edges.map(edge => edge.node)
+            }
+        })
     });
     return {
         type: connectionType,
@@ -37,7 +49,13 @@ export function primaryConnection () {
 export function supportConnection () {
     const {connectionType} = connectionDefinitions({
         name: 'Support',
-        nodeType: supportData
+        nodeType: supportData,
+        connectionFields: () => ({
+            data: {
+                type: new GraphQLList(supportData),
+                resolve: (conn) => conn.edges.map(edge => edge.node)
+            }
+        })
     });
     return {
         type: connectionType,
