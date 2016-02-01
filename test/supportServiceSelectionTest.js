@@ -188,7 +188,7 @@ const contextWithInexistentName = idCDT => {
         supportServiceNames: [
             {
                 name: 'Yahoo',
-                operation: 'search'
+                operation: 'searchings'
             }
         ]
     }

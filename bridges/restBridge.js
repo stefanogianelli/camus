@@ -59,21 +59,21 @@ export default class extends Bridge {
      * Default bridge for rest and query services.
      * It executes the mapping between the service parameters and the values in the CDT.
      * Then compose the query and invoke the service
-     * @param service The service description
+     * @param descriptor The service description
      * @param paramNodes The parameter nodes of the CDT
      * @param paginationArgs Define the starting point for pagination and how many pages retrieve, if they are available
      * @returns {Promise|Request|Promise.<T>} The promise with the service responses
      */
-    executeQuery (service, paramNodes, paginationArgs) {
+    executeQuery (descriptor, paramNodes, paginationArgs) {
         const startTime = process.hrtime();
         return this
-            ._parameterMapping(service, paramNodes)
+            ._parameterMapping(descriptor, paramNodes)
             .then(params => {
-                return this._invokeService(service, params, paginationArgs);
+                return this._invokeService(descriptor, params, paginationArgs);
             })
             .finally(() => {
                 if (debug) {
-                    metrics.record('executeQuery/' + service.name, startTime);
+                    metrics.record('executeQuery/' + descriptor.service.name, startTime);
                     metrics.saveResults();
                 }
             });
@@ -81,7 +81,7 @@ export default class extends Bridge {
 
     /**
      * Map the service parameters to the values derived from the CDT
-     * @param service The service description
+     * @param descriptor The service description
      * @param paramNodes The list of parameter nodes of the CDT
      * @returns {bluebird|exports|module.exports} The mapped parameters
      * These object are composed as follow:
@@ -91,10 +91,10 @@ export default class extends Bridge {
      * }
      * @private
      */
-    _parameterMapping (service, paramNodes) {
+    _parameterMapping (descriptor, paramNodes) {
         return new Promise((resolve, reject) => {
             let params = [];
-            _.forEach(service.operations.parameters, p => {
+            _.forEach(descriptor.parameters, p => {
                 if (_.isEmpty(p.mappingCDT)) {
                     //use default value if the parameter is required and no mapping on the CDT was added
                     if (!_.isUndefined(p.default)) {
@@ -177,16 +177,15 @@ export default class extends Bridge {
     /**
      * Compose the address of the service, add the header information and call the service.
      * Then return the service response (parsed)
-     * @param service The service description
+     * @param descriptor The service description
      * @param params The parameters that will be used for query composition
      * @param pagination Define the starting point for pagination and how many pages retrieve, if they are available
      * @returns {bluebird|exports|module.exports} The parsed response
      * @private
      */
-    _invokeService (service, params, pagination) {
+    _invokeService (descriptor, params, pagination) {
         const start = process.hrtime();
         return new Promise ((resolve, reject) => {
-            const operation = service.operations;
             //configure parameters (the default ones are useful for standard query composition)
             let querySymbols = {
                 start: '?',
@@ -194,11 +193,11 @@ export default class extends Bridge {
                 separator: '&'
             };
             //change parameter value if the service is REST
-            if (service.protocol === 'rest') {
+            if (descriptor.service.protocol === 'rest') {
                 querySymbols.start = querySymbols.assign = querySymbols.separator = '/';
             }
             //setting up the query path and parameters
-            let address = service.basePath + operation.path + querySymbols.start;
+            let address = descriptor.service.basePath + descriptor.path + querySymbols.start;
             let parameters = _.reduce(params, (output, p) => {
                 //add the value(s) to the query
                 if (_.isEmpty(output)) {
@@ -208,7 +207,7 @@ export default class extends Bridge {
                 }
             }, '');
             //acquire pagination parameters
-            let {startPage, numOfPages} = this._getPaginationInitialConfig(service, pagination);
+            let {startPage, numOfPages} = this._getPaginationInitialConfig(descriptor, pagination);
             let count = 0;
             let hasNextPage = false;
             let currentPageAddress = null;
@@ -218,8 +217,8 @@ export default class extends Bridge {
             async.doWhilst(
                 (callback) => {
                     //check if next page is defined
-                    if (!_.isNull(currentPageIdentifier) && _.has(operation, 'pagination')) {
-                        currentPageAddress = operation.pagination.attributeName + querySymbols.assign + currentPageIdentifier;
+                    if (!_.isNull(currentPageIdentifier) && _.has(descriptor, 'pagination')) {
+                        currentPageAddress = descriptor.pagination.attributeName + querySymbols.assign + currentPageIdentifier;
                     }
                     //add the address to the request object
                     let fullAddress = '';
@@ -229,14 +228,14 @@ export default class extends Bridge {
                         fullAddress = address + parameters;
                     }
                     if (debug) {
-                        console.log('Querying service \'' + service.name + '\' #' + (count + 1) + ': ' + fullAddress);
+                        console.log('Querying service \'' + descriptor.service.name + '\' #' + (count + 1) + ': ' + fullAddress);
                     }
                     let callPromise = null;
                     //configure timeout between following requests, if needed
-                    if (count > 0 && operation.pagination.delay > 0) {
-                        callPromise = this._makeCall(fullAddress, operation.headers, operation.pagination.delay, service.name);
+                    if (count > 0 && descriptor.pagination.delay > 0) {
+                        callPromise = this._makeCall(fullAddress, descriptor.headers, descriptor.pagination.delay, descriptor.service.name);
                     } else {
-                        callPromise = this._makeCall(fullAddress, operation.headers, 0, service.name);
+                        callPromise = this._makeCall(fullAddress, descriptor.headers, 0, descriptor.service.name);
                     }
                     //invoke the service and wait for the response, then acquire information for querying the next page
                     callPromise
@@ -244,7 +243,7 @@ export default class extends Bridge {
                             //collect the response
                             responses.push(response);
                             //acquire next page information
-                            paginationStatus = this._getPaginationStatus(service, currentPageIdentifier, response);
+                            paginationStatus = this._getPaginationStatus(descriptor, currentPageIdentifier, response);
                             hasNextPage = paginationStatus.hasNextPage;
                             currentPageIdentifier = paginationStatus.nextPage;
                             count++;
@@ -257,7 +256,7 @@ export default class extends Bridge {
                 () => count < numOfPages && hasNextPage,
                 (err) => {
                     if (debug) {
-                        metrics.record('invokeService/' + service.name, start);
+                        metrics.record('invokeService/' + descriptor.service.name, start);
                     }
                     if (err) {
                         //if some responses are correctly retrieved I mask the error
@@ -358,18 +357,18 @@ export default class extends Bridge {
 
     /**
      * Check if can be requested a new page from the current service
-     * @param service The service description
+     * @param descriptor The service description
      * @param currentPage The last page queried
      * @param response The last responses received by the service
      * @returns {{hasNextPage: boolean, nextPage: *}} hasNextPage is a boolean attribute that specify if exists another page to be queried; nextPage define the identifier of the following page, and can be a number or a token depends on the service implementation.
      * @private
      */
-    _getPaginationStatus (service, currentPage, response) {
+    _getPaginationStatus (descriptor, currentPage, response) {
         let hasNextPage = false;
         let nextPage = null;
         //check if the service has pagination parameters associated
-        if (_.has(service.operations, 'pagination')) {
-            const paginationConfig = service.operations.pagination;
+        if (_.has(descriptor, 'pagination')) {
+            const paginationConfig = descriptor.pagination;
             //acquire the next page identifier
             if (paginationConfig.type === 'number') {
                 //initialize the first page
@@ -405,16 +404,16 @@ export default class extends Bridge {
 
     /**
      * Define the initial status of pagination attributes
-     * @param service The service description
+     * @param descriptor The service description
      * @param paginationArgs The pagination arguments received by the caller
      * @returns {{startPage: *, numOfPages: number}} The startPage attribute defines the starting identifier that will be queried; the numOfPages attribute defines the number of pages to be queried.
      * @private
      */
-    _getPaginationInitialConfig (service, paginationArgs) {
+    _getPaginationInitialConfig (descriptor, paginationArgs) {
         let startPage = null;
         let numOfPages = 1;
         //check if the service has pagination parameters associated
-        if (_.has(service.operations, 'pagination') && !_.isUndefined(paginationArgs)) {
+        if (_.has(descriptor, 'pagination') && !_.isUndefined(paginationArgs)) {
             //check if exists a start page placeholder
             if (!_.isUndefined(paginationArgs.startPage)) {
                 startPage = paginationArgs.startPage;

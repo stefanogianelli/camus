@@ -187,19 +187,13 @@ export default class {
             let assign = '=';
             let separator = '&';
             //change parameter value if the service is REST
-            if (s.protocol === 'rest') {
+            if (s.service.protocol === 'rest') {
                 start = assign = separator = '/';
             }
             //add the base path and the operation path to the address
-            let operationsObject = {};
-            if (_.isArray(s.operations)) {
-                operationsObject = s.operations[0];
-            } else {
-                operationsObject = s.operations;
-            }
-            let address = s.basePath + operationsObject.path + start;
+            let address = s.service.basePath + s.path + start;
             //compose the parameters part of the query
-            let output = _.reduce(operationsObject.parameters, (output, p) => {
+            let output = _.reduce(s.parameters, (output, p) => {
                 let values;
                 if (_.isEmpty(p.mappingTerm)) {
                     //if no term is associated use the default value
@@ -243,12 +237,12 @@ export default class {
             if (!_.isUndefined(category) && !_.isEmpty(category)) {
                 return {
                     category: category,
-                    service: s.name,
+                    service: s.service.name,
                     url: address + output
                 };
             } else {
                 return {
-                    name: s.name,
+                    name: s.service.name,
                     url: address + output
                 };
             }

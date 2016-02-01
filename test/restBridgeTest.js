@@ -89,230 +89,230 @@ describe('Component: RestBridge', () => {
 });
 
 const eventful = {
-    name: 'Eventful',
-    type: 'primary',
-    protocol: 'rest',
-    basePath: 'http://localhost:3000/json',
-    operations: {
-        name: 'eventSearch',
-        path: '/events/search',
-        parameters: [
-            {
-                name: 'app_key',
-                required: true,
-                default: 'cpxgqQcFnbVSmvc2'
-            },
-            {
-                name: 'keywords',
-                required: false,
-                default: 'restaurant',
-                mappingCDT: [
-                    'SearchKey'
-                ]
-            },
-            {
-                name: 'location',
-                required: false,
-                default: 'chicago',
-                mappingCDT: [
-                    'CityName'
-                ]
-            }
-        ],
-        responseMapping: {
-            list: 'events.event',
-            items: [
-                {
-                    termName: 'title',
-                    path: 'title'
-                },
-                {
-                    termName: 'address',
-                    path: 'venue_address'
-                },
-                {
-                    termName: 'latitude',
-                    path: 'latitude'
-                },
-                {
-                    termName: 'longitude',
-                    path: 'longitude'
-                }
+    service: {
+        name: 'Eventful',
+        type: 'primary',
+        protocol: 'rest',
+        basePath: 'http://localhost:3000/json'
+    },
+    name: 'eventSearch',
+    path: '/events/search',
+    parameters: [
+        {
+            name: 'app_key',
+            required: true,
+            default: 'cpxgqQcFnbVSmvc2'
+        },
+        {
+            name: 'keywords',
+            required: false,
+            default: 'restaurant',
+            mappingCDT: [
+                'SearchKey'
             ]
         },
-        pagination: {
-            attributeName: 'page_number',
-            type: 'number',
-            pageCountAttribute: 'page_count',
-            delay: 0
+        {
+            name: 'location',
+            required: false,
+            default: 'chicago',
+            mappingCDT: [
+                'CityName'
+            ]
         }
+    ],
+    responseMapping: {
+        list: 'events.event',
+        items: [
+            {
+                termName: 'title',
+                path: 'title'
+            },
+            {
+                termName: 'address',
+                path: 'venue_address'
+            },
+            {
+                termName: 'latitude',
+                path: 'latitude'
+            },
+            {
+                termName: 'longitude',
+                path: 'longitude'
+            }
+        ]
+    },
+    pagination: {
+        attributeName: 'page_number',
+        type: 'number',
+        pageCountAttribute: 'page_count',
+        delay: 0
     }
 };
 
 const noDefaultParameterService = {
-    name: 'eventful',
-    type: 'primary',
-    protocol: 'rest',
-    basePath: 'http://localhost:3000/json',
-    operations: {
-        name: 'eventSearch',
-        path: '/events/search',
-        parameters: [
-            {
-                name: 'app_key',
-                required: true,
-                mappingCDT: []
-            },
-            {
-                name: 'keywords',
-                required: false,
-                default: 'restaurant',
-                mappingCDT: [
-                    'SearchKey'
-                ]
-            },
-            {
-                name: 'location',
-                required: false,
-                default: 'chicago',
-                mappingCDT: [
-                    'Location'
-                ]
-            }
-        ],
-        responseMapping: {
-            list: 'events.event',
-            items: [
-                {
-                    termName: 'title',
-                    path: 'title'
-                },
-                {
-                    termName: 'venue_address',
-                    path: 'address'
-                },
-                {
-                    termName: 'latitude',
-                    path: 'latitude'
-                },
-                {
-                    termName: 'longitude',
-                    path: 'longitude'
-                }
+    service: {
+        name: 'eventful',
+        type: 'primary',
+        protocol: 'rest',
+        basePath: 'http://localhost:3000/json'
+    },
+    name: 'eventSearch',
+    path: '/events/search',
+    parameters: [
+        {
+            name: 'app_key',
+            required: true,
+            mappingCDT: []
+        },
+        {
+            name: 'keywords',
+            required: false,
+            default: 'restaurant',
+            mappingCDT: [
+                'SearchKey'
+            ]
+        },
+        {
+            name: 'location',
+            required: false,
+            default: 'chicago',
+            mappingCDT: [
+                'Location'
             ]
         }
+    ],
+    responseMapping: {
+        list: 'events.event',
+        items: [
+            {
+                termName: 'title',
+                path: 'title'
+            },
+            {
+                termName: 'venue_address',
+                path: 'address'
+            },
+            {
+                termName: 'latitude',
+                path: 'latitude'
+            },
+            {
+                termName: 'longitude',
+                path: 'longitude'
+            }
+        ]
     }
 };
 
 const noValueParameterService = {
-    name: 'eventful',
-    type: 'primary',
-    protocol: 'rest',
-    basePath: 'http://localhost:3000/json',
-    operations: {
-        name: 'eventSearch',
-        path: '/events/search',
-        parameters: [
-            {
-                name: 'app_key',
-                required: true,
-                default: 'cpxgqQcFnbVSmvc2',
-                mappingCDT: []
-            },
-            {
-                name: 'keywords',
-                required: false,
-                default: 'restaurant',
-                mappingCDT: [
-                    'SearchKey'
-                ]
-            },
-            {
-                name: 'location',
-                required: true,
-                default: 'chicago',
-                mappingCDT: [
-                    'location'
-                ]
-            }
-        ],
-        responseMapping: {
-            list: 'events.event',
-            items: [
-                {
-                    termName: 'title',
-                    path: 'title'
-                },
-                {
-                    termName: 'venue_address',
-                    path: 'address'
-                },
-                {
-                    termName: 'latitude',
-                    path: 'latitude'
-                },
-                {
-                    termName: 'longitude',
-                    path: 'longitude'
-                }
+    service: {
+        name: 'eventful',
+        type: 'primary',
+        protocol: 'rest',
+        basePath: 'http://localhost:3000/json'
+    },
+    name: 'eventSearch',
+    path: '/events/search',
+    parameters: [
+        {
+            name: 'app_key',
+            required: true,
+            default: 'cpxgqQcFnbVSmvc2',
+            mappingCDT: []
+        },
+        {
+            name: 'keywords',
+            required: false,
+            default: 'restaurant',
+            mappingCDT: [
+                'SearchKey'
+            ]
+        },
+        {
+            name: 'location',
+            required: true,
+            default: 'chicago',
+            mappingCDT: [
+                'location'
             ]
         }
+    ],
+    responseMapping: {
+        list: 'events.event',
+        items: [
+            {
+                termName: 'title',
+                path: 'title'
+            },
+            {
+                termName: 'venue_address',
+                path: 'address'
+            },
+            {
+                termName: 'latitude',
+                path: 'latitude'
+            },
+            {
+                termName: 'longitude',
+                path: 'longitude'
+            }
+        ]
     }
 };
 
 const wrongBasePath = {
-    name: 'eventful',
-    type: 'primary',
-    protocol: 'rest',
-    basePath: 'http://localhost:3000',
-    operations: {
-        name: 'eventSearch',
-        path: '/events/search',
-        parameters: [
-            {
-                name: 'app_key',
-                required: true,
-                default: 'cpxgqQcFnbVSmvc2',
-                mappingCDT: []
-            },
-            {
-                name: 'keywords',
-                required: false,
-                default: 'restaurant',
-                mappingCDT: [
-                    'SearchKey'
-                ]
-            },
-            {
-                name: 'location',
-                required: false,
-                default: 'chicago',
-                mappingCDT: [
-                    'Location'
-                ]
-            }
-        ],
-        responseMapping: {
-            list: 'events.event',
-            items: [
-                {
-                    termName: 'title',
-                    path: 'title'
-                },
-                {
-                    termName: 'venue_address',
-                    path: 'address'
-                },
-                {
-                    termName: 'latitude',
-                    path: 'latitude'
-                },
-                {
-                    termName: 'longitude',
-                    path: 'longitude'
-                }
+    service: {
+        name: 'eventful',
+        type: 'primary',
+        protocol: 'rest',
+        basePath: 'http://localhost:3000'
+    },
+    name: 'eventSearch',
+    path: '/events/search',
+    parameters: [
+        {
+            name: 'app_key',
+            required: true,
+            default: 'cpxgqQcFnbVSmvc2',
+            mappingCDT: []
+        },
+        {
+            name: 'keywords',
+            required: false,
+            default: 'restaurant',
+            mappingCDT: [
+                'SearchKey'
+            ]
+        },
+        {
+            name: 'location',
+            required: false,
+            default: 'chicago',
+            mappingCDT: [
+                'Location'
             ]
         }
+    ],
+    responseMapping: {
+        list: 'events.event',
+        items: [
+            {
+                termName: 'title',
+                path: 'title'
+            },
+            {
+                termName: 'venue_address',
+                path: 'address'
+            },
+            {
+                termName: 'latitude',
+                path: 'latitude'
+            },
+            {
+                termName: 'longitude',
+                path: 'longitude'
+            }
+        ]
     }
 };
 

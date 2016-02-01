@@ -110,12 +110,9 @@ const paginationSchema = new Schema({
  * Operation schema
  */
 const operationSchema = new Schema({
-    _id: {
+    service: {
         type: ObjectId,
-        default: function () {
-            return new mongoose.Types.ObjectId()
-        },
-        index: true
+        ref: 'service'
     },
     name: {
         type: String,
@@ -148,10 +145,8 @@ const serviceDescriptionSchema = new Schema({
         type: String,
         enum: protocols
     },
-    basePath: String,
-    operations: [operationSchema]
+    basePath: String
 });
 
-const serviceDescription = mongoose.model('service_description', serviceDescriptionSchema);
-
-export default serviceDescription;
+export const serviceModel = mongoose.model('service', serviceDescriptionSchema);
+export const operationModel = mongoose.model('operation', operationSchema);

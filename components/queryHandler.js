@@ -91,35 +91,33 @@ export default class {
 
     /**
      * Call the correct service's bridge and transform the response to make an array of items
-     * @param service The service description
+     * @param descriptor The service description
      * @param params The list of parameters from the CDT
      * @returns {Promise.<T>} The list of the responses, in order of service ranking
      * @private
      */
-    _callService (service, params) {
-        const operation = service.operations;
+    _callService (descriptor, params) {
         let promise;
         //check if the protocol of the current service is 'rest' o 'query'
-        if (service.protocol === 'rest' || service.protocol === 'query') {
+        if (descriptor.service.protocol === 'rest' || descriptor.service.protocol === 'query') {
             //use the rest bridge
             const paginationArgs = {
                 numOfPages: 1
             };
-            promise = restBridge.executeQuery(service, params, paginationArgs);
-        } else if (service.protocol === 'custom') {
+            promise = restBridge.executeQuery(descriptor, params, paginationArgs);
+        } else if (descriptor.service.protocol === 'custom') {
             //call the custom bridge
-            let bridgeName = operation.bridgeName;
             //check if a bridge name is defined
-            if (!_.isUndefined(bridgeName) && !_.isEmpty(bridgeName)) {
+            if (!_.isUndefined(descriptor.bridgeName) && !_.isEmpty(descriptor.bridgeName)) {
                 //load the module
                 promise = System
-                    .import(this._bridgeFolder + bridgeName)
+                    .import(this._bridgeFolder + descriptor.bridgeName)
                     .then(Module => {
                         const module = new Module.default();
                         return module.executeQuery(params);
                     });
             } else {
-                console.log('ERROR: The service \'' + service.name + '\' must define a custom bridge');
+                console.log('ERROR: The service \'' + descriptor.service.name + '\' must define a custom bridge');
                 return Promise.resolve([]);
             }
         }
@@ -134,7 +132,7 @@ export default class {
                 return Promise
                     .reduce(responses, (output, response) => {
                         return transformResponse
-                            .retrieveListOfResults(response, operation.responseMapping.list)
+                            .retrieveListOfResults(response, descriptor.responseMapping.list)
                             .then(itemList => {
                                 if (!_.isUndefined(itemList) && !_.isEmpty(itemList)) {
                                     return _.concat(output, itemList);
@@ -143,7 +141,7 @@ export default class {
                                 }
                             })
                             .catch(e => {
-                                console.log('[' + service.name + '] ERROR: ' + e);
+                                console.log('[' + descriptor.service.name + '] ERROR: ' + e);
                                 return output;
                             });
                     }, [])
@@ -156,10 +154,10 @@ export default class {
             .then(itemArray => {
                 //transform the response
                 return transformResponse
-                    .mappingResponse(operation.responseMapping, itemArray)
+                    .mappingResponse(descriptor.responseMapping, itemArray)
             })
             .catch(e => {
-                console.log('[' + service.name + '] ERROR: ' + e);
+                console.log('[' + descriptor.service.name + '] ERROR: ' + e);
                 return Promise.resolve([]);
             });
     }

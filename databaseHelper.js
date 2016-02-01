@@ -5,7 +5,10 @@ import async from 'async';
 import Promise from 'bluebird';
 
 //models
-import ServiceModel from './models/mongoose/serviceDescription';
+import {
+    serviceModel,
+    operationModel
+} from './models/mongoose/serviceDescription';
 import PrimaryServiceModel from './models/mongoose/primaryServiceAssociation';
 import SupportServiceModel from './models/mongoose/supportServiceAssociation';
 import CdtModel from './models/mongoose/cdtDescription';
@@ -37,142 +40,200 @@ export default class {
                             //save google places service
                             async.waterfall([
                                 callback => {
-                                    new ServiceModel(googlePlaces).save((err, service) => {
-                                        callback(err, service.operations[0].id);
+                                    new serviceModel(googlePlaces).save((err, service) => {
+                                        callback(err, service.id);
+                                    });
+                                },
+                                (idService, callback) => {
+                                    new operationModel(googlePlacesOperations(idService)).save((err, operation) => {
+                                       callback(err, operation.id);
                                     });
                                 },
                                 (idOperation, callback) => {
                                     _.forEach(googlePlacesAssociations(idOperation, idCdt), a => {
                                         new PrimaryServiceModel(a).save(err => {
-                                            callback(err, 'done');
+                                            callback(err);
                                         });
                                     });
                                 }
                             ], err => {
-                                callback(err, 'done');
+                                callback(err);
                             });
                         },
                         callback => {
                             //save eventful service
                             async.waterfall([
                                 callback => {
-                                    new ServiceModel(eventful).save((err, service) => {
-                                        callback(err, service.operations[0].id);
+                                    new serviceModel(eventful).save((err, service) => {
+                                        callback(err, service.id);
+                                    });
+                                },
+                                (idService, callback) => {
+                                    new operationModel(eventfulOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id);
                                     });
                                 },
                                 (idOperation, callback) => {
                                     _.forEach(eventfulAssociations(idOperation, idCdt), a => {
                                         new PrimaryServiceModel(a).save(err => {
-                                            callback(err, 'done');
+                                            callback(err);
                                         });
                                     });
                                 }
                             ], err => {
-                                callback(err, 'done');
+                                callback(err);
                             });
                         },
                         callback => {
                             //save cinema stub
                             async.waterfall([
                                 callback => {
-                                    new ServiceModel(cinemaStub).save((err, service) => {
-                                        callback(err, service.operations[0].id);
+                                    new serviceModel(cinemaStub).save((err, service) => {
+                                        callback(err, service.id);
+                                    });
+                                },
+                                (idService, callback) => {
+                                    new operationModel(cinemaStubOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id);
                                     });
                                 },
                                 (idOperation, callback) => {
                                     _.forEach(cinemaStubAssociations(idOperation, idCdt), a => {
                                         new PrimaryServiceModel(a).save(err => {
-                                            callback(err, 'done');
+                                            callback(err);
                                         });
                                     });
                                 }
                             ], err => {
-                                callback(err, 'done');
+                                callback(err);
                             });
                         },
                         callback => {
                             //save theater stub
                             async.waterfall([
                                 callback => {
-                                    new ServiceModel(theaterStub).save((err, service) => {
-                                        callback(err, service.operations[0].id);
+                                    new serviceModel(theaterStub).save((err, service) => {
+                                        callback(err, service.id);
+                                    });
+                                },
+                                (idService, callback) => {
+                                    new operationModel(theaterStubOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id);
                                     });
                                 },
                                 (idOperation, callback) => {
                                     _.forEach(theaterStubAssociations(idOperation, idCdt), a => {
                                         new PrimaryServiceModel(a).save(err => {
-                                            callback(err, 'done');
+                                            callback(err);
                                         });
                                     });
                                 }
                             ], err => {
-                                callback(err, 'done');
+                                callback(err);
                             });
                         },
                         callback => {
                             //save merici stub
                             async.waterfall([
                                 callback => {
-                                    new ServiceModel(mericiPrimary).save((err, service) => {
-                                        callback(err, service.operations[0].id, service.operations[1].id, service.operations[2].id, service.operations[3].id);
+                                    new serviceModel(mericiPrimary).save((err, service) => {
+                                        callback(err, service.id);
                                     });
+                                },
+                                (idService, callback) => {
+                                    async.map(mericiPrimaryOperations(idService)
+                                        , (op, callback) => {
+                                            new operationModel(op).save((err, operation) => {
+                                                callback(err, operation.id);
+                                            });
+                                        }
+                                        , (err, operations) => {
+                                            callback(err, operations[0], operations[1], operations[2], operations[3]);
+                                        });
                                 },
                                 (idHotel, idFood, idTheater, idMuseum, callback) => {
                                     _.forEach(mericiPrimaryAssociations(idCdt, idHotel, idFood, idTheater, idMuseum), a => {
                                         new PrimaryServiceModel(a).save(err => {
-                                            callback(err, 'done');
+                                            callback(err);
                                         });
                                     });
                                 }
                             ], err => {
-                                callback(err, 'done');
+                                callback(err);
                             });
                         },
                         /*
                          ADD SUPPORT SERVICES BELOW
                          */
                         callback => {
-                            //save wikipedia service
-                            new ServiceModel(wikipedia).save(err => {
-                                callback(err, 'done');
+                            async.waterfall([
+                                callback => {
+                                    //save wikipedia service
+                                    new serviceModel(wikipedia).save((err, service) => {
+                                        callback(err, service.id);
+                                    });
+                                },
+                                (idService, callback) => {
+                                    new operationModel(wikipediaOperations(idService)).save(err => {
+                                        callback(err);
+                                    });
+                                }
+                            ], err => {
+                                callback(err);
                             });
                         },
                         callback => {
                             //save google maps service
                             async.waterfall([
                                 callback => {
-                                    new ServiceModel(googleMaps).save((err, service) => {
-                                        callback(err, service.operations[0].id);
+                                    new serviceModel(googleMaps).save((err, service) => {
+                                        callback(err, service.id);
+                                    });
+                                },
+                                (idService, callback) => {
+                                    new operationModel(googleMapsOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id);
                                     });
                                 },
                                 (idOperation, callback) => {
                                     _.forEach(googleMapsAssociation(idOperation, idCdt), a => {
                                         new SupportServiceModel(a).save(err => {
-                                            callback(err, 'done');
+                                            callback(err);
                                         });
                                     });
                                 }
                             ], err => {
-                                callback(err, 'done');
+                                callback(err);
                             });
                         },
                         callback => {
                             //save merici support service
                             async.waterfall([
                                 callback => {
-                                    new ServiceModel(mericiSupport).save((err, service) => {
-                                        callback(err, service.operations[0].id, service.operations[1].id, service.operations[2].id);
+                                    new serviceModel(mericiSupport).save((err, service) => {
+                                        callback(err, service.id);
                                     });
+                                },
+                                (idService, callback) => {
+                                    async.map(mericiSupportOperations(idService)
+                                        , (op, callback) => {
+                                            new operationModel(op).save((err, operation) => {
+                                                callback(err, operation.id);
+                                            });
+                                        }
+                                        , (err, operations) => {
+                                            callback(err, operations[0], operations[1], operations[2]);
+                                        });
                                 },
                                 (idTaxi, idCarSharing, idDriver, callback) => {
                                     _.forEach(mericiSupportAssociation(idCdt, idTaxi, idCarSharing, idDriver), a => {
                                         new SupportServiceModel(a).save(err => {
-                                            callback(err, 'done');
+                                            callback(err);
                                         });
                                     });
                                 }
                             ], err => {
-                                callback(err, 'done');
+                                callback(err);
                             });
                         }
                         /*
@@ -201,22 +262,27 @@ export default class {
             async.parallel([
                 callback => {
                     CdtModel.remove({}, err => {
-                        callback(err, 'done');
+                        callback(err);
                     })
                 },
                 callback => {
                     PrimaryServiceModel.remove({}, err => {
-                        callback(err, 'done');
+                        callback(err);
                     })
                 },
                 callback => {
-                    ServiceModel.remove({}, err => {
-                        callback(err, 'done');
+                    serviceModel.remove({}, err => {
+                        callback(err);
+                    })
+                },
+                callback => {
+                    operationModel.remove({}, err => {
+                        callback(err);
                     })
                 },
                 callback => {
                     SupportServiceModel.remove({}, err => {
-                        callback(err, 'done');
+                        callback(err);
                     })
                 }
             ], err => {
@@ -309,66 +375,69 @@ const googlePlaces = {
     name: 'GooglePlaces',
     type: 'primary',
     protocol: 'query',
-    basePath: 'https://maps.googleapis.com/maps/api/place',
-    operations: [
-        {
-            name: 'placeTextSearch',
-            path: '/textsearch/json',
-            parameters: [
-                {
-                    name: 'query',
-                    required: true,
-                    default: 'restaurant+in+milan',
-                    mappingCDT: [
-                        'SearchKey'
-                    ]
-                },
-                {
-                    name: 'key',
-                    required: true,
-                    default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio',
-                    mappingCDT: []
-                }
-            ],
-            responseMapping: {
-                list: 'results',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'name'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'formatted_address'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'geometry.location.lat'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'geometry.location.lng'
-                    }
-                ],
-                functions: [
-                    {
-                        onAttribute: 'latitude',
-                        run: 'return String(value);'
-                    },
-                    {
-                        onAttribute: 'longitude',
-                        run: 'return String(value);'
-                    }
+    basePath: 'https://maps.googleapis.com/maps/api/place'
+};
+
+//googlePlaces operations
+const googlePlacesOperations = idService => {
+    return {
+        service: idService,
+        name: 'placeTextSearch',
+        path: '/textsearch/json',
+        parameters: [
+            {
+                name: 'query',
+                required: true,
+                default: 'restaurant+in+milan',
+                mappingCDT: [
+                    'SearchKey'
                 ]
             },
-            pagination: {
-                attributeName: 'pagetoken',
-                type: 'token',
-                tokenAttribute: 'next_page_token',
-                delay: 2000
+            {
+                name: 'key',
+                required: true,
+                default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio',
+                mappingCDT: []
             }
+        ],
+        responseMapping: {
+            list: 'results',
+            items: [
+                {
+                    termName: 'title',
+                    path: 'name'
+                },
+                {
+                    termName: 'address',
+                    path: 'formatted_address'
+                },
+                {
+                    termName: 'latitude',
+                    path: 'geometry.location.lat'
+                },
+                {
+                    termName: 'longitude',
+                    path: 'geometry.location.lng'
+                }
+            ],
+            functions: [
+                {
+                    onAttribute: 'latitude',
+                    run: 'return String(value);'
+                },
+                {
+                    onAttribute: 'longitude',
+                    run: 'return String(value);'
+                }
+            ]
+        },
+        pagination: {
+            attributeName: 'pagetoken',
+            type: 'token',
+            tokenAttribute: 'next_page_token',
+            delay: 2000
         }
-    ]
+    };
 };
 
 //googlePlaces associations
@@ -377,13 +446,9 @@ const googlePlacesAssociations = (idOperation, idCDT) => {
         {
             _idOperation: idOperation,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'InterestTopic',
-                    value: 'Restaurant',
-                    ranking: 1
-                }
-            ]
+            dimension: 'InterestTopic',
+            value: 'Restaurant',
+            ranking: 1
         }
     ];
 };
@@ -393,63 +458,66 @@ const eventful = {
     name: 'eventful',
     type: 'primary',
     protocol: 'query',
-    basePath: 'http://api.eventful.com/json',
-    operations: [
-        {
-            name: 'eventSearch',
-            path: '/events/search',
-            parameters: [
-                {
-                    name: 'app_key',
-                    required: true,
-                    default: 'cpxgqQcFnbVSmvc2',
-                    mappingCDT: []
-                },
-                {
-                    name: 'keywords',
-                    required: false,
-                    default: 'restaurant',
-                    mappingCDT: [
-                        'SearchKey'
-                    ]
-                },
-                {
-                    name: 'location',
-                    required: false,
-                    default: 'chicago',
-                    mappingCDT: [
-                        'CityName'
-                    ]
-                }
-            ],
-            responseMapping: {
-                list: 'events.event',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'title'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'venue_address'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'latitude'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'longitude'
-                    }
+    basePath: 'http://api.eventful.com/json'
+};
+
+//eventful operations
+const eventfulOperations = idService => {
+    return {
+        service: idService,
+        name: 'eventSearch',
+        path: '/events/search',
+        parameters: [
+            {
+                name: 'app_key',
+                required: true,
+                default: 'cpxgqQcFnbVSmvc2',
+                mappingCDT: []
+            },
+            {
+                name: 'keywords',
+                required: false,
+                default: 'restaurant',
+                mappingCDT: [
+                    'SearchKey'
                 ]
             },
-            pagination: {
-                attributeName: 'page_number',
-                type: 'number',
-                pageCountAttribute: 'page_count'
+            {
+                name: 'location',
+                required: false,
+                default: 'chicago',
+                mappingCDT: [
+                    'CityName'
+                ]
             }
+        ],
+        responseMapping: {
+            list: 'events.event',
+            items: [
+                {
+                    termName: 'title',
+                    path: 'title'
+                },
+                {
+                    termName: 'address',
+                    path: 'venue_address'
+                },
+                {
+                    termName: 'latitude',
+                    path: 'latitude'
+                },
+                {
+                    termName: 'longitude',
+                    path: 'longitude'
+                }
+            ]
+        },
+        pagination: {
+            attributeName: 'page_number',
+            type: 'number',
+            pageCountAttribute: 'page_count'
         }
-    ]
+    };
 };
 
 //eventful associations
@@ -458,100 +526,102 @@ const eventfulAssociations = (idOperation, idCDT) => {
         {
             _idOperation: idOperation,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'InterestTopic',
-                    value: 'Restaurant',
-                    ranking: 2
-                }
-            ]
+            dimension: 'InterestTopic',
+            value: 'Restaurant',
+            ranking: 2
         }
     ];
 };
 
-//wikipedia support service
+//wikipedia
 const wikipedia = {
     name: 'Wikipedia',
     type: 'support',
     protocol: 'query',
-    basePath: 'https://en.wikipedia.org/w',
-    operations: [
-        {
-            name: 'search',
-            path: '/api.php',
-            parameters: [
-                {
-                    name: 'action',
-                    required: true,
-                    default: 'query',
-                    mappingCDT: [],
-                    mappingTerm: []
-                },
-                {
-                    name: 'titles',
-                    required: true,
-                    default: 'Italy',
-                    mappingCDT: [],
-                    mappingTerm: [
-                        'title'
-                    ]
-                },
-                {
-                    name: 'prop',
-                    required: true,
-                    default: 'revisions',
-                    mappingCDT: [],
-                    mappingTerm: []
-                },
-                {
-                    name: 'rvprop',
-                    required: true,
-                    default: 'content',
-                    mappingCDT: [],
-                    mappingTerm: []
-                },
-                {
-                    name: 'format',
-                    required: true,
-                    default: 'json',
-                    mappingCDT: [],
-                    mappingTerm: []
-                }
-            ]
-        }
-    ]
+    basePath: 'https://en.wikipedia.org/w'
 };
 
-//google maps support service
+//wikipedia operations
+const wikipediaOperations = idService => {
+    return {
+        service: idService,
+        name: 'search',
+        path: '/api.php',
+        parameters: [
+            {
+                name: 'action',
+                required: true,
+                default: 'query',
+                mappingCDT: [],
+                mappingTerm: []
+            },
+            {
+                name: 'titles',
+                required: true,
+                default: 'Italy',
+                mappingCDT: [],
+                mappingTerm: [
+                    'title'
+                ]
+            },
+            {
+                name: 'prop',
+                required: true,
+                default: 'revisions',
+                mappingCDT: [],
+                mappingTerm: []
+            },
+            {
+                name: 'rvprop',
+                required: true,
+                default: 'content',
+                mappingCDT: [],
+                mappingTerm: []
+            },
+            {
+                name: 'format',
+                required: true,
+                default: 'json',
+                mappingCDT: [],
+                mappingTerm: []
+            }
+        ]
+    };
+};
+
+//google maps service
 const googleMaps = {
     name: 'GoogleMaps',
     type: 'support',
     protocol: 'query',
-    basePath: 'https://maps.googleapis.com/maps/api',
-    operations: [
-        {
-            name: 'distanceMatrix',
-            path: '/distancematrix/json',
-            parameters: [
-                {
-                    name: 'origins',
-                    mappingTerm: [
-                        'startCity'
-                    ]
-                },
-                {
-                    name: 'destinations',
-                    mappingTerm: [
-                        'endCity'
-                    ]
-                },
-                {
-                    name: 'mode',
-                    default: 'car'
-                }
-            ]
-        }
-    ]
+    basePath: 'https://maps.googleapis.com/maps/api'
+};
+
+//google maps operations
+const googleMapsOperations = idService => {
+    return {
+        service: idService,
+        name: 'distanceMatrix',
+        path: '/distancematrix/json',
+        parameters: [
+            {
+                name: 'origins',
+                mappingTerm: [
+                    'startCity'
+                ]
+            },
+            {
+                name: 'destinations',
+                mappingTerm: [
+                    'endCity'
+                ]
+            },
+            {
+                name: 'mode',
+                default: 'car'
+            }
+        ]
+    };
 };
 
 //google maps service associations
@@ -577,51 +647,54 @@ const cinemaStub = {
     name: 'cinemaStub',
     type: 'primary',
     protocol: 'query',
-    basePath: 'http://pedigree.deib.polimi.it/camus/stub/cinema/api/v1/queryDB',
-    operations: [
-        {
-            name: 'search',
-            path: '/',
-            parameters: [
-                {
-                    name: 'citta',
-                    required: true,
-                    default: 'Milano',
-                    mappingCDT: [
-                        'CityName'
-                    ]
-                }
-            ],
-            responseMapping: {
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'nome'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'indirizzo'
-                    },
-                    {
-                        termName: 'telephone',
-                        path: 'telefono'
-                    },
-                    {
-                        termName: 'website',
-                        path: 'sito'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'latitudine'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'longitudine'
-                    }
+    basePath: 'http://pedigree.deib.polimi.it/camus/stub/cinema/api/v1/queryDB'
+};
+
+//cinema stub operations
+const cinemaStubOperations = idService => {
+    return {
+        service: idService,
+        name: 'search',
+        path: '/',
+        parameters: [
+            {
+                name: 'citta',
+                required: true,
+                default: 'Milano',
+                mappingCDT: [
+                    'CityName'
                 ]
             }
+        ],
+        responseMapping: {
+            items: [
+                {
+                    termName: 'title',
+                    path: 'nome'
+                },
+                {
+                    termName: 'address',
+                    path: 'indirizzo'
+                },
+                {
+                    termName: 'telephone',
+                    path: 'telefono'
+                },
+                {
+                    termName: 'website',
+                    path: 'sito'
+                },
+                {
+                    termName: 'latitude',
+                    path: 'latitudine'
+                },
+                {
+                    termName: 'longitude',
+                    path: 'longitudine'
+                }
+            ]
         }
-    ]
+    };
 };
 
 //cinema stub associations
@@ -630,13 +703,9 @@ const cinemaStubAssociations = (idOperation, idCDT) => {
         {
             _idOperation: idOperation,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'InterestTopic',
-                    value: 'Cinema',
-                    ranking: 1
-                }
-            ]
+            dimension: 'InterestTopic',
+            value: 'Cinema',
+            ranking: 1
         }
     ];
 };
@@ -646,60 +715,63 @@ const theaterStub = {
     name: 'theaterStub',
     type: 'primary',
     protocol: 'query',
-    basePath: 'http://pedigree.deib.polimi.it/camus/stub/milanotheater',
-    operations: [
-        {
-            name: 'search',
-            path: '/rest.php',
-            parameters: [
-                {
-                    name: 'latitude',
-                    required: true,
-                    default: '45.46867',
-                    mappingCDT: [
-                        'CityCoord.Latitude'
-                    ]
-                },
-                {
-                    name: 'longitude',
-                    required: true,
-                    default: '9.11144',
-                    mappingCDT: [
-                        'CityCoord.Longitude'
-                    ]
-                }
-            ],
-            responseMapping: {
-                list: 'results',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'name'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'address'
-                    },
-                    {
-                        termName: 'telephone',
-                        path: 'tel'
-                    },
-                    {
-                        termName: 'website',
-                        path: 'url'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'latitude'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'longitude'
-                    }
+    basePath: 'http://pedigree.deib.polimi.it/camus/stub/milanotheater'
+};
+
+//theater stub operations
+const theaterStubOperations = idService => {
+    return {
+        service: idService,
+        name: 'search',
+        path: '/rest.php',
+        parameters: [
+            {
+                name: 'latitude',
+                required: true,
+                default: '45.46867',
+                mappingCDT: [
+                    'CityCoord.Latitude'
+                ]
+            },
+            {
+                name: 'longitude',
+                required: true,
+                default: '9.11144',
+                mappingCDT: [
+                    'CityCoord.Longitude'
                 ]
             }
+        ],
+        responseMapping: {
+            list: 'results',
+            items: [
+                {
+                    termName: 'title',
+                    path: 'name'
+                },
+                {
+                    termName: 'address',
+                    path: 'address'
+                },
+                {
+                    termName: 'telephone',
+                    path: 'tel'
+                },
+                {
+                    termName: 'website',
+                    path: 'url'
+                },
+                {
+                    termName: 'latitude',
+                    path: 'latitude'
+                },
+                {
+                    termName: 'longitude',
+                    path: 'longitude'
+                }
+            ]
         }
-    ]
+    };
 };
 
 //theater stub associations
@@ -708,13 +780,13 @@ const theaterStubAssociations = (idOperation, idCDT) => {
         {
             _idOperation: idOperation,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'InterestTopic',
-                    value: 'Theater',
-                    ranking: 2
-                }
-            ],
+            dimension: 'InterestTopic',
+            value: 'Theater',
+            ranking: 2
+        },
+        {
+            _idOperation: idOperation,
+            _idCDT: idCDT,
             loc: [9.18951, 45.46427]
         }
     ];
@@ -725,9 +797,14 @@ const mericiPrimary = {
     name: 'mericiPrimary',
     type: 'primary',
     protocol: 'query',
-    basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici',
-    operations: [
+    basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici'
+};
+
+//merici primary operations
+const mericiPrimaryOperations = idService => {
+    return [
         {
+            service: idService,
             name: 'searchHotel',
             path: '/service_process.php',
             parameters: [
@@ -800,6 +877,7 @@ const mericiPrimary = {
             }
         },
         {
+            service: idService,
             name: 'searchFood',
             path: '/service_process.php',
             parameters: [
@@ -872,6 +950,7 @@ const mericiPrimary = {
             }
         },
         {
+            service: idService,
             name: 'searchTheater',
             path: '/service_process.php',
             parameters: [
@@ -944,6 +1023,7 @@ const mericiPrimary = {
             }
         },
         {
+            service: idService,
             name: 'searchMuseum',
             path: '/service_process.php',
             parameters: [
@@ -1015,7 +1095,7 @@ const mericiPrimary = {
                 ]
             }
         }
-    ]
+    ];
 };
 
 //merici primary service associations
@@ -1024,46 +1104,30 @@ const mericiPrimaryAssociations = (idCDT, idHotel, idFood, idTheater, idMuseum) 
         {
             _idOperation: idHotel,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'InterestTopic',
-                    value: 'Hotel',
-                    ranking: 1
-                }
-            ]
+            dimension: 'InterestTopic',
+            value: 'Hotel',
+            ranking: 1
         },
         {
             _idOperation: idFood,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'InterestTopic',
-                    value: 'Restaurant',
-                    ranking: 3
-                }
-            ]
+            dimension: 'InterestTopic',
+            value: 'Restaurant',
+            ranking: 3
         },
         {
             _idOperation: idTheater,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'InterestTopic',
-                    value: 'Theater',
-                    ranking: 1
-                }
-            ]
+            dimension: 'InterestTopic',
+            value: 'Theater',
+            ranking: 1
         },
         {
             _idOperation: idMuseum,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'InterestTopic',
-                    value: 'Museum',
-                    ranking: 1
-                }
-            ]
+            dimension: 'InterestTopic',
+            value: 'Museum',
+            ranking: 1
         }
     ];
 };
@@ -1073,9 +1137,14 @@ const mericiSupport = {
     name: 'mericiSupport',
     type: 'support',
     protocol: 'query',
-    basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici',
-    operations: [
+    basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici'
+};
+
+//merici support operations
+const mericiSupportOperations = idService => {
+    return [
         {
+            service: idService,
             name: 'searchTaxi',
             path: '/service_process.php',
             parameters: [
@@ -1103,6 +1172,7 @@ const mericiSupport = {
             ]
         },
         {
+            service: idService,
             name: 'searchCarSharing',
             path: '/service_process.php',
             parameters: [
@@ -1130,6 +1200,7 @@ const mericiSupport = {
             ]
         },
         {
+            service: idService,
             name: 'searchDriver',
             path: '/service_process.php',
             parameters: [
@@ -1156,7 +1227,7 @@ const mericiSupport = {
                 }
             ]
         }
-    ]
+    ];
 };
 
 //merici support service associations

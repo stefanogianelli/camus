@@ -5,7 +5,10 @@ import * as async from 'async';
 import * as assert from 'assert';
 
 import * as mockData from './mockModel';
-import ServiceModel from '../models/mongoose/serviceDescription';
+import {
+    serviceModel,
+    operationModel
+} from '../models/mongoose/serviceDescription';
 import PrimaryServiceModel from '../models/mongoose/primaryServiceAssociation';
 import SupportServiceModel from '../models/mongoose/supportServiceAssociation';
 import CdtModel from '../models/mongoose/cdtDescription';
@@ -32,34 +35,40 @@ export default class {
         let _idCDT;
         let _idNestedCdt;
         let _idMultipleSonsCdt;
-        async.series({
-                one: callback => {
+        async.series([
+                callback => {
                     let cdt = new CdtModel(mockData.cdt);
                     cdt.save((err, cdt) => {
                         _idCDT = cdt._id;
-                        callback(err, 'done');
+                        callback(err);
                     });
                 },
-                two: callback => {
+                callback => {
                     let cdt = new CdtModel(mockData.nestedCdt);
                     cdt.save((err, cdt) => {
                         _idNestedCdt = cdt._id;
-                        callback(err, 'done');
+                        callback(err);
                     });
                 },
-                three: callback => {
+                callback => {
                     let cdt = new CdtModel(mockData.multipleSonsCdt);
                     cdt.save((err, cdt) => {
                         _idMultipleSonsCdt = cdt._id;
-                        callback(err, 'done');
+                        callback(err);
                     });
                 },
-                four: callback => {
+                callback => {
                     async.waterfall([
                             callback => {
-                                let googlePlaces = new ServiceModel(mockData.googlePlaces);
+                                let googlePlaces = new serviceModel(mockData.googlePlaces);
                                 googlePlaces.save((err, service) => {
-                                    callback(err, service.operations[0].id);
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                let googlePlacesOperations = new operationModel(mockData.googlePlacesOperations(idService));
+                                googlePlacesOperations.save((err, operation) => {
+                                   callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
@@ -69,19 +78,25 @@ export default class {
                                         assert.equal(err, null);
                                     });
                                 });
-                                callback(null, 'done');
+                                callback(null);
                             }
                         ],
                         err => {
-                            callback(err, 'done');
+                            callback(err);
                         });
                 },
-                five: callback => {
+                callback => {
                     async.waterfall([
                             callback => {
-                                let eventful = new ServiceModel(mockData.eventful);
+                                let eventful = new serviceModel(mockData.eventful);
                                 eventful.save((err, service) => {
-                                    callback(err, service.operations[0].id);
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                let eventfulOperations = new operationModel(mockData.eventfulOperations(idService));
+                                eventfulOperations.save((err, operation) => {
+                                    callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
@@ -91,19 +106,25 @@ export default class {
                                         assert.equal(err, null);
                                     });
                                 });
-                                callback(null, 'done');
+                                callback(null);
                             }
                         ],
                         err => {
-                            callback(err, 'done');
+                            callback(err);
                         });
                 },
-                six: callback => {
+                callback => {
                     async.waterfall([
                             callback => {
-                                let fakeService = new ServiceModel(mockData.fakeService);
+                                let fakeService = new serviceModel(mockData.fakeService);
                                 fakeService.save((err, service) => {
-                                    callback(err, service.operations[0].id);
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                let fakeServiceOperations = new operationModel(mockData.fakeServiceOperations(idService));
+                                fakeServiceOperations.save((err, operation) => {
+                                    callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
@@ -113,19 +134,25 @@ export default class {
                                         assert.equal(err, null);
                                     });
                                 });
-                                callback(null, 'done');
+                                callback(null);
                             }
                         ],
                         err => {
-                            callback(err, 'done');
+                            callback(err);
                         });
                 },
-                seven: callback => {
+                callback => {
                     async.waterfall([
                             callback => {
-                                let testBridgeService = new ServiceModel(mockData.testBridge);
+                                let testBridgeService = new serviceModel(mockData.testBridge);
                                 testBridgeService.save((err, service) => {
-                                    callback(err, service.operations[0].id);
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                let testBridgeServiceOperations = new operationModel(mockData.testBridgeOperations(idService));
+                                testBridgeServiceOperations.save((err, operation) => {
+                                   callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
@@ -135,32 +162,44 @@ export default class {
                                         assert.equal(err, null);
                                     });
                                 });
-                                callback(null, 'done');
+                                callback(null);
                             }
                         ],
                         err => {
-                            callback(err, 'done');
+                            callback(err);
                         });
                 },
-                eight: callback => {
+                callback => {
                     async.waterfall([
                             callback => {
-                                let wikipediaService = new ServiceModel(mockData.wikipedia);
+                                let wikipediaService = new serviceModel(mockData.wikipedia);
                                 wikipediaService.save((err, service) => {
-                                    callback(err, 'done');
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                let wikipediaOperations = new operationModel(mockData.wikipediaOperations(idService));
+                                wikipediaOperations.save(err => {
+                                    callback(err);
                                 });
                             }
                         ],
                         err => {
-                            callback(err, 'done');
+                            callback(err);
                         });
                 },
-                nine: callback => {
+                callback => {
                     async.waterfall([
                             callback => {
-                                let googleMapsService = new ServiceModel(mockData.googleMaps);
+                                let googleMapsService = new serviceModel(mockData.googleMaps);
                                 googleMapsService.save((err, service) => {
-                                    callback(err, service.operations[0].id);
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                let googleMapsOperations = new operationModel(mockData.googleMapsOperations(idService));
+                                googleMapsOperations.save((err, operation) => {
+                                   callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
@@ -170,19 +209,25 @@ export default class {
                                         assert.equal(err, null);
                                     });
                                 });
-                                callback(null, 'done');
+                                callback(null);
                             }
                         ],
                         err => {
-                            callback(err, 'done');
+                            callback(err);
                         });
                 },
-                ten: callback => {
+                callback => {
                     async.waterfall([
                             callback => {
-                                let atmService = new ServiceModel(mockData.atm);
+                                let atmService = new serviceModel(mockData.atm);
                                 atmService.save((err, service) => {
-                                    callback(err, service.operations[0].id);
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                let atmOperations = new operationModel(mockData.atmOperations(idService));
+                                atmOperations.save((err, operation) => {
+                                   callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
@@ -192,19 +237,25 @@ export default class {
                                         assert.equal(err, null);
                                     });
                                 });
-                                callback(null, 'done');
+                                callback(null);
                             }
                         ],
                         err => {
-                            callback(err, 'done');
+                            callback(err);
                         });
                 },
-                eleven: callback => {
+                callback => {
                     async.waterfall([
                             callback => {
-                                let atacService = new ServiceModel(mockData.atac);
+                                let atacService = new serviceModel(mockData.atac);
                                 atacService.save((err, service) => {
-                                    callback(err, service.operations[0].id);
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                let atacOperations = new operationModel(mockData.atacOperations(idService));
+                                atacOperations.save((err, operation) => {
+                                   callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
@@ -214,19 +265,25 @@ export default class {
                                         assert.equal(err, null);
                                     });
                                 });
-                                callback(null, 'done');
+                                callback(null);
                             }
                         ],
                         err => {
-                            callback(err, 'done');
+                            callback(err);
                         });
                 },
-                twelve: callback => {
+                callback => {
                     async.waterfall([
                             callback => {
-                                let fsService = new ServiceModel(mockData.fs);
+                                let fsService = new serviceModel(mockData.fs);
                                 fsService.save((err, service) => {
-                                    callback(err, service.operations[0].id);
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                let fsOperations = new operationModel(mockData.fsOperations(idService));
+                                fsOperations.save((err, operation) => {
+                                   callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
@@ -236,19 +293,25 @@ export default class {
                                         assert.equal(err, null);
                                     });
                                 });
-                                callback(null, 'done');
+                                callback(null);
                             }
                         ],
                         err => {
-                            callback(err, 'done');
+                            callback(err);
                         });
                 },
-                thirteen: callback => {
+                callback => {
                     async.waterfall([
                             callback => {
-                                let trenordService = new ServiceModel(mockData.trenord);
+                                let trenordService = new serviceModel(mockData.trenord);
                                 trenordService.save((err, service) => {
-                                    callback(err, service.operations[0].id);
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                let trenordOperations = new operationModel(mockData.trenordOperations(idService));
+                                trenordOperations.save((err, operation) => {
+                                   callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
@@ -258,19 +321,25 @@ export default class {
                                         assert.equal(err, null);
                                     });
                                 });
-                                callback(null, 'done');
+                                callback(null);
                             }
                         ],
                         err => {
-                            callback(err, 'done');
+                            callback(err);
                         });
                 },
-                fourteen: callback => {
+                callback => {
                     async.waterfall([
                             callback => {
-                                let flickrService = new ServiceModel(mockData.flickr);
+                                let flickrService = new serviceModel(mockData.flickr);
                                 flickrService.save((err, service) => {
-                                    callback(err, service.operations[0].id);
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                let flickrOperations = new operationModel(mockData.flickrOperations(idService));
+                                flickrOperations.save((err, operation) => {
+                                   callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
@@ -280,14 +349,14 @@ export default class {
                                         assert.equal(err, null);
                                     });
                                 });
-                                callback(null, 'done');
+                                callback(null);
                             }
                         ],
                         err => {
-                            callback(err, 'done');
+                            callback(err);
                         });
                 }
-            },
+            ],
             err => {
                 callback(err, _idCDT, _idNestedCdt, _idMultipleSonsCdt);
             });
@@ -299,30 +368,35 @@ export default class {
      * @param callback The callback function
      */
     deleteDatabase (callback) {
-        async.parallel({
-                zero: callback => {
+        async.parallel([
+                callback => {
                     CdtModel.remove({}, err => {
-                        callback(err, 'done');
+                        callback(err);
                     })
                 },
-                one: callback => {
+                callback => {
                     PrimaryServiceModel.remove({}, err => {
-                        callback(err, 'done');
+                        callback(err);
                     })
                 },
-                two: callback => {
-                    ServiceModel.remove({}, err => {
-                        callback(err, 'done');
+                callback => {
+                    serviceModel.remove({}, err => {
+                        callback(err);
                     })
                 },
-                three: callback => {
+                callback => {
+                    operationModel.remove({}, err => {
+                        callback(err);
+                    })
+                },
+                callback => {
                     SupportServiceModel.remove({}, err => {
-                        callback(err, 'done');
+                        callback(err);
                     })
                 }
-            },
+            ],
             err => {
-                callback(err, 'done');
+                callback(err);
             });
     }
 }

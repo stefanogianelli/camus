@@ -271,54 +271,56 @@ export const googlePlaces = {
     name: 'GooglePlaces',
     type: 'primary',
     protocol: 'rest',
-    basePath: 'http://localhost:3000/maps/api/place',
-    operations: [
-        {
-            name: 'placeTextSearch',
-            path: '/textsearch/json',
-            parameters: [
-                {
-                    name: 'query',
-                    required: true,
-                    default: 'restaurant+in+milan',
-                    mappingCDT: [
-                        'SearchKey'
-                    ]
-                },
-                {
-                    name: 'key',
-                    required: true,
-                    default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio'
-                }
-            ],
-            responseMapping: {
-                list: 'results',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'name'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'formatted_address'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'geometry.location.lat'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'geometry.location.lng'
-                    }
+    basePath: 'http://localhost:3000/maps/api/place'
+};
+
+export const googlePlacesOperations = idService => {
+    return {
+        service: idService,
+        name: 'placeTextSearch',
+        path: '/textsearch/json',
+        parameters: [
+            {
+                name: 'query',
+                required: true,
+                default: 'restaurant+in+milan',
+                mappingCDT: [
+                    'SearchKey'
                 ]
             },
-            pagination: {
-                attributeName: 'pagetoken',
-                type: 'token',
-                tokenAttribute: 'next_page_token'
+            {
+                name: 'key',
+                required: true,
+                default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio'
             }
+        ],
+        responseMapping: {
+            list: 'results',
+            items: [
+                {
+                    termName: 'title',
+                    path: 'name'
+                },
+                {
+                    termName: 'address',
+                    path: 'formatted_address'
+                },
+                {
+                    termName: 'latitude',
+                    path: 'geometry.location.lat'
+                },
+                {
+                    termName: 'longitude',
+                    path: 'geometry.location.lng'
+                }
+            ]
+        },
+        pagination: {
+            attributeName: 'pagetoken',
+            type: 'token',
+            tokenAttribute: 'next_page_token'
         }
-    ]
+    };
 };
 
 //eventful service
@@ -326,62 +328,64 @@ export const eventful = {
     name: 'Eventful',
     type: 'primary',
     protocol: 'rest',
-    basePath: 'http://localhost:3000/json',
-    operations: [
-        {
-            name: 'eventSearch',
-            path: '/events/search',
-            parameters: [
-                {
-                    name: 'app_key',
-                    required: true,
-                    default: 'cpxgqQcFnbVSmvc2'
-                },
-                {
-                    name: 'keywords',
-                    required: false,
-                    default: 'restaurant',
-                    mappingCDT: [
-                        'SearchKey'
-                    ]
-                },
-                {
-                    name: 'location',
-                    required: false,
-                    default: 'chicago',
-                    mappingCDT: [
-                        'CityName'
-                    ]
-                }
-            ],
-            responseMapping: {
-                list: 'events.event',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'title'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'venue_address'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'latitude'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'longitude'
-                    }
+    basePath: 'http://localhost:3000/json'
+};
+
+export const eventfulOperations = idService => {
+    return {
+        service: idService,
+        name: 'eventSearch',
+        path: '/events/search',
+        parameters: [
+            {
+                name: 'app_key',
+                required: true,
+                default: 'cpxgqQcFnbVSmvc2'
+            },
+            {
+                name: 'keywords',
+                required: false,
+                default: 'restaurant',
+                mappingCDT: [
+                    'SearchKey'
                 ]
             },
-            pagination: {
-                attributeName: 'page_number',
-                type: 'number',
-                pageCountAttribute: 'page_count'
+            {
+                name: 'location',
+                required: false,
+                default: 'chicago',
+                mappingCDT: [
+                    'CityName'
+                ]
             }
+        ],
+        responseMapping: {
+            list: 'events.event',
+            items: [
+                {
+                    termName: 'title',
+                    path: 'title'
+                },
+                {
+                    termName: 'address',
+                    path: 'venue_address'
+                },
+                {
+                    termName: 'latitude',
+                    path: 'latitude'
+                },
+                {
+                    termName: 'longitude',
+                    path: 'longitude'
+                }
+            ]
+        },
+        pagination: {
+            attributeName: 'page_number',
+            type: 'number',
+            pageCountAttribute: 'page_count'
         }
-    ]
+    };
 };
 
 //fake service with wrong URL
@@ -389,97 +393,101 @@ export const fakeService = {
     name: 'fakeService',
     type: 'primary',
     protocol: 'rest',
-    basePath: 'http://localhost:3000/jsonn',
-    operations: [
-        {
-            name: 'eventSearch',
-            path: '/events/search',
-            parameters: [
-                {
-                    name: 'app_key',
-                    required: true,
-                    default: 'cpxgqQcFnbVSmvc2'
-                },
-                {
-                    name: 'keywords',
-                    required: false,
-                    default: 'restaurant',
-                    mappingCDT: [
-                        'SearchKey'
-                    ]
-                },
-                {
-                    name: 'location',
-                    required: false,
-                    default: 'chicago',
-                    mappingCDT: [
-                        'CityName'
-                    ]
-                }
-            ],
-            responseMapping: {
-                list: 'events.event',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'title'
-                    },
-                    {
-                        termName: 'venue_address',
-                        path: 'address'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'latitude'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'longitude'
-                    }
+    basePath: 'http://localhost:3000/jsonn'
+};
+
+export const fakeServiceOperations = idService => {
+    return {
+        service: idService,
+        name: 'eventSearch',
+        path: '/events/search',
+        parameters: [
+            {
+                name: 'app_key',
+                required: true,
+                default: 'cpxgqQcFnbVSmvc2'
+            },
+            {
+                name: 'keywords',
+                required: false,
+                default: 'restaurant',
+                mappingCDT: [
+                    'SearchKey'
+                ]
+            },
+            {
+                name: 'location',
+                required: false,
+                default: 'chicago',
+                mappingCDT: [
+                    'CityName'
                 ]
             }
+        ],
+        responseMapping: {
+            list: 'events.event',
+            items: [
+                {
+                    termName: 'title',
+                    path: 'title'
+                },
+                {
+                    termName: 'venue_address',
+                    path: 'address'
+                },
+                {
+                    termName: 'latitude',
+                    path: 'latitude'
+                },
+                {
+                    termName: 'longitude',
+                    path: 'longitude'
+                }
+            ]
         }
-    ]
+    };
 };
 
 //service created for custom bridge testing
 export const testBridge = {
     name: 'testBridge',
     type: 'primary',
-    protocol: 'custom',
-    operations: [
-        {
-            name: 'placeTextSearch',
-            bridgeName: 'testBridge',
-            responseMapping: {
-                list: 'results',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'name'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'formatted_address'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'geometry.location.lat'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'geometry.location.lng'
-                    }
-                ],
-                functions: [
-                    {
-                        run: 'return \'Restaurant \' + value;',
-                        onAttribute: 'title'
-                    }
-                ]
-            }
+    protocol: 'custom'
+};
+
+export const testBridgeOperations = idService => {
+    return {
+        service: idService,
+        name: 'placeTextSearch',
+        bridgeName: 'testBridge',
+        responseMapping: {
+            list: 'results',
+            items: [
+                {
+                    termName: 'title',
+                    path: 'name'
+                },
+                {
+                    termName: 'address',
+                    path: 'formatted_address'
+                },
+                {
+                    termName: 'latitude',
+                    path: 'geometry.location.lat'
+                },
+                {
+                    termName: 'longitude',
+                    path: 'geometry.location.lng'
+                }
+            ],
+            functions: [
+                {
+                    run: 'return \'Restaurant \' + value;',
+                    onAttribute: 'title'
+                }
+            ]
         }
-    ]
+    };
 };
 
 //wikipedia support service
@@ -487,43 +495,45 @@ export const wikipedia = {
     name: 'Wikipedia',
     type: 'support',
     protocol: 'query',
-    basePath: 'https://en.wikipedia.org/w',
-    operations: [
-        {
-            name: 'search',
-            path: '/api.php',
-            parameters: [
-                {
-                    name: 'action',
-                    required: true,
-                    default: 'query'
-                },
-                {
-                    name: 'titles',
-                    required: true,
-                    default: 'Italy',
-                    mappingTerm: [
-                        'SearchKey'
-                    ]
-                },
-                {
-                    name: 'prop',
-                    required: true,
-                    default: 'revisions'
-                },
-                {
-                    name: 'rvprop',
-                    required: true,
-                    default: 'content'
-                },
-                {
-                    name: 'format',
-                    required: true,
-                    default: 'json'
-                }
-            ]
-        }
-    ]
+    basePath: 'https://en.wikipedia.org/w'
+};
+
+export const wikipediaOperations = idService => {
+    return {
+        service: idService,
+        name: 'search',
+        path: '/api.php',
+        parameters: [
+            {
+                name: 'action',
+                required: true,
+                default: 'query'
+            },
+            {
+                name: 'titles',
+                required: true,
+                default: 'Italy',
+                mappingTerm: [
+                    'SearchKey'
+                ]
+            },
+            {
+                name: 'prop',
+                required: true,
+                default: 'revisions'
+            },
+            {
+                name: 'rvprop',
+                required: true,
+                default: 'content'
+            },
+            {
+                name: 'format',
+                required: true,
+                default: 'json'
+            }
+        ]
+    };
 };
 
 //google maps support service
@@ -531,21 +541,23 @@ export const flickr = {
     name: 'Flickr',
     type: 'support',
     protocol: 'rest',
-    basePath: 'http://api.flickr.com',
-    operations: [
-        {
-            name: 'searchPhoto',
-            path: '/photos',
-            parameters: [
-                {
-                    name: 'tag',
-                    mappingTerm: [
-                        'tag'
-                    ]
-                }
-            ]
-        }
-    ]
+    basePath: 'http://api.flickr.com'
+};
+
+export const flickrOperations = idService => {
+    return {
+        service: idService,
+        name: 'searchPhoto',
+        path: '/photos',
+        parameters: [
+            {
+                name: 'tag',
+                mappingTerm: [
+                    'tag'
+                ]
+            }
+        ]
+    };
 };
 
 //google maps support service
@@ -553,31 +565,33 @@ export const googleMaps = {
     name: 'GoogleMaps',
     type: 'support',
     protocol: 'query',
-    basePath: 'https://maps.googleapis.com/maps/api',
-    operations: [
-        {
-            name: 'distanceMatrix',
-            path: '/distancematrix/json',
-            parameters: [
-                {
-                    name: 'origins',
-                    mappingTerm: [
-                        'startCity'
-                    ]
-                },
-                {
-                    name: 'destinations',
-                    mappingTerm: [
-                        'endCity'
-                    ]
-                },
-                {
-                    name: 'mode',
-                    default: 'bus'
-                }
-            ]
-        }
-    ]
+    basePath: 'https://maps.googleapis.com/maps/api'
+};
+
+export const googleMapsOperations = idService => {
+    return {
+        service: idService,
+        name: 'distanceMatrix',
+        path: '/distancematrix/json',
+        parameters: [
+            {
+                name: 'origins',
+                mappingTerm: [
+                    'startCity'
+                ]
+            },
+            {
+                name: 'destinations',
+                mappingTerm: [
+                    'endCity'
+                ]
+            },
+            {
+                name: 'mode',
+                default: 'bus'
+            }
+        ]
+    };
 };
 
 //ATM support service
@@ -585,35 +599,37 @@ export const atm = {
     name: 'ATM',
     type: 'support',
     protocol: 'query',
-    basePath: 'http://api.atm-mi.it',
-    operations: [
-        {
-            name: 'searchAddress',
-            path: '/searchAddress',
-            parameters: [
-                {
-                    name: 'from',
-                    collectionFormat: 'pipes',
-                    mappingTerm: [
-                        'latitude',
-                        'longitude'
-                    ]
-                },
-                {
-                    name: 'to',
-                    collectionFormat: 'pipes',
-                    mappingTerm: [
-                        'latitude',
-                        'longitude'
-                    ]
-                },
-                {
-                    name: 'key',
-                    default: 'abc123'
-                }
-            ]
-        }
-    ]
+    basePath: 'http://api.atm-mi.it'
+};
+
+export const atmOperations = idService => {
+    return {
+        service: idService,
+        name: 'searchAddress',
+        path: '/searchAddress',
+        parameters: [
+            {
+                name: 'from',
+                collectionFormat: 'pipes',
+                mappingTerm: [
+                    'latitude',
+                    'longitude'
+                ]
+            },
+            {
+                name: 'to',
+                collectionFormat: 'pipes',
+                mappingTerm: [
+                    'latitude',
+                    'longitude'
+                ]
+            },
+            {
+                name: 'key',
+                default: 'abc123'
+            }
+        ]
+    };
 };
 
 //ATAC support service
@@ -621,47 +637,51 @@ export const atac = {
     name: 'ATAC',
     type: 'support',
     protocol: 'query',
-    basePath: 'http://api.atac.it',
-    operations: [
-        {
-            name: 'searchAddress',
-            path: '/searchAddress',
-            parameters: [
-                {
-                    name: 'from',
-                    collectionFormat: 'pipes',
-                    mappingTerm: [
-                        'latitude',
-                        'longitude'
-                    ]
-                },
-                {
-                    name: 'to',
-                    collectionFormat: 'pipes',
-                    mappingTerm: [
-                        'latitude',
-                        'longitude'
-                    ]
-                },
-                {
-                    name: 'key',
-                    default: 'abc123'
-                }
-            ]
-        }
-    ]
+    basePath: 'http://api.atac.it'
+};
+
+export const atacOperations = idService => {
+    return {
+        service: idService,
+        name: 'searchAddress',
+        path: '/searchAddress',
+        parameters: [
+            {
+                name: 'from',
+                collectionFormat: 'pipes',
+                mappingTerm: [
+                    'latitude',
+                    'longitude'
+                ]
+            },
+            {
+                name: 'to',
+                collectionFormat: 'pipes',
+                mappingTerm: [
+                    'latitude',
+                    'longitude'
+                ]
+            },
+            {
+                name: 'key',
+                default: 'abc123'
+            }
+        ]
+    };
 };
 
 //FS support service
 export const fs = {
     name: 'FS',
     type: 'support',
-    protocol: 'query',
-    operations: [
-        {
-            name: 'searchAddress'
-        }
-    ]
+    protocol: 'query'
+};
+
+export const fsOperations = idService => {
+    return {
+        service: idService,
+        name: 'searchAddress'
+    };
 };
 
 //Trenord support service
@@ -669,27 +689,29 @@ export const trenord = {
     name: 'Trenord',
     type: 'support',
     protocol: 'rest',
-    basePath: 'http://api.trenord.it',
-    operations: [
-        {
-            name: 'searchStation',
-            path: '/searchStation',
-            parameters: [
-                {
-                    name: 'fromStation',
-                    mappingTerm: [
-                        'startStationName'
-                    ]
-                },
-                {
-                    name: 'toStation',
-                    mappingTerm: [
-                        'endStationName'
-                    ]
-                }
-            ]
-        }
-    ]
+    basePath: 'http://api.trenord.it'
+};
+
+export const trenordOperations = idService => {
+    return {
+        service: idService,
+        name: 'searchStation',
+        path: '/searchStation',
+        parameters: [
+            {
+                name: 'fromStation',
+                mappingTerm: [
+                    'startStationName'
+                ]
+            },
+            {
+                name: 'toStation',
+                mappingTerm: [
+                    'endStationName'
+                ]
+            }
+        ]
+    };
 };
 
 //googlePlaces associations
@@ -698,41 +720,35 @@ export const googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMult
         {
             _idOperation: idOperation,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'InterestTopic',
-                    value: 'Restaurant',
-                    ranking: 1
-                },
-                {
-                    dimension: 'Tipology',
-                    value: 'DinnerWithFriends',
-                    ranking: 1
-                }
-            ],
+            dimension: 'InterestTopic',
+            value: 'Restaurant',
+            ranking: 1
+        },
+        {
+            _idOperation: idOperation,
+            _idCDT: idCDT,
+            dimension: 'Tipology',
+            value: 'DinnerWithFriends',
+            ranking: 1
+        },
+        {
+            _idOperation: idOperation,
+            _idCDT: idCDT,
             loc: [9.18951, 45.46427]
         },
         {
             _idOperation: idOperation,
             _idCDT: idNestedCDT,
-            associations: [
-                {
-                    dimension: 'd',
-                    value: 'e',
-                    ranking: 1
-                }
-            ]
+            dimension: 'd',
+            value: 'e',
+            ranking: 1
         },
         {
             _idOperation: idOperation,
             _idCDT: idMultipleSonCDT,
-            associations: [
-                {
-                    dimension: 'g',
-                    value: 'i',
-                    ranking: 1
-                }
-            ]
+            dimension: 'g',
+            value: 'i',
+            ranking: 1
         }
     ];
 };
@@ -743,40 +759,30 @@ export const eventfulAssociations = (idOperation, idCDT, idNestedCDT, idMultiple
         {
             _idOperation: idOperation,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'InterestTopic',
-                    value: 'Restaurant',
-                    ranking: 2
-                },
-                {
-                    dimension: 'Festivita',
-                    value: 'Capodanno',
-                    ranking: 1
-                }
-            ]
+            dimension: 'InterestTopic',
+            value: 'Restaurant',
+            ranking: 2
+        },
+        {
+            _idOperation: idOperation,
+            _idCDT: idCDT,
+            dimension: 'Festivita',
+            value: 'Capodanno',
+            ranking: 1
         },
         {
             _idOperation: idOperation,
             _idCDT: idNestedCDT,
-            associations: [
-                {
-                    dimension: 'g',
-                    value: 'h',
-                    ranking: 1
-                }
-            ]
+            dimension: 'g',
+            value: 'h',
+            ranking: 1
         },
         {
             _idOperation: idOperation,
             _idCDT: idMultipleSonCDT,
-            associations: [
-                {
-                    dimension: 'g',
-                    value: 'l',
-                    ranking: 1
-                }
-            ]
+            dimension: 'g',
+            value: 'l',
+            ranking: 1
         }
     ];
 };
@@ -787,40 +793,30 @@ export const fakeServiceAssociation = (idOperation, idCDT, idNestedCDT, idMultip
         {
             _idOperation: idOperation,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'TestServizio',
-                    value: 'TestSenzaRisposta',
-                    ranking: 1
-                },
-                {
-                    dimension: 'Festivita',
-                    value: 'Capodanno',
-                    ranking: 2
-                }
-            ]
+            dimension: 'TestServizio',
+            value: 'TestSenzaRisposta',
+            ranking: 1
+        },
+        {
+            _idOperation: idOperation,
+            _idCDT: idCDT,
+            dimension: 'Festivita',
+            value: 'Capodanno',
+            ranking: 2
         },
         {
             _idOperation: idOperation,
             _idCDT: idNestedCDT,
-            associations: [
-                {
-                    dimension: 'g',
-                    value: 'i',
-                    ranking: 1
-                }
-            ]
+            dimension: 'g',
+            value: 'i',
+            ranking: 1
         },
         {
             _idOperation: idOperation,
             _idCDT: idMultipleSonCDT,
-            associations: [
-                {
-                    dimension: 'h',
-                    value: 'n',
-                    ranking: 1
-                }
-            ]
+            dimension: 'h',
+            value: 'n',
+            ranking: 1
         }
     ];
 };
@@ -831,13 +827,9 @@ export const testBridgeAssociation = (idOperation, idCDT) => {
         {
             _idOperation: idOperation,
             _idCDT: idCDT,
-            associations: [
-                {
-                    dimension: 'TestBridge',
-                    value: 'TestBridge',
-                    ranking: 1
-                }
-            ]
+            dimension: 'TestBridge',
+            value: 'TestBridge',
+            ranking: 1
         }
     ];
 };

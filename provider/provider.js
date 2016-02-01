@@ -6,7 +6,10 @@ import Promise from 'bluebird';
 
 //load the models
 import cdtModel from '../models/mongoose/cdtDescription';
-import serviceModel from '../models/mongoose/serviceDescription';
+import {
+    serviceModel,
+    operationModel
+} from '../models/mongoose/serviceDescription';
 import primaryServiceModel from '../models/mongoose/primaryServiceAssociation';
 import supportServiceModel from '../models/mongoose/supportServiceAssociation';
 
@@ -94,14 +97,15 @@ export default class {
     getServiceByOperationId (idOperation) {
         return new Promise ((resolve, reject) => {
             if (!_.isUndefined(idOperation)) {
-                serviceModel.aggregate(
-                    {$unwind: '$operations'},
-                    {$match: {'operations._id': idOperation}}
-                    ,(err, results) => {
+                operationModel
+                    .findOne({_id: idOperation})
+                    .populate('service')
+                    .lean()
+                    .exec((err, results) => {
                         if (err) {
                             reject(err);
                         }
-                        resolve(results[0]);
+                        resolve(results);
                     });
             } else {
                 resolve({});
@@ -118,10 +122,11 @@ export default class {
     getServicesByOperationIds (idOperations) {
         return new Promise ((resolve, reject) => {
             if (!_.isUndefined(idOperations)) {
-                serviceModel.aggregate(
-                    {$unwind: '$operations'},
-                    {$match: {'operations._id': {$in: idOperations}}}
-                    ,(err, results) => {
+                operationModel
+                    .find({_id: {$in: idOperations}})
+                    .populate('service')
+                    .lean()
+                    .exec((err, results) => {
                         if (err) {
                             reject(err);
                         }
@@ -142,23 +147,19 @@ export default class {
     getServicesByNames (serviceNames) {
         return new Promise ((resolve, reject) => {
             if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
-                let whereClause = {
-                    $or: []
-                };
-                whereClause.$or = _.map(serviceNames, s => {
-                    return {
-                        $and: [{
-                            name: s.name,
-                            'operations.name': s.operation
-                        }]
-                    };
+                let operationNames = _.map(serviceNames, s => {
+                    return s.operation;
                 });
-                serviceModel.find(whereClause, (err, results) => {
-                    if (err) {
-                        reject(err);
-                    }
-                    resolve(results);
-                });
+                operationModel
+                    .find({name: {$in: operationNames}})
+                    .populate('service')
+                    .lean()
+                    .exec((err, results) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        resolve(results);
+                    });
             } else {
                 resolve([]);
             }
@@ -182,40 +183,30 @@ export default class {
     filterPrimaryServices (idCDT, attributes) {
         return new Promise ((resolve, reject) => {
             if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
-                let associations = _.map(attributes, a => {
+                let clause = {
+                    _idCDT: idCDT,
+                    $or: []
+                };
+                clause.$or = _.map(attributes, a => {
                     return {
-                        'associations.dimension': a.name,
-                        'associations.value': a.value
+                        dimension: a.name,
+                        value: a.value
                     }
                 });
-                let clause = [
-                    {
-                        $match: {
-                            _idCDT: idCDT
+                const projection = {
+                    _idOperation: 1,
+                    ranking: 1,
+                    _id: 0
+                };
+                primaryServiceModel
+                    .find(clause, projection)
+                    .lean()
+                    .exec((err, results) => {
+                        if (err) {
+                            reject(err);
                         }
-                    },
-                    {
-                        $unwind: '$associations'
-                    },
-                    {
-                        $match: {
-                            $or: associations
-                        }
-                    },
-                    {
-                        $project: {
-                            _idOperation: '$_idOperation',
-                            ranking: '$associations.ranking',
-                            _id: 0
-                        }
-                    }
-                ];
-                primaryServiceModel.aggregate(clause, (err, results) => {
-                    if (err) {
-                        reject(err);
-                    }
-                    resolve(results);
-                });
+                        resolve(results);
+                    });
             } else {
                 resolve([]);
             }
@@ -234,19 +225,21 @@ export default class {
             const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
             const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
             if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
-                primaryServiceModel.find({
-                    _idCDT: idCdt,
-                    loc: {
-                        $near: [longitude, latitude],
-                        $maxDistance: radius
-                    }
-                }, {_idOperation: 1, _id: 0}
-                , (err, results) => {
-                    if (err) {
-                        reject(err);
-                    }
-                    resolve(results);
-                });
+                primaryServiceModel
+                    .find({
+                        _idCDT: idCdt,
+                        loc: {
+                            $near: [longitude, latitude],
+                            $maxDistance: radius
+                        }
+                    }, {_idOperation: 1, _id: 0})
+                    .lean()
+                    .exec((err, results) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        resolve(results);
+                    });
             } else {
                 resolve([]);
             }
@@ -324,19 +317,21 @@ export default class {
             const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
             const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
             if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
-                supportServiceModel.find({
-                    _idCDT: idCdt,
-                    loc: {
-                        $near: [longitude, latitude],
-                        $maxDistance: radius
-                    }
-                }, {_idOperation: 1, _id: 0}
-                , (err, results) => {
-                    if (err) {
-                        reject(err);
-                    }
-                    resolve(results);
-                });
+                supportServiceModel
+                    .find({
+                        _idCDT: idCdt,
+                        loc: {
+                            $near: [longitude, latitude],
+                            $maxDistance: radius
+                        }
+                    }, {_idOperation: 1, _id: 0})
+                    .lean()
+                    .exec((err, results) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        resolve(results);
+                    });
             } else {
                 resolve([]);
             }

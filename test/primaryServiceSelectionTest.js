@@ -37,14 +37,14 @@ describe('Component: PrimaryServiceSelection', () => {
                     return [services, provider.getServiceByOperationId(services[0]._idOperation)];
                 })
                 .spread((services, data) => {
-                    assert.equal(data.name, 'Eventful');
-                    assert.equal(data.operations.name, 'eventSearch');
+                    assert.equal(data.service.name, 'Eventful');
+                    assert.equal(data.name, 'eventSearch');
                     assert.equal(services[1].rank, 2);
                     return provider.getServiceByOperationId(services[1]._idOperation);
                 })
                 .then(data => {
-                    assert.equal(data.name, 'GooglePlaces');
-                    assert.equal(data.operations.name, 'placeTextSearch');
+                    assert.equal(data.service.name, 'GooglePlaces');
+                    assert.equal(data.name, 'placeTextSearch');
                 });
         });
         it('check if correct services are selected for nested CDT dimensions', () => {
@@ -56,20 +56,20 @@ describe('Component: PrimaryServiceSelection', () => {
                 })
                 .spread((services, data) => {
                     assert.equal(services[0].rank, 2);
-                    assert.equal(data.name, 'fakeService');
-                    assert.equal(data.operations.name, 'eventSearch');
+                    assert.equal(data.service.name, 'fakeService');
+                    assert.equal(data.name, 'eventSearch');
                     return [services, provider.getServiceByOperationId(services[1]._idOperation)];
                 })
                 .spread((services, data) => {
                     assert.equal(services[1].rank, 2);
-                    assert.equal(data.name, 'Eventful');
-                    assert.equal(data.operations.name, 'eventSearch');
+                    assert.equal(data.service.name, 'Eventful');
+                    assert.equal(data.name, 'eventSearch');
                     return [services, provider.getServiceByOperationId(services[2]._idOperation)];
                 })
                 .spread((services, data) => {
                     assert.equal(services[2].rank, 2);
-                    assert.equal(data.name, 'GooglePlaces');
-                    assert.equal(data.operations.name, 'placeTextSearch');
+                    assert.equal(data.service.name, 'GooglePlaces');
+                    assert.equal(data.name, 'placeTextSearch');
                 });
         });
         it('check if correct services are selected for multiple son CDT dimensions', () => {
@@ -81,20 +81,20 @@ describe('Component: PrimaryServiceSelection', () => {
                 })
                 .spread((services, data) => {
                     assert.equal(services[0].rank, 2);
-                    assert.equal(data.name, 'fakeService');
-                    assert.equal(data.operations.name, 'eventSearch');
+                    assert.equal(data.service.name, 'fakeService');
+                    assert.equal(data.name, 'eventSearch');
                     return [services, provider.getServiceByOperationId(services[1]._idOperation)];
                 })
                 .spread((services, data) => {
                     assert.equal(services[1].rank, 2);
-                    assert.equal(data.name, 'Eventful');
-                    assert.equal(data.operations.name, 'eventSearch');
+                    assert.equal(data.service.name, 'Eventful');
+                    assert.equal(data.name, 'eventSearch');
                     return [services, provider.getServiceByOperationId(services[2]._idOperation)];
                 })
                 .spread((services, data) => {
                     assert.equal(services[2].rank, 2);
-                    assert.equal(data.name, 'GooglePlaces');
-                    assert.equal(data.operations.name, 'placeTextSearch');
+                    assert.equal(data.service.name, 'GooglePlaces');
+                    assert.equal(data.name, 'placeTextSearch');
                 });
         });
         it('check error when no filter nodes selected', () => {
