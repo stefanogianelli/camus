@@ -3,8 +3,7 @@
 import {
     GraphQLString,
     GraphQLObjectType,
-    GraphQLInt,
-    GraphQLList
+    GraphQLInt
 } from 'graphql';
 
 const metaObject = new GraphQLObjectType({

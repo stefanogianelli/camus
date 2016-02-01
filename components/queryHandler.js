@@ -58,24 +58,18 @@ export default class {
             return Promise.resolve();
         }
         const startTime = process.hrtime();
-        return Promise
-            .map(services, service => {
-                const startService = process.hrtime();
-                //acquire the service descriptions from the DB
-                return provider
-                    .getServiceByOperationId(service._idOperation)
-                    .then(serviceDescriptor => {
-                        if (_.isUndefined(serviceDescriptor)) {
-                            return [];
-                        }
-                        if (debug) {
-                            metrics.record('getDescription/' + serviceDescriptor.name, startService);
-                        }
-                        //add the ranking value
-                        serviceDescriptor.service.rank = service.rank;
-                        //make call to the current service
-                        return this._callService(serviceDescriptor, decoratedCdt.parameterNodes);
-                    });
+        return provider
+            .getServicesByOperationIds(_.map(services, '_idOperation'))
+            .map(service => {
+                if (debug) {
+                    metrics.record('getDescriptions', startTime);
+                }
+                //add the ranking value
+                service.service.rank = _.result(_.find(services, s => {
+                    return s._idOperation.equals(service._id);
+                }), 'rank');
+                //make call to the current service
+                return this._callService(service, decoratedCdt.parameterNodes);
             })
             //merge the results
             .reduce((a, b) => {
