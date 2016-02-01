@@ -225,6 +225,9 @@ export default class extends Bridge {
                 .then(response => {
                     //acquire next page information
                     let {hasNextPage, nextPage} = this._getPaginationStatus(descriptor, startPage, response);
+                    if (debug) {
+                        metrics.record('invokeService/' + descriptor.service.name, start);
+                    }
                     resolve({
                         status: 'OK',
                         hasNextPage: hasNextPage,
@@ -234,11 +237,6 @@ export default class extends Bridge {
                 })
                 .catch(err => {
                     reject(err);
-                })
-                .finally(() => {
-                    if (debug) {
-                        metrics.record('invokeService/' + descriptor.service.name, start);
-                    }
                 });
         });
     }

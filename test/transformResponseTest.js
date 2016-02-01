@@ -8,7 +8,7 @@ const transformResponse = new TransformResponse();
 
 describe('Component: TransformResponse', () => {
 
-    describe('#_retrieveListOfResults()', () => {
+    describe('#retrieveListOfResults()', () => {
         it('check if the transform operation is done correctly', () => {
             const array = transformResponse._retrieveListOfResults(googlePlacesResponse, googlePlacesMapping.list);
             assert.equal(array.length, 2);
@@ -117,9 +117,16 @@ describe('Component: TransformResponse', () => {
                     assert.equal(e, 'Empty response. Please add a response to be mapped');
                 });
         });
-        it('check error when no mapping is defined', () => {
+        it('check error when no descriptor is provided', () => {
             return transformResponse
                 .mappingResponse(googlePlacesResponse)
+                .catch(e => {
+                    assert.equal(e, 'No descriptor defined. Please add a descriptor for the current service');
+                });
+        });
+        it('check error when no mapping is defined', () => {
+            return transformResponse
+                .mappingResponse(googlePlacesResponse, {})
                 .catch(e => {
                     assert.equal(e, 'No mapping defined. Please add a mapping for the current service');
                 });
@@ -129,158 +136,194 @@ describe('Component: TransformResponse', () => {
 });
 
 const googlePlacesMapping = {
-    list: 'results',
-    items: [
-        {
-            path: 'name',
-            termName: 'title'
-        },
-        {
-            path: 'formatted_address',
-            termName: 'address'
-        },
-        {
-            path: 'geometry.location.lat',
-            termName: 'latitude'
-        },
-        {
-            path: 'geometry.location.lng',
-            termName: 'longitude'
-        }
-    ]
+    service: {
+        name: 'GooglePlaces',
+        rank: 1
+    },
+    responseMapping: {
+        list: 'results',
+        items: [
+            {
+                path: 'name',
+                termName: 'title'
+            },
+            {
+                path: 'formatted_address',
+                termName: 'address'
+            },
+            {
+                path: 'geometry.location.lat',
+                termName: 'latitude'
+            },
+            {
+                path: 'geometry.location.lng',
+                termName: 'longitude'
+            }
+        ]
+    }
 };
 
 const mappingWithFunction = {
-    list: 'results',
-    items: [
-        {
-            path: 'name',
-            termName: 'title'
-        },
-        {
-            path: 'formatted_address',
-            termName: 'address'
-        },
-        {
-            path: 'geometry.location.lat',
-            termName: 'latitude'
-        },
-        {
-            path: 'geometry.location.lng',
-            termName: 'longitude'
-        }
-    ],
-    functions: [
-        {
-            onAttribute: 'title',
-            run: 'return \'Restaurant \' + value;'
-        }
-    ]
+    service: {
+        name: 'GooglePlaces',
+        rank: 1
+    },
+    responseMapping: {
+        list: 'results',
+        items: [
+            {
+                path: 'name',
+                termName: 'title'
+            },
+            {
+                path: 'formatted_address',
+                termName: 'address'
+            },
+            {
+                path: 'geometry.location.lat',
+                termName: 'latitude'
+            },
+            {
+                path: 'geometry.location.lng',
+                termName: 'longitude'
+            }
+        ],
+        functions: [
+            {
+                onAttribute: 'title',
+                run: 'return \'Restaurant \' + value;'
+            }
+        ]
+    }
 };
 
 const mappingWithInvalidFunction = {
-    list: 'results',
-    items: [
-        {
-            path: 'name',
-            termName: 'title'
-        },
-        {
-            path: 'formatted_address',
-            termName: 'address'
-        },
-        {
-            path: 'geometry.location.lat',
-            termName: 'latitude'
-        },
-        {
-            path: 'geometry.location.lng',
-            termName: 'longitude'
-        }
-    ],
-    functions: [
-        {
-            onAttribute: 'website',
-            run: 'return \'Restaurant \' + value;'
-        }
-    ]
+    service: {
+        name: 'GooglePlaces',
+        rank: 1
+    },
+    responseMapping: {
+        list: 'results',
+        items: [
+            {
+                path: 'name',
+                termName: 'title'
+            },
+            {
+                path: 'formatted_address',
+                termName: 'address'
+            },
+            {
+                path: 'geometry.location.lat',
+                termName: 'latitude'
+            },
+            {
+                path: 'geometry.location.lng',
+                termName: 'longitude'
+            }
+        ],
+        functions: [
+            {
+                onAttribute: 'website',
+                run: 'return \'Restaurant \' + value;'
+            }
+        ]
+    }
 };
 
 const eventfulMapping = {
-    list: 'events.event',
-    items: [
-        {
-            path: 'title',
-            termName: 'title'
-        },
-        {
-            path: 'venue_address',
-            termName: 'address'
-        },
-        {
-            path: 'latitude',
-            termName: 'latitude'
-        },
-        {
-            path: 'longitude',
-            termName: 'longitude'
-        }
-    ]
+    service: {
+        name: 'Eventful',
+        rank: 1
+    },
+    responseMapping: {
+        list: 'events.event',
+        items: [
+            {
+                path: 'title',
+                termName: 'title'
+            },
+            {
+                path: 'venue_address',
+                termName: 'address'
+            },
+            {
+                path: 'latitude',
+                termName: 'latitude'
+            },
+            {
+                path: 'longitude',
+                termName: 'longitude'
+            }
+        ]
+    }
 };
 
 const mappgingWithNullValue = {
-    list: 'events.event',
-    items: [
-        {
-            path: 'title',
-            termName: 'title'
-        },
-        {
-            path: 'venue_address',
-            termName: 'address'
-        },
-        {
-            path: 'latitude',
-            termName: 'latitude'
-        },
-        {
-            path: 'longitude',
-            termName: 'longitude'
-        },
-        {
-            path: 'watching_count',
-            termName: 'count'
-        }
-    ]
+    service: {
+        name: 'Eventful',
+        rank: 1
+    },
+    responseMapping: {
+        list: 'events.event',
+        items: [
+            {
+                path: 'title',
+                termName: 'title'
+            },
+            {
+                path: 'venue_address',
+                termName: 'address'
+            },
+            {
+                path: 'latitude',
+                termName: 'latitude'
+            },
+            {
+                path: 'longitude',
+                termName: 'longitude'
+            },
+            {
+                path: 'watching_count',
+                termName: 'count'
+            }
+        ]
+    }
 };
 
 const cinemaMapping = {
-    items: [
-        {
-            termName: 'title',
-            path: 'nome'
-        },
-        {
-            termName: 'address',
-            path: 'indirizzo'
-        },
-        {
-            termName: 'telephone',
-            path: 'telefono'
-        },
-        {
-            termName: 'website',
-            path: 'sito'
-        },
-        {
-            termName: 'latitude',
-            path: 'latitudine'
-        },
-        {
-            termName: 'longitude',
-            path: 'longitudine'
-        }
-    ]
+    service: {
+        name: 'Cinema',
+        rank: 1
+    },
+    responseMapping: {
+        items: [
+            {
+                termName: 'title',
+                path: 'nome'
+            },
+            {
+                termName: 'address',
+                path: 'indirizzo'
+            },
+            {
+                termName: 'telephone',
+                path: 'telefono'
+            },
+            {
+                termName: 'website',
+                path: 'sito'
+            },
+            {
+                termName: 'latitude',
+                path: 'latitudine'
+            },
+            {
+                termName: 'longitude',
+                path: 'longitudine'
+            }
+        ]
+    }
 };
 
 const googlePlacesResponse = {

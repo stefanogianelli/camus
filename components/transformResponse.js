@@ -25,26 +25,29 @@ export default class {
     /**
      * It transforms the response of the service to make it in internal representation
      * @param response The response from the service. It must be an array of items
-     * @param mapping The mapping rules for the specific service
+     * @param descriptor The service's descriptor
      * @returns {bluebird|exports|module.exports}
      */
-    mappingResponse (response, mapping) {
+    mappingResponse (response, descriptor) {
         const start = process.hrtime();
         return new Promise ((resolve, reject) => {
             if (_.isUndefined(response)) {
                 reject('Empty response. Please add a response to be mapped');
             }
-            if (_.isUndefined(mapping)) {
+            if (_.isUndefined(descriptor)) {
+                reject('No descriptor defined. Please add a descriptor for the current service');
+            }
+            if (_.isUndefined(descriptor.responseMapping)) {
                 reject('No mapping defined. Please add a mapping for the current service');
             }
             //retrieve the base list of items
-            const itemList = this._retrieveListOfResults(response, mapping.list);
+            const itemList = this._retrieveListOfResults(response, descriptor.responseMapping.list);
             //transform each item of the response
             let transformedResponse = _.map(itemList, i => {
-                return this._transformItem(i, mapping);
+                return this._transformItem(i, descriptor);
             });
             //execute custom functions on items (if defined)
-            transformedResponse = this._executeFunctions(transformedResponse, mapping);
+            transformedResponse = this._executeFunctions(transformedResponse, descriptor);
             //clean the response from empty objects
             transformedResponse = _.filter(transformedResponse, item => {
                 return !_.isUndefined(item) && !_.isEmpty(item);
@@ -121,15 +124,15 @@ export default class {
     }
 
     /**
-     * Tranform a single item in the new representation
+     * Transform a single item in the new representation
      * @param item The original item
-     * @param mapping The mapping rules
+     * @param descriptor The mapping rules
      * @returns {{}} The transformed object
      * @private
      */
-    _transformItem (item, mapping) {
+    _transformItem (item, descriptor) {
         let obj = {};
-        _.forEach(mapping.items, m => {
+        _.forEach(descriptor.responseMapping.items, m => {
             if (_.isString(m.path) && !_.isEmpty(m.path)) {
                 let v = this._getItemValue(item, m.path);
                 if (!_.isUndefined(v) && !this._isInvalidValue(v)) {
@@ -137,18 +140,24 @@ export default class {
                 }
             }
         });
+        if (!_.isEmpty(obj)) {
+            obj.meta = {
+                name: descriptor.service.name,
+                rank: descriptor.service.rank
+            };
+        }
         return obj;
     }
 
     /**
      * Execute custom function on attributes
      * @param items The list of transformed items
-     * @param mapping The mapping rules
+     * @param descriptor The service's descriptor
      * @returns {*} The modified list of items
      * @private
      */
-    _executeFunctions (items, mapping) {
-        _.forEach(mapping.functions, f => {
+    _executeFunctions (items, descriptor) {
+        _.forEach(descriptor.responseMapping.functions, f => {
             _.forEach(items, i => {
                 if (_.has(i, f.onAttribute)) {
                     try {

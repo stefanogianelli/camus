@@ -126,7 +126,7 @@ export default class {
                     metrics.record('bridgeExecution', start);
                 }
                 //transform the response
-                return transformResponse.mappingResponse(response.response, descriptor.responseMapping);
+                return transformResponse.mappingResponse(response.response, descriptor);
             })
             .catch(e => {
                 console.log('[' + descriptor.service.name + '] ERROR: ' + e);
