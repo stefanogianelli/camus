@@ -92,9 +92,16 @@ export default class {
                                 console.log('Found similar items \'' + items[i].title + '\' and \'' + items[j].title + '\' (' + sim + ')');
                             }
                             //merge the two items
-                            items[i] = _.assign(items[j], items[i]);
-                            //delete the item from array
-                            items.splice(j, 1);
+                            if (items[i].meta.rank >= items[j].meta.rank) {
+                                items[i] = this._mergeItems(items[i], items[j]);
+                                //delete the item from array
+                                items.splice(j, 1);
+                            } else {
+                                items[j] = this._mergeItems(items[j], items[i]);
+                                //delete the item from array
+                                items.splice(i, 1);
+                                j = i + 1;
+                            }
                             len -= 1;
                         } else {
                             j++;
@@ -141,5 +148,24 @@ export default class {
         }, 0);
         //compute the final similarity dividend by the count of attributes taken into account
         return similaritySum / count;
+    }
+
+    /**
+     * Merge the items into a new one. It takes the primary item as base, then add the attributes that are contained only in the secondary item
+     * @param {Object} primary - The primary item
+     * @param {Object} secondary - The secondary item
+     * @returns {Object} The merged object
+     * @private
+     */
+    _mergeItems (primary, secondary) {
+        const primaryKeys = _.keys(primary);
+        const secondaryKeys = _.keys(secondary);
+        const toAdd = _.difference(secondaryKeys, _.intersection(primaryKeys, secondaryKeys));
+        let obj = _.cloneDeep(primary);
+        _.forEach(toAdd, item => {
+           obj[item] = secondary[item];
+        });
+        obj.meta.name = _.concat(primary.meta.name, secondary.meta.name);
+        return obj;
     }
 }
