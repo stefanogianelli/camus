@@ -224,8 +224,13 @@ export default class extends Bridge {
                 ._makeCall(fullAddress, descriptor.headers, descriptor.service.name)
                 .then(response => {
                     //acquire next page information
-                    let paginationStatus = this._getPaginationStatus(descriptor, startPage, response);
-                    resolve(response);
+                    let {hasNextPage, nextPage} = this._getPaginationStatus(descriptor, startPage, response);
+                    resolve({
+                        status: 'OK',
+                        hasNextPage: hasNextPage,
+                        nextPage: nextPage,
+                        response: response
+                    });
                 })
                 .catch(err => {
                     reject(err);

@@ -15,7 +15,7 @@ describe('Component: RestBridge', () => {
                 .executeQuery(eventful, mockModel.decoratedCdt(1).parameterNodes)
                 .then(data => {
                     assert.notEqual(data, null);
-                    assert.equal(data.total_items, 83);
+                    assert.equal(data.response.total_items, 83);
                 });
         });
         it('check that correct response is returned when request the second page', () => {
@@ -26,7 +26,7 @@ describe('Component: RestBridge', () => {
                 .executeQuery(eventful, mockModel.decoratedCdt(1).parameterNodes, paginationArgs)
                 .then(data => {
                     assert.notEqual(data, null);
-                    assert.equal(data.page_number, 2);
+                    assert.equal(data.response.page_number, 2);
                 });
         });
         it('check error when a required default parameter is not defined', () => {
