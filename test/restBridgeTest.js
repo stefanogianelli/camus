@@ -15,31 +15,18 @@ describe('Component: RestBridge', () => {
                 .executeQuery(eventful, mockModel.decoratedCdt(1).parameterNodes)
                 .then(data => {
                     assert.notEqual(data, null);
-                    assert.equal(data[0].total_items, 83);
+                    assert.equal(data.total_items, 83);
                 });
         });
-        it('check that correct response is returned when request multiple pages', () => {
+        it('check that correct response is returned when request the second page', () => {
             const paginationArgs = {
-                numOfPages: 2
+                startPage: 2
             };
             return restBridge
                 .executeQuery(eventful, mockModel.decoratedCdt(1).parameterNodes, paginationArgs)
                 .then(data => {
-                    assert.equal(data.length, 2);
-                    assert.equal(data[0].page_number, 1);
-                    assert.equal(data[1].page_number, 2);
-                });
-        });
-        it('check that correct response is returned when request multiple pages, starting from the second to last page', () => {
-            const paginationArgs = {
-                startPage: 2,
-                numOfPages: 2
-            };
-            return restBridge
-                .executeQuery(eventful, mockModel.decoratedCdt(1).parameterNodes, paginationArgs)
-                .then(data => {
-                    assert.equal(data.length, 1);
-                    assert.equal(data[0].page_number, 2);
+                    assert.notEqual(data, null);
+                    assert.equal(data.page_number, 2);
                 });
         });
         it('check error when a required default parameter is not defined', () => {

@@ -72,7 +72,7 @@ export default class {
                             metrics.record('getDescription/' + serviceDescriptor.name, startService);
                         }
                         //add the ranking value
-                        serviceDescriptor.rank = service.rank;
+                        serviceDescriptor.service.rank = service.rank;
                         //make call to the current service
                         return this._callService(serviceDescriptor, decoratedCdt.parameterNodes);
                     });
@@ -101,9 +101,7 @@ export default class {
         //check if the protocol of the current service is 'rest' o 'query'
         if (descriptor.service.protocol === 'rest' || descriptor.service.protocol === 'query') {
             //use the rest bridge
-            const paginationArgs = {
-                numOfPages: 1
-            };
+            const paginationArgs = {};
             promise = restBridge.executeQuery(descriptor, params, paginationArgs);
         } else if (descriptor.service.protocol === 'custom') {
             //call the custom bridge
@@ -123,38 +121,20 @@ export default class {
         }
         const start = process.hrtime();
         return promise
-            .then(responses => {
+            .then(response => {
                 if (debug) {
                     metrics.record('bridgeExecution', start);
                 }
-                const startAggr = process.hrtime();
                 //create the list of items
-                return Promise
-                    .reduce(responses, (output, response) => {
-                        return transformResponse
-                            .retrieveListOfResults(response, descriptor.responseMapping.list)
-                            .then(itemList => {
-                                if (!_.isUndefined(itemList) && !_.isEmpty(itemList)) {
-                                    return _.concat(output, itemList);
-                                } else {
-                                    return output;
-                                }
-                            })
-                            .catch(e => {
-                                console.log('[' + descriptor.service.name + '] ERROR: ' + e);
-                                return output;
-                            });
-                    }, [])
-                    .finally(() => {
-                        if (debug) {
-                            metrics.record('transformResponse', startAggr);
-                        }
-                    });
+                return transformResponse.retrieveListOfResults(response, descriptor.responseMapping.list);
             })
             .then(itemArray => {
                 //transform the response
-                return transformResponse
-                    .mappingResponse(descriptor.responseMapping, itemArray)
+                if (!_.isUndefined(itemArray) && !_.isEmpty(itemArray)) {
+                    return transformResponse.mappingResponse(descriptor.responseMapping, itemArray);
+                } else {
+                    return Promise.resolve([]);
+                }
             })
             .catch(e => {
                 console.log('[' + descriptor.service.name + '] ERROR: ' + e);

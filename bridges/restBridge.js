@@ -3,7 +3,6 @@
 import _ from 'lodash';
 import Promise from 'bluebird';
 import agent from 'superagent';
-import async from 'async';
 import Redis from 'ioredis';
 import config from 'config';
 
@@ -110,7 +109,7 @@ export default class extends Bridge {
                     }
                 } else {
                     //search for the value(s) in the CDT
-                    let values;
+                    let values = '';
                     let separator = ',';
                     switch (p.collectionFormat) {
                         case 'csv':
@@ -207,69 +206,35 @@ export default class extends Bridge {
                 }
             }, '');
             //acquire pagination parameters
-            let {startPage, numOfPages} = this._getPaginationInitialConfig(descriptor, pagination);
-            let count = 0;
-            let hasNextPage = false;
+            let startPage = this._getStartPage(descriptor, pagination);
+            //check if next page is defined
             let currentPageAddress = null;
-            let currentPageIdentifier = startPage;
-            let paginationStatus = {};
-            let responses = [];
-            async.doWhilst(
-                (callback) => {
-                    //check if next page is defined
-                    if (!_.isNull(currentPageIdentifier) && _.has(descriptor, 'pagination')) {
-                        currentPageAddress = descriptor.pagination.attributeName + querySymbols.assign + currentPageIdentifier;
-                    }
-                    //add the address to the request object
-                    let fullAddress = '';
-                    if (!_.isNull(currentPageAddress)) {
-                        fullAddress = address + parameters + querySymbols.separator + currentPageAddress;
-                    } else {
-                        fullAddress = address + parameters;
-                    }
-                    if (debug) {
-                        console.log('Querying service \'' + descriptor.service.name + '\' #' + (count + 1) + ': ' + fullAddress);
-                    }
-                    let callPromise = null;
-                    //configure timeout between following requests, if needed
-                    if (count > 0 && descriptor.pagination.delay > 0) {
-                        callPromise = this._makeCall(fullAddress, descriptor.headers, descriptor.pagination.delay, descriptor.service.name);
-                    } else {
-                        callPromise = this._makeCall(fullAddress, descriptor.headers, 0, descriptor.service.name);
-                    }
-                    //invoke the service and wait for the response, then acquire information for querying the next page
-                    callPromise
-                        .then(response => {
-                            //collect the response
-                            responses.push(response);
-                            //acquire next page information
-                            paginationStatus = this._getPaginationStatus(descriptor, currentPageIdentifier, response);
-                            hasNextPage = paginationStatus.hasNextPage;
-                            currentPageIdentifier = paginationStatus.nextPage;
-                            count++;
-                            callback(null);
-                        })
-                        .catch(e => {
-                            callback(e);
-                        });
-                },
-                () => count < numOfPages && hasNextPage,
-                (err) => {
+            if (startPage) {
+                currentPageAddress = descriptor.pagination.attributeName + querySymbols.assign + startPage;
+            }
+            //add the address to the request object
+            let fullAddress = address + parameters;
+            if (currentPageAddress) {
+                fullAddress += querySymbols.separator + currentPageAddress;
+            }
+            if (debug) {
+                console.log('Querying service \'' + descriptor.service.name + ': ' + fullAddress);
+            }
+            this
+                ._makeCall(fullAddress, descriptor.headers, descriptor.service.name)
+                .then(response => {
+                    //acquire next page information
+                    let paginationStatus = this._getPaginationStatus(descriptor, startPage, response);
+                    resolve(response);
+                })
+                .catch(err => {
+                    reject(err);
+                })
+                .finally(() => {
                     if (debug) {
                         metrics.record('invokeService/' + descriptor.service.name, start);
                     }
-                    if (err) {
-                        //if some responses are correctly retrieved I mask the error
-                        if (responses.length > 0) {
-                            resolve(responses);
-                        } else {
-                            reject(err);
-                        }
-                    } else {
-                        resolve(responses);
-                    }
-                }
-            );
+                });
         });
     }
 
@@ -277,12 +242,11 @@ export default class extends Bridge {
      * Make a request to the current web service and retrieve the response
      * @param address The service's address
      * @param headers The headers to be appended to the request
-     * @param delay (Optional) The delay time (in ms) before send the request
      * @param service The service name
      * @returns {Object} The received response
      * @private
      */
-    _makeCall (address, headers, delay, service) {
+    _makeCall (address, headers, service) {
         const start = process.hrtime();
         return new Promise ((resolve, reject) => {
             //check if a copy of the response exists in the cache
@@ -293,17 +257,10 @@ export default class extends Bridge {
                         metrics.record('accessCache/' + service, start);
                     }
                     if (result) {
-                        //return immediatly the cached response
+                        //return immediately the cached response
                         return resolve(JSON.parse(result));
                     } else {
                         //send a new request
-                        if (!_.isUndefined(delay) && _.isNumber(delay)) {
-                            if (debug) {
-                                console.log('Delaying request by: ' + delay + ' ms');
-                            }
-                        } else {
-                            delay = 0;
-                        }
                         //creating the agent
                         let request = agent.get(address);
                         //adding header information
@@ -313,43 +270,39 @@ export default class extends Bridge {
                         //setting timeout
                         request.timeout(this._timeout);
                         //invoke the service and return the response
-                        Promise
-                            .delay(delay)
-                            .then(() => {
-                                request.end((err, res) => {
-                                    if (err) {
-                                        switch (err.status) {
-                                            case 400:
-                                                reject('bad request. Check the address and parameters (400)');
-                                                break;
-                                            case 401:
-                                                reject('access to a restricted resource (401)');
-                                                break;
-                                            case 404:
-                                                reject('service not found (404)');
-                                                break;
-                                            case 500:
-                                                reject('server error (500)');
-                                                break;
-                                            default:
-                                                reject(err);
-                                        }
-                                    } else {
-                                        let response;
-                                        if (!_.isEmpty(res.body)) {
-                                            response = res.body;
-                                        } else {
-                                            response = JSON.parse(res.text);
-                                        }
-                                        //caching the response (with associated TTL)
-                                        redis.set(address, res.text, 'EX', this._cacheTTL);
-                                        if (debug) {
-                                            metrics.record('makeCall/' + service, start);
-                                        }
-                                        return resolve(response);
-                                    }
-                                });
-                            });
+                        request.end((err, res) => {
+                            if (err) {
+                                switch (err.status) {
+                                    case 400:
+                                        reject('bad request. Check the address and parameters (400)');
+                                        break;
+                                    case 401:
+                                        reject('access to a restricted resource (401)');
+                                        break;
+                                    case 404:
+                                        reject('service not found (404)');
+                                        break;
+                                    case 500:
+                                        reject('server error (500)');
+                                        break;
+                                    default:
+                                        reject(err);
+                                }
+                            } else {
+                                let response;
+                                if (!_.isEmpty(res.body)) {
+                                    response = res.body;
+                                } else {
+                                    response = JSON.parse(res.text);
+                                }
+                                //caching the response (with associated TTL)
+                                redis.set(address, res.text, 'EX', this._cacheTTL);
+                                if (debug) {
+                                    metrics.record('makeCall/' + service, start);
+                                }
+                                return resolve(response);
+                            }
+                        });
                     }
                 });
         });
@@ -406,26 +359,18 @@ export default class extends Bridge {
      * Define the initial status of pagination attributes
      * @param descriptor The service description
      * @param paginationArgs The pagination arguments received by the caller
-     * @returns {{startPage: *, numOfPages: number}} The startPage attribute defines the starting identifier that will be queried; the numOfPages attribute defines the number of pages to be queried.
+     * @returns {String} The startPage attribute defines the starting identifier that will be queried
      * @private
      */
-    _getPaginationInitialConfig (descriptor, paginationArgs) {
+    _getStartPage (descriptor, paginationArgs) {
         let startPage = null;
-        let numOfPages = 1;
         //check if the service has pagination parameters associated
         if (_.has(descriptor, 'pagination') && !_.isUndefined(paginationArgs)) {
             //check if exists a start page placeholder
             if (!_.isUndefined(paginationArgs.startPage)) {
                 startPage = paginationArgs.startPage;
             }
-            //acquire the number of pages to be queried
-            if (!_.isUndefined(paginationArgs.numOfPages) && _.isNumber(paginationArgs.numOfPages)) {
-                numOfPages = paginationArgs.numOfPages;
-            }
         }
-        return {
-            startPage,
-            numOfPages
-        };
+        return startPage;
     }
 }
