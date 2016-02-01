@@ -24,24 +24,23 @@ export default class {
 
     /**
      * It transforms the response of the service to make it in internal representation
-     * @param mapping The mapping rules for the specific service
      * @param response The response from the service. It must be an array of items
+     * @param mapping The mapping rules for the specific service
      * @returns {bluebird|exports|module.exports}
      */
-    mappingResponse (mapping, response) {
+    mappingResponse (response, mapping) {
         const start = process.hrtime();
         return new Promise ((resolve, reject) => {
             if (_.isUndefined(response)) {
                 reject('Empty response. Please add a response to be mapped');
             }
-            if (!_.isArray(response)) {
-                reject('The response must be an array');
-            }
             if (_.isUndefined(mapping)) {
                 reject('No mapping defined. Please add a mapping for the current service');
             }
+            //retrieve the base list of items
+            const itemList = this._retrieveListOfResults(response, mapping.list);
             //transform each item of the response
-            let transformedResponse = _.map(response, i => {
+            let transformedResponse = _.map(itemList, i => {
                 return this._transformItem(i, mapping);
             });
             //execute custom functions on items (if defined)
@@ -63,29 +62,28 @@ export default class {
      * If the specified path is not an array it converts it to an array.
      * @param response The response received from the web service
      * @param listItem The base path where find the items. If the root of the document is the base path leave this field empty
-     * @returns {Promise<T>} The array of items
+     * @returns {Array} The array of items
+     * @private
      */
-    retrieveListOfResults (response, listItem) {
-        return new Promise((resolve, reject) => {
-            if (_.isUndefined(response)) {
-                reject('Empty response. Please add a response to be mapped');
-            }
-            let list = [];
-            if (!_.isUndefined(listItem) && !_.isEmpty(listItem)) {
-                //it was defined a base list item so consider it as root for the transformation
-                list = this._getItemValue(response, listItem);
-            } else {
-                //start at the root element
-                list = response;
-            }
-            //check if the current list is an array, otherwise I transform it in a list from the current set of objects
-            if (!_.isArray(list)) {
-                list = _.map(list, item => {
-                    return item;
-                });
-            }
-            resolve(list);
-        });
+    _retrieveListOfResults (response, listItem) {
+        if (_.isUndefined(response)) {
+            throw new Error('Empty response. Please add a response to be mapped');
+        }
+        let list = [];
+        if (!_.isUndefined(listItem) && !_.isEmpty(listItem)) {
+            //it was defined a base list item so consider it as root for the transformation
+            list = this._getItemValue(response, listItem);
+        } else {
+            //start at the root element
+            list = response;
+        }
+        //check if the current list is an array, otherwise I transform it in a list from the current set of objects
+        if (!_.isArray(list)) {
+            list = _.map(list, item => {
+                return item;
+            });
+        }
+        return list;
     }
 
     /**

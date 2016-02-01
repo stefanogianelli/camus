@@ -125,17 +125,8 @@ export default class {
                 if (debug) {
                     metrics.record('bridgeExecution', start);
                 }
-                //create the list of items
-                return transformResponse
-                    .retrieveListOfResults(response.response, descriptor.responseMapping.list)
-                    .then(itemArray => {
-                        //transform the response
-                        if (!_.isUndefined(itemArray) && !_.isEmpty(itemArray)) {
-                            return transformResponse.mappingResponse(descriptor.responseMapping, itemArray);
-                        } else {
-                            return Promise.resolve([]);
-                        }
-                    })
+                //transform the response
+                return transformResponse.mappingResponse(response.response, descriptor.responseMapping);
             })
             .catch(e => {
                 console.log('[' + descriptor.service.name + '] ERROR: ' + e);

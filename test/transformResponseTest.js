@@ -8,30 +8,24 @@ const transformResponse = new TransformResponse();
 
 describe('Component: TransformResponse', () => {
 
-    describe('#retrieveListOfResults()', () => {
+    describe('#_retrieveListOfResults()', () => {
         it('check if the transform operation is done correctly', () => {
-            return transformResponse
-                .retrieveListOfResults(googlePlacesResponse, googlePlacesMapping.list)
-                .then(array => {
-                    assert.equal(array.length, 2);
-                });
+            const array = transformResponse._retrieveListOfResults(googlePlacesResponse, googlePlacesMapping.list);
+            assert.equal(array.length, 2);
         });
         it('check error message when no response is specified', () => {
-            return transformResponse
-                .retrieveListOfResults()
-                .catch(e => {
-                    assert.equal(e, 'Empty response. Please add a response to be mapped');
-                })
+            try {
+                transformResponse._retrieveListOfResults();
+            } catch (e) {
+                assert.equal(e.message, 'Empty response. Please add a response to be mapped');
+            }
         });
     });
 
     describe('#mappingResponse()', () => {
         it('check if the mapping is done correctly', () => {
             return transformResponse
-                .retrieveListOfResults(googlePlacesResponse, googlePlacesMapping.list)
-                .then(array => {
-                    return transformResponse.mappingResponse(googlePlacesMapping, array);
-                })
+                .mappingResponse(googlePlacesResponse, googlePlacesMapping)
                 .then(data => {
                     assert.equal(data[0].title, 'Girl & the Goat');
                     assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
@@ -45,10 +39,7 @@ describe('Component: TransformResponse', () => {
         });
         it('check if a custom function on an attribute is correctly executed', () => {
             return transformResponse
-                .retrieveListOfResults(googlePlacesResponse, mappingWithFunction.list)
-                .then(array => {
-                    return transformResponse.mappingResponse(mappingWithFunction, array);
-                })
+                .mappingResponse(googlePlacesResponse, mappingWithFunction)
                 .then(data => {
                     assert.equal(data[0].title, 'Restaurant Girl & the Goat');
                     assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
@@ -62,10 +53,7 @@ describe('Component: TransformResponse', () => {
         });
         it('check if a function on a non existent attribute doesn\'t change the response', () => {
             return transformResponse
-                .retrieveListOfResults(googlePlacesResponse, mappingWithInvalidFunction.list)
-                .then(array => {
-                    return transformResponse.mappingResponse(mappingWithInvalidFunction, array);
-                })
+                .mappingResponse(googlePlacesResponse, mappingWithInvalidFunction)
                 .then(data => {
                     assert.equal(data[0].title, 'Girl & the Goat');
                     assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
@@ -81,10 +69,7 @@ describe('Component: TransformResponse', () => {
         });
         it('check if nested base list is correctly handled', () => {
             return transformResponse
-                .retrieveListOfResults(eventfulResponse, eventfulMapping.list)
-                .then(array => {
-                    return transformResponse.mappingResponse(eventfulMapping, array);
-                })
+                .mappingResponse(eventfulResponse, eventfulMapping)
                 .then(data => {
                     assert.equal(data[0].title, 'Wine Lover\'s New Year\'s Eve at Volo Restaurant Wine Bar');
                     assert.equal(data[0].address, '2008 West Roscoe');
@@ -98,10 +83,7 @@ describe('Component: TransformResponse', () => {
         });
         it('check if null values are deleted from the response', () => {
             return transformResponse
-                .retrieveListOfResults(eventfulResponse, mappgingWithNullValue.list)
-                .then(array => {
-                    return transformResponse.mappingResponse(mappgingWithNullValue, array);
-                })
+                .mappingResponse(eventfulResponse, mappgingWithNullValue)
                 .then(data => {
                     assert.equal(typeof data[0].count, 'undefined');
                     assert.equal(typeof data[1].count, 'undefined');
@@ -109,10 +91,7 @@ describe('Component: TransformResponse', () => {
         });
         it('check root and non array base list is correctly handled', () => {
             return transformResponse
-                .retrieveListOfResults(cinemaResponse, cinemaMapping.list)
-                .then(array => {
-                    return transformResponse.mappingResponse(cinemaMapping, array);
-                })
+                .mappingResponse(cinemaResponse, cinemaMapping)
                 .then(data => {
                     assert.equal(data[0].title, 'Cinema Pierrot');
                     assert.equal(data[0].address, 'Via Camillo De Meis, 58');
@@ -138,18 +117,11 @@ describe('Component: TransformResponse', () => {
                     assert.equal(e, 'Empty response. Please add a response to be mapped');
                 });
         });
-        it('check error message when the response is not an array', () => {
-            return transformResponse
-                .mappingResponse(googlePlacesResponse, googlePlacesMapping)
-                .catch(e => {
-                    assert.equal(e, 'The response must be an array');
-                });
-        });
         it('check error when no mapping is defined', () => {
             return transformResponse
                 .mappingResponse(googlePlacesResponse)
                 .catch(e => {
-                    assert.equal(e, 'Empty response. Please add a response to be mapped');
+                    assert.equal(e, 'No mapping defined. Please add a mapping for the current service');
                 });
         });
     });
