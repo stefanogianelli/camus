@@ -142,7 +142,7 @@ export default class {
         });
         if (!_.isEmpty(obj)) {
             obj.meta = {
-                name: descriptor.service.name,
+                name: [descriptor.service.name],
                 rank: descriptor.service.rank
             };
         }

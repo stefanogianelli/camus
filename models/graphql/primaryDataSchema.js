@@ -3,7 +3,8 @@
 import {
     GraphQLString,
     GraphQLObjectType,
-    GraphQLInt
+    GraphQLInt,
+    GraphQLList
 } from 'graphql';
 
 const metaObject = new GraphQLObjectType({
@@ -12,7 +13,7 @@ const metaObject = new GraphQLObjectType({
     fields: () => ({
         name: {
             description: 'The service\'s name',
-            type: GraphQLString
+            type: new GraphQLList(GraphQLString)
         },
         rank: {
             description: 'The service\'s rank',
