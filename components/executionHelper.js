@@ -66,8 +66,15 @@ export function prepareResponse (context) {
  * @returns {Promise|Request|Promise.<T>} The decorated CDT
  */
 export function getDecoratedCdt (context) {
+    const start = process.hrtime();
     return contextManager
-        .getDecoratedCdt(context);
+        .getDecoratedCdt(context)
+        .finally(() => {
+            if (debug) {
+                metrics.record('getDecoratedCdt', start);
+                metrics.saveResults();
+            }
+        });
 }
 
 /**
@@ -76,6 +83,7 @@ export function getDecoratedCdt (context) {
  * @returns {*|Promise|Request|Promise.<T>} The list of items found
  */
 export function getPrimaryData (decoratedCdt) {
+    const start = process.hrtime();
     return primaryService
         .selectServices(decoratedCdt)
         .then(services => {
@@ -85,6 +93,12 @@ export function getPrimaryData (decoratedCdt) {
         .then(responses => {
             return responseAggregator
                 .prepareResponse(responses);
+        })
+        .finally(() => {
+            if (debug) {
+                metrics.record('getPrimaryData', start);
+                metrics.saveResults();
+            }
         });
 }
 
@@ -94,6 +108,13 @@ export function getPrimaryData (decoratedCdt) {
  * @returns {bluebird|exports|module.exports} The list of support services found
  */
 export function getSupportData (decoratedCdt) {
+    const start = process.hrtime();
     return supportService
-        .selectServices(decoratedCdt);
+        .selectServices(decoratedCdt)
+        .finally(() => {
+            if (debug) {
+                metrics.record('getSupportData', start);
+                metrics.saveResults();
+            }
+        });
 }

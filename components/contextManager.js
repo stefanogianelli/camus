@@ -104,7 +104,7 @@ export default class {
                         metrics.record('getCdt', startTime);
                     }
                     //check if the related CDT is found
-                    if (!_.isNull(cdt)) {
+                    if (!_.isEmpty(cdt)) {
                         //create the map of user context values
                         let mapContext = this._createMap(context.context);
                         //merging the CDT description with the user context

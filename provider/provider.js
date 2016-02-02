@@ -70,14 +70,14 @@ export default class {
      */
     getCdt (idCDT) {
         return new Promise ((resolve, reject) => {
-            cdtModel
-                .findOne({_id: mongoose.Types.ObjectId(idCDT)})
-                .lean()
-                .exec((err, result) => {
+            cdtModel.collection
+                .find({_id: mongoose.Types.ObjectId(idCDT)})
+                .limit(1)
+                .toArray((err, results) => {
                     if (err) {
                         reject(err);
                     }
-                    resolve(result);
+                    resolve(results[0]);
                 });
         });
     }
@@ -98,14 +98,15 @@ export default class {
         return new Promise ((resolve, reject) => {
             if (!_.isUndefined(idOperation)) {
                 operationModel
-                    .findOne({_id: idOperation})
+                    .find({_id: idOperation})
+                    .limit(1)
                     .populate('service')
                     .lean()
                     .exec((err, results) => {
                         if (err) {
                             reject(err);
                         }
-                        resolve(results);
+                        resolve(results[0]);
                     });
             } else {
                 resolve({});
@@ -198,10 +199,9 @@ export default class {
                     ranking: 1,
                     _id: 0
                 };
-                primaryServiceModel
+                primaryServiceModel.collection
                     .find(clause, projection)
-                    .lean()
-                    .exec((err, results) => {
+                    .toArray((err, results) => {
                         if (err) {
                             reject(err);
                         }
@@ -293,12 +293,14 @@ export default class {
                         }
                     }
                 ];
-                supportServiceModel.aggregate(clause, (err, results) => {
-                    if (err) {
-                        reject(err);
-                    }
-                    resolve(results);
-                });
+                supportServiceModel.collection
+                    .aggregate(clause)
+                    .toArray((err, results) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        resolve(results);
+                    });
             } else {
                 resolve([]);
             }
