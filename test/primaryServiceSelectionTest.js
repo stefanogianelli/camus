@@ -56,8 +56,8 @@ describe('Component: PrimaryServiceSelection', () => {
                 })
                 .spread((services, data) => {
                     assert.equal(services[0].rank, 2);
-                    assert.equal(data.service.name, 'fakeService');
-                    assert.equal(data.name, 'eventSearch');
+                    assert.equal(data.service.name, 'GooglePlaces');
+                    assert.equal(data.name, 'placeTextSearch');
                     return [services, provider.getServiceByOperationId(services[1]._idOperation)];
                 })
                 .spread((services, data) => {
@@ -68,8 +68,8 @@ describe('Component: PrimaryServiceSelection', () => {
                 })
                 .spread((services, data) => {
                     assert.equal(services[2].rank, 2);
-                    assert.equal(data.service.name, 'GooglePlaces');
-                    assert.equal(data.name, 'placeTextSearch');
+                    assert.equal(data.service.name, 'fakeService');
+                    assert.equal(data.name, 'eventSearch');
                 });
         });
         it('check if correct services are selected for multiple son CDT dimensions', () => {
@@ -81,8 +81,8 @@ describe('Component: PrimaryServiceSelection', () => {
                 })
                 .spread((services, data) => {
                     assert.equal(services[0].rank, 2);
-                    assert.equal(data.service.name, 'fakeService');
-                    assert.equal(data.name, 'eventSearch');
+                    assert.equal(data.service.name, 'GooglePlaces');
+                    assert.equal(data.name, 'placeTextSearch');
                     return [services, provider.getServiceByOperationId(services[1]._idOperation)];
                 })
                 .spread((services, data) => {
@@ -93,8 +93,8 @@ describe('Component: PrimaryServiceSelection', () => {
                 })
                 .spread((services, data) => {
                     assert.equal(services[2].rank, 2);
-                    assert.equal(data.service.name, 'GooglePlaces');
-                    assert.equal(data.name, 'placeTextSearch');
+                    assert.equal(data.service.name, 'fakeService');
+                    assert.equal(data.name, 'eventSearch');
                 });
         });
         it('check error when no filter nodes selected', () => {
