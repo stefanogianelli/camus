@@ -1,8 +1,6 @@
 'use strict';
 
-import * as _ from 'lodash';
-import * as async from 'async';
-import * as assert from 'assert';
+import async from 'async';
 
 import * as mockData from './mockModel';
 import {
@@ -10,7 +8,10 @@ import {
     operationModel
 } from '../models/mongoose/serviceDescription';
 import PrimaryServiceModel from '../models/mongoose/primaryServiceAssociation';
-import SupportServiceModel from '../models/mongoose/supportServiceAssociation';
+import {
+    supportAssociation,
+    supportConstraint
+} from '../models/mongoose/supportServiceAssociation';
 import CdtModel from '../models/mongoose/cdtDescription';
 
 let instance = null;
@@ -37,22 +38,19 @@ export default class {
         let _idMultipleSonsCdt;
         async.series([
                 callback => {
-                    let cdt = new CdtModel(mockData.cdt);
-                    cdt.save((err, cdt) => {
+                    new CdtModel(mockData.cdt).save((err, cdt) => {
                         _idCDT = cdt._id;
                         callback(err);
                     });
                 },
                 callback => {
-                    let cdt = new CdtModel(mockData.nestedCdt);
-                    cdt.save((err, cdt) => {
+                    new CdtModel(mockData.nestedCdt).save((err, cdt) => {
                         _idNestedCdt = cdt._id;
                         callback(err);
                     });
                 },
                 callback => {
-                    let cdt = new CdtModel(mockData.multipleSonsCdt);
-                    cdt.save((err, cdt) => {
+                    new CdtModel(mockData.multipleSonsCdt).save((err, cdt) => {
                         _idMultipleSonsCdt = cdt._id;
                         callback(err);
                     });
@@ -60,126 +58,22 @@ export default class {
                 callback => {
                     async.waterfall([
                             callback => {
-                                let googlePlaces = new serviceModel(mockData.googlePlaces);
-                                googlePlaces.save((err, service) => {
+                                new serviceModel(mockData.googlePlaces).save((err, service) => {
                                     callback(err, service.id);
                                 });
                             },
                             (idService, callback) => {
-                                let googlePlacesOperations = new operationModel(mockData.googlePlacesOperations(idService));
-                                googlePlacesOperations.save((err, operation) => {
+                                new operationModel(mockData.googlePlacesOperation(idService)).save((err, operation) => {
                                    callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
-                                _.forEach(mockData.googlePlacesAssociations(idOperation, _idCDT, _idNestedCdt, _idMultipleSonsCdt), a => {
-                                    let associations = new PrimaryServiceModel(a);
-                                    associations.save(err => {
-                                        assert.equal(err, null);
+                                async.each(mockData.googlePlacesAssociations(idOperation, _idCDT, _idNestedCdt, _idMultipleSonsCdt), (a, callback) => {
+                                    new PrimaryServiceModel(a).save(err => {
+                                        callback(err);
                                     });
-                                });
-                                callback(null);
-                            }
-                        ],
-                        err => {
-                            callback(err);
-                        });
-                },
-                callback => {
-                    async.waterfall([
-                            callback => {
-                                let eventful = new serviceModel(mockData.eventful);
-                                eventful.save((err, service) => {
-                                    callback(err, service.id);
-                                });
-                            },
-                            (idService, callback) => {
-                                let eventfulOperations = new operationModel(mockData.eventfulOperations(idService));
-                                eventfulOperations.save((err, operation) => {
-                                    callback(err, operation.id);
-                                });
-                            },
-                            (idOperation, callback) => {
-                                _.forEach(mockData.eventfulAssociations(idOperation, _idCDT, _idNestedCdt, _idMultipleSonsCdt), a => {
-                                    let associations = new PrimaryServiceModel(a);
-                                    associations.save(err => {
-                                        assert.equal(err, null);
-                                    });
-                                });
-                                callback(null);
-                            }
-                        ],
-                        err => {
-                            callback(err);
-                        });
-                },
-                callback => {
-                    async.waterfall([
-                            callback => {
-                                let fakeService = new serviceModel(mockData.fakeService);
-                                fakeService.save((err, service) => {
-                                    callback(err, service.id);
-                                });
-                            },
-                            (idService, callback) => {
-                                let fakeServiceOperations = new operationModel(mockData.fakeServiceOperations(idService));
-                                fakeServiceOperations.save((err, operation) => {
-                                    callback(err, operation.id);
-                                });
-                            },
-                            (idOperation, callback) => {
-                                _.forEach(mockData.fakeServiceAssociation(idOperation, _idCDT, _idNestedCdt, _idMultipleSonsCdt), a => {
-                                    let associations = new PrimaryServiceModel(a);
-                                    associations.save(err => {
-                                        assert.equal(err, null);
-                                    });
-                                });
-                                callback(null);
-                            }
-                        ],
-                        err => {
-                            callback(err);
-                        });
-                },
-                callback => {
-                    async.waterfall([
-                            callback => {
-                                let testBridgeService = new serviceModel(mockData.testBridge);
-                                testBridgeService.save((err, service) => {
-                                    callback(err, service.id);
-                                });
-                            },
-                            (idService, callback) => {
-                                let testBridgeServiceOperations = new operationModel(mockData.testBridgeOperations(idService));
-                                testBridgeServiceOperations.save((err, operation) => {
-                                   callback(err, operation.id);
-                                });
-                            },
-                            (idOperation, callback) => {
-                                _.forEach(mockData.testBridgeAssociation(idOperation, _idCDT), a => {
-                                    let associations = new PrimaryServiceModel(a);
-                                    associations.save(err => {
-                                        assert.equal(err, null);
-                                    });
-                                });
-                                callback(null);
-                            }
-                        ],
-                        err => {
-                            callback(err);
-                        });
-                },
-                callback => {
-                    async.waterfall([
-                            callback => {
-                                let wikipediaService = new serviceModel(mockData.wikipedia);
-                                wikipediaService.save((err, service) => {
-                                    callback(err, service.id);
-                                });
-                            },
-                            (idService, callback) => {
-                                let wikipediaOperations = new operationModel(mockData.wikipediaOperations(idService));
-                                wikipediaOperations.save(err => {
+                                },
+                                err => {
                                     callback(err);
                                 });
                             }
@@ -191,25 +85,24 @@ export default class {
                 callback => {
                     async.waterfall([
                             callback => {
-                                let googleMapsService = new serviceModel(mockData.googleMaps);
-                                googleMapsService.save((err, service) => {
+                                new serviceModel(mockData.eventful).save((err, service) => {
                                     callback(err, service.id);
                                 });
                             },
                             (idService, callback) => {
-                                let googleMapsOperations = new operationModel(mockData.googleMapsOperations(idService));
-                                googleMapsOperations.save((err, operation) => {
-                                   callback(err, operation.id);
+                                new operationModel(mockData.eventfulOperation(idService)).save((err, operation) => {
+                                    callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
-                                _.forEach(mockData.googleMapsAssociation(idOperation, _idCDT), a => {
-                                    let associations = new SupportServiceModel(a);
-                                    associations.save(err => {
-                                        assert.equal(err, null);
+                                async.each(mockData.eventfulAssociations(idOperation, _idCDT, _idNestedCdt, _idMultipleSonsCdt), (a, callback) => {
+                                    new PrimaryServiceModel(a).save(err => {
+                                        callback(err);
                                     });
+                                },
+                                err => {
+                                    callback(err);
                                 });
-                                callback(null);
                             }
                         ],
                         err => {
@@ -219,25 +112,24 @@ export default class {
                 callback => {
                     async.waterfall([
                             callback => {
-                                let atmService = new serviceModel(mockData.atm);
-                                atmService.save((err, service) => {
+                                new serviceModel(mockData.fakeService).save((err, service) => {
                                     callback(err, service.id);
                                 });
                             },
                             (idService, callback) => {
-                                let atmOperations = new operationModel(mockData.atmOperations(idService));
-                                atmOperations.save((err, operation) => {
-                                   callback(err, operation.id);
+                                new operationModel(mockData.fakeServiceOperation(idService)).save((err, operation) => {
+                                    callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
-                                _.forEach(mockData.atmAssociation(idOperation, _idCDT), a => {
-                                    let associations = new SupportServiceModel(a);
-                                    associations.save(err => {
-                                        assert.equal(err, null);
+                                async.each(mockData.fakeServiceAssociations(idOperation, _idCDT, _idNestedCdt, _idMultipleSonsCdt), (a, callback) => {
+                                    new PrimaryServiceModel(a).save(err => {
+                                        callback(err);
                                     });
+                                },
+                                err => {
+                                    callback(err);
                                 });
-                                callback(null);
                             }
                         ],
                         err => {
@@ -247,25 +139,24 @@ export default class {
                 callback => {
                     async.waterfall([
                             callback => {
-                                let atacService = new serviceModel(mockData.atac);
-                                atacService.save((err, service) => {
+                                new serviceModel(mockData.testBridge).save((err, service) => {
                                     callback(err, service.id);
                                 });
                             },
                             (idService, callback) => {
-                                let atacOperations = new operationModel(mockData.atacOperations(idService));
-                                atacOperations.save((err, operation) => {
+                                new operationModel(mockData.testBridgeOperation(idService)).save((err, operation) => {
                                    callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
-                                _.forEach(mockData.atacAssociation(idOperation, _idCDT), a => {
-                                    let associations = new SupportServiceModel(a);
-                                    associations.save(err => {
-                                        assert.equal(err, null);
+                                async.each(mockData.testBridgeAssociations(idOperation, _idCDT), (a, callback) => {
+                                    new PrimaryServiceModel(a).save(err => {
+                                        callback(err);
                                     });
+                                },
+                                err => {
+                                    callback(err);
                                 });
-                                callback(null);
                             }
                         ],
                         err => {
@@ -275,25 +166,14 @@ export default class {
                 callback => {
                     async.waterfall([
                             callback => {
-                                let fsService = new serviceModel(mockData.fs);
-                                fsService.save((err, service) => {
+                                new serviceModel(mockData.wikipedia).save((err, service) => {
                                     callback(err, service.id);
                                 });
                             },
                             (idService, callback) => {
-                                let fsOperations = new operationModel(mockData.fsOperations(idService));
-                                fsOperations.save((err, operation) => {
-                                   callback(err, operation.id);
+                                new operationModel(mockData.wikipediaOperations(idService)).save(err => {
+                                    callback(err);
                                 });
-                            },
-                            (idOperation, callback) => {
-                                _.forEach(mockData.fsAssociation(idOperation, _idCDT), a => {
-                                    let associations = new SupportServiceModel(a);
-                                    associations.save(err => {
-                                        assert.equal(err, null);
-                                    });
-                                });
-                                callback(null);
                             }
                         ],
                         err => {
@@ -303,25 +183,29 @@ export default class {
                 callback => {
                     async.waterfall([
                             callback => {
-                                let trenordService = new serviceModel(mockData.trenord);
-                                trenordService.save((err, service) => {
+                                new serviceModel(mockData.googleMaps).save((err, service) => {
                                     callback(err, service.id);
                                 });
                             },
                             (idService, callback) => {
-                                let trenordOperations = new operationModel(mockData.trenordOperations(idService));
-                                trenordOperations.save((err, operation) => {
+                                new operationModel(mockData.googleMapsOperations(idService)).save((err, operation) => {
                                    callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
-                                _.forEach(mockData.trenordAssociation(idOperation, _idCDT), a => {
-                                    let associations = new SupportServiceModel(a);
-                                    associations.save(err => {
-                                        assert.equal(err, null);
+                                async.each(mockData.googleMapsAssociations(idOperation, _idCDT), (a, callback) => {
+                                        new supportAssociation(a).save(err => {
+                                            callback(err);
+                                        });
+                                    },
+                                    err => {
+                                        callback(err, idOperation);
                                     });
+                            },
+                            (idOperation, callback) => {
+                                new supportConstraint(mockData.googleMapsConstraint(idOperation, _idCDT)).save(err => {
+                                    callback(err);
                                 });
-                                callback(null);
                             }
                         ],
                         err => {
@@ -331,25 +215,157 @@ export default class {
                 callback => {
                     async.waterfall([
                             callback => {
-                                let flickrService = new serviceModel(mockData.flickr);
-                                flickrService.save((err, service) => {
+                                new serviceModel(mockData.atm).save((err, service) => {
                                     callback(err, service.id);
                                 });
                             },
                             (idService, callback) => {
-                                let flickrOperations = new operationModel(mockData.flickrOperations(idService));
-                                flickrOperations.save((err, operation) => {
+                                new operationModel(mockData.atmOperations(idService)).save((err, operation) => {
                                    callback(err, operation.id);
                                 });
                             },
                             (idOperation, callback) => {
-                                _.forEach(mockData.flickrAssociation(idOperation, _idCDT), a => {
-                                    let associations = new SupportServiceModel(a);
-                                    associations.save(err => {
-                                        assert.equal(err, null);
+                                async.each(mockData.atmAssociations(idOperation, _idCDT), (a, callback) => {
+                                        new supportAssociation(a).save(err => {
+                                            callback(err);
+                                        });
+                                    },
+                                    err => {
+                                        callback(err, idOperation);
                                     });
+                            },
+                            (idOperation, callback) => {
+                                new supportConstraint(mockData.atmConstraint(idOperation, _idCDT)).save(err => {
+                                    callback(err);
                                 });
-                                callback(null);
+                            }
+                        ],
+                        err => {
+                            callback(err);
+                        });
+                },
+                callback => {
+                    async.waterfall([
+                            callback => {
+                                new serviceModel(mockData.atac).save((err, service) => {
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                new operationModel(mockData.atacOperations(idService)).save((err, operation) => {
+                                   callback(err, operation.id);
+                                });
+                            },
+                            (idOperation, callback) => {
+                                async.each(mockData.atacAssociations(idOperation, _idCDT), (a, callback) => {
+                                        new supportAssociation(a).save(err => {
+                                            callback(err);
+                                        });
+                                    },
+                                    err => {
+                                        callback(err, idOperation);
+                                    });
+                            },
+                            (idOperation, callback) => {
+                                new supportConstraint(mockData.atacConstraint(idOperation, _idCDT)).save(err => {
+                                    callback(err);
+                                });
+                            }
+                        ],
+                        err => {
+                            callback(err);
+                        });
+                },
+                callback => {
+                    async.waterfall([
+                            callback => {
+                                new serviceModel(mockData.fs).save((err, service) => {
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                new operationModel(mockData.fsOperations(idService)).save((err, operation) => {
+                                   callback(err, operation.id);
+                                });
+                            },
+                            (idOperation, callback) => {
+                                async.each(mockData.fsAssociations(idOperation, _idCDT), (a, callback) => {
+                                        new supportAssociation(a).save(err => {
+                                            callback(err);
+                                        });
+                                    },
+                                    err => {
+                                        callback(err, idOperation);
+                                    });
+                            },
+                            (idOperation, callback) => {
+                                new supportConstraint(mockData.fsConstraint(idOperation, _idCDT)).save(err => {
+                                    callback(err);
+                                });
+                            }
+                        ],
+                        err => {
+                            callback(err);
+                        });
+                },
+                callback => {
+                    async.waterfall([
+                            callback => {
+                                new serviceModel(mockData.trenord).save((err, service) => {
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                new operationModel(mockData.trenordOperations(idService)).save((err, operation) => {
+                                   callback(err, operation.id);
+                                });
+                            },
+                            (idOperation, callback) => {
+                                async.each(mockData.trenordAssociations(idOperation, _idCDT), (a, callback) => {
+                                        new supportAssociation(a).save(err => {
+                                            callback(err);
+                                        });
+                                    },
+                                    err => {
+                                        callback(err, idOperation);
+                                    });
+                            },
+                            (idOperation, callback) => {
+                                new supportConstraint(mockData.trenordConstraint(idOperation, _idCDT)).save(err => {
+                                    callback(err);
+                                });
+                            }
+                        ],
+                        err => {
+                            callback(err);
+                        });
+                },
+                callback => {
+                    async.waterfall([
+                            callback => {
+                                new serviceModel(mockData.flickr).save((err, service) => {
+                                    callback(err, service.id);
+                                });
+                            },
+                            (idService, callback) => {
+                                new operationModel(mockData.flickrOperations(idService)).save((err, operation) => {
+                                   callback(err, operation.id);
+                                });
+                            },
+                            (idOperation, callback) => {
+                                async.each(mockData.flickrAssociations(idOperation, _idCDT), (a, callback) => {
+                                    new supportAssociation(a).save(err => {
+                                        callback(err);
+                                    });
+                                },
+                                err => {
+                                    callback(err, idOperation);
+                                });
+                            },
+                            (idOperation, callback) => {
+                                new supportConstraint(mockData.flickrConstraint(idOperation, _idCDT)).save(err => {
+                                   callback(err);
+                                });
                             }
                         ],
                         err => {
@@ -390,7 +406,12 @@ export default class {
                     })
                 },
                 callback => {
-                    SupportServiceModel.remove({}, err => {
+                    supportAssociation.remove({}, err => {
+                        callback(err);
+                    })
+                },
+                callback => {
+                    supportConstraint.remove({}, err => {
                         callback(err);
                     })
                 }

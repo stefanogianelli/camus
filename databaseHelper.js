@@ -1,6 +1,5 @@
 'use strict';
 
-import _ from 'lodash';
 import async from 'async';
 import Promise from 'bluebird';
 
@@ -10,7 +9,10 @@ import {
     operationModel
 } from './models/mongoose/serviceDescription';
 import PrimaryServiceModel from './models/mongoose/primaryServiceAssociation';
-import SupportServiceModel from './models/mongoose/supportServiceAssociation';
+import {
+    supportAssociation,
+    supportConstraint
+} from './models/mongoose/supportServiceAssociation';
 import CdtModel from './models/mongoose/cdtDescription';
 
 /**
@@ -50,10 +52,13 @@ export default class {
                                     });
                                 },
                                 (idOperation, callback) => {
-                                    _.forEach(googlePlacesAssociations(idOperation, idCdt), a => {
+                                    async.each(googlePlacesAssociations(idOperation, idCdt), (a, callback) => {
                                         new PrimaryServiceModel(a).save(err => {
                                             callback(err);
                                         });
+                                    },
+                                    err => {
+                                        callback(err);
                                     });
                                 }
                             ], err => {
@@ -74,10 +79,13 @@ export default class {
                                     });
                                 },
                                 (idOperation, callback) => {
-                                    _.forEach(eventfulAssociations(idOperation, idCdt), a => {
+                                    async.each(eventfulAssociations(idOperation, idCdt), (a, callback) => {
                                         new PrimaryServiceModel(a).save(err => {
                                             callback(err);
                                         });
+                                    },
+                                    err => {
+                                        callback(err);
                                     });
                                 }
                             ], err => {
@@ -98,10 +106,13 @@ export default class {
                                     });
                                 },
                                 (idOperation, callback) => {
-                                    _.forEach(cinemaStubAssociations(idOperation, idCdt), a => {
+                                    async.each(cinemaStubAssociations(idOperation, idCdt), (a, callback) => {
                                         new PrimaryServiceModel(a).save(err => {
                                             callback(err);
                                         });
+                                    },
+                                    err => {
+                                        callback(err);
                                     });
                                 }
                             ], err => {
@@ -122,10 +133,13 @@ export default class {
                                     });
                                 },
                                 (idOperation, callback) => {
-                                    _.forEach(theaterStubAssociations(idOperation, idCdt), a => {
+                                    async.each(theaterStubAssociations(idOperation, idCdt), (a, callback) => {
                                         new PrimaryServiceModel(a).save(err => {
                                             callback(err);
                                         });
+                                    },
+                                    err => {
+                                        callback(err);
                                     });
                                 }
                             ], err => {
@@ -141,21 +155,24 @@ export default class {
                                     });
                                 },
                                 (idService, callback) => {
-                                    async.map(mericiPrimaryOperations(idService)
-                                        , (op, callback) => {
+                                    async.map(mericiPrimaryOperations(idService),
+                                        (op, callback) => {
                                             new operationModel(op).save((err, operation) => {
                                                 callback(err, operation.id);
                                             });
-                                        }
-                                        , (err, operations) => {
+                                        },
+                                        (err, operations) => {
                                             callback(err, operations[0], operations[1], operations[2], operations[3]);
                                         });
                                 },
                                 (idHotel, idFood, idTheater, idMuseum, callback) => {
-                                    _.forEach(mericiPrimaryAssociations(idCdt, idHotel, idFood, idTheater, idMuseum), a => {
+                                    async.each(mericiPrimaryAssociations(idCdt, idHotel, idFood, idTheater, idMuseum), (a, callback) => {
                                         new PrimaryServiceModel(a).save(err => {
                                             callback(err);
                                         });
+                                    },
+                                    err => {
+                                        callback(err);
                                     });
                                 }
                             ], err => {
@@ -196,10 +213,18 @@ export default class {
                                     });
                                 },
                                 (idOperation, callback) => {
-                                    _.forEach(googleMapsAssociation(idOperation, idCdt), a => {
-                                        new SupportServiceModel(a).save(err => {
+                                    async.each(googleMapsAssociations(idOperation, idCdt), (a, callback) => {
+                                        new supportAssociation(a).save(err => {
                                             callback(err);
                                         });
+                                    },
+                                    err => {
+                                        callback(err, idOperation);
+                                    });
+                                },
+                                (idOperation, callback) => {
+                                    new supportConstraint(googleMapsConstraint(idOperation, idCdt)).save(err => {
+                                        callback(err);
                                     });
                                 }
                             ], err => {
@@ -215,22 +240,35 @@ export default class {
                                     });
                                 },
                                 (idService, callback) => {
-                                    async.map(mericiSupportOperations(idService)
-                                        , (op, callback) => {
+                                    async.map(mericiSupportOperations(idService),
+                                        (op, callback) => {
                                             new operationModel(op).save((err, operation) => {
                                                 callback(err, operation.id);
                                             });
-                                        }
-                                        , (err, operations) => {
+                                        },
+                                        (err, operations) => {
                                             callback(err, operations[0], operations[1], operations[2]);
                                         });
                                 },
                                 (idTaxi, idCarSharing, idDriver, callback) => {
-                                    _.forEach(mericiSupportAssociation(idCdt, idTaxi, idCarSharing, idDriver), a => {
-                                        new SupportServiceModel(a).save(err => {
+                                    async.each(mericiSupportAssociations(idCdt, idTaxi, idCarSharing, idDriver), (a, callback) => {
+                                        new supportAssociation(a).save(err => {
                                             callback(err);
                                         });
+                                    },
+                                    err => {
+                                        callback(err, idTaxi, idCarSharing, idDriver);
                                     });
+                                },
+                                (idTaxi, idCarSharing, idDriver, callback) => {
+                                    async.each(mericiSupportConstraints(idCdt, idTaxi, idCarSharing, idDriver), (c, callback) => {
+                                        new supportConstraint(c).save(err => {
+                                           callback(err);
+                                        });
+                                    },
+                                    err => {
+                                        callback(err);
+                                    })
                                 }
                             ], err => {
                                 callback(err);
@@ -281,7 +319,12 @@ export default class {
                     })
                 },
                 callback => {
-                    SupportServiceModel.remove({}, err => {
+                    supportAssociation.remove({}, err => {
+                        callback(err);
+                    })
+                },
+                callback => {
+                    supportConstraint.remove({}, err => {
                         callback(err);
                     })
                 }
@@ -625,21 +668,26 @@ const googleMapsOperations = idService => {
 };
 
 //google maps service associations
-const googleMapsAssociation = (idOperation, idCDT) => {
+const googleMapsAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 1,
-            associations: [
-                {
-                    dimension: 'Transport',
-                    value: 'WithCar'
-                }
-            ]
+            dimension: 'Transport',
+            value: 'WithCar'
         }
     ];
+};
+
+//google maps service constraint
+const googleMapsConstraint = (idOperation, idCDT) => {
+    return {
+        _idOperation: idOperation,
+        category: 'Transport',
+        _idCDT: idCDT,
+        constraintCount: 1
+    };
 };
 
 //cinema stub service
@@ -1231,43 +1279,52 @@ const mericiSupportOperations = idService => {
 };
 
 //merici support service associations
-const mericiSupportAssociation = (idCDT, idTaxi, idCarSharing, idDriver) => {
+const mericiSupportAssociations = (idCDT, idTaxi, idCarSharing, idDriver) => {
     return [
         {
             _idOperation: idTaxi,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 1,
-            associations: [
-                {
-                    dimension: 'Tipology',
-                    value: 'Taxi'
-                }
-            ]
+            dimension: 'Tipology',
+            value: 'Taxi'
         },
         {
             _idOperation: idCarSharing,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 1,
-            associations: [
-                {
-                    dimension: 'Tipology',
-                    value: 'CarSharing'
-                }
-            ]
+            dimension: 'Tipology',
+            value: 'CarSharing'
         },
         {
             _idOperation: idDriver,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 1,
-            associations: [
-                {
-                    dimension: 'Tipology',
-                    value: 'WithDriver'
-                }
-            ]
+            dimension: 'Tipology',
+            value: 'WithDriver'
+        }
+    ];
+};
+
+//merici support service constraints
+const mericiSupportConstraints = (idCDT, idTaxi, idCarSharing, idDriver) => {
+    return [
+        {
+            _idOperation: idTaxi,
+            category: 'Transport',
+            _idCDT: idCDT,
+            constraintCount: 1
+        },
+        {
+            _idOperation: idCarSharing,
+            category: 'Transport',
+            _idCDT: idCDT,
+            constraintCount: 1
+        },
+        {
+            _idOperation: idDriver,
+            category: 'Transport',
+            _idCDT: idCDT,
+            constraintCount: 1
         }
     ];
 };

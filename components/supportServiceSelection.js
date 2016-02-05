@@ -93,55 +93,58 @@ export default class {
      */
     _selectServiceFromCategory (categories, decoratedCdt) {
         const start = process.hrtime();
-        return new Promise (resolve => {
-            if (!_.isUndefined(categories) && !_.isEmpty(categories) && !_.isEmpty(decoratedCdt.filterNodes)) {
-                let nodes = decoratedCdt.filterNodes;
-                if (!_.isEmpty(decoratedCdt.rankingNodes)) {
-                    nodes = _.concat(decoratedCdt.filterNodes, decoratedCdt.rankingNodes);
-                }
-                Promise
-                    .map(categories, c => {
-                        return Promise
-                            .join(
-                                provider
-                                    .filterSupportServices(decoratedCdt._id, c, nodes),
-                                this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes),
-                                (filterServices, customServices) => {
-                                    if (debug) {
-                                        metrics.record('getAssociations', start);
-                                    }
-                                    return this._mergeResults(filterServices, customServices);
-                                }
-                            )
-                            .then(services => {
-                                //retrieve the service descriptions for the found operation identifiers
-                                return provider.getServicesByOperationIds(services);
-                            })
-                            .then(services => {
-                                //compose the queries
-                                return this._composeQueries(services, c);
-                            })
-                            .catch(e => {
-                                console.log(e);
-                            });
-                    })
-                    .then(output => {
-                        resolve(_.flatten(output));
-                    });
-            } else {
-                resolve([]);
+        if (!_.isUndefined(categories) && !_.isEmpty(categories) && !_.isEmpty(decoratedCdt.filterNodes)) {
+            let nodes = decoratedCdt.filterNodes;
+            if (!_.isEmpty(decoratedCdt.rankingNodes)) {
+                nodes = _.concat(decoratedCdt.filterNodes, decoratedCdt.rankingNodes);
             }
-        });
+            return Promise
+                .map(categories, c => {
+                    return Promise
+                        .join(
+                            provider.filterSupportServices(decoratedCdt._id, c, nodes),
+                            this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes),
+                            (filterServices, customServices) => {
+                                if (debug) {
+                                    metrics.record('getAssociations', start);
+                                }
+                                //acquire constraint count information
+                                const ids = _.unionWith(filterServices, customServices, (arrVal, othVal) => {
+                                    return arrVal._idOperation.equals(othVal._idOperation);
+                                });
+                                return provider
+                                    .getServicesConstraintCount(decoratedCdt._id, c, _.map(ids, '_idOperation'))
+                                    .then(constraintCount => {
+                                        return this._mergeResults(filterServices, customServices, constraintCount);
+                                    });
+                            }
+                        )
+                        .then(provider.getServicesByOperationIds)
+                        .then(services => {
+                            //compose the queries
+                            return this._composeQueries(services, c);
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                })
+                .reduce((a, b) => {
+                    return _.concat(a,b);
+                });
+        } else {
+            return Promise.resolve([]);
+        }
     }
 
     /**
      * Create the final list of support services selected for a specific category
      * @param filterServices The services found by the standard search
      * @param customServices The services found by the custom searches
+     * @param constraintCount The count of the constraints associated to a service
      * @returns {Array} The operation identifiers of the selected support services
      * @private
      */
-    _mergeResults (filterServices, customServices) {
+    _mergeResults (filterServices, customServices, constraintCount) {
         const start = process.hrtime();
         let results = [];
         _.forEach(_.concat(filterServices, customServices), s => {
@@ -151,9 +154,12 @@ export default class {
             });
             if (index === -1) {
                 //operation not found, so I create a new object
+                const count = _.result(_.find(constraintCount, o => {
+                    return o._idOperation.equals(s._idOperation);
+                }), 'constraintCount');
                 results.push({
                     _idOperation: s._idOperation,
-                    constraintCount: s.constraintCount,
+                    constraintCount: count,
                     count: 1
                 });
             } else {
@@ -162,7 +168,7 @@ export default class {
             }
         });
         //get the maximum value of the count attribute
-        let maxCount = _.max(_.map(results, 'count'));
+        let maxCount = _.result(_.maxBy(results, 'count'), 'count');
         //filter out the operations with the maximum count value and that respect their total constraint counter
         results = _.filter(results, r => {
             return r.count === maxCount && r.constraintCount === r.count;

@@ -11,7 +11,10 @@ import {
     operationModel
 } from '../models/mongoose/serviceDescription';
 import primaryServiceModel from '../models/mongoose/primaryServiceAssociation';
-import supportServiceModel from '../models/mongoose/supportServiceAssociation';
+import {
+    supportAssociation,
+    supportConstraint
+} from '../models/mongoose/supportServiceAssociation';
 
 //radius for the coordinate search
 const _radius = 1500;
@@ -261,40 +264,24 @@ export default class {
      */
     filterSupportServices (idCDT, category, attributes) {
         return new Promise ((resolve, reject) => {
-            if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes)) {
-                let associations = _.map(attributes, a => {
+            if (!_.isUndefined(idCDT) && !_.isUndefined(attributes) && !_.isEmpty(attributes) && !_.isUndefined(category)) {
+                let clause = {
+                    _idCDT: idCDT,
+                    category: category,
+                    $or: []
+                };
+                clause.$or = _.map(attributes, a => {
                     return {
-                        'associations.dimension': a.name,
-                        'associations.value': a.value
+                        dimension: a.name,
+                        value: a.value
                     }
                 });
-                let clause = [
-                    {
-                        $match: {
-                            _idCDT: idCDT,
-                            category: category
-                        }
-                    },
-                    {
-                        $unwind: '$associations'
-                    },
-                    {
-                        $match: {
-                            $or: associations
-                        }
-                    },
-                    {
-                        $project: {
-                            _idOperation: '$_idOperation',
-                            dimension: '$associations.dimension',
-                            value: '$associations.value',
-                            constraintCount: '$constraintCount',
-                            _id: 0
-                        }
-                    }
-                ];
-                supportServiceModel.collection
-                    .aggregate(clause)
+                const projection = {
+                    _idOperation: 1,
+                    _id: 0
+                };
+                supportAssociation.collection
+                    .find(clause, projection)
                     .toArray((err, results) => {
                         if (err) {
                             reject(err);
@@ -304,6 +291,31 @@ export default class {
             } else {
                 resolve([]);
             }
+        });
+    }
+
+    getServicesConstraintCount (idCDT, category, idOperations) {
+        return new Promise ((resolve, reject) => {
+           if (!_.isUndefined(idCDT) && !_.isUndefined(category) && !_.isUndefined(idOperations) && !_.isEmpty(idOperations)) {
+               const clause = {
+                   _idCDT: idCDT,
+                   category: category,
+                   _idOperation: {
+                       $in: idOperations
+                   }
+               };
+               const projection = {_idOperation: 1, constraintCount: 1, _id: 0};
+               supportConstraint.collection
+                   .find(clause, projection)
+                   .toArray((err, results) => {
+                       if (err) {
+                           reject(err);
+                       }
+                       resolve(results);
+                   });
+           } else {
+               resolve([]);
+           }
         });
     }
 
@@ -319,7 +331,7 @@ export default class {
             const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
             const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
             if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
-                supportServiceModel
+                supportAssociation
                     .find({
                         _idCDT: idCdt,
                         loc: {

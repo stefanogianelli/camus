@@ -274,7 +274,7 @@ export const googlePlaces = {
     basePath: 'http://localhost:3000/maps/api/place'
 };
 
-export const googlePlacesOperations = idService => {
+export const googlePlacesOperation = idService => {
     return {
         service: idService,
         name: 'placeTextSearch',
@@ -331,7 +331,7 @@ export const eventful = {
     basePath: 'http://localhost:3000/json'
 };
 
-export const eventfulOperations = idService => {
+export const eventfulOperation = idService => {
     return {
         service: idService,
         name: 'eventSearch',
@@ -396,7 +396,7 @@ export const fakeService = {
     basePath: 'http://localhost:3000/jsonn'
 };
 
-export const fakeServiceOperations = idService => {
+export const fakeServiceOperation = idService => {
     return {
         service: idService,
         name: 'eventSearch',
@@ -455,7 +455,7 @@ export const testBridge = {
     protocol: 'custom'
 };
 
-export const testBridgeOperations = idService => {
+export const testBridgeOperation = idService => {
     return {
         service: idService,
         name: 'placeTextSearch',
@@ -788,7 +788,7 @@ export const eventfulAssociations = (idOperation, idCDT, idNestedCDT, idMultiple
 };
 
 //fake service associations
-export const fakeServiceAssociation = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
+export const fakeServiceAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -822,7 +822,7 @@ export const fakeServiceAssociation = (idOperation, idCDT, idNestedCDT, idMultip
 };
 
 //test bridge service associations
-export const testBridgeAssociation = (idOperation, idCDT) => {
+export const testBridgeAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
@@ -835,113 +835,157 @@ export const testBridgeAssociation = (idOperation, idCDT) => {
 };
 
 //google maps service associations
-export const googleMapsAssociation = (idOperation, idCDT) => {
+export const googleMapsAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 1,
-            associations: [
-                {
-                    dimension: 'Transport',
-                    value: 'WithCar'
-                }
-            ]
+            dimension: 'Transport',
+            value: 'WithCar'
         }
     ];
 };
 
+//google maps service constraint
+export const googleMapsConstraint = (idOperation, idCDT) => {
+    return {
+        _idOperation: idOperation,
+        category: 'Transport',
+        _idCDT: idCDT,
+        constraintCount: 1
+    };
+};
+
 //ATM service associations
-export const atmAssociation = (idOperation, idCDT) => {
+export const atmAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 2,
-            associations: [
-                {
-                    dimension: 'Tipology',
-                    value: 'Bus'
-                }
-            ],
+            dimension: 'Tipology',
+            value: 'Bus'
+        },
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            _idCDT: idCDT,
             loc: [9.18951, 45.46427]
         }
     ];
 };
 
+//ATM service constraint
+export const atmConstraint = (idOperation, idCDT) => {
+    return {
+        _idOperation: idOperation,
+        category: 'Transport',
+        _idCDT: idCDT,
+        constraintCount: 2
+    };
+};
+
 //ATAC service associations
-export const atacAssociation = (idOperation, idCDT) => {
+export const atacAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 2,
-            associations: [
-                {
-                    dimension: 'Tipology',
-                    value: 'Bus'
-                }
-            ],
+            dimension: 'Tipology',
+            value: 'Bus'
+        },
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            _idCDT: idCDT,
             loc: [12.51133, 41.89193]
         }
     ];
 };
 
+//ATAC service constraint
+export const atacConstraint = (idOperation, idCDT) => {
+    return {
+        _idOperation: idOperation,
+        category: 'Transport',
+        _idCDT: idCDT,
+        constraintCount: 2
+    };
+};
+
 //FS service associations
-export const fsAssociation = (idOperation, idCDT) => {
+export const fsAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
             category: 'Transport',
-            require: '',
             _idCDT: idCDT,
-            constraintCount: 1,
-            associations: [
-                {
-                    dimension: 'Tipology',
-                    value: 'Train'
-                }
-            ]
+            dimension: 'Tipology',
+            value: 'Train'
         }
     ];
 };
 
+//FS service constraint
+export const fsConstraint = (idOperation, idCDT) => {
+    return {
+        _idOperation: idOperation,
+        category: 'Transport',
+        _idCDT: idCDT,
+        constraintCount: 1
+    };
+};
+
 //Trenord service associations
-export const trenordAssociation = (idOperation, idCDT) => {
+export const trenordAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            constraintCount: 2,
-            associations: [
-                {
-                    dimension: 'Tipology',
-                    value: 'Train'
-                }
-            ],
+            dimension: 'Tipology',
+            value: 'Train'
+        },
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            _idCDT: idCDT,
             loc: [9.18951, 45.46427]
         }
     ];
 };
 
+//Trenord service constraint
+export const trenordConstraint = (idOperation, idCDT) => {
+    return {
+        _idOperation: idOperation,
+        category: 'Transport',
+        _idCDT: idCDT,
+        constraintCount: 2
+    };
+};
+
 //Flickr service associations
-export const flickrAssociation = (idOperation, idCDT) => {
+export const flickrAssociations = (idOperation, idCDT) => {
     return [
         {
             _idOperation: idOperation,
             category: 'Photo',
             _idCDT: idCDT,
-            constraintCount: 1,
-            associations: [
-                {
                     dimension: 'Tipology',
                     value: 'DinnerWithFriends'
-                }
-            ]
         }
     ];
+};
+
+//Flickr service constraint
+export const flickrConstraint = (idOperation, idCDT) => {
+    return {
+        _idOperation: idOperation,
+        category: 'Photo',
+        _idCDT: idCDT,
+        constraintCount: 1
+    };
 };
