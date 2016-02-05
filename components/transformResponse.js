@@ -43,15 +43,15 @@ export default class {
             //retrieve the base list of items
             const itemList = this._retrieveListOfResults(response, descriptor.responseMapping.list);
             //transform each item of the response
-            let transformedResponse = _.map(itemList, i => {
-                return this._transformItem(i, descriptor);
+            let transformedResponse = [];
+            _.forEach(itemList, i => {
+                let obj = this._transformItem(i, descriptor);
+                if (!_.isEmpty(obj)) {
+                    transformedResponse.push(obj);
+                }
             });
             //execute custom functions on items (if defined)
             transformedResponse = this._executeFunctions(transformedResponse, descriptor);
-            //clean the response from empty objects
-            transformedResponse = _.filter(transformedResponse, item => {
-                return !_.isUndefined(item) && !_.isEmpty(item);
-            });
             if (debug) {
                 metrics.record('mappingResponse', start);
                 metrics.saveResults();
