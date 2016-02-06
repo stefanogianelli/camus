@@ -477,8 +477,7 @@ const googlePlacesOperations = idService => {
         pagination: {
             attributeName: 'pagetoken',
             type: 'token',
-            tokenAttribute: 'next_page_token',
-            delay: 2000
+            tokenAttribute: 'next_page_token'
         }
     };
 };

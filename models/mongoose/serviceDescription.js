@@ -98,12 +98,7 @@ const paginationSchema = new Schema({
         enum: paginationTypes
     },
     tokenAttribute: String,
-    pageCountAttribute: String,
-    delay: {
-        type: Number,
-        min: 0,
-        default: 0
-    }
+    pageCountAttribute: String
 });
 
 /**
