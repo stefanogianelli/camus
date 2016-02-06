@@ -12,7 +12,7 @@
   },
   "rest": {
     "timeout": {
-      "service": "6000",
+      "service": "3000",
       "cache": "3600"
     }
   },
