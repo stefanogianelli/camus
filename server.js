@@ -72,7 +72,9 @@ app.use('/graphql', graphqlHTTP({schema: camusSchema, graphiql: true}));
 
 //acquire server configuration
 let port = 3001;
-if (config.has('server.port')) {
+if (!_.isUndefined(process.env.PORT)) {
+    port = process.env.PORT;
+} else if (config.has('server.port')) {
     port = config.get('server.port');
 }
 
