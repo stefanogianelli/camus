@@ -7,8 +7,7 @@
     "address": "mongodb://localhost/camus"
   },
   "redis": {
-    "address": "localhost",
-    "port": "6379"
+    "address": "localhost:6379"
   },
   "rest": {
     "timeout": {

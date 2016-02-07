@@ -10,20 +10,11 @@ import Bridge from './bridge';
 import Metrics from '../utils/MetricsUtils';
 
 //acquire redis configuration
-let port = undefined;
-if (config.has('redis.port')) {
-    port = config.get('redis.port');
-}
-
-let address = 'localhost';
+let address = 'localhost:6379';
 if (!_.isUndefined(process.env.REDIS_URL)) {
     address = process.env.REDIS_URL;
 } else if (config.has('redis.address')) {
     address = config.get('redis.address');
-}
-
-if (!_.isUndefined(port)) {
-    address = address + ':' + port;
 }
 
 const redis = new Redis(address);
