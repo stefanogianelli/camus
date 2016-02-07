@@ -218,7 +218,7 @@ export default class extends Bridge {
                 fullAddress += querySymbols.separator + currentPageAddress;
             }
             if (debug) {
-                console.log('Querying service \'' + descriptor.service.name + ': ' + fullAddress);
+                console.log('Querying service \'' + descriptor.service.name + '\': ' + fullAddress);
             }
             this
                 ._makeCall(fullAddress, descriptor.headers, descriptor.service.name)

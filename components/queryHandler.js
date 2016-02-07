@@ -123,7 +123,7 @@ export default class {
                 return transformResponse.mappingResponse(response.response, descriptor);
             })
             .catch(e => {
-                console.log('[' + descriptor.service.name + '] ERROR: ' + e);
+                console.log('[' + descriptor.service.name + '] ' + e);
                 return Promise.resolve([]);
             });
     }
