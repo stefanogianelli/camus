@@ -21,7 +21,9 @@ export default class {
         }
         this._path = filePath;
         //clear the file content
-        fs.writeFileAsync(this._path, '');
+        fs.writeFileAsync(this._path, '', err => {
+            //do nothing
+        });
         this._map = new Map();
     }
 
@@ -55,7 +57,9 @@ export default class {
             })
         });
         this._map.clear();
-        fs.appendFileAsync(this._path, output);
+        fs.appendFileAsync(this._path, output, err => {
+            //do nothing
+        });
     }
 
 }
