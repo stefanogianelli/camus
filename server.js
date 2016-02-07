@@ -77,11 +77,7 @@ if (!_.isUndefined(process.env.PORT)) {
 } else if (config.has('server.port')) {
     port = config.get('server.port');
 }
-
-let hostname = 'localhost';
-if (config.has('server.hostname')) {
-    hostname = config.get('server.hostname');
-}
+app.set('port', port);
 
 let dbUrl = '';
 if (!_.isUndefined(process.env.MONGOLAB_URI)) {
@@ -93,9 +89,9 @@ if (!_.isUndefined(process.env.MONGOLAB_URI)) {
 }
 
 //start the server
-let server = app.listen(port, hostname, () => {
+let server = app.listen(app.get('port'), () => {
     //connect to the DB
     provider.createConnection(dbUrl);
     //print the server stats
-    console.log('[INFO] Server running at http://%s:%s', hostname, port);
+    console.log('[INFO] Server listening on port ' + port);
 });
