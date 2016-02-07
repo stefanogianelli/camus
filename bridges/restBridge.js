@@ -229,7 +229,6 @@ export default class extends Bridge {
                         metrics.record('invokeService/' + descriptor.service.name, start);
                     }
                     resolve({
-                        status: 'OK',
                         hasNextPage: hasNextPage,
                         nextPage: nextPage,
                         response: response
