@@ -13,6 +13,10 @@ describe('Component: TransformResponse', () => {
             const array = transformResponse._retrieveListOfResults(googlePlacesResponse, googlePlacesMapping.list);
             assert.equal(array.length, 2);
         });
+        it('check behaviour when the root element doesn\'t have an array nor an object', () => {
+            const array = transformResponse._retrieveListOfResults(stringResponse, 'data');
+            assert.equal(array.length, 0);
+        });
         it('check error message when no response is specified', () => {
             try {
                 transformResponse._retrieveListOfResults();
@@ -589,4 +593,8 @@ const cinemaResponse = {
         "3D":0,
         "prevendita":0
     }
+};
+
+const stringResponse = {
+    data: 'No data found'
 };

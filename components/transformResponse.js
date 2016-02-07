@@ -86,11 +86,16 @@ export default class {
         }
         //check if the current list is an array, otherwise I transform it in a list from the current set of objects
         if (!_.isArray(list)) {
-            list = _.map(list, item => {
-                return item;
-            });
+            if (_.isObject(list)) {
+                return _.map(list, item => {
+                    return item;
+                });
+            } else {
+                return [];
+            }
+        } else {
+            return list;
         }
-        return list;
     }
 
     /**
