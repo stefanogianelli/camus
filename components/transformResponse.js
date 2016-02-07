@@ -40,23 +40,27 @@ export default class {
             if (_.isUndefined(descriptor.responseMapping)) {
                 reject('No mapping defined. Please add a mapping for the current service');
             }
-            //retrieve the base list of items
-            const itemList = this._retrieveListOfResults(response, descriptor.responseMapping.list);
-            //transform each item of the response
-            let transformedResponse = [];
-            _.forEach(itemList, i => {
-                let obj = this._transformItem(i, descriptor);
-                if (!_.isEmpty(obj)) {
-                    transformedResponse.push(obj);
+            try {
+                //retrieve the base list of items
+                const itemList = this._retrieveListOfResults(response, descriptor.responseMapping.list);
+                //transform each item of the response
+                let transformedResponse = [];
+                _.forEach(itemList, i => {
+                    let obj = this._transformItem(i, descriptor);
+                    if (!_.isEmpty(obj)) {
+                        transformedResponse.push(obj);
+                    }
+                });
+                //execute custom functions on items (if defined)
+                transformedResponse = this._executeFunctions(transformedResponse, descriptor);
+                if (debug) {
+                    metrics.record('mappingResponse', start);
+                    metrics.saveResults();
                 }
-            });
-            //execute custom functions on items (if defined)
-            transformedResponse = this._executeFunctions(transformedResponse, descriptor);
-            if (debug) {
-                metrics.record('mappingResponse', start);
-                metrics.saveResults();
+                resolve(transformedResponse);
+            } catch (e) {
+                reject(e.message);
             }
-            resolve(transformedResponse);
         })
     }
 
@@ -73,7 +77,7 @@ export default class {
             throw new Error('Empty response. Please add a response to be mapped');
         }
         let list = [];
-        if (!_.isUndefined(listItem) && !_.isEmpty(listItem)) {
+        if (!_.isUndefined(listItem)) {
             //it was defined a base list item so consider it as root for the transformation
             list = this._getItemValue(response, listItem);
         } else {
