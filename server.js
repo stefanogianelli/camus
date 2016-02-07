@@ -89,7 +89,7 @@ if (!_.isUndefined(process.env.MONGOLAB_URI)) {
 }
 
 //start the server
-let server = app.listen(app.get('port'), () => {
+app.listen(app.get('port'), () => {
     //connect to the DB
     provider.createConnection(dbUrl);
     //print the server stats
