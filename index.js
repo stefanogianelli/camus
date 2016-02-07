@@ -4,6 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import graphqlHTTP from 'express-graphql';
 import config from 'config';
+import _ from 'lodash';
 
 import DatabaseHelper from'./databaseHelper';
 import Provider from './provider/provider';
@@ -81,7 +82,9 @@ if (config.has('server.hostname')) {
 }
 
 let dbUrl = '';
-if (config.has('database.address')) {
+if (!_.isUndefined(process.env.MONGOLAB_URI)) {
+    dbUrl = process.env.MONGOLAB_URI;
+} else if (config.has('database.address')) {
     dbUrl = config.get('database.address');
 } else {
     throw Error('[ERROR] No database URL defined in the config file!');
