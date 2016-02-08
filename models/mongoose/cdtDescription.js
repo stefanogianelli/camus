@@ -44,8 +44,7 @@ const NodeSchema = new Schema({
     },
     values: [String],
     parameters: [ParameterSchema],
-    parents: [String],
-    parent: String
+    parents: [String]
 })
 
 /**
