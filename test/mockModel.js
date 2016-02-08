@@ -1,176 +1,190 @@
 'use strict'
 
+//user
+export const user = {
+    name: 'Mario',
+    surname: 'Rossi',
+    mail: 'mario.rossi@mail.com',
+    password: 'password'
+}
+
 //cdt
-export const cdt = {
-    _userId: 1,
-    context: [
-        {
-            name: 'InterestTopic',
-            for: 'filter',
-            values: [
-                'Restaurant',
-                'Hotel'
-            ]
-        },
-        {
-            name: 'Festivita',
-            for: 'ranking',
-            values: [
-                'Natale',
-                'Capodanno'
-            ]
-        },
-        {
-            name: 'Location',
-            for: 'ranking|parameter',
-            parameters: [
-                {
-                    name: 'CityName'
-                },
-                {
-                    name: 'CityCoord',
-                    fields: [
-                        {
-                            name: 'Latitude'
-                        },
-                        {
-                            name: 'Longitude'
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'Guests',
-            for: 'parameter',
-            parameters: [
-                {
-                    name: 'Number',
-                    type: 'Integer'
-                }
-            ]
-        },
-        {
-            name: 'Budget',
-            for: 'filter|parameter',
-            values: [
-                'Low',
-                'Medium',
-                'High'
-            ]
-        },
-        {
-            name: 'RestaurantTipology',
-            for: 'filter',
-            values: [
-                'DinnerWithFriends'
-            ]
-        },
-        {
-            name: 'Keyword',
-            for: 'parameter',
-            parameters: [
-                {
-                    name: 'SearchKey',
-                    type: 'String'
-                }
-            ]
-        },
-        {
-            name: 'Transport',
-            for: 'filter',
-            values: [
-                'PublicTransport',
-                'WithCar'
-            ]
-        },
-        {
-            name: 'Tipology',
-            for: 'filter',
-            values: [
-                'Bus',
-                'Train'
-            ],
-            parents: [
-                'PublicTransport'
-            ]
-        }
-    ]
+export const cdt = userId => {
+    return {
+        _userId: userId,
+        context: [
+            {
+                name: 'InterestTopic',
+                for: 'filter',
+                values: [
+                    'Restaurant',
+                    'Hotel'
+                ]
+            },
+            {
+                name: 'Festivita',
+                for: 'ranking',
+                values: [
+                    'Natale',
+                    'Capodanno'
+                ]
+            },
+            {
+                name: 'Location',
+                for: 'ranking|parameter',
+                parameters: [
+                    {
+                        name: 'CityName'
+                    },
+                    {
+                        name: 'CityCoord',
+                        fields: [
+                            {
+                                name: 'Latitude'
+                            },
+                            {
+                                name: 'Longitude'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name: 'Guests',
+                for: 'parameter',
+                parameters: [
+                    {
+                        name: 'Number',
+                        type: 'Integer'
+                    }
+                ]
+            },
+            {
+                name: 'Budget',
+                for: 'filter|parameter',
+                values: [
+                    'Low',
+                    'Medium',
+                    'High'
+                ]
+            },
+            {
+                name: 'RestaurantTipology',
+                for: 'filter',
+                values: [
+                    'DinnerWithFriends'
+                ]
+            },
+            {
+                name: 'Keyword',
+                for: 'parameter',
+                parameters: [
+                    {
+                        name: 'SearchKey',
+                        type: 'String'
+                    }
+                ]
+            },
+            {
+                name: 'Transport',
+                for: 'filter',
+                values: [
+                    'PublicTransport',
+                    'WithCar'
+                ]
+            },
+            {
+                name: 'Tipology',
+                for: 'filter',
+                values: [
+                    'Bus',
+                    'Train'
+                ],
+                parents: [
+                    'PublicTransport'
+                ]
+            }
+        ]
+    }
 }
 
 //CDT with nested sons
-export const nestedCdt = {
-    _userId: 1,
-    context: [
-        {
-            name: 'a',
-            for: 'filter',
-            values: [
-                'b', 'c'
-            ]
-        },
-        {
-            name: 'd',
-            for: 'filter',
-            values: [
-                'e', 'f'
-            ],
-            parents: [
-                'b'
-            ]
-        },
-        {
-            name: 'g',
-            for: 'filter',
-            values: [
-                'h', 'i'
-            ],
-            parents: [
-                'f', 'b'
-            ]
-        }
-    ]
+export const nestedCdt = userId => {
+    return {
+        _userId: userId,
+        context: [
+            {
+                name: 'a',
+                for: 'filter',
+                values: [
+                    'b', 'c'
+                ]
+            },
+            {
+                name: 'd',
+                for: 'filter',
+                values: [
+                    'e', 'f'
+                ],
+                parents: [
+                    'b'
+                ]
+            },
+            {
+                name: 'g',
+                for: 'filter',
+                values: [
+                    'h', 'i'
+                ],
+                parents: [
+                    'f', 'b'
+                ]
+            }
+        ]
+    }
 }
 
 //CDT with multiple sons
-export const multipleSonsCdt = {
-    _userId: 1,
-    context: [
-        {
-            name: 'a',
-            for: 'filter',
-            values: [
-                'c', 'd'
-            ]
-        },
-        {
-            name: 'b',
-            for: 'filter',
-            values: [
-                'e', 'f'
-            ]
-        },
-        {
-            name: 'g',
-            for: 'filter',
-            values: [
-                'i', 'l'
-            ],
-            parents: [
-                'd'
-            ]
-        },
-        {
-            name: 'h',
-            for: 'filter',
-            values: [
-                'm', 'n'
-            ],
-            parents: [
-                'e'
-            ]
-        }
-    ]
+export const multipleSonsCdt = userId => {
+    return {
+        _userId: userId,
+        context: [
+            {
+                name: 'a',
+                for: 'filter',
+                values: [
+                    'c', 'd'
+                ]
+            },
+            {
+                name: 'b',
+                for: 'filter',
+                values: [
+                    'e', 'f'
+                ]
+            },
+            {
+                name: 'g',
+                for: 'filter',
+                values: [
+                    'i', 'l'
+                ],
+                parents: [
+                    'd'
+                ]
+            },
+            {
+                name: 'h',
+                for: 'filter',
+                values: [
+                    'm', 'n'
+                ],
+                parents: [
+                    'e'
+                ]
+            }
+        ]
+    }
 }
 
 //sample decorated CDT

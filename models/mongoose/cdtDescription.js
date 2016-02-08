@@ -2,6 +2,7 @@
 
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const ObjectId = Schema.Types.ObjectId
 
 const forEnum = 'filter parameter ranking filter|parameter ranking|parameter'.split(' ')
 
@@ -51,7 +52,10 @@ const NodeSchema = new Schema({
  * Schema for CDT
  */
 const cdtSchema = new Schema ({
-    _userId: String,
+    _userId: {
+        type: ObjectId,
+        ref: 'user'
+    },
     context: [NodeSchema]
 })
 

@@ -5,8 +5,13 @@ import {
     GraphQLString,
     GraphQLList,
     GraphQLObjectType,
-    GraphQLSchema
+    GraphQLNonNull
 } from 'graphql'
+
+import {
+    primaryConnection,
+    supportConnection
+} from './connections'
 
 /**
  * Field schema
@@ -51,7 +56,7 @@ const parameterItemType = new GraphQLInputObjectType({
 /**
  * Context item
  */
-export const contextItemType = new GraphQLInputObjectType({
+const contextItemType = new GraphQLInputObjectType({
     name: 'ContextItem',
     description: 'A context item is a single selection made by the user',
     fields: () => ({
@@ -69,3 +74,33 @@ export const contextItemType = new GraphQLInputObjectType({
         }
     })
 })
+
+/**
+ * Response schema
+ */
+export const responseType = new GraphQLObjectType({
+    name: 'Response',
+    description: 'The response type. It contains the information retrieved by the services',
+    fields: () => ({
+        primaryResults: primaryConnection(),
+        supportResults: supportConnection()
+    })
+})
+
+/**
+ * Context arguments
+ */
+export const contextArgs = {
+    _id: {
+        description: 'The CDT identifier',
+        type: new GraphQLNonNull(GraphQLString)
+    },
+    context: {
+        description: 'The list of context preferences',
+        type: new GraphQLNonNull(new GraphQLList(contextItemType))
+    },
+    support: {
+        description: 'The list of support service categories that will be retrieved in the CDT',
+        type: new GraphQLList(GraphQLString)
+    }
+}

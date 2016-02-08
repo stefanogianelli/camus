@@ -1,43 +1,24 @@
 'use strict'
 
 import {
-    GraphQLString,
-    GraphQLList,
     GraphQLObjectType,
-    GraphQLSchema,
-    GraphQLID,
-    GraphQLNonNull
+    GraphQLSchema
 } from 'graphql'
 
 import {
-    getDecoratedCdt
+    getDecoratedCdt,
+    login
 } from './../../components/executionHelper'
 
 import {
-    contextItemType,
-    supportItemType
+    contextArgs,
+    responseType
 } from './contextSchema'
 
 import {
-    primaryConnection,
-    supportConnection
-} from './connections'
-
-import dataType from './primaryDataSchema'
-
-import supportResponseType from './supportDataSchema'
-
-/**
- * Response schema
- */
-export const responseType = new GraphQLObjectType({
-    name: 'Response',
-    description: 'The response type. It contains the information retrieved by the services',
-    fields: () => ({
-        primaryResults: primaryConnection(),
-        supportResults: supportConnection()
-    })
-})
+    loginType,
+    loginArgs
+} from './loginSchema'
 
 /**
  * Schema for GraphQL query
@@ -49,22 +30,17 @@ const queryType = new GraphQLObjectType({
         executeQuery: {
             type: responseType,
             description: 'The endpoint committed to the query execution',
-            args: {
-                _id: {
-                    description: 'The CDT identifier',
-                    type: new GraphQLNonNull(GraphQLString)
-                },
-                context: {
-                    description: 'The list of context preferences',
-                    type: new GraphQLNonNull(new GraphQLList(contextItemType))
-                },
-                support: {
-                    description: 'The list of support service categories that will be retrieved in the CDT',
-                    type: new GraphQLList(GraphQLString)
-                }
-            },
+            args: contextArgs,
             resolve: (root, {_id, context, support}) => {
                 return getDecoratedCdt({_id, context, support})
+            }
+        },
+        login: {
+            type: loginType,
+            description: 'The endpoint committed to the user login',
+            args: loginArgs,
+            resolve: (root, {mail, password}) => {
+                return login(mail, password)
             }
         }
     })

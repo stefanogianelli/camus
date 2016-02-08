@@ -7,6 +7,7 @@ import PrimaryService from './primaryServiceSelection'
 import QueryHandler from './queryHandler'
 import SupportService from './supportServiceSelection'
 import ResponseAggregator from './responseAggregator'
+import UserManager from './userManager'
 import Metrics from '../utils/MetricsUtils'
 import config from 'config'
 
@@ -15,6 +16,7 @@ const primaryService = new PrimaryService()
 const queryHandler = new QueryHandler()
 const supportService = new SupportService()
 const responseAggregator = new ResponseAggregator()
+const userManager = new UserManager()
 
 let debug = false
 if (config.has('debug')) {
@@ -117,4 +119,14 @@ export function getSupportData (decoratedCdt) {
                 metrics.saveResults()
             }
         })
+}
+
+/**
+ * User login method
+ * @param mail The user's email address
+ * @param password The user's password
+ * @returns {Object} The user's identifier and session token
+ */
+export function login (mail, password) {
+    return userManager.login(mail, password)
 }

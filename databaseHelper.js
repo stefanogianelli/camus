@@ -14,6 +14,7 @@ import {
     supportConstraint
 } from './models/mongoose/supportServiceAssociation'
 import CdtModel from './models/mongoose/cdtDescription'
+import UserModel from './models/mongoose/user'
 
 /**
  * DatabaseHelper
@@ -27,8 +28,13 @@ export default class {
         return new Promise((resolve, reject) => {
             async.waterfall([
                 callback => {
+                    new UserModel(user).save((err, user) => {
+                        callback(err, user.id)
+                    })
+                },
+                (userId, callback) => {
                     //create the CDT
-                    new CdtModel(cdt).save((err, savedCdt) => {
+                    new CdtModel(cdt(userId)).save((err, savedCdt) => {
                         callback(err, savedCdt._id)
                     })
                 },
@@ -282,6 +288,11 @@ export default class {
         return new Promise((resolve, reject) => {
             async.parallel([
                 callback => {
+                    UserModel.remove({}, err => {
+                        callback(err)
+                    })
+                },
+                callback => {
                     CdtModel.remove({}, err => {
                         callback(err)
                     })
@@ -326,74 +337,84 @@ export default class {
  * MODELS
  */
 
+//User
+const user = {
+    name: 'Mario',
+    surname: 'Rossi',
+    mail: 'mario.rossi@mail.com',
+    password: 'camus2016'
+}
+
 //CDT
-const cdt = {
-    _userId: 1,
-    context: [
-        {
-            name: 'InterestTopic',
-            for: 'filter',
-            values: [
-                'Restaurant',
-                'Cinema',
-                'Theater',
-                'Hotel',
-                'Museum'
-            ]
-        },
-        {
-            name: 'Location',
-            for: 'ranking|parameter',
-            parameters: [
-                {
-                    name: 'CityName'
-                },
-                {
-                    name: 'CityCoord',
-                    fields: [
-                        {
-                            name: 'Latitude'
-                        },
-                        {
-                            name: 'Longitude'
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            name: 'Keyword',
-            for: 'parameter',
-            parameters: [
-                {
-                    name: 'SearchKey',
-                    type: 'String'
-                }
-            ]
-        },
-        {
-            name: 'Transport',
-            for: 'filter',
-            values: [
-                'PublicTransport',
-                'WithCar'
-            ]
-        },
-        {
-            name: 'Tipology',
-            for: 'filter',
-            values: [
-                'Bus',
-                'Train',
-                'Taxi',
-                'CarSharing',
-                'WithDriver'
-            ],
-            parents: [
-                'PublicTransport'
-            ]
-        }
-    ]
+const cdt = userId => {
+    return {
+        _userId: userId,
+        context: [
+            {
+                name: 'InterestTopic',
+                for: 'filter',
+                values: [
+                    'Restaurant',
+                    'Cinema',
+                    'Theater',
+                    'Hotel',
+                    'Museum'
+                ]
+            },
+            {
+                name: 'Location',
+                for: 'ranking|parameter',
+                parameters: [
+                    {
+                        name: 'CityName'
+                    },
+                    {
+                        name: 'CityCoord',
+                        fields: [
+                            {
+                                name: 'Latitude'
+                            },
+                            {
+                                name: 'Longitude'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name: 'Keyword',
+                for: 'parameter',
+                parameters: [
+                    {
+                        name: 'SearchKey',
+                        type: 'String'
+                    }
+                ]
+            },
+            {
+                name: 'Transport',
+                for: 'filter',
+                values: [
+                    'PublicTransport',
+                    'WithCar'
+                ]
+            },
+            {
+                name: 'Tipology',
+                for: 'filter',
+                values: [
+                    'Bus',
+                    'Train',
+                    'Taxi',
+                    'CarSharing',
+                    'WithDriver'
+                ],
+                parents: [
+                    'PublicTransport'
+                ]
+            }
+        ]
+    }
 }
 
 //googlePlaces service

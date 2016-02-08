@@ -287,7 +287,7 @@ describe('Component: ContextManager', () => {
 
     describe('#getDescendants()', () => {
         it('check if correct descendants are returned', () => {
-            const nodes = contextManager._getDescendants(mockModel.cdt, [{value: 'PublicTransport'}])
+            const nodes = contextManager._getDescendants(mockModel.cdt(1), [{value: 'PublicTransport'}])
             assert.equal(nodes.length, 2)
             assert.equal(nodes[0].name, 'Tipology')
             assert.equal(nodes[0].value, 'Bus')
@@ -295,7 +295,7 @@ describe('Component: ContextManager', () => {
             assert.equal(nodes[1].value, 'Train')
         })
         it('check if correct nested descendants are returned', () => {
-            const nodes = contextManager._getDescendants(mockModel.nestedCdt, [{value: 'b'}])
+            const nodes = contextManager._getDescendants(mockModel.nestedCdt(1), [{value: 'b'}])
             assert.equal(nodes[0].name, 'd')
             assert.equal(nodes[0].value, 'e')
             assert.equal(nodes[1].name, 'd')
@@ -306,7 +306,7 @@ describe('Component: ContextManager', () => {
             assert.equal(nodes[3].value, 'i')
         })
         it('check if correct multiple descendants are returned', () => {
-            const nodes = contextManager._getDescendants(mockModel.multipleSonsCdt, [{value: 'd'}, {value: 'e'}])
+            const nodes = contextManager._getDescendants(mockModel.multipleSonsCdt(1), [{value: 'd'}, {value: 'e'}])
             assert.equal(nodes[0].name, 'g')
             assert.equal(nodes[0].value, 'i')
             assert.equal(nodes[1].name, 'g')
@@ -317,7 +317,7 @@ describe('Component: ContextManager', () => {
             assert.equal(nodes[3].value, 'n')
         })
         it('check empty list in output when no nodes are specified', () => {
-            const nodes = contextManager._getDescendants(mockModel.cdt, [])
+            const nodes = contextManager._getDescendants(mockModel.cdt(1), [])
             assert.equal(nodes.length, 0)
         })
     })

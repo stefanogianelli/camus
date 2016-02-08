@@ -13,6 +13,7 @@ import {
     supportConstraint
 } from '../models/mongoose/supportServiceAssociation'
 import CdtModel from '../models/mongoose/cdtDescription'
+import UserModel from '../models/mongoose/user'
 
 let instance = null
 
@@ -38,22 +39,33 @@ export default class {
         let _idMultipleSonsCdt
         async.series([
                 callback => {
-                    new CdtModel(mockData.cdt).save((err, cdt) => {
-                        _idCDT = cdt._id
-                        callback(err)
-                    })
-                },
-                callback => {
-                    new CdtModel(mockData.nestedCdt).save((err, cdt) => {
-                        _idNestedCdt = cdt._id
-                        callback(err)
-                    })
-                },
-                callback => {
-                    new CdtModel(mockData.multipleSonsCdt).save((err, cdt) => {
-                        _idMultipleSonsCdt = cdt._id
-                        callback(err)
-                    })
+                    async.waterfall([
+                        callback => {
+                            new UserModel(mockData.user).save((err, user) => {
+                                callback(err, user.id)
+                            })
+                        },
+                        (userId, callback) => {
+                            new CdtModel(mockData.cdt(userId)).save((err, cdt) => {
+                                _idCDT = cdt._id
+                                callback(err, userId)
+                            })
+                        },
+                        (userId, callback) => {
+                            new CdtModel(mockData.nestedCdt(userId)).save((err, cdt) => {
+                                _idNestedCdt = cdt._id
+                                callback(err, userId)
+                            })
+                        },
+                        (userId, callback) => {
+                            new CdtModel(mockData.multipleSonsCdt(userId)).save((err, cdt) => {
+                                _idMultipleSonsCdt = cdt._id
+                                callback(err)
+                            })
+                        }],
+                        err => {
+                            callback(err)
+                        })
                 },
                 callback => {
                     async.waterfall([
@@ -368,6 +380,11 @@ export default class {
      */
     deleteDatabase (callback) {
         async.parallel([
+                callback => {
+                    UserModel.remove({}, err => {
+                        callback(err)
+                    })
+                },
                 callback => {
                     CdtModel.remove({}, err => {
                         callback(err)

@@ -15,6 +15,7 @@ import {
     supportAssociation,
     supportConstraint
 } from '../models/mongoose/supportServiceAssociation'
+import userModel from '../models/mongoose/user'
 
 //radius for the coordinate search
 const _radius = 1500
@@ -320,6 +321,41 @@ export default class {
                     })
             } else {
                 resolve([])
+            }
+        })
+    }
+
+    /**
+     * USER METHODS
+     */
+
+    /**
+     * Retrieve user's details based on mail and password
+     * @param {String} mail - The user's email address
+     * @param {String} password - The user's password
+     * @returns {Object} The user's details
+     */
+    getUser (mail, password) {
+        return new Promise ((resolve, reject) => {
+            if (!_.isUndefined(mail) && !_.isUndefined(password)) {
+                userModel
+                    .find({
+                        mail: mail,
+                        password: password
+                    })
+                    .limit(1)
+                    .exec((err, user) => {
+                        if (err) {
+                            reject(err)
+                        }
+                        if (user.length === 1) {
+                            resolve(user[0])
+                        } else {
+                            reject('Invalid mail or password')
+                        }
+                    })
+            } else {
+                reject('Invalid mail or password')
             }
         })
     }
