@@ -143,34 +143,6 @@ export default class {
     }
 
     /**
-     * Retrieve a service description by it's name and operation name.
-     * @param {Object} serviceNames - The object containing the service and operation names.
-     * This object must be in form { name: 'service name', operation: 'operation name' }
-     * @returns {Array} The service and operation description
-     */
-    getServicesByNames (serviceNames) {
-        return new Promise ((resolve, reject) => {
-            if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
-                let operationNames = _.map(serviceNames, s => {
-                    return s.operation
-                })
-                operationModel
-                    .find({name: {$in: operationNames}})
-                    .populate('service')
-                    .lean()
-                    .exec((err, results) => {
-                        if (err) {
-                            reject(err)
-                        }
-                        resolve(results)
-                    })
-            } else {
-                resolve([])
-            }
-        })
-    }
-
-    /**
      * -------------------------------------
      * PRIMARY SERVICE ASSOCIATION METHODS
      * -------------------------------------

@@ -77,14 +77,6 @@ export const supportItemType = new GraphQLInputObjectType({
     name: 'SupportItem',
     description: 'Support service item. It allows the definition of the requested support service name or category. If a service is requested by the name the fields name and operation are mandatory. Otherwise it\'s sufficient to specify a category' ,
     fields: () => ({
-        name: {
-            description: 'The support service name',
-            type: GraphQLString
-        },
-        operation: {
-            description: 'The support service operation name',
-            type: GraphQLString
-        },
         category: {
             description: 'The support service category',
             type: GraphQLString

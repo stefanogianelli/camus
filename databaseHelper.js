@@ -183,23 +183,6 @@ export default class {
                          ADD SUPPORT SERVICES BELOW
                          */
                         callback => {
-                            async.waterfall([
-                                callback => {
-                                    //save wikipedia service
-                                    new serviceModel(wikipedia).save((err, service) => {
-                                        callback(err, service.id)
-                                    })
-                                },
-                                (idService, callback) => {
-                                    new operationModel(wikipediaOperations(idService)).save(err => {
-                                        callback(err)
-                                    })
-                                }
-                            ], err => {
-                                callback(err)
-                            })
-                        },
-                        callback => {
                             //save google maps service
                             async.waterfall([
                                 callback => {
@@ -573,62 +556,6 @@ const eventfulAssociations = (idOperation, idCDT) => {
             ranking: 2
         }
     ]
-}
-
-//wikipedia
-const wikipedia = {
-    name: 'Wikipedia',
-    type: 'support',
-    protocol: 'query',
-    basePath: 'https://en.wikipedia.org/w'
-}
-
-//wikipedia operations
-const wikipediaOperations = idService => {
-    return {
-        service: idService,
-        name: 'search',
-        path: '/api.php',
-        parameters: [
-            {
-                name: 'action',
-                required: true,
-                default: 'query',
-                mappingCDT: [],
-                mappingTerm: []
-            },
-            {
-                name: 'titles',
-                required: true,
-                default: 'Italy',
-                mappingCDT: [],
-                mappingTerm: [
-                    'title'
-                ]
-            },
-            {
-                name: 'prop',
-                required: true,
-                default: 'revisions',
-                mappingCDT: [],
-                mappingTerm: []
-            },
-            {
-                name: 'rvprop',
-                required: true,
-                default: 'content',
-                mappingCDT: [],
-                mappingTerm: []
-            },
-            {
-                name: 'format',
-                required: true,
-                default: 'json',
-                mappingCDT: [],
-                mappingTerm: []
-            }
-        ]
-    }
 }
 
 //google maps service

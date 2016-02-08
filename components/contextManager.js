@@ -35,7 +35,6 @@ export default class {
      * - specificNodes: the list of specific nodes (assumed that they are ranking nodes)
      * - parametersNodes: the list of parameter nodes
      * - supportServiceCategories: the list of categories for which retrieve the support services
-     * - supportServiceNames: the list of names and operations for selected the correct support services
      * @param {Object} context - The user's context
      * @returns {Object} The decorated CDT
      */
@@ -59,9 +58,7 @@ export default class {
                         this._getParameterNodes(mergedCdt.context),
                         //find the support service categories requested
                         this._getSupportServiceCategories(mergedCdt),
-                        //find the support service names and operations requested
-                        this._getSupportServiceNames(mergedCdt),
-                        (interestTopic, filterNodes, rankingNodes, specificNodes, parameterNodes, supportServiceCategories, supportServiceNames) => {
+                        (interestTopic, filterNodes, rankingNodes, specificNodes, parameterNodes, supportServiceCategories) => {
                             //acquire the descendants of the selected filter nodes
                             filterNodes = _.concat(filterNodes, this._getDescendants(cdt, filterNodes))
                             //acquire the descendants of the selected ranking nodes
@@ -73,7 +70,6 @@ export default class {
                                 specificNodes: specificNodes,
                                 parameterNodes: parameterNodes,
                                 supportServiceCategories: supportServiceCategories,
-                                supportServiceNames: supportServiceNames,
                                 _id: mergedCdt._id
                             }
                         }
@@ -439,30 +435,6 @@ export default class {
                     metrics.record('getSupportServiceCategories', startTime)
                 }
                 resolve(categories)
-            } else {
-                resolve()
-            }
-        })
-    }
-
-    /**
-     * Return the support service names
-     * @param {Object} mergedCdt - The merged CDT
-     * @returns {Array} The list of services name and operation
-     * @private
-     */
-    _getSupportServiceNames (mergedCdt) {
-        const startTime = process.hrtime()
-        return new Promise (resolve => {
-            let support = mergedCdt.support
-            if (!_.isEmpty(support)) {
-                let names = _.map(_.filter(support, 'name' && 'operation'), s => {
-                    return s
-                })
-                if (debug) {
-                    metrics.record('getSupportServiceNames', startTime)
-                }
-                resolve(names)
             } else {
                 resolve()
             }

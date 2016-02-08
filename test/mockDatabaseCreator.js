@@ -166,23 +166,6 @@ export default class {
                 callback => {
                     async.waterfall([
                             callback => {
-                                new serviceModel(mockData.wikipedia).save((err, service) => {
-                                    callback(err, service.id)
-                                })
-                            },
-                            (idService, callback) => {
-                                new operationModel(mockData.wikipediaOperations(idService)).save(err => {
-                                    callback(err)
-                                })
-                            }
-                        ],
-                        err => {
-                            callback(err)
-                        })
-                },
-                callback => {
-                    async.waterfall([
-                            callback => {
                                 new serviceModel(mockData.googleMaps).save((err, service) => {
                                     callback(err, service.id)
                                 })

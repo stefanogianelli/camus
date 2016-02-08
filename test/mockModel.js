@@ -256,13 +256,7 @@ export const decoratedCdt = idCDT => {
                 ]
             }
         ],
-        supportServiceCategories: [ 'Transport' ],
-        supportServiceNames: [
-            {
-                name: 'Wikipedia',
-                operation: 'search'
-            }
-        ]
+        supportServiceCategories: [ 'Transport' ]
     }
 }
 
@@ -490,51 +484,6 @@ export const testBridgeOperation = idService => {
     }
 }
 
-//wikipedia support service
-export const wikipedia = {
-    name: 'Wikipedia',
-    type: 'support',
-    protocol: 'query',
-    basePath: 'https://en.wikipedia.org/w'
-}
-
-export const wikipediaOperations = idService => {
-    return {
-        service: idService,
-        name: 'search',
-        path: '/api.php',
-        parameters: [
-            {
-                name: 'action',
-                required: true,
-                default: 'query'
-            },
-            {
-                name: 'titles',
-                required: true,
-                default: 'Italy',
-                mappingTerm: [
-                    'SearchKey'
-                ]
-            },
-            {
-                name: 'prop',
-                required: true,
-                default: 'revisions'
-            },
-            {
-                name: 'rvprop',
-                required: true,
-                default: 'content'
-            },
-            {
-                name: 'format',
-                required: true,
-                default: 'json'
-            }
-        ]
-    }
-}
 
 //google maps support service
 export const flickr = {

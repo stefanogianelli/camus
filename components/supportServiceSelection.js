@@ -32,56 +32,14 @@ export default class {
      */
     selectServices (decoratedCdt) {
         const startTime = process.hrtime()
-        return new Promise ((resolve, reject) => {
-            Promise
-                .join(
-                    //acquire the URLs for the services requested by name and operation
-                    this._selectServicesFromName(decoratedCdt.supportServiceNames),
-                    //acquire the URLs for the services requested by categories
-                    this._selectServiceFromCategory(decoratedCdt.supportServiceCategories, decoratedCdt),
-                (servicesByName, serviceByCategory) => {
-                    resolve(_.concat(servicesByName, serviceByCategory))
-                })
-                .catch(e => {
-                    reject(e)
-                })
-                .finally(() => {
-                    if (debug) {
-                        metrics.record('selectServices', startTime)
-                        metrics.saveResults()
-                    }
-                })
-        })
-    }
-
-    /**
-     * Compose the queries of services from a list of operation ids
-     * @param serviceNames The list of services name and operation
-     * @returns {bluebird|exports|module.exports} The list of service objects, composed by the service name and the query associated
-     * @private
-     */
-    _selectServicesFromName (serviceNames) {
-        const start = process.hrtime()
-        return new Promise (resolve => {
-            if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
-                provider
-                //retrieve the service descriptions
-                    .getServicesByNames(serviceNames)
-                    .then(services => {
-                        if (debug) {
-                            metrics.record('getServicesByName', start)
-                        }
-                        //compose the queries
-                        resolve(this._composeQueries(services))
-                    })
-                    .catch(e => {
-                        console.log(e)
-                        resolve()
-                    })
-            } else {
-                resolve([])
-            }
-        })
+        return this
+            ._selectServiceFromCategory(decoratedCdt.supportServiceCategories, decoratedCdt)
+            .finally(() => {
+                if (debug) {
+                    metrics.record('selectServices', startTime)
+                    metrics.saveResults()
+                }
+            })
     }
 
     /**

@@ -76,10 +76,6 @@ describe('Component: ContextManager', () => {
                     //support service categories
                     assert.equal(data.supportServiceCategories.length, 1)
                     assert.equal(data.supportServiceCategories[0], 'Transport')
-                    //support service names
-                    assert.equal(data.supportServiceNames.length, 1)
-                    assert.equal(data.supportServiceNames[0].name, 'Wikipedia')
-                    assert.equal(data.supportServiceNames[0].operation, 'search')
                 })
         })
     })
@@ -314,33 +310,6 @@ describe('Component: ContextManager', () => {
         })
     })
 
-    describe('#getSupportServiceNames()', () => {
-        it('check if correct names are returned', () => {
-            return contextManager
-                ._getSupportServiceNames(mergedCdt(_idCDT))
-                .then(names => {
-                    assert.notEqual(names, null)
-                    assert.equal(names.length, 1)
-                    assert.equal(names[0].name, 'Wikipedia')
-                    assert.equal(names[0].operation, 'search')
-                })
-        })
-        it('check error when sending empty context', () => {
-            return contextManager
-                ._getSupportServiceNames(emptySupport(_idCDT))
-                .catch(e => {
-                    assert.equal(e, 'No support services defined')
-                })
-        })
-        it('check error when sending empty object', () => {
-            return contextManager
-                ._getSupportServiceNames({ })
-                .catch(e => {
-                    assert.equal(e, 'No support services defined')
-                })
-        })
-    })
-
     describe('#getDescendants()', () => {
         it('check if correct descendants are returned', () => {
             const nodes = contextManager._getDescendants(mockModel.cdt, [{value: 'PublicTransport'}])
@@ -489,10 +458,6 @@ let context = idCDT => {
         support: [
             {
                 category: 'Transport'
-            },
-            {
-                name: 'Wikipedia',
-                operation: 'search'
             }
         ]
     }
@@ -560,10 +525,6 @@ let mergedCdt = idCDT => {
         support: [
             {
                 category: 'Transport'
-            },
-            {
-                name: 'Wikipedia',
-                operation: 'search'
             }
         ]
     }
