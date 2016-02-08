@@ -1,19 +1,19 @@
-'use strict';
+'use strict'
 
-import async from 'async';
-import Promise from 'bluebird';
+import async from 'async'
+import Promise from 'bluebird'
 
 //models
 import {
     serviceModel,
     operationModel
-} from './models/mongoose/serviceDescription';
-import PrimaryServiceModel from './models/mongoose/primaryServiceAssociation';
+} from './models/mongoose/serviceDescription'
+import PrimaryServiceModel from './models/mongoose/primaryServiceAssociation'
 import {
     supportAssociation,
     supportConstraint
-} from './models/mongoose/supportServiceAssociation';
-import CdtModel from './models/mongoose/cdtDescription';
+} from './models/mongoose/supportServiceAssociation'
+import CdtModel from './models/mongoose/cdtDescription'
 
 /**
  * DatabaseHelper
@@ -29,8 +29,8 @@ export default class {
                 callback => {
                     //create the CDT
                     new CdtModel(cdt).save((err, savedCdt) => {
-                        callback(err, savedCdt._id);
-                    });
+                        callback(err, savedCdt._id)
+                    })
                 },
                 (idCdt, callback) => {
                     //create the services and save their associations
@@ -43,141 +43,141 @@ export default class {
                             async.waterfall([
                                 callback => {
                                     new serviceModel(googlePlaces).save((err, service) => {
-                                        callback(err, service.id);
-                                    });
+                                        callback(err, service.id)
+                                    })
                                 },
                                 (idService, callback) => {
                                     new operationModel(googlePlacesOperations(idService)).save((err, operation) => {
-                                       callback(err, operation.id);
-                                    });
+                                       callback(err, operation.id)
+                                    })
                                 },
                                 (idOperation, callback) => {
                                     async.each(googlePlacesAssociations(idOperation, idCdt), (a, callback) => {
                                         new PrimaryServiceModel(a).save(err => {
-                                            callback(err);
-                                        });
+                                            callback(err)
+                                        })
                                     },
                                     err => {
-                                        callback(err);
-                                    });
+                                        callback(err)
+                                    })
                                 }
                             ], err => {
-                                callback(err);
-                            });
+                                callback(err)
+                            })
                         },
                         callback => {
                             //save eventful service
                             async.waterfall([
                                 callback => {
                                     new serviceModel(eventful).save((err, service) => {
-                                        callback(err, service.id);
-                                    });
+                                        callback(err, service.id)
+                                    })
                                 },
                                 (idService, callback) => {
                                     new operationModel(eventfulOperations(idService)).save((err, operation) => {
-                                        callback(err, operation.id);
-                                    });
+                                        callback(err, operation.id)
+                                    })
                                 },
                                 (idOperation, callback) => {
                                     async.each(eventfulAssociations(idOperation, idCdt), (a, callback) => {
                                         new PrimaryServiceModel(a).save(err => {
-                                            callback(err);
-                                        });
+                                            callback(err)
+                                        })
                                     },
                                     err => {
-                                        callback(err);
-                                    });
+                                        callback(err)
+                                    })
                                 }
                             ], err => {
-                                callback(err);
-                            });
+                                callback(err)
+                            })
                         },
                         callback => {
                             //save cinema stub
                             async.waterfall([
                                 callback => {
                                     new serviceModel(cinemaStub).save((err, service) => {
-                                        callback(err, service.id);
-                                    });
+                                        callback(err, service.id)
+                                    })
                                 },
                                 (idService, callback) => {
                                     new operationModel(cinemaStubOperations(idService)).save((err, operation) => {
-                                        callback(err, operation.id);
-                                    });
+                                        callback(err, operation.id)
+                                    })
                                 },
                                 (idOperation, callback) => {
                                     async.each(cinemaStubAssociations(idOperation, idCdt), (a, callback) => {
                                         new PrimaryServiceModel(a).save(err => {
-                                            callback(err);
-                                        });
+                                            callback(err)
+                                        })
                                     },
                                     err => {
-                                        callback(err);
-                                    });
+                                        callback(err)
+                                    })
                                 }
                             ], err => {
-                                callback(err);
-                            });
+                                callback(err)
+                            })
                         },
                         callback => {
                             //save theater stub
                             async.waterfall([
                                 callback => {
                                     new serviceModel(theaterStub).save((err, service) => {
-                                        callback(err, service.id);
-                                    });
+                                        callback(err, service.id)
+                                    })
                                 },
                                 (idService, callback) => {
                                     new operationModel(theaterStubOperations(idService)).save((err, operation) => {
-                                        callback(err, operation.id);
-                                    });
+                                        callback(err, operation.id)
+                                    })
                                 },
                                 (idOperation, callback) => {
                                     async.each(theaterStubAssociations(idOperation, idCdt), (a, callback) => {
                                         new PrimaryServiceModel(a).save(err => {
-                                            callback(err);
-                                        });
+                                            callback(err)
+                                        })
                                     },
                                     err => {
-                                        callback(err);
-                                    });
+                                        callback(err)
+                                    })
                                 }
                             ], err => {
-                                callback(err);
-                            });
+                                callback(err)
+                            })
                         },
                         callback => {
                             //save merici stub
                             async.waterfall([
                                 callback => {
                                     new serviceModel(mericiPrimary).save((err, service) => {
-                                        callback(err, service.id);
-                                    });
+                                        callback(err, service.id)
+                                    })
                                 },
                                 (idService, callback) => {
                                     async.map(mericiPrimaryOperations(idService),
                                         (op, callback) => {
                                             new operationModel(op).save((err, operation) => {
-                                                callback(err, operation.id);
-                                            });
+                                                callback(err, operation.id)
+                                            })
                                         },
                                         (err, operations) => {
-                                            callback(err, operations[0], operations[1], operations[2], operations[3]);
-                                        });
+                                            callback(err, operations[0], operations[1], operations[2], operations[3])
+                                        })
                                 },
                                 (idHotel, idFood, idTheater, idMuseum, callback) => {
                                     async.each(mericiPrimaryAssociations(idCdt, idHotel, idFood, idTheater, idMuseum), (a, callback) => {
                                         new PrimaryServiceModel(a).save(err => {
-                                            callback(err);
-                                        });
+                                            callback(err)
+                                        })
                                     },
                                     err => {
-                                        callback(err);
-                                    });
+                                        callback(err)
+                                    })
                                 }
                             ], err => {
-                                callback(err);
-                            });
+                                callback(err)
+                            })
                         },
                         /*
                          ADD SUPPORT SERVICES BELOW
@@ -187,108 +187,108 @@ export default class {
                                 callback => {
                                     //save wikipedia service
                                     new serviceModel(wikipedia).save((err, service) => {
-                                        callback(err, service.id);
-                                    });
+                                        callback(err, service.id)
+                                    })
                                 },
                                 (idService, callback) => {
                                     new operationModel(wikipediaOperations(idService)).save(err => {
-                                        callback(err);
-                                    });
+                                        callback(err)
+                                    })
                                 }
                             ], err => {
-                                callback(err);
-                            });
+                                callback(err)
+                            })
                         },
                         callback => {
                             //save google maps service
                             async.waterfall([
                                 callback => {
                                     new serviceModel(googleMaps).save((err, service) => {
-                                        callback(err, service.id);
-                                    });
+                                        callback(err, service.id)
+                                    })
                                 },
                                 (idService, callback) => {
                                     new operationModel(googleMapsOperations(idService)).save((err, operation) => {
-                                        callback(err, operation.id);
-                                    });
+                                        callback(err, operation.id)
+                                    })
                                 },
                                 (idOperation, callback) => {
                                     async.each(googleMapsAssociations(idOperation, idCdt), (a, callback) => {
                                         new supportAssociation(a).save(err => {
-                                            callback(err);
-                                        });
+                                            callback(err)
+                                        })
                                     },
                                     err => {
-                                        callback(err, idOperation);
-                                    });
+                                        callback(err, idOperation)
+                                    })
                                 },
                                 (idOperation, callback) => {
                                     new supportConstraint(googleMapsConstraint(idOperation, idCdt)).save(err => {
-                                        callback(err);
-                                    });
+                                        callback(err)
+                                    })
                                 }
                             ], err => {
-                                callback(err);
-                            });
+                                callback(err)
+                            })
                         },
                         callback => {
                             //save merici support service
                             async.waterfall([
                                 callback => {
                                     new serviceModel(mericiSupport).save((err, service) => {
-                                        callback(err, service.id);
-                                    });
+                                        callback(err, service.id)
+                                    })
                                 },
                                 (idService, callback) => {
                                     async.map(mericiSupportOperations(idService),
                                         (op, callback) => {
                                             new operationModel(op).save((err, operation) => {
-                                                callback(err, operation.id);
-                                            });
+                                                callback(err, operation.id)
+                                            })
                                         },
                                         (err, operations) => {
-                                            callback(err, operations[0], operations[1], operations[2]);
-                                        });
+                                            callback(err, operations[0], operations[1], operations[2])
+                                        })
                                 },
                                 (idTaxi, idCarSharing, idDriver, callback) => {
                                     async.each(mericiSupportAssociations(idCdt, idTaxi, idCarSharing, idDriver), (a, callback) => {
                                         new supportAssociation(a).save(err => {
-                                            callback(err);
-                                        });
+                                            callback(err)
+                                        })
                                     },
                                     err => {
-                                        callback(err, idTaxi, idCarSharing, idDriver);
-                                    });
+                                        callback(err, idTaxi, idCarSharing, idDriver)
+                                    })
                                 },
                                 (idTaxi, idCarSharing, idDriver, callback) => {
                                     async.each(mericiSupportConstraints(idCdt, idTaxi, idCarSharing, idDriver), (c, callback) => {
                                         new supportConstraint(c).save(err => {
-                                           callback(err);
-                                        });
+                                           callback(err)
+                                        })
                                     },
                                     err => {
-                                        callback(err);
+                                        callback(err)
                                     })
                                 }
                             ], err => {
-                                callback(err);
-                            });
+                                callback(err)
+                            })
                         }
                         /*
                          END SERVICE INSERTION
                          */
                     ], err => {
-                        callback(err, idCdt);
-                    });
+                        callback(err, idCdt)
+                    })
                 }
             ], (err, idCdt) => {
                 if (err) {
-                    reject(err);
+                    reject(err)
                 } else {
-                    resolve(idCdt);
+                    resolve(idCdt)
                 }
-            });
-        });
+            })
+        })
     }
 
     /**
@@ -300,42 +300,42 @@ export default class {
             async.parallel([
                 callback => {
                     CdtModel.remove({}, err => {
-                        callback(err);
+                        callback(err)
                     })
                 },
                 callback => {
                     PrimaryServiceModel.remove({}, err => {
-                        callback(err);
+                        callback(err)
                     })
                 },
                 callback => {
                     serviceModel.remove({}, err => {
-                        callback(err);
+                        callback(err)
                     })
                 },
                 callback => {
                     operationModel.remove({}, err => {
-                        callback(err);
+                        callback(err)
                     })
                 },
                 callback => {
                     supportAssociation.remove({}, err => {
-                        callback(err);
+                        callback(err)
                     })
                 },
                 callback => {
                     supportConstraint.remove({}, err => {
-                        callback(err);
+                        callback(err)
                     })
                 }
             ], err => {
                 if (err) {
-                    reject(err);
+                    reject(err)
                 } else {
-                    resolve();
+                    resolve()
                 }
-            });
-        });
+            })
+        })
     }
 }
 
@@ -411,7 +411,7 @@ const cdt = {
             ]
         }
     ]
-};
+}
 
 //googlePlaces service
 const googlePlaces = {
@@ -419,7 +419,7 @@ const googlePlaces = {
     type: 'primary',
     protocol: 'query',
     basePath: 'https://maps.googleapis.com/maps/api/place'
-};
+}
 
 //googlePlaces operations
 const googlePlacesOperations = idService => {
@@ -466,11 +466,11 @@ const googlePlacesOperations = idService => {
             functions: [
                 {
                     onAttribute: 'latitude',
-                    run: 'return String(value);'
+                    run: 'return String(value)'
                 },
                 {
                     onAttribute: 'longitude',
-                    run: 'return String(value);'
+                    run: 'return String(value)'
                 }
             ]
         },
@@ -479,8 +479,8 @@ const googlePlacesOperations = idService => {
             type: 'token',
             tokenAttribute: 'next_page_token'
         }
-    };
-};
+    }
+}
 
 //googlePlaces associations
 const googlePlacesAssociations = (idOperation, idCDT) => {
@@ -492,8 +492,8 @@ const googlePlacesAssociations = (idOperation, idCDT) => {
             value: 'Restaurant',
             ranking: 1
         }
-    ];
-};
+    ]
+}
 
 //eventful service
 const eventful = {
@@ -501,7 +501,7 @@ const eventful = {
     type: 'primary',
     protocol: 'query',
     basePath: 'http://api.eventful.com/json'
-};
+}
 
 //eventful operations
 const eventfulOperations = idService => {
@@ -559,8 +559,8 @@ const eventfulOperations = idService => {
             type: 'number',
             pageCountAttribute: 'page_count'
         }
-    };
-};
+    }
+}
 
 //eventful associations
 const eventfulAssociations = (idOperation, idCDT) => {
@@ -572,8 +572,8 @@ const eventfulAssociations = (idOperation, idCDT) => {
             value: 'Restaurant',
             ranking: 2
         }
-    ];
-};
+    ]
+}
 
 //wikipedia
 const wikipedia = {
@@ -581,7 +581,7 @@ const wikipedia = {
     type: 'support',
     protocol: 'query',
     basePath: 'https://en.wikipedia.org/w'
-};
+}
 
 //wikipedia operations
 const wikipediaOperations = idService => {
@@ -628,8 +628,8 @@ const wikipediaOperations = idService => {
                 mappingTerm: []
             }
         ]
-    };
-};
+    }
+}
 
 //google maps service
 const googleMaps = {
@@ -637,7 +637,7 @@ const googleMaps = {
     type: 'support',
     protocol: 'query',
     basePath: 'https://maps.googleapis.com/maps/api'
-};
+}
 
 //google maps operations
 const googleMapsOperations = idService => {
@@ -663,8 +663,8 @@ const googleMapsOperations = idService => {
                 default: 'car'
             }
         ]
-    };
-};
+    }
+}
 
 //google maps service associations
 const googleMapsAssociations = (idOperation, idCDT) => {
@@ -676,8 +676,8 @@ const googleMapsAssociations = (idOperation, idCDT) => {
             dimension: 'Transport',
             value: 'WithCar'
         }
-    ];
-};
+    ]
+}
 
 //google maps service constraint
 const googleMapsConstraint = (idOperation, idCDT) => {
@@ -686,8 +686,8 @@ const googleMapsConstraint = (idOperation, idCDT) => {
         category: 'Transport',
         _idCDT: idCDT,
         constraintCount: 1
-    };
-};
+    }
+}
 
 //cinema stub service
 const cinemaStub = {
@@ -695,7 +695,7 @@ const cinemaStub = {
     type: 'primary',
     protocol: 'query',
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/cinema/api/v1/queryDB'
-};
+}
 
 //cinema stub operations
 const cinemaStubOperations = idService => {
@@ -741,8 +741,8 @@ const cinemaStubOperations = idService => {
                 }
             ]
         }
-    };
-};
+    }
+}
 
 //cinema stub associations
 const cinemaStubAssociations = (idOperation, idCDT) => {
@@ -754,8 +754,8 @@ const cinemaStubAssociations = (idOperation, idCDT) => {
             value: 'Cinema',
             ranking: 1
         }
-    ];
-};
+    ]
+}
 
 //theater stub service
 const theaterStub = {
@@ -763,7 +763,7 @@ const theaterStub = {
     type: 'primary',
     protocol: 'query',
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/milanotheater'
-};
+}
 
 //theater stub operations
 const theaterStubOperations = idService => {
@@ -818,8 +818,8 @@ const theaterStubOperations = idService => {
                 }
             ]
         }
-    };
-};
+    }
+}
 
 //theater stub associations
 const theaterStubAssociations = (idOperation, idCDT) => {
@@ -836,8 +836,8 @@ const theaterStubAssociations = (idOperation, idCDT) => {
             _idCDT: idCDT,
             loc: [9.18951, 45.46427]
         }
-    ];
-};
+    ]
+}
 
 //merici primary service
 const mericiPrimary = {
@@ -845,7 +845,7 @@ const mericiPrimary = {
     type: 'primary',
     protocol: 'query',
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici'
-};
+}
 
 //merici primary operations
 const mericiPrimaryOperations = idService => {
@@ -1142,8 +1142,8 @@ const mericiPrimaryOperations = idService => {
                 ]
             }
         }
-    ];
-};
+    ]
+}
 
 //merici primary service associations
 const mericiPrimaryAssociations = (idCDT, idHotel, idFood, idTheater, idMuseum) => {
@@ -1176,8 +1176,8 @@ const mericiPrimaryAssociations = (idCDT, idHotel, idFood, idTheater, idMuseum) 
             value: 'Museum',
             ranking: 1
         }
-    ];
-};
+    ]
+}
 
 //merici support service
 const mericiSupport = {
@@ -1185,7 +1185,7 @@ const mericiSupport = {
     type: 'support',
     protocol: 'query',
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici'
-};
+}
 
 //merici support operations
 const mericiSupportOperations = idService => {
@@ -1274,8 +1274,8 @@ const mericiSupportOperations = idService => {
                 }
             ]
         }
-    ];
-};
+    ]
+}
 
 //merici support service associations
 const mericiSupportAssociations = (idCDT, idTaxi, idCarSharing, idDriver) => {
@@ -1301,8 +1301,8 @@ const mericiSupportAssociations = (idCDT, idTaxi, idCarSharing, idDriver) => {
             dimension: 'Tipology',
             value: 'WithDriver'
         }
-    ];
-};
+    ]
+}
 
 //merici support service constraints
 const mericiSupportConstraints = (idCDT, idTaxi, idCarSharing, idDriver) => {
@@ -1325,5 +1325,5 @@ const mericiSupportConstraints = (idCDT, idTaxi, idCarSharing, idDriver) => {
             _idCDT: idCDT,
             constraintCount: 1
         }
-    ];
-};
+    ]
+}

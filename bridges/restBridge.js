@@ -1,33 +1,33 @@
-'use strict';
+'use strict'
 
-import _ from 'lodash';
-import Promise from 'bluebird';
-import agent from 'superagent';
-import Redis from 'ioredis';
-import config from 'config';
+import _ from 'lodash'
+import Promise from 'bluebird'
+import agent from 'superagent'
+import Redis from 'ioredis'
+import config from 'config'
 
-import Bridge from './bridge';
-import Metrics from '../utils/MetricsUtils';
+import Bridge from './bridge'
+import Metrics from '../utils/MetricsUtils'
 
 //acquire redis configuration
-let address = 'localhost:6379';
+let address = 'localhost:6379'
 if (!_.isUndefined(process.env.REDIS_URL)) {
-    address = process.env.REDIS_URL;
+    address = process.env.REDIS_URL
 } else if (config.has('redis.address')) {
-    address = config.get('redis.address');
+    address = config.get('redis.address')
 }
 
-const redis = new Redis(address);
+const redis = new Redis(address)
 
-let debug = false;
+let debug = false
 if (config.has('debug')) {
-    debug = config.get('debug');
+    debug = config.get('debug')
 }
 
-let metrics = null;
+let metrics = null
 if (debug) {
-    const filePath = __dirname.replace('bridges', '') + '/metrics/RestBridge.txt';
-    metrics = new Metrics(filePath);
+    const filePath = __dirname.replace('bridges', '') + '/metrics/RestBridge.txt'
+    metrics = new Metrics(filePath)
 }
 
 /**
@@ -36,18 +36,18 @@ if (debug) {
 export default class extends Bridge {
 
     constructor () {
-        super();
+        super()
         //timeout for the requests (in ms)
         if (config.has('rest.timeout.service')) {
-            this._timeout = config.get('rest.timeout.service');
+            this._timeout = config.get('rest.timeout.service')
         } else {
-            this._timeout = 3000;
+            this._timeout = 3000
         }
         //validity time for cache content (in s)
         if (config.has('rest.timeout.cache')) {
-            this._cacheTTL = config.get('rest.timeout.cache');
+            this._cacheTTL = config.get('rest.timeout.cache')
         } else {
-            this._cacheTTL = 3600;
+            this._cacheTTL = 3600
         }
     }
 
@@ -61,18 +61,18 @@ export default class extends Bridge {
      * @returns {Promise|Request|Promise.<T>} The promise with the service responses
      */
     executeQuery (descriptor, paramNodes, paginationArgs) {
-        const startTime = process.hrtime();
+        const startTime = process.hrtime()
         return this
             ._parameterMapping(descriptor, paramNodes)
             .then(params => {
-                return this._invokeService(descriptor, params, paginationArgs);
+                return this._invokeService(descriptor, params, paginationArgs)
             })
             .finally(() => {
                 if (debug) {
-                    metrics.record('executeQuery/' + descriptor.service.name, startTime);
-                    metrics.saveResults();
+                    metrics.record('executeQuery/' + descriptor.service.name, startTime)
+                    metrics.saveResults()
                 }
-            });
+            })
     }
 
     /**
@@ -89,7 +89,7 @@ export default class extends Bridge {
      */
     _parameterMapping (descriptor, paramNodes) {
         return new Promise((resolve, reject) => {
-            let params = [];
+            let params = []
             _.forEach(descriptor.parameters, p => {
                 if (_.isEmpty(p.mappingCDT)) {
                     //use default value if the parameter is required and no mapping on the CDT was added
@@ -97,56 +97,56 @@ export default class extends Bridge {
                         params.push({
                             name: p.name,
                             value: p.default
-                        });
+                        })
                     } else {
                         if (p.required) {
                             //the service cannot be invoked
-                            reject('lack of required parameter \'' + p.name + '\'');
+                            reject('lack of required parameter \'' + p.name + '\'')
                         }
                     }
                 } else {
                     //search for the value(s) in the CDT
-                    let values = '';
-                    let separator = ',';
+                    let values = ''
+                    let separator = ','
                     switch (p.collectionFormat) {
                         case 'csv':
-                            separator = ',';
-                            break;
+                            separator = ','
+                            break
                         case 'ssv':
-                            separator = ' ';
-                            break;
+                            separator = ' '
+                            break
                         case 'tsv':
-                            separator = '/';
-                            break;
+                            separator = '/'
+                            break
                         case 'pipes':
-                            separator = '|';
-                            break;
+                            separator = '|'
+                            break
                     }
                     _.forEach(p.mappingCDT, m => {
-                        let v = this._searchMapping(paramNodes, m);
+                        let v = this._searchMapping(paramNodes, m)
                         if (!_.isEmpty(v)) {
                             if (_.isEmpty(values)) {
-                                values = v;
+                                values = v
                             } else {
-                                values = values.concat(separator + v);
+                                values = values.concat(separator + v)
                             }
                         }
-                    });
+                    })
                     if (!_.isEmpty(values)) {
                         params.push({
                             name: p.name,
                             value: values
-                        });
+                        })
                     } else {
                         if (p.required) {
                             //the service cannot be invoked
-                            reject('lack of required parameter \'' + p.name + '\'');
+                            reject('lack of required parameter \'' + p.name + '\'')
                         }
                     }
                 }
-            });
-            resolve(params);
-        });
+            })
+            resolve(params)
+        })
     }
 
     /**
@@ -157,16 +157,16 @@ export default class extends Bridge {
      * @private
      */
     _searchMapping (nodes, name) {
-        let names = name.split('.');
-        let obj = {};
+        let names = name.split('.')
+        let obj = {}
         if (names.length > 0) {
-            obj = _.find(nodes, {name: names[0]});
+            obj = _.find(nodes, {name: names[0]})
         }
         if (!_.isUndefined(obj)) {
             if (names.length > 1) {
-                obj = _.find(obj.fields, {name: names[1]});
+                obj = _.find(obj.fields, {name: names[1]})
             }
-            return _.result(obj, 'value');
+            return _.result(obj, 'value')
         }
     }
 
@@ -180,61 +180,61 @@ export default class extends Bridge {
      * @private
      */
     _invokeService (descriptor, params, pagination) {
-        const start = process.hrtime();
+        const start = process.hrtime()
         return new Promise ((resolve, reject) => {
             //configure parameters (the default ones are useful for standard query composition)
             let querySymbols = {
                 start: '?',
                 assign: '=',
                 separator: '&'
-            };
+            }
             //change parameter value if the service is REST
             if (descriptor.service.protocol === 'rest') {
-                querySymbols.start = querySymbols.assign = querySymbols.separator = '/';
+                querySymbols.start = querySymbols.assign = querySymbols.separator = '/'
             }
             //setting up the query path and parameters
-            let address = descriptor.service.basePath + descriptor.path + querySymbols.start;
+            let address = descriptor.service.basePath + descriptor.path + querySymbols.start
             let parameters = _.reduce(params, (output, p) => {
                 //add the value(s) to the query
                 if (_.isEmpty(output)) {
-                    return p.name + querySymbols.assign + p.value;
+                    return p.name + querySymbols.assign + p.value
                 } else {
-                    return output + querySymbols.separator + p.name + querySymbols.assign + p.value;
+                    return output + querySymbols.separator + p.name + querySymbols.assign + p.value
                 }
-            }, '');
+            }, '')
             //acquire pagination parameters
-            let startPage = this._getStartPage(descriptor, pagination);
+            let startPage = this._getStartPage(descriptor, pagination)
             //check if next page is defined
-            let currentPageAddress = null;
+            let currentPageAddress = null
             if (startPage) {
-                currentPageAddress = descriptor.pagination.attributeName + querySymbols.assign + startPage;
+                currentPageAddress = descriptor.pagination.attributeName + querySymbols.assign + startPage
             }
             //add the address to the request object
-            let fullAddress = address + parameters;
+            let fullAddress = address + parameters
             if (currentPageAddress) {
-                fullAddress += querySymbols.separator + currentPageAddress;
+                fullAddress += querySymbols.separator + currentPageAddress
             }
             if (debug) {
-                console.log('Querying service \'' + descriptor.service.name + '\': ' + fullAddress);
+                console.log('Querying service \'' + descriptor.service.name + '\': ' + fullAddress)
             }
             this
                 ._makeCall(fullAddress, descriptor.headers, descriptor.service.name)
                 .then(response => {
                     //acquire next page information
-                    let {hasNextPage, nextPage} = this._getPaginationStatus(descriptor, startPage, response);
+                    let {hasNextPage, nextPage} = this._getPaginationStatus(descriptor, startPage, response)
                     if (debug) {
-                        metrics.record('invokeService/' + descriptor.service.name, start);
+                        metrics.record('invokeService/' + descriptor.service.name, start)
                     }
                     resolve({
                         hasNextPage: hasNextPage,
                         nextPage: nextPage,
                         response: response
-                    });
+                    })
                 })
                 .catch(err => {
-                    reject(err);
-                });
-        });
+                    reject(err)
+                })
+        })
     }
 
     /**
@@ -246,65 +246,65 @@ export default class extends Bridge {
      * @private
      */
     _makeCall (address, headers, service) {
-        const start = process.hrtime();
+        const start = process.hrtime()
         return new Promise ((resolve, reject) => {
             //check if a copy of the response exists in the cache
             redis
                 .get(address)
                 .then((result) => {
                     if (debug) {
-                        metrics.record('accessCache/' + service, start);
+                        metrics.record('accessCache/' + service, start)
                     }
                     if (result) {
                         //return immediately the cached response
-                        return resolve(JSON.parse(result));
+                        return resolve(JSON.parse(result))
                     } else {
                         //send a new request
                         //creating the agent
-                        let request = agent.get(address);
+                        let request = agent.get(address)
                         //adding header information
                         _.forEach(headers, h => {
-                            request.set(h.name, h.value);
-                        });
+                            request.set(h.name, h.value)
+                        })
                         //setting timeout
-                        request.timeout(this._timeout);
+                        request.timeout(this._timeout)
                         //invoke the service and return the response
                         request.end((err, res) => {
                             if (err) {
                                 switch (err.status) {
                                     case 400:
-                                        reject('bad request. Check the address and parameters (400)');
-                                        break;
+                                        reject('bad request. Check the address and parameters (400)')
+                                        break
                                     case 401:
-                                        reject('access to a restricted resource (401)');
-                                        break;
+                                        reject('access to a restricted resource (401)')
+                                        break
                                     case 404:
-                                        reject('service not found (404)');
-                                        break;
+                                        reject('service not found (404)')
+                                        break
                                     case 500:
-                                        reject('server error (500)');
-                                        break;
+                                        reject('server error (500)')
+                                        break
                                     default:
-                                        reject(err);
+                                        reject(err)
                                 }
                             } else {
-                                let response;
+                                let response
                                 if (!_.isEmpty(res.body)) {
-                                    response = res.body;
+                                    response = res.body
                                 } else {
-                                    response = JSON.parse(res.text);
+                                    response = JSON.parse(res.text)
                                 }
                                 //caching the response (with associated TTL)
-                                redis.set(address, res.text, 'EX', this._cacheTTL);
+                                redis.set(address, res.text, 'EX', this._cacheTTL)
                                 if (debug) {
-                                    metrics.record('makeCall/' + service, start);
+                                    metrics.record('makeCall/' + service, start)
                                 }
-                                return resolve(response);
+                                return resolve(response)
                             }
-                        });
+                        })
                     }
-                });
-        });
+                })
+        })
     }
 
     /**
@@ -312,46 +312,46 @@ export default class extends Bridge {
      * @param descriptor The service description
      * @param currentPage The last page queried
      * @param response The last responses received by the service
-     * @returns {{hasNextPage: boolean, nextPage: *}} hasNextPage is a boolean attribute that specify if exists another page to be queried; nextPage define the identifier of the following page, and can be a number or a token depends on the service implementation.
+     * @returns {{hasNextPage: boolean, nextPage: *}} hasNextPage is a boolean attribute that specify if exists another page to be queried nextPage define the identifier of the following page, and can be a number or a token depends on the service implementation.
      * @private
      */
     _getPaginationStatus (descriptor, currentPage, response) {
-        let hasNextPage = false;
-        let nextPage = null;
+        let hasNextPage = false
+        let nextPage = null
         //check if the service has pagination parameters associated
         if (_.has(descriptor, 'pagination')) {
-            const paginationConfig = descriptor.pagination;
+            const paginationConfig = descriptor.pagination
             //acquire the next page identifier
             if (paginationConfig.type === 'number') {
                 //initialize the first page
                 if (_.isNull(currentPage)) {
-                    currentPage = 1;
+                    currentPage = 1
                 }
                 //get the pages count
                 try {
-                    let count = Number(response[paginationConfig.pageCountAttribute]);
+                    let count = Number(response[paginationConfig.pageCountAttribute])
                     //check if can I acquire a new page
                     if (currentPage + 1 <= count) {
-                        nextPage = currentPage + 1;
-                        hasNextPage = true;
+                        nextPage = currentPage + 1
+                        hasNextPage = true
                     }
                 } catch (e) {
-                    console.log('Invalid page count value');
+                    console.log('Invalid page count value')
                 }
             } else if (paginationConfig.type === 'token') {
                 //get the next token
-                let nextToken = response[paginationConfig.tokenAttribute];
+                let nextToken = response[paginationConfig.tokenAttribute]
                 //check if the token is valid
                 if (!_.isUndefined(nextToken) && !_.isEmpty(nextToken)) {
-                    nextPage = nextToken;
-                    hasNextPage = true;
+                    nextPage = nextToken
+                    hasNextPage = true
                 }
             }
         }
         return {
             hasNextPage,
             nextPage
-        };
+        }
     }
 
     /**
@@ -362,14 +362,14 @@ export default class extends Bridge {
      * @private
      */
     _getStartPage (descriptor, paginationArgs) {
-        let startPage = null;
+        let startPage = null
         //check if the service has pagination parameters associated
         if (_.has(descriptor, 'pagination') && !_.isUndefined(paginationArgs)) {
             //check if exists a start page placeholder
             if (!_.isUndefined(paginationArgs.startPage)) {
-                startPage = paginationArgs.startPage;
+                startPage = paginationArgs.startPage
             }
         }
-        return startPage;
+        return startPage
     }
 }

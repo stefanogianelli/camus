@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const Schema = mongoose.Schema;
-const ObjectId = Schema.Types.ObjectId;
+const Schema = mongoose.Schema
+const ObjectId = Schema.Types.ObjectId
 
 /**
  * Schema for primary services associations with the CDT nodes
@@ -27,8 +27,8 @@ const primaryServiceSchema = new Schema ({
         type: [Number], //[Longitude, Latitude]
         index: '2d'
     }
-});
+})
 
-const primaryServiceAssociation = mongoose.model('primary_service', primaryServiceSchema);
+const primaryServiceAssociation = mongoose.model('primary_service', primaryServiceSchema)
 
-export default primaryServiceAssociation;
+export default primaryServiceAssociation

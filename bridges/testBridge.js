@@ -1,6 +1,6 @@
-import Promise from 'bluebird';
+import Promise from 'bluebird'
 
-import Bridge from './bridge';
+import Bridge from './bridge'
 
 /**
  * TestBridge
@@ -91,7 +91,7 @@ export default class extends Bridge {
                         }
                     ]
                 }
-            });
-        });
+            })
+        })
     }
 }

@@ -1,11 +1,11 @@
-'use strict';
+'use strict'
 
 import {
     GraphQLString,
     GraphQLObjectType,
     GraphQLInt,
     GraphQLList
-} from 'graphql';
+} from 'graphql'
 
 /**
  * Meta schema
@@ -23,7 +23,7 @@ const metaObject = new GraphQLObjectType({
             type: GraphQLInt
         }
     })
-});
+})
 
 /**
  * Data schema
@@ -69,4 +69,4 @@ export default new GraphQLObjectType({
             type: metaObject
         }
     })
-});
+})

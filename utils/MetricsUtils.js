@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
-import _ from 'lodash';
-import fs from 'fs';
-import Promise from 'bluebird';
+import _ from 'lodash'
+import fs from 'fs'
+import Promise from 'bluebird'
 
-Promise.promisifyAll(fs);
+Promise.promisifyAll(fs)
 
 /**
  * Helper class for recording execution time of each component
@@ -17,16 +17,16 @@ export default class {
      */
     constructor (filePath) {
         if (_.isUndefined(filePath) || _.isEmpty(filePath)) {
-            throw new Error('File path not set! Please specify a file path');
+            throw new Error('File path not set! Please specify a file path')
         }
-        this._path = filePath;
+        this._path = filePath
         //clear the file content
         fs
             .writeFileAsync(this._path, '')
             .catch(() => {
                 //do nothing
-            });
-        this._map = new Map();
+            })
+        this._map = new Map()
     }
 
     /**
@@ -37,14 +37,14 @@ export default class {
      */
     record (label, start) {
         if (_.isUndefined(label) || !_.isString(label)) {
-            throw new Error('Invalid label');
+            throw new Error('Invalid label')
         }
-        const end = process.hrtime(start);
-        const time = end[0] * 1000 + end[1] / 1000000;
+        const end = process.hrtime(start)
+        const time = end[0] * 1000 + end[1] / 1000000
         if (this._map.has(label)) {
-            this._map.get(label).push(time);
+            this._map.get(label).push(time)
         } else {
-            this._map.set(label, [time]);
+            this._map.set(label, [time])
         }
     }
 
@@ -52,18 +52,18 @@ export default class {
      * This function saves the collected results into the specified file
      */
     saveResults () {
-        let output = '';
+        let output = ''
         this._map.forEach((item, key) => {
             item.forEach(time => {
-                output += key + '\t' + time.toString().replace('.', ',') + '\n';
+                output += key + '\t' + time.toString().replace('.', ',') + '\n'
             })
-        });
-        this._map.clear();
+        })
+        this._map.clear()
         fs
             .appendFileAsync(this._path, output)
             .catch(() => {
                 //do nothing
-            });
+            })
     }
 
 }

@@ -1,24 +1,24 @@
-'use strict';
+'use strict'
 
-import _ from 'lodash';
-import mongoose from 'mongoose';
-import Promise from 'bluebird';
+import _ from 'lodash'
+import mongoose from 'mongoose'
+import Promise from 'bluebird'
 
 //load the models
-import cdtModel from '../models/mongoose/cdtDescription';
+import cdtModel from '../models/mongoose/cdtDescription'
 import {
     serviceModel,
     operationModel
-} from '../models/mongoose/serviceDescription';
-import primaryServiceModel from '../models/mongoose/primaryServiceAssociation';
+} from '../models/mongoose/serviceDescription'
+import primaryServiceModel from '../models/mongoose/primaryServiceAssociation'
 import {
     supportAssociation,
     supportConstraint
-} from '../models/mongoose/supportServiceAssociation';
+} from '../models/mongoose/supportServiceAssociation'
 
 //radius for the coordinate search
-const _radius = 1500;
-let instance = null;
+const _radius = 1500
+let instance = null
 
 /**
  * Provider
@@ -32,11 +32,11 @@ export default class {
     constructor () {
         if (!instance) {
             mongoose.connection.on('error', function (err) {
-                console.log('[ERROR] Mongoose default connection error: ' + err);
-            });
-            instance = this;
+                console.log('[ERROR] Mongoose default connection error: ' + err)
+            })
+            instance = this
         }
-        return instance;
+        return instance
     }
 
     /**
@@ -45,10 +45,10 @@ export default class {
      */
     createConnection (url) {
         if (!_.isUndefined(url)) {
-            mongoose.connect(url);
-            console.log('[INFO] Successfully connected to the database');
+            mongoose.connect(url)
+            console.log('[INFO] Successfully connected to the database')
         } else {
-            throw Error('No database URL specified');
+            throw Error('No database URL specified')
         }
     }
 
@@ -56,7 +56,7 @@ export default class {
      * Close the connection with MongoDB
      */
     closeConnection () {
-        mongoose.connection.close();
+        mongoose.connection.close()
     }
 
     /**
@@ -78,11 +78,11 @@ export default class {
                 .limit(1)
                 .toArray((err, results) => {
                     if (err) {
-                        reject(err);
+                        reject(err)
                     }
-                    resolve(results[0]);
-                });
-        });
+                    resolve(results[0])
+                })
+        })
     }
 
     /**
@@ -107,14 +107,14 @@ export default class {
                     .lean()
                     .exec((err, results) => {
                         if (err) {
-                            reject(err);
+                            reject(err)
                         }
-                        resolve(results[0]);
-                    });
+                        resolve(results[0])
+                    })
             } else {
-                resolve({});
+                resolve({})
             }
-        });
+        })
     }
 
     /**
@@ -132,14 +132,14 @@ export default class {
                     .lean()
                     .exec((err, results) => {
                         if (err) {
-                            reject(err);
+                            reject(err)
                         }
-                        resolve(results);
-                    });
+                        resolve(results)
+                    })
             } else {
-                resolve([]);
+                resolve([])
             }
-        });
+        })
     }
 
     /**
@@ -152,22 +152,22 @@ export default class {
         return new Promise ((resolve, reject) => {
             if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
                 let operationNames = _.map(serviceNames, s => {
-                    return s.operation;
-                });
+                    return s.operation
+                })
                 operationModel
                     .find({name: {$in: operationNames}})
                     .populate('service')
                     .lean()
                     .exec((err, results) => {
                         if (err) {
-                            reject(err);
+                            reject(err)
                         }
-                        resolve(results);
-                    });
+                        resolve(results)
+                    })
             } else {
-                resolve([]);
+                resolve([])
             }
-        });
+        })
     }
 
     /**
@@ -190,30 +190,30 @@ export default class {
                 let clause = {
                     _idCDT: idCDT,
                     $or: []
-                };
+                }
                 clause.$or = _.map(attributes, a => {
                     return {
                         dimension: a.name,
                         value: a.value
                     }
-                });
+                })
                 const projection = {
                     _idOperation: 1,
                     ranking: 1,
                     _id: 0
-                };
+                }
                 primaryServiceModel.collection
                     .find(clause, projection)
                     .toArray((err, results) => {
                         if (err) {
-                            reject(err);
+                            reject(err)
                         }
-                        resolve(results);
-                    });
+                        resolve(results)
+                    })
             } else {
-                resolve([]);
+                resolve([])
             }
-        });
+        })
     }
 
     /**
@@ -224,9 +224,9 @@ export default class {
      */
     searchPrimaryByCoordinates (idCdt, node) {
         return new Promise ((resolve, reject) => {
-            const radius = _radius / 6371;
-            const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
-            const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
+            const radius = _radius / 6371
+            const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value')
+            const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value')
             if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
                 primaryServiceModel
                     .find({
@@ -239,14 +239,14 @@ export default class {
                     .lean()
                     .exec((err, results) => {
                         if (err) {
-                            reject(err);
+                            reject(err)
                         }
-                        resolve(results);
-                    });
+                        resolve(results)
+                    })
             } else {
-                resolve([]);
+                resolve([])
             }
-        });
+        })
     }
 
     /**
@@ -269,29 +269,29 @@ export default class {
                     _idCDT: idCDT,
                     category: category,
                     $or: []
-                };
+                }
                 clause.$or = _.map(attributes, a => {
                     return {
                         dimension: a.name,
                         value: a.value
                     }
-                });
+                })
                 const projection = {
                     _idOperation: 1,
                     _id: 0
-                };
+                }
                 supportAssociation.collection
                     .find(clause, projection)
                     .toArray((err, results) => {
                         if (err) {
-                            reject(err);
+                            reject(err)
                         }
-                        resolve(results);
-                    });
+                        resolve(results)
+                    })
             } else {
-                resolve([]);
+                resolve([])
             }
-        });
+        })
     }
 
     getServicesConstraintCount (idCDT, category, idOperations) {
@@ -303,20 +303,20 @@ export default class {
                    _idOperation: {
                        $in: idOperations
                    }
-               };
-               const projection = {_idOperation: 1, constraintCount: 1, _id: 0};
+               }
+               const projection = {_idOperation: 1, constraintCount: 1, _id: 0}
                supportConstraint.collection
                    .find(clause, projection)
                    .toArray((err, results) => {
                        if (err) {
-                           reject(err);
+                           reject(err)
                        }
-                       resolve(results);
-                   });
+                       resolve(results)
+                   })
            } else {
-               resolve([]);
+               resolve([])
            }
-        });
+        })
     }
 
     /**
@@ -327,9 +327,9 @@ export default class {
      */
     searchSupportByCoordinates (idCdt, node) {
         return new Promise ((resolve, reject) => {
-            const radius = _radius / 6371;
-            const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value');
-            const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value');
+            const radius = _radius / 6371
+            const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value')
+            const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value')
             if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
                 supportAssociation
                     .find({
@@ -342,13 +342,13 @@ export default class {
                     .lean()
                     .exec((err, results) => {
                         if (err) {
-                            reject(err);
+                            reject(err)
                         }
-                        resolve(results);
-                    });
+                        resolve(results)
+                    })
             } else {
-                resolve([]);
+                resolve([])
             }
-        });
+        })
     }
 }

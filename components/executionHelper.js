@@ -1,30 +1,30 @@
-'use strict';
+'use strict'
 
-import Promise from 'bluebird';
+import Promise from 'bluebird'
 
-import ContextManager from './contextManager';
-import PrimaryService from './primaryServiceSelection';
-import QueryHandler from './queryHandler';
-import SupportService from './supportServiceSelection';
-import ResponseAggregator from './responseAggregator';
-import Metrics from '../utils/MetricsUtils';
-import config from 'config';
+import ContextManager from './contextManager'
+import PrimaryService from './primaryServiceSelection'
+import QueryHandler from './queryHandler'
+import SupportService from './supportServiceSelection'
+import ResponseAggregator from './responseAggregator'
+import Metrics from '../utils/MetricsUtils'
+import config from 'config'
 
-const contextManager = new ContextManager();
-const primaryService = new PrimaryService();
-const queryHandler = new QueryHandler();
-const supportService = new SupportService();
-const responseAggregator = new ResponseAggregator();
+const contextManager = new ContextManager()
+const primaryService = new PrimaryService()
+const queryHandler = new QueryHandler()
+const supportService = new SupportService()
+const responseAggregator = new ResponseAggregator()
 
-let debug = false;
+let debug = false
 if (config.has('debug')) {
-    debug = config.get('debug');
+    debug = config.get('debug')
 }
 
-let metrics = null;
+let metrics = null
 if (debug) {
-    const filePath = __dirname.replace('components', '') + '/metrics/ExecutionHelper.txt';
-    metrics = new Metrics(filePath);
+    const filePath = __dirname.replace('components', '') + '/metrics/ExecutionHelper.txt'
+    metrics = new Metrics(filePath)
 }
 
 /**
@@ -33,7 +33,7 @@ if (debug) {
  * @returns {Promise|Request|Promise.<T>} The final response
  */
 export function prepareResponse (context) {
-    const start = process.hrtime();
+    const start = process.hrtime()
     return contextManager
         .getDecoratedCdt(context)
         .then(decoratedCdt => {
@@ -43,21 +43,21 @@ export function prepareResponse (context) {
                         .selectServices(decoratedCdt)
                         .then(services => {
                             return queryHandler
-                                .executeQueries(services, decoratedCdt);
+                                .executeQueries(services, decoratedCdt)
                         })
                         .then(responses => {
                             return responseAggregator
-                                .prepareResponse(responses);
+                                .prepareResponse(responses)
                         }),
                     support: supportService.selectServices(decoratedCdt)
-                });
+                })
         })
         .finally(() => {
             if (debug) {
-                metrics.record('executionTime', start);
-                metrics.saveResults();
+                metrics.record('executionTime', start)
+                metrics.saveResults()
             }
-        });
+        })
 }
 
 /**
@@ -66,15 +66,15 @@ export function prepareResponse (context) {
  * @returns {Promise|Request|Promise.<T>} The decorated CDT
  */
 export function getDecoratedCdt (context) {
-    const start = process.hrtime();
+    const start = process.hrtime()
     return contextManager
         .getDecoratedCdt(context)
         .finally(() => {
             if (debug) {
-                metrics.record('getDecoratedCdt', start);
-                metrics.saveResults();
+                metrics.record('getDecoratedCdt', start)
+                metrics.saveResults()
             }
-        });
+        })
 }
 
 /**
@@ -83,23 +83,23 @@ export function getDecoratedCdt (context) {
  * @returns {*|Promise|Request|Promise.<T>} The list of items found
  */
 export function getPrimaryData (decoratedCdt) {
-    const start = process.hrtime();
+    const start = process.hrtime()
     return primaryService
         .selectServices(decoratedCdt)
         .then(services => {
             return queryHandler
-                .executeQueries(services, decoratedCdt);
+                .executeQueries(services, decoratedCdt)
         })
         .then(responses => {
             return responseAggregator
-                .prepareResponse(responses);
+                .prepareResponse(responses)
         })
         .finally(() => {
             if (debug) {
-                metrics.record('getPrimaryData', start);
-                metrics.saveResults();
+                metrics.record('getPrimaryData', start)
+                metrics.saveResults()
             }
-        });
+        })
 }
 
 /**
@@ -108,13 +108,13 @@ export function getPrimaryData (decoratedCdt) {
  * @returns {bluebird|exports|module.exports} The list of support services found
  */
 export function getSupportData (decoratedCdt) {
-    const start = process.hrtime();
+    const start = process.hrtime()
     return supportService
         .selectServices(decoratedCdt)
         .finally(() => {
             if (debug) {
-                metrics.record('getSupportData', start);
-                metrics.saveResults();
+                metrics.record('getSupportData', start)
+                metrics.saveResults()
             }
-        });
+        })
 }

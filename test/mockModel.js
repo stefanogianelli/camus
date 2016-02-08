@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 //cdt
 export const cdt = {
@@ -96,7 +96,7 @@ export const cdt = {
             ]
         }
     ]
-};
+}
 
 //CDT with nested sons
 export const nestedCdt = {
@@ -130,7 +130,7 @@ export const nestedCdt = {
             ]
         }
     ]
-};
+}
 
 //CDT with multiple sons
 export const multipleSonsCdt = {
@@ -171,7 +171,7 @@ export const multipleSonsCdt = {
             ]
         }
     ]
-};
+}
 
 //sample decorated CDT
 export const decoratedCdt = idCDT => {
@@ -264,7 +264,7 @@ export const decoratedCdt = idCDT => {
             }
         ]
     }
-};
+}
 
 //googlePlaces service
 export const googlePlaces = {
@@ -272,7 +272,7 @@ export const googlePlaces = {
     type: 'primary',
     protocol: 'rest',
     basePath: 'http://localhost:3000/maps/api/place'
-};
+}
 
 export const googlePlacesOperation = idService => {
     return {
@@ -320,8 +320,8 @@ export const googlePlacesOperation = idService => {
             type: 'token',
             tokenAttribute: 'next_page_token'
         }
-    };
-};
+    }
+}
 
 //eventful service
 export const eventful = {
@@ -329,7 +329,7 @@ export const eventful = {
     type: 'primary',
     protocol: 'rest',
     basePath: 'http://localhost:3000/json'
-};
+}
 
 export const eventfulOperation = idService => {
     return {
@@ -385,8 +385,8 @@ export const eventfulOperation = idService => {
             type: 'number',
             pageCountAttribute: 'page_count'
         }
-    };
-};
+    }
+}
 
 //fake service with wrong URL
 export const fakeService = {
@@ -394,7 +394,7 @@ export const fakeService = {
     type: 'primary',
     protocol: 'rest',
     basePath: 'http://localhost:3000/jsonn'
-};
+}
 
 export const fakeServiceOperation = idService => {
     return {
@@ -445,15 +445,15 @@ export const fakeServiceOperation = idService => {
                 }
             ]
         }
-    };
-};
+    }
+}
 
 //service created for custom bridge testing
 export const testBridge = {
     name: 'testBridge',
     type: 'primary',
     protocol: 'custom'
-};
+}
 
 export const testBridgeOperation = idService => {
     return {
@@ -482,13 +482,13 @@ export const testBridgeOperation = idService => {
             ],
             functions: [
                 {
-                    run: 'return \'Restaurant \' + value;',
+                    run: 'return \'Restaurant \' + value',
                     onAttribute: 'title'
                 }
             ]
         }
-    };
-};
+    }
+}
 
 //wikipedia support service
 export const wikipedia = {
@@ -496,7 +496,7 @@ export const wikipedia = {
     type: 'support',
     protocol: 'query',
     basePath: 'https://en.wikipedia.org/w'
-};
+}
 
 export const wikipediaOperations = idService => {
     return {
@@ -533,8 +533,8 @@ export const wikipediaOperations = idService => {
                 default: 'json'
             }
         ]
-    };
-};
+    }
+}
 
 //google maps support service
 export const flickr = {
@@ -542,7 +542,7 @@ export const flickr = {
     type: 'support',
     protocol: 'rest',
     basePath: 'http://api.flickr.com'
-};
+}
 
 export const flickrOperations = idService => {
     return {
@@ -557,8 +557,8 @@ export const flickrOperations = idService => {
                 ]
             }
         ]
-    };
-};
+    }
+}
 
 //google maps support service
 export const googleMaps = {
@@ -566,7 +566,7 @@ export const googleMaps = {
     type: 'support',
     protocol: 'query',
     basePath: 'https://maps.googleapis.com/maps/api'
-};
+}
 
 export const googleMapsOperations = idService => {
     return {
@@ -591,8 +591,8 @@ export const googleMapsOperations = idService => {
                 default: 'bus'
             }
         ]
-    };
-};
+    }
+}
 
 //ATM support service
 export const atm = {
@@ -600,7 +600,7 @@ export const atm = {
     type: 'support',
     protocol: 'query',
     basePath: 'http://api.atm-mi.it'
-};
+}
 
 export const atmOperations = idService => {
     return {
@@ -629,8 +629,8 @@ export const atmOperations = idService => {
                 default: 'abc123'
             }
         ]
-    };
-};
+    }
+}
 
 //ATAC support service
 export const atac = {
@@ -638,7 +638,7 @@ export const atac = {
     type: 'support',
     protocol: 'query',
     basePath: 'http://api.atac.it'
-};
+}
 
 export const atacOperations = idService => {
     return {
@@ -667,22 +667,22 @@ export const atacOperations = idService => {
                 default: 'abc123'
             }
         ]
-    };
-};
+    }
+}
 
 //FS support service
 export const fs = {
     name: 'FS',
     type: 'support',
     protocol: 'query'
-};
+}
 
 export const fsOperations = idService => {
     return {
         service: idService,
         name: 'searchAddress'
-    };
-};
+    }
+}
 
 //Trenord support service
 export const trenord = {
@@ -690,7 +690,7 @@ export const trenord = {
     type: 'support',
     protocol: 'rest',
     basePath: 'http://api.trenord.it'
-};
+}
 
 export const trenordOperations = idService => {
     return {
@@ -711,8 +711,8 @@ export const trenordOperations = idService => {
                 ]
             }
         ]
-    };
-};
+    }
+}
 
 //googlePlaces associations
 export const googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
@@ -750,8 +750,8 @@ export const googlePlacesAssociations = (idOperation, idCDT, idNestedCDT, idMult
             value: 'i',
             ranking: 1
         }
-    ];
-};
+    ]
+}
 
 //eventful associations
 export const eventfulAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
@@ -784,8 +784,8 @@ export const eventfulAssociations = (idOperation, idCDT, idNestedCDT, idMultiple
             value: 'l',
             ranking: 1
         }
-    ];
-};
+    ]
+}
 
 //fake service associations
 export const fakeServiceAssociations = (idOperation, idCDT, idNestedCDT, idMultipleSonCDT) => {
@@ -818,8 +818,8 @@ export const fakeServiceAssociations = (idOperation, idCDT, idNestedCDT, idMulti
             value: 'n',
             ranking: 1
         }
-    ];
-};
+    ]
+}
 
 //test bridge service associations
 export const testBridgeAssociations = (idOperation, idCDT) => {
@@ -831,8 +831,8 @@ export const testBridgeAssociations = (idOperation, idCDT) => {
             value: 'TestBridge',
             ranking: 1
         }
-    ];
-};
+    ]
+}
 
 //google maps service associations
 export const googleMapsAssociations = (idOperation, idCDT) => {
@@ -844,8 +844,8 @@ export const googleMapsAssociations = (idOperation, idCDT) => {
             dimension: 'Transport',
             value: 'WithCar'
         }
-    ];
-};
+    ]
+}
 
 //google maps service constraint
 export const googleMapsConstraint = (idOperation, idCDT) => {
@@ -854,8 +854,8 @@ export const googleMapsConstraint = (idOperation, idCDT) => {
         category: 'Transport',
         _idCDT: idCDT,
         constraintCount: 1
-    };
-};
+    }
+}
 
 //ATM service associations
 export const atmAssociations = (idOperation, idCDT) => {
@@ -873,8 +873,8 @@ export const atmAssociations = (idOperation, idCDT) => {
             _idCDT: idCDT,
             loc: [9.18951, 45.46427]
         }
-    ];
-};
+    ]
+}
 
 //ATM service constraint
 export const atmConstraint = (idOperation, idCDT) => {
@@ -883,8 +883,8 @@ export const atmConstraint = (idOperation, idCDT) => {
         category: 'Transport',
         _idCDT: idCDT,
         constraintCount: 2
-    };
-};
+    }
+}
 
 //ATAC service associations
 export const atacAssociations = (idOperation, idCDT) => {
@@ -902,8 +902,8 @@ export const atacAssociations = (idOperation, idCDT) => {
             _idCDT: idCDT,
             loc: [12.51133, 41.89193]
         }
-    ];
-};
+    ]
+}
 
 //ATAC service constraint
 export const atacConstraint = (idOperation, idCDT) => {
@@ -912,8 +912,8 @@ export const atacConstraint = (idOperation, idCDT) => {
         category: 'Transport',
         _idCDT: idCDT,
         constraintCount: 2
-    };
-};
+    }
+}
 
 //FS service associations
 export const fsAssociations = (idOperation, idCDT) => {
@@ -925,8 +925,8 @@ export const fsAssociations = (idOperation, idCDT) => {
             dimension: 'Tipology',
             value: 'Train'
         }
-    ];
-};
+    ]
+}
 
 //FS service constraint
 export const fsConstraint = (idOperation, idCDT) => {
@@ -935,8 +935,8 @@ export const fsConstraint = (idOperation, idCDT) => {
         category: 'Transport',
         _idCDT: idCDT,
         constraintCount: 1
-    };
-};
+    }
+}
 
 //Trenord service associations
 export const trenordAssociations = (idOperation, idCDT) => {
@@ -954,8 +954,8 @@ export const trenordAssociations = (idOperation, idCDT) => {
             _idCDT: idCDT,
             loc: [9.18951, 45.46427]
         }
-    ];
-};
+    ]
+}
 
 //Trenord service constraint
 export const trenordConstraint = (idOperation, idCDT) => {
@@ -964,8 +964,8 @@ export const trenordConstraint = (idOperation, idCDT) => {
         category: 'Transport',
         _idCDT: idCDT,
         constraintCount: 2
-    };
-};
+    }
+}
 
 //Flickr service associations
 export const flickrAssociations = (idOperation, idCDT) => {
@@ -977,8 +977,8 @@ export const flickrAssociations = (idOperation, idCDT) => {
                     dimension: 'Tipology',
                     value: 'DinnerWithFriends'
         }
-    ];
-};
+    ]
+}
 
 //Flickr service constraint
 export const flickrConstraint = (idOperation, idCDT) => {
@@ -987,5 +987,5 @@ export const flickrConstraint = (idOperation, idCDT) => {
         category: 'Photo',
         _idCDT: idCDT,
         constraintCount: 1
-    };
-};
+    }
+}

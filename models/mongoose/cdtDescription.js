@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-const forEnum = 'filter parameter ranking filter|parameter ranking|parameter'.split(' ');
+const forEnum = 'filter parameter ranking filter|parameter ranking|parameter'.split(' ')
 
 /**
  * Field schema
@@ -13,7 +13,7 @@ const fieldSchema = new Schema({
         type: String,
         required: true
     }
-});
+})
 
 /**
  * Parameter schema
@@ -26,7 +26,7 @@ const ParameterSchema = new Schema({
     type: String,
     enum: [String],
     fields: [fieldSchema]
-});
+})
 
 /**
  * Node schema
@@ -45,7 +45,7 @@ const NodeSchema = new Schema({
     parameters: [ParameterSchema],
     parents: [String],
     parent: String
-});
+})
 
 /**
  * Schema for CDT
@@ -53,8 +53,8 @@ const NodeSchema = new Schema({
 const cdtSchema = new Schema ({
     _userId: String,
     context: [NodeSchema]
-});
+})
 
-const cdtModel = mongoose.model('cdt_description', cdtSchema);
+const cdtModel = mongoose.model('cdt_description', cdtSchema)
 
-export default cdtModel;
+export default cdtModel

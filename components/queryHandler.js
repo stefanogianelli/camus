@@ -1,28 +1,28 @@
-'use strict';
+'use strict'
 
-import _ from 'lodash';
-import Promise from 'bluebird';
-import System from 'systemjs';
-import config from 'config';
+import _ from 'lodash'
+import Promise from 'bluebird'
+import System from 'systemjs'
+import config from 'config'
 
-import RestBridge from '../bridges/restBridge';
-import Provider from '../provider/provider';
-import TransformResponse from './transformResponse';
-import Metrics from '../utils/MetricsUtils';
+import RestBridge from '../bridges/restBridge'
+import Provider from '../provider/provider'
+import TransformResponse from './transformResponse'
+import Metrics from '../utils/MetricsUtils'
 
-const restBridge = new RestBridge();
-const provider = new Provider();
-const transformResponse = new TransformResponse();
+const restBridge = new RestBridge()
+const provider = new Provider()
+const transformResponse = new TransformResponse()
 
-let debug = false;
+let debug = false
 if (config.has('debug')) {
-    debug = config.get('debug');
+    debug = config.get('debug')
 }
 
-let metrics = null;
+let metrics = null
 if (debug) {
-    const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt';
-    metrics = new Metrics(filePath);
+    const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt'
+    metrics = new Metrics(filePath)
 }
 
 System.config({
@@ -33,7 +33,7 @@ System.config({
         bluebird: '../node_modules/bluebird/js/release/bluebird.js',
         lodash: '../node_modules/lodash/index.js'
     }
-});
+})
 
 /**
  * QueryHandler
@@ -42,7 +42,7 @@ export default class {
 
     constructor () {
         //shortcut to the bridges folder
-        this._bridgeFolder = '../server/bridges/';
+        this._bridgeFolder = '../server/bridges/'
     }
 
     /**
@@ -55,32 +55,32 @@ export default class {
     executeQueries (services, decoratedCdt) {
         //if no service was selected, return an empty object
         if (_.isEmpty(services)) {
-            return Promise.resolve();
+            return Promise.resolve()
         }
-        const startTime = process.hrtime();
+        const startTime = process.hrtime()
         return provider
             .getServicesByOperationIds(_.map(services, '_idOperation'))
             .map(service => {
                 if (debug) {
-                    metrics.record('getDescriptions', startTime);
+                    metrics.record('getDescriptions', startTime)
                 }
                 //add the ranking value
                 service.service.rank = _.result(_.find(services, s => {
-                    return s._idOperation.equals(service._id);
-                }), 'rank');
+                    return s._idOperation.equals(service._id)
+                }), 'rank')
                 //make call to the current service
-                return this._callService(service, decoratedCdt.parameterNodes);
+                return this._callService(service, decoratedCdt.parameterNodes)
             })
             //merge the results
             .reduce((a, b) => {
-                return _.concat(a,b);
+                return _.concat(a,b)
             })
             .finally(() => {
                 if (debug) {
-                    metrics.record('executeQueries', startTime);
-                    metrics.saveResults();
+                    metrics.record('executeQueries', startTime)
+                    metrics.saveResults()
                 }
-            });
+            })
     }
 
     /**
@@ -91,12 +91,12 @@ export default class {
      * @private
      */
     _callService (descriptor, params) {
-        let promise;
+        let promise
         //check if the protocol of the current service is 'rest' o 'query'
         if (descriptor.service.protocol === 'rest' || descriptor.service.protocol === 'query') {
             //use the rest bridge
-            const paginationArgs = {};
-            promise = restBridge.executeQuery(descriptor, params, paginationArgs);
+            const paginationArgs = {}
+            promise = restBridge.executeQuery(descriptor, params, paginationArgs)
         } else if (descriptor.service.protocol === 'custom') {
             //call the custom bridge
             //check if a bridge name is defined
@@ -105,27 +105,27 @@ export default class {
                 promise = System
                     .import(this._bridgeFolder + descriptor.bridgeName)
                     .then(Module => {
-                        const module = new Module.default();
-                        return module.executeQuery(params);
-                    });
+                        const module = new Module.default()
+                        return module.executeQuery(params)
+                    })
             } else {
-                console.log('ERROR: The service \'' + descriptor.service.name + '\' must define a custom bridge');
-                return Promise.resolve([]);
+                console.log('ERROR: The service \'' + descriptor.service.name + '\' must define a custom bridge')
+                return Promise.resolve([])
             }
         }
-        const start = process.hrtime();
+        const start = process.hrtime()
         return promise
             .then(response => {
                 if (debug) {
-                    metrics.record('bridgeExecution', start);
+                    metrics.record('bridgeExecution', start)
                 }
                 //transform the response
-                return transformResponse.mappingResponse(response.response, descriptor);
+                return transformResponse.mappingResponse(response.response, descriptor)
             })
             .catch(e => {
-                console.log('[' + descriptor.service.name + '] ' + e);
-                return Promise.resolve([]);
-            });
+                console.log('[' + descriptor.service.name + '] ' + e)
+                return Promise.resolve([])
+            })
     }
 
 }

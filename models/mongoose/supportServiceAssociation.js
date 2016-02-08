@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const Schema = mongoose.Schema;
-const ObjectId = Schema.Types.ObjectId;
+const Schema = mongoose.Schema
+const ObjectId = Schema.Types.ObjectId
 
 
 /**
@@ -28,7 +28,7 @@ const supportServiceSchema = new Schema ({
         type: [Number], //[Longitude, Latitude]
         index: '2d'
     }
-});
+})
 
 /**
  * Schema for support services constraints count
@@ -51,7 +51,7 @@ const supportServiceConstraintSchema = new Schema({
         required: true,
         default: 0
     }
-});
+})
 
-export const supportAssociation = mongoose.model('support_service', supportServiceSchema);
-export const supportConstraint = mongoose.model('support_constraint', supportServiceConstraintSchema);
+export const supportAssociation = mongoose.model('support_service', supportServiceSchema)
+export const supportConstraint = mongoose.model('support_constraint', supportServiceConstraintSchema)

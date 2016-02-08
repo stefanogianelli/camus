@@ -1,23 +1,23 @@
-'use strict';
+'use strict'
 
-import _ from 'lodash';
-import Promise from 'bluebird';
-import config from 'config';
+import _ from 'lodash'
+import Promise from 'bluebird'
+import config from 'config'
 
-import Provider from '../provider/provider';
-import Metrics from '../utils/MetricsUtils';
+import Provider from '../provider/provider'
+import Metrics from '../utils/MetricsUtils'
 
-const provider = new Provider();
+const provider = new Provider()
 
-let debug = false;
+let debug = false
 if (config.has('debug')) {
-    debug = config.get('debug');
+    debug = config.get('debug')
 }
 
-let metrics = null;
+let metrics = null
 if (debug) {
-    const filePath = __dirname.replace('components', '') + '/metrics/PrimaryServiceSelection.txt';
-    metrics = new Metrics(filePath);
+    const filePath = __dirname.replace('components', '') + '/metrics/PrimaryServiceSelection.txt'
+    metrics = new Metrics(filePath)
 }
 
 /**
@@ -28,21 +28,21 @@ export default class  {
     constructor () {
         //number of services to keep
         if (config.has('primaryService.n')) {
-            this._n = config.get('primaryService.n');
+            this._n = config.get('primaryService.n')
         } else {
-            this._n = 3;
+            this._n = 3
         }
         //filter nodes weight
         if (config.has('primaryService.weight.filter')) {
-            this._filterWeight = config.get('primaryService.weight.filter');
+            this._filterWeight = config.get('primaryService.weight.filter')
         } else {
-            this._filterWeight = 2;
+            this._filterWeight = 2
         }
         //ranking nodes weight
         if (config.has('primaryService.weight.ranking')) {
-            this._rankingWeight = config.get('primaryService.weight.ranking');
+            this._rankingWeight = config.get('primaryService.weight.ranking')
         } else {
-            this._rankingWeight = 4;
+            this._rankingWeight = 4
         }
     }
 
@@ -52,7 +52,7 @@ export default class  {
      * @returns {Array} The ordered operations id
      */
     selectServices (decoratedCdt) {
-        const startTime = process.hrtime();
+        const startTime = process.hrtime()
         return new Promise(resolve => {
             Promise
                 .join(
@@ -64,36 +64,36 @@ export default class  {
                     this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes)
                 ,(filter, ranking, specific) => {
                     if (debug) {
-                        metrics.record('getAssociations', startTime);
+                        metrics.record('getAssociations', startTime)
                     }
                     //merge the ranking and specific list (specific searches are considered ranking)
                     //discard the ranking nodes that haven't a correspondence in the filter nodes list
                         ranking = _(ranking)
                             .concat(specific)
                             .intersectionWith(filter, (s, i) => {
-                                return s._idOperation.equals(i._idOperation);
+                                return s._idOperation.equals(i._idOperation)
                             })
-                            .value();
+                            .value()
                     //add the weight values for each item
                     _.forEach(filter, i => {
-                        i['weight'] = this._filterWeight;
-                    });
+                        i['weight'] = this._filterWeight
+                    })
                     _.forEach(ranking, i => {
-                        i['weight'] = this._rankingWeight;
-                    });
+                        i['weight'] = this._rankingWeight
+                    })
                     //calculate the ranking of the merged list
-                    resolve(this._calculateRanking(_.concat(filter, ranking)));
+                    resolve(this._calculateRanking(_.concat(filter, ranking)))
                 })
                 .catch(e => {
-                    console.log('[ERROR]' + e);
-                    resolve([]);
+                    console.log('[ERROR]' + e)
+                    resolve([])
                 })
                 .finally(() => {
                     if (debug) {
-                        metrics.record('selectServices', startTime);
-                        metrics.saveResults();
+                        metrics.record('selectServices', startTime)
+                        metrics.saveResults()
                     }
-                });
+                })
         })
     }
 
@@ -106,33 +106,33 @@ export default class  {
      * @private
      */
     _specificSearch (idCdt, nodes) {
-        const start = process.hrtime();
+        const start = process.hrtime()
         return new Promise (resolve => {
-            let promises = [];
+            let promises = []
             //check if the node dimension have a specific search associated
             _.forEach(nodes, node => {
                 switch (node.name) {
                     case 'CityCoord':
                         //load specific coordinates search
-                        promises.push(this._searchByCoordinates(idCdt, node));
-                        break;
+                        promises.push(this._searchByCoordinates(idCdt, node))
+                        break
                 }
-            });
+            })
             Promise
                 .all(promises)
                 .then(results => {
-                    resolve(_.flatten(results));
+                    resolve(_.flatten(results))
                 })
                 .catch(e => {
-                    console.log(e);
-                    resolve();
+                    console.log(e)
+                    resolve()
                 })
                 .finally(() => {
                     if (debug) {
-                        metrics.record('specificSearches', start);
+                        metrics.record('specificSearches', start)
                     }
-                });
-        });
+                })
+        })
     }
 
     /**
@@ -143,42 +143,42 @@ export default class  {
      */
     _calculateRanking (services) {
         if (debug) {
-            console.log('Found ' + services.length + ' service/s');
+            console.log('Found ' + services.length + ' service/s')
         }
-        const start = process.hrtime();
-        let rankedList = [];
+        const start = process.hrtime()
+        let rankedList = []
         _.forEach(services, s => {
             //calculate the ranking of the current service
-            let rank;
+            let rank
             //avoid infinity results
             if (s.ranking > 0) {
-                rank = s.weight * (1 / s.ranking);
+                rank = s.weight * (1 / s.ranking)
             } else {
-                rank = s.weight;
+                rank = s.weight
             }
             //check if the service is already in the list
             let index = _.findIndex(rankedList, i => {
-                return i._idOperation.equals(s._idOperation);
-            });
+                return i._idOperation.equals(s._idOperation)
+            })
             if (index === -1) {
                 //if not exists creates the entry
                 rankedList.push({
                     _idOperation: s._idOperation,
                     rank: rank
-                });
+                })
             } else {
                 //if exists update the rank
-                rankedList[index].rank += rank;
+                rankedList[index].rank += rank
             }
-        });
+        })
         //sort the list by the rank in descending order
-        rankedList = _.orderBy(rankedList, 'rank', 'desc');
+        rankedList = _.orderBy(rankedList, 'rank', 'desc')
         //take only the first N services
-        rankedList = _.take(rankedList, this._n);
+        rankedList = _.take(rankedList, this._n)
         if (debug) {
-            metrics.record('calculateRanking', start);
+            metrics.record('calculateRanking', start)
         }
-        return rankedList;
+        return rankedList
     }
 
     /**
@@ -190,28 +190,28 @@ export default class  {
      * @private
      */
     _searchByCoordinates (idCdt, node) {
-        const start = process.hrtime();
+        const start = process.hrtime()
         return provider
             .searchPrimaryByCoordinates(idCdt, node)
             .then(results => {
                 if (debug) {
-                    metrics.record('dbCoordinatesSearch', start);
+                    metrics.record('dbCoordinatesSearch', start)
                 }
                 if (debug) {
-                    console.log('Found ' + results.length + ' services near the position');
+                    console.log('Found ' + results.length + ' services near the position')
                 }
-                return results;
+                return results
             })
             .map((result, index) => {
                 return {
                     _idOperation: result._idOperation,
                     ranking: index + 1
-                };
+                }
             })
             .finally(() => {
                 if (debug) {
-                    metrics.record('searchByCoordinates', start);
+                    metrics.record('searchByCoordinates', start)
                 }
-            });
+            })
     }
 }

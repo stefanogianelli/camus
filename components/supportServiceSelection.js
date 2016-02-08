@@ -1,23 +1,23 @@
-'use strict';
+'use strict'
 
-import _ from 'lodash';
-import Promise from 'bluebird';
-import config from 'config';
+import _ from 'lodash'
+import Promise from 'bluebird'
+import config from 'config'
 
-import Provider from '../provider/provider';
-import Metrics from '../utils/MetricsUtils';
+import Provider from '../provider/provider'
+import Metrics from '../utils/MetricsUtils'
 
-const provider = new Provider();
+const provider = new Provider()
 
-let debug = false;
+let debug = false
 if (config.has('debug')) {
-    debug = config.get('debug');
+    debug = config.get('debug')
 }
 
-let metrics = null;
+let metrics = null
 if (debug) {
-    const filePath = __dirname.replace('components', '') + '/metrics/SupportServiceSelection.txt';
-    metrics = new Metrics(filePath);
+    const filePath = __dirname.replace('components', '') + '/metrics/SupportServiceSelection.txt'
+    metrics = new Metrics(filePath)
 }
 
 /**
@@ -31,7 +31,7 @@ export default class {
      * @returns {bluebird|exports|module.exports} The list of services, with the query associated
      */
     selectServices (decoratedCdt) {
-        const startTime = process.hrtime();
+        const startTime = process.hrtime()
         return new Promise ((resolve, reject) => {
             Promise
                 .join(
@@ -40,18 +40,18 @@ export default class {
                     //acquire the URLs for the services requested by categories
                     this._selectServiceFromCategory(decoratedCdt.supportServiceCategories, decoratedCdt),
                 (servicesByName, serviceByCategory) => {
-                    resolve(_.concat(servicesByName, serviceByCategory));
+                    resolve(_.concat(servicesByName, serviceByCategory))
                 })
                 .catch(e => {
-                    reject(e);
+                    reject(e)
                 })
                 .finally(() => {
                     if (debug) {
-                        metrics.record('selectServices', startTime);
-                        metrics.saveResults();
+                        metrics.record('selectServices', startTime)
+                        metrics.saveResults()
                     }
-                });
-        });
+                })
+        })
     }
 
     /**
@@ -61,7 +61,7 @@ export default class {
      * @private
      */
     _selectServicesFromName (serviceNames) {
-        const start = process.hrtime();
+        const start = process.hrtime()
         return new Promise (resolve => {
             if (!_.isUndefined(serviceNames) && !_.isEmpty(serviceNames)) {
                 provider
@@ -69,19 +69,19 @@ export default class {
                     .getServicesByNames(serviceNames)
                     .then(services => {
                         if (debug) {
-                            metrics.record('getServicesByName', start);
+                            metrics.record('getServicesByName', start)
                         }
                         //compose the queries
-                        resolve(this._composeQueries(services));
+                        resolve(this._composeQueries(services))
                     })
                     .catch(e => {
-                        console.log(e);
-                        resolve();
-                    });
+                        console.log(e)
+                        resolve()
+                    })
             } else {
-                resolve([]);
+                resolve([])
             }
-        });
+        })
     }
 
     /**
@@ -92,11 +92,11 @@ export default class {
      * @private
      */
     _selectServiceFromCategory (categories, decoratedCdt) {
-        const start = process.hrtime();
+        const start = process.hrtime()
         if (!_.isUndefined(categories) && !_.isEmpty(categories) && !_.isEmpty(decoratedCdt.filterNodes)) {
-            let nodes = decoratedCdt.filterNodes;
+            let nodes = decoratedCdt.filterNodes
             if (!_.isEmpty(decoratedCdt.rankingNodes)) {
-                nodes = _.concat(decoratedCdt.filterNodes, decoratedCdt.rankingNodes);
+                nodes = _.concat(decoratedCdt.filterNodes, decoratedCdt.rankingNodes)
             }
             return Promise
                 .map(categories, c => {
@@ -106,33 +106,33 @@ export default class {
                             this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes),
                             (filterServices, customServices) => {
                                 if (debug) {
-                                    metrics.record('getAssociations', start);
+                                    metrics.record('getAssociations', start)
                                 }
                                 //acquire constraint count information
                                 const ids = _.unionWith(filterServices, customServices, (arrVal, othVal) => {
-                                    return arrVal._idOperation.equals(othVal._idOperation);
-                                });
+                                    return arrVal._idOperation.equals(othVal._idOperation)
+                                })
                                 return provider
                                     .getServicesConstraintCount(decoratedCdt._id, c, _.map(ids, '_idOperation'))
                                     .then(constraintCount => {
-                                        return this._mergeResults(filterServices, customServices, constraintCount);
-                                    });
+                                        return this._mergeResults(filterServices, customServices, constraintCount)
+                                    })
                             }
                         )
                         .then(provider.getServicesByOperationIds)
                         .then(services => {
                             //compose the queries
-                            return this._composeQueries(services, c);
+                            return this._composeQueries(services, c)
                         })
                         .catch(e => {
-                            console.log(e);
-                        });
+                            console.log(e)
+                        })
                 })
                 .reduce((a, b) => {
-                    return _.concat(a,b);
-                });
+                    return _.concat(a,b)
+                })
         } else {
-            return Promise.resolve([]);
+            return Promise.resolve([])
         }
     }
 
@@ -145,38 +145,38 @@ export default class {
      * @private
      */
     _mergeResults (filterServices, customServices, constraintCount) {
-        const start = process.hrtime();
-        let results = [];
+        const start = process.hrtime()
+        let results = []
         _.forEach(_.concat(filterServices, customServices), s => {
             //search if the current operation already exists in the results collection
             let index = _.findIndex(results, i => {
-                return i._idOperation.equals(s._idOperation);
-            });
+                return i._idOperation.equals(s._idOperation)
+            })
             if (index === -1) {
                 //operation not found, so I create a new object
                 const count = _.result(_.find(constraintCount, o => {
-                    return o._idOperation.equals(s._idOperation);
-                }), 'constraintCount');
+                    return o._idOperation.equals(s._idOperation)
+                }), 'constraintCount')
                 results.push({
                     _idOperation: s._idOperation,
                     constraintCount: count,
                     count: 1
-                });
+                })
             } else {
                 //operation found, so I increase the counter
                 results[index].count += 1
             }
-        });
+        })
         //get the maximum value of the count attribute
-        let maxCount = _.result(_.maxBy(results, 'count'), 'count');
+        let maxCount = _.result(_.maxBy(results, 'count'), 'count')
         //filter out the operations with the maximum count value and that respect their total constraint counter
         results = _.filter(results, r => {
-            return r.count === maxCount && r.constraintCount === r.count;
-        });
+            return r.count === maxCount && r.constraintCount === r.count
+        })
         if (debug) {
-            metrics.record('mergeResults', start);
+            metrics.record('mergeResults', start)
         }
-        return _.map(results, '_idOperation');
+        return _.map(results, '_idOperation')
     }
 
     /**
@@ -189,70 +189,70 @@ export default class {
     _composeQueries (services, category) {
         return _.map(services, s => {
             //configure parameters (the default ones are useful for standard query composition)
-            let start = '?';
-            let assign = '=';
-            let separator = '&';
+            let start = '?'
+            let assign = '='
+            let separator = '&'
             //change parameter value if the service is REST
             if (s.service.protocol === 'rest') {
-                start = assign = separator = '/';
+                start = assign = separator = '/'
             }
             //add the base path and the operation path to the address
-            let address = s.service.basePath + s.path + start;
+            let address = s.service.basePath + s.path + start
             //compose the parameters part of the query
             let output = _.reduce(s.parameters, (output, p) => {
-                let values;
+                let values
                 if (_.isEmpty(p.mappingTerm)) {
                     //if no term is associated use the default value
-                    values = p.default;
+                    values = p.default
                 } else {
                     // compose the values part of the parameter
-                    let valueSeparator = ',';
+                    let valueSeparator = ','
                     //select the correct separator (the default one is the comma)
                     switch (p.collectionFormat) {
                         case 'csv':
-                            valueSeparator = ',';
-                            break;
+                            valueSeparator = ','
+                            break
                         case 'ssv':
-                            valueSeparator = ' ';
-                            break;
+                            valueSeparator = ' '
+                            break
                         case 'tsv':
-                            valueSeparator = '/';
-                            break;
+                            valueSeparator = '/'
+                            break
                         case 'pipes':
-                            valueSeparator = '|';
-                            break;
+                            valueSeparator = '|'
+                            break
                     }
                     //concatenate one or more terms, separated by the symbol selected above
                     values = _.reduce(p.mappingTerm, (values, m) => {
                         if (_.isEmpty(values)) {
-                            return m;
+                            return m
                         } else {
-                            return values + valueSeparator + m;
+                            return values + valueSeparator + m
                         }
-                    }, '');
-                    values = '{' + values + '}';
+                    }, '')
+                    values = '{' + values + '}'
                 }
                 //add the value(s) to the query
                 if (_.isEmpty(output)) {
-                    return p.name + assign + values;
+                    return p.name + assign + values
                 } else {
-                    return output + separator + p.name + assign + values;
+                    return output + separator + p.name + assign + values
                 }
-            }, '');
+            }, '')
             //return the object
             if (!_.isUndefined(category) && !_.isEmpty(category)) {
                 return {
                     category: category,
                     service: s.service.name,
                     url: address + output
-                };
+                }
             } else {
                 return {
                     name: s.service.name,
                     url: address + output
-                };
+                }
             }
-        });
+        })
     }
 
     /**
@@ -265,22 +265,22 @@ export default class {
      */
     _specificSearch (idCdt, nodes) {
         return new Promise (resolve => {
-            let promises = [];
+            let promises = []
             //check if the node dimension have a specific search associated
             _.forEach(nodes, node => {
                 switch (node.name) {
                     case 'CityCoord':
                         //load specific coordinates search
-                        promises.push(this._searchByCoordinates(idCdt, node));
-                        break;
+                        promises.push(this._searchByCoordinates(idCdt, node))
+                        break
                 }
-            });
+            })
             Promise
                 .all(promises)
                 .then(results => {
-                    resolve(_.flatten(results));
-                });
-        });
+                    resolve(_.flatten(results))
+                })
+        })
     }
 
     /**
@@ -294,7 +294,7 @@ export default class {
         return provider
             .searchSupportByCoordinates(idCdt, node)
             .catch(e => {
-                console.log(e);
-            });
+                console.log(e)
+            })
     }
 }

@@ -1,22 +1,22 @@
-'use strict';
+'use strict'
 
 import {
     connectionFromPromisedArray,
     connectionArgs,
     connectionDefinitions,
-} from 'graphql-relay';
+} from 'graphql-relay'
 
 import {
     GraphQLList
-} from 'graphql';
+} from 'graphql'
 
-import primaryData from './primaryDataSchema';
-import supportData from './supportDataSchema';
+import primaryData from './primaryDataSchema'
+import supportData from './supportDataSchema'
 
 import {
     getPrimaryData,
     getSupportData
-} from './../../components/executionHelper';
+} from './../../components/executionHelper'
 
 /**
  * Create a connection related to the primary service request
@@ -32,14 +32,14 @@ export function primaryConnection () {
                 resolve: (conn) => conn.edges.map(edge => edge.node)
             }
         })
-    });
+    })
     return {
         type: connectionType,
         args: connectionArgs,
         resolve: (decoratedCdt, args) => {
-            return connectionFromPromisedArray(getPrimaryData(decoratedCdt), args);
+            return connectionFromPromisedArray(getPrimaryData(decoratedCdt), args)
         }
-    };
+    }
 }
 
 /**
@@ -56,12 +56,12 @@ export function supportConnection () {
                 resolve: (conn) => conn.edges.map(edge => edge.node)
             }
         })
-    });
+    })
     return {
         type: connectionType,
         args: connectionArgs,
         resolve: (decoratedCdt, args) => {
-            return connectionFromPromisedArray(getSupportData(decoratedCdt), args);
+            return connectionFromPromisedArray(getSupportData(decoratedCdt), args)
         }
-    };
+    }
 }

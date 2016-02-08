@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 import {
     GraphQLString,
@@ -7,25 +7,25 @@ import {
     GraphQLSchema,
     GraphQLID,
     GraphQLNonNull
-} from 'graphql';
+} from 'graphql'
 
 import {
     getDecoratedCdt
-} from './../../components/executionHelper';
+} from './../../components/executionHelper'
 
 import {
     contextItemType,
     supportItemType
-} from './contextSchema';
+} from './contextSchema'
 
 import {
     primaryConnection,
     supportConnection
-} from './connections';
+} from './connections'
 
-import dataType from './primaryDataSchema';
+import dataType from './primaryDataSchema'
 
-import supportResponseType from './supportDataSchema';
+import supportResponseType from './supportDataSchema'
 
 /**
  * Response schema
@@ -37,7 +37,7 @@ export const responseType = new GraphQLObjectType({
         primaryResults: primaryConnection(),
         supportResults: supportConnection()
     })
-});
+})
 
 /**
  * Schema for GraphQL query
@@ -64,15 +64,15 @@ const queryType = new GraphQLObjectType({
                 }
             },
             resolve: (root, {_id, context, support}) => {
-                return getDecoratedCdt({_id, context, support});
+                return getDecoratedCdt({_id, context, support})
             }
         }
     })
-});
+})
 
 /**
  * The main schema
  */
 export const camusSchema = new GraphQLSchema({
     query: queryType
-});
+})

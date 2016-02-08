@@ -1,143 +1,143 @@
-'use strict';
+'use strict'
 
-import assert from 'assert';
+import assert from 'assert'
 
-import TransformResponse from '../components/transformResponse';
+import TransformResponse from '../components/transformResponse'
 
-const transformResponse = new TransformResponse();
+const transformResponse = new TransformResponse()
 
 describe('Component: TransformResponse', () => {
 
     describe('#retrieveListOfResults()', () => {
         it('check if the transform operation is done correctly', () => {
-            const array = transformResponse._retrieveListOfResults(googlePlacesResponse, googlePlacesMapping.list);
-            assert.equal(array.length, 2);
-        });
+            const array = transformResponse._retrieveListOfResults(googlePlacesResponse, googlePlacesMapping.list)
+            assert.equal(array.length, 2)
+        })
         it('check behaviour when the root element doesn\'t have an array nor an object', () => {
-            const array = transformResponse._retrieveListOfResults(stringResponse, 'data');
-            assert.equal(array.length, 0);
-        });
+            const array = transformResponse._retrieveListOfResults(stringResponse, 'data')
+            assert.equal(array.length, 0)
+        })
         it('check error message when no response is specified', () => {
             try {
-                transformResponse._retrieveListOfResults();
+                transformResponse._retrieveListOfResults()
             } catch (e) {
-                assert.equal(e.message, 'Empty response. Please add a response to be mapped');
+                assert.equal(e.message, 'Empty response. Please add a response to be mapped')
             }
-        });
-    });
+        })
+    })
 
     describe('#mappingResponse()', () => {
         it('check if the mapping is done correctly', () => {
             return transformResponse
                 .mappingResponse(googlePlacesResponse, googlePlacesMapping)
                 .then(data => {
-                    assert.equal(data[0].title, 'Girl & the Goat');
-                    assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
-                    assert.equal(data[0].latitude, 41.8841133);
-                    assert.equal(data[0].longitude, -87.6480041);
-                    assert.equal(data[1].title, 'Bandera');
-                    assert.equal(data[1].address, '535 N Michigan Ave, Chicago, IL 60611, Stati Uniti');
-                    assert.equal(data[1].latitude, 41.8918882);
-                    assert.equal(data[1].longitude, -87.62385739999999);
-                });
-        });
+                    assert.equal(data[0].title, 'Girl & the Goat')
+                    assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti')
+                    assert.equal(data[0].latitude, 41.8841133)
+                    assert.equal(data[0].longitude, -87.6480041)
+                    assert.equal(data[1].title, 'Bandera')
+                    assert.equal(data[1].address, '535 N Michigan Ave, Chicago, IL 60611, Stati Uniti')
+                    assert.equal(data[1].latitude, 41.8918882)
+                    assert.equal(data[1].longitude, -87.62385739999999)
+                })
+        })
         it('check if a custom function on an attribute is correctly executed', () => {
             return transformResponse
                 .mappingResponse(googlePlacesResponse, mappingWithFunction)
                 .then(data => {
-                    assert.equal(data[0].title, 'Restaurant Girl & the Goat');
-                    assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
-                    assert.equal(data[0].latitude, 41.8841133);
-                    assert.equal(data[0].longitude, -87.6480041);
-                    assert.equal(data[1].title, 'Restaurant Bandera');
-                    assert.equal(data[1].address, '535 N Michigan Ave, Chicago, IL 60611, Stati Uniti');
-                    assert.equal(data[1].latitude, 41.8918882);
-                    assert.equal(data[1].longitude, -87.62385739999999);
-                });
-        });
+                    assert.equal(data[0].title, 'Restaurant Girl & the Goat')
+                    assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti')
+                    assert.equal(data[0].latitude, 41.8841133)
+                    assert.equal(data[0].longitude, -87.6480041)
+                    assert.equal(data[1].title, 'Restaurant Bandera')
+                    assert.equal(data[1].address, '535 N Michigan Ave, Chicago, IL 60611, Stati Uniti')
+                    assert.equal(data[1].latitude, 41.8918882)
+                    assert.equal(data[1].longitude, -87.62385739999999)
+                })
+        })
         it('check if a function on a non existent attribute doesn\'t change the response', () => {
             return transformResponse
                 .mappingResponse(googlePlacesResponse, mappingWithInvalidFunction)
                 .then(data => {
-                    assert.equal(data[0].title, 'Girl & the Goat');
-                    assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti');
-                    assert.equal(data[0].latitude, 41.8841133);
-                    assert.equal(data[0].longitude, -87.6480041);
-                    assert.equal(typeof data[0].website, 'undefined');
-                    assert.equal(data[1].title, 'Bandera');
-                    assert.equal(data[1].address, '535 N Michigan Ave, Chicago, IL 60611, Stati Uniti');
-                    assert.equal(data[1].latitude, 41.8918882);
-                    assert.equal(data[1].longitude, -87.62385739999999);
-                    assert.equal(typeof data[1].website, 'undefined');
-                });
-        });
+                    assert.equal(data[0].title, 'Girl & the Goat')
+                    assert.equal(data[0].address, '809 W Randolph St, Chicago, IL 60607, Stati Uniti')
+                    assert.equal(data[0].latitude, 41.8841133)
+                    assert.equal(data[0].longitude, -87.6480041)
+                    assert.equal(typeof data[0].website, 'undefined')
+                    assert.equal(data[1].title, 'Bandera')
+                    assert.equal(data[1].address, '535 N Michigan Ave, Chicago, IL 60611, Stati Uniti')
+                    assert.equal(data[1].latitude, 41.8918882)
+                    assert.equal(data[1].longitude, -87.62385739999999)
+                    assert.equal(typeof data[1].website, 'undefined')
+                })
+        })
         it('check if nested base list is correctly handled', () => {
             return transformResponse
                 .mappingResponse(eventfulResponse, eventfulMapping)
                 .then(data => {
-                    assert.equal(data[0].title, 'Wine Lover\'s New Year\'s Eve at Volo Restaurant Wine Bar');
-                    assert.equal(data[0].address, '2008 West Roscoe');
-                    assert.equal(data[0].latitude, '41.9433228');
-                    assert.equal(data[0].longitude, '-87.6788849');
-                    assert.equal(data[1].title, 'National Restaurant Association');
-                    assert.equal(data[1].address, '2301 S. Lake Shore Drive');
-                    assert.equal(data[1].latitude, '41.854092');
-                    assert.equal(data[1].longitude, '-87.6127372');
-                });
-        });
+                    assert.equal(data[0].title, 'Wine Lover\'s New Year\'s Eve at Volo Restaurant Wine Bar')
+                    assert.equal(data[0].address, '2008 West Roscoe')
+                    assert.equal(data[0].latitude, '41.9433228')
+                    assert.equal(data[0].longitude, '-87.6788849')
+                    assert.equal(data[1].title, 'National Restaurant Association')
+                    assert.equal(data[1].address, '2301 S. Lake Shore Drive')
+                    assert.equal(data[1].latitude, '41.854092')
+                    assert.equal(data[1].longitude, '-87.6127372')
+                })
+        })
         it('check if null values are deleted from the response', () => {
             return transformResponse
                 .mappingResponse(eventfulResponse, mappgingWithNullValue)
                 .then(data => {
-                    assert.equal(typeof data[0].count, 'undefined');
-                    assert.equal(typeof data[1].count, 'undefined');
-                });
-        });
+                    assert.equal(typeof data[0].count, 'undefined')
+                    assert.equal(typeof data[1].count, 'undefined')
+                })
+        })
         it('check root and non array base list is correctly handled', () => {
             return transformResponse
                 .mappingResponse(cinemaResponse, cinemaMapping)
                 .then(data => {
-                    assert.equal(data[0].title, 'Cinema Pierrot');
-                    assert.equal(data[0].address, 'Via Camillo De Meis, 58');
-                    assert.equal(data[0].telephone, '+39 0815 967 802');
-                    assert.equal(data[0].latitude, '40.85151');
-                    assert.equal(data[0].longitude, '14.333234');
-                    assert.equal(data[1].title, 'Cinema Ambasciatori');
-                    assert.equal(data[1].address, 'Via Francesco Crispi, 33');
-                    assert.equal(data[1].telephone, '+39 0817 613 128');
-                    assert.equal(data[1].latitude, '40.836518');
-                    assert.equal(data[1].longitude, '14.231663');
-                    assert.equal(data[2].title, 'Cinema Acacia');
-                    assert.equal(data[2].address, 'Via Raffaele Tarantino, 10');
-                    assert.equal(data[2].telephone, '+39 081 5563999');
-                    assert.equal(data[2].latitude, '40.849546');
-                    assert.equal(data[2].longitude, '14.230291');
-                });
-        });
+                    assert.equal(data[0].title, 'Cinema Pierrot')
+                    assert.equal(data[0].address, 'Via Camillo De Meis, 58')
+                    assert.equal(data[0].telephone, '+39 0815 967 802')
+                    assert.equal(data[0].latitude, '40.85151')
+                    assert.equal(data[0].longitude, '14.333234')
+                    assert.equal(data[1].title, 'Cinema Ambasciatori')
+                    assert.equal(data[1].address, 'Via Francesco Crispi, 33')
+                    assert.equal(data[1].telephone, '+39 0817 613 128')
+                    assert.equal(data[1].latitude, '40.836518')
+                    assert.equal(data[1].longitude, '14.231663')
+                    assert.equal(data[2].title, 'Cinema Acacia')
+                    assert.equal(data[2].address, 'Via Raffaele Tarantino, 10')
+                    assert.equal(data[2].telephone, '+39 081 5563999')
+                    assert.equal(data[2].latitude, '40.849546')
+                    assert.equal(data[2].longitude, '14.230291')
+                })
+        })
         it('check error message when no response is specified', () => {
             return transformResponse
                 .mappingResponse()
                 .catch(e => {
-                    assert.equal(e, 'Empty response. Please add a response to be mapped');
-                });
-        });
+                    assert.equal(e, 'Empty response. Please add a response to be mapped')
+                })
+        })
         it('check error when no descriptor is provided', () => {
             return transformResponse
                 .mappingResponse(googlePlacesResponse)
                 .catch(e => {
-                    assert.equal(e, 'No descriptor defined. Please add a descriptor for the current service');
-                });
-        });
+                    assert.equal(e, 'No descriptor defined. Please add a descriptor for the current service')
+                })
+        })
         it('check error when no mapping is defined', () => {
             return transformResponse
                 .mappingResponse(googlePlacesResponse, {})
                 .catch(e => {
-                    assert.equal(e, 'No mapping defined. Please add a mapping for the current service');
-                });
-        });
-    });
+                    assert.equal(e, 'No mapping defined. Please add a mapping for the current service')
+                })
+        })
+    })
 
-});
+})
 
 const googlePlacesMapping = {
     service: {
@@ -165,7 +165,7 @@ const googlePlacesMapping = {
             }
         ]
     }
-};
+}
 
 const mappingWithFunction = {
     service: {
@@ -195,11 +195,11 @@ const mappingWithFunction = {
         functions: [
             {
                 onAttribute: 'title',
-                run: 'return \'Restaurant \' + value;'
+                run: 'return \'Restaurant \' + value'
             }
         ]
     }
-};
+}
 
 const mappingWithInvalidFunction = {
     service: {
@@ -229,11 +229,11 @@ const mappingWithInvalidFunction = {
         functions: [
             {
                 onAttribute: 'website',
-                run: 'return \'Restaurant \' + value;'
+                run: 'return \'Restaurant \' + value'
             }
         ]
     }
-};
+}
 
 const eventfulMapping = {
     service: {
@@ -261,7 +261,7 @@ const eventfulMapping = {
             }
         ]
     }
-};
+}
 
 const mappgingWithNullValue = {
     service: {
@@ -293,7 +293,7 @@ const mappgingWithNullValue = {
             }
         ]
     }
-};
+}
 
 const cinemaMapping = {
     service: {
@@ -328,7 +328,7 @@ const cinemaMapping = {
             }
         ]
     }
-};
+}
 
 const googlePlacesResponse = {
     "html_attributions": [],
@@ -396,7 +396,7 @@ const googlePlacesResponse = {
             "types": ["restaurant", "food", "point_of_interest", "establishment"]
         }
     ]
-};
+}
 
 const eventfulResponse = {
     "last_item":null,
@@ -431,7 +431,7 @@ const eventfulResponse = {
                 "region_name":"Illinois",
                 "start_time":"2015-12-31 17:00:00",
                 "tz_id":null,
-                "description":" Making plans for an early dinner, or looking for a great spot to ring in the New Year?    Join us this year for an amazing Food & Wine Lover&#39;s New Year&#39;s Eve at Volo Restaurant Wine Bar  New Year&#39;s Eve at Volo:  Whether you need a great spot to indulge in a special dinner before [...] <br> <br>(773) 348-4600",
+                "description":" Making plans for an early dinner, or looking for a great spot to ring in the New Year?    Join us this year for an amazing Food & Wine Lover&#39s New Year&#39s Eve at Volo Restaurant Wine Bar  New Year&#39s Eve at Volo:  Whether you need a great spot to indulge in a special dinner before [...] <br> <br>(773) 348-4600",
                 "modified":"2015-10-06 01:40:52",
                 "venue_display":"1",
                 "tz_country":null,
@@ -539,7 +539,7 @@ const eventfulResponse = {
             }
         ]
     }
-};
+}
 
 const cinemaResponse = {
     "0": {
@@ -593,8 +593,8 @@ const cinemaResponse = {
         "3D":0,
         "prevendita":0
     }
-};
+}
 
 const stringResponse = {
     data: 'No data found'
-};
+}

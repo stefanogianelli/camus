@@ -1,24 +1,24 @@
-'use strict';
+'use strict'
 
-import _ from 'lodash';
-import Promise from 'bluebird';
-import config from 'config';
+import _ from 'lodash'
+import Promise from 'bluebird'
+import config from 'config'
 import {
     SoundEx,
     DiceCoefficient
-} from 'natural';
+} from 'natural'
 
-import Metrics from '../utils/MetricsUtils';
+import Metrics from '../utils/MetricsUtils'
 
-let debug = false;
+let debug = false
 if (config.has('debug')) {
-    debug = config.get('debug');
+    debug = config.get('debug')
 }
 
-let metrics = null;
+let metrics = null
 if (debug) {
-    const filePath = __dirname.replace('components', '') + '/metrics/ResponseAggregator.txt';
-    metrics = new Metrics(filePath);
+    const filePath = __dirname.replace('components', '') + '/metrics/ResponseAggregator.txt'
+    metrics = new Metrics(filePath)
 }
 
 /**
@@ -29,9 +29,9 @@ export default class {
     constructor () {
         //this threshold is used for identify a pair of items as similar. Greater value is better (0.9 means 90% similarity)
         if (config.has('similarity.threshold')) {
-            this._threshold = config.get('similarity.threshold');
+            this._threshold = config.get('similarity.threshold')
         } else {
-            this._threshold = 0.85;
+            this._threshold = 0.85
         }
     }
 
@@ -43,12 +43,12 @@ export default class {
     prepareResponse (response) {
         return new Promise ((resolve, reject) => {
             if (!_.isUndefined(response) && !_.isEmpty(response)) {
-                resolve(this._findSimilarities(response));
+                resolve(this._findSimilarities(response))
             } else {
                 //nothing found
-                reject('No results');
+                reject('No results')
             }
-        });
+        })
     }
 
     /**
@@ -61,66 +61,66 @@ export default class {
      * @private
      */
     _findSimilarities (response) {
-        const startTime = process.hrtime();
+        const startTime = process.hrtime()
         //create a map of items that sounds similar (using SoundEx algorithm)
-        let clusters = new Map();
+        let clusters = new Map()
         _.forEach(response, item => {
-            const phonetic = SoundEx.process(item.title);
+            const phonetic = SoundEx.process(item.title)
             if (clusters.has(phonetic)) {
                 //add the current item to the cluster
-                clusters.get(phonetic).push(item);
+                clusters.get(phonetic).push(item)
             } else {
                 //create new entry (casted as array)
-                clusters.set(phonetic, [item]);
+                clusters.set(phonetic, [item])
             }
-        });
+        })
         //scan the clusters and perform merge if similar items are found
-        let output = [];
+        let output = []
         clusters.forEach(items => {
             if (items.length > 1) {
                 //doing comparisons between each item belonging to the current cluster
-                let i = 0;
-                let len = items.length;
+                let i = 0
+                let len = items.length
                 while (i < len) {
-                    let j = i + 1;
+                    let j = i + 1
                     while (j < len) {
                         //calculate the similarity index
-                        const sim = this._calculateObjectSimilarity(items[i], items[j]);
+                        const sim = this._calculateObjectSimilarity(items[i], items[j])
                         //if the similarity is greater or equal of the threshold, then merge the two items
                         if (sim >= this._threshold) {
                             if (debug) {
-                                console.log('Found similar items \'' + items[i].title + '\' and \'' + items[j].title + '\' (' + sim + ')');
+                                console.log('Found similar items \'' + items[i].title + '\' and \'' + items[j].title + '\' (' + sim + ')')
                             }
                             //merge the two items
                             if (items[i].meta.rank >= items[j].meta.rank) {
-                                items[i] = this._mergeItems(items[i], items[j]);
+                                items[i] = this._mergeItems(items[i], items[j])
                                 //delete the item from array
-                                items.splice(j, 1);
+                                items.splice(j, 1)
                             } else {
-                                items[j] = this._mergeItems(items[j], items[i]);
+                                items[j] = this._mergeItems(items[j], items[i])
                                 //delete the item from array
-                                items.splice(i, 1);
-                                j = i + 1;
+                                items.splice(i, 1)
+                                j = i + 1
                             }
-                            len -= 1;
+                            len -= 1
                         } else {
-                            j++;
+                            j++
                         }
                     }
                     //add the current item to the response
-                    output.push(items[i]);
-                    i++;
+                    output.push(items[i])
+                    i++
                 }
             } else {
                 //add the item to the response
-                output.push(items[0]);
+                output.push(items[0])
             }
-        });
+        })
         if (debug) {
-            metrics.record('findSimilarities', startTime);
-            metrics.saveResults();
+            metrics.record('findSimilarities', startTime)
+            metrics.saveResults()
         }
-        return output;
+        return output
     }
 
     /**
@@ -134,20 +134,20 @@ export default class {
      */
     _calculateObjectSimilarity (obj1, obj2) {
         //take into account only the attributes in common for both the objects
-        let intersect = _.intersection(_.keysIn(obj1), _.keysIn(obj2));
-        let count = 0;
+        let intersect = _.intersection(_.keysIn(obj1), _.keysIn(obj2))
+        let count = 0
         let similaritySum = _.reduce(intersect, (sum, i) => {
             //consider only string values
             if (_.isString(obj1[i]) && _.isString(obj2[i])) {
-                count++;
+                count++
                 //calculate the similarity index for the attribute's pair and sum to the accumulator
-                return sum + DiceCoefficient(obj1[i], obj2[i]);
+                return sum + DiceCoefficient(obj1[i], obj2[i])
             } else {
-                return sum;
+                return sum
             }
-        }, 0);
+        }, 0)
         //compute the final similarity dividend by the count of attributes taken into account
-        return similaritySum / count;
+        return similaritySum / count
     }
 
     /**
@@ -158,14 +158,14 @@ export default class {
      * @private
      */
     _mergeItems (primary, secondary) {
-        const primaryKeys = _.keys(primary);
-        const secondaryKeys = _.keys(secondary);
-        const toAdd = _.difference(secondaryKeys, _.intersection(primaryKeys, secondaryKeys));
-        let obj = _.cloneDeep(primary);
+        const primaryKeys = _.keys(primary)
+        const secondaryKeys = _.keys(secondary)
+        const toAdd = _.difference(secondaryKeys, _.intersection(primaryKeys, secondaryKeys))
+        let obj = _.cloneDeep(primary)
         _.forEach(toAdd, item => {
-           obj[item] = secondary[item];
-        });
-        obj.meta.name = _.concat(primary.meta.name, secondary.meta.name);
-        return obj;
+           obj[item] = secondary[item]
+        })
+        obj.meta.name = _.concat(primary.meta.name, secondary.meta.name)
+        return obj
     }
 }

@@ -1,14 +1,14 @@
-'use strict';
+'use strict'
 
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const Schema = mongoose.Schema;
-const ObjectId = Schema.Types.ObjectId;
+const Schema = mongoose.Schema
+const ObjectId = Schema.Types.ObjectId
 
-const types = 'primary support'.split(' ');
-const separators = 'csv ssv tsv pipes'.split(' ');
-const protocols = 'rest query custom'.split(' ');
-const paginationTypes = 'number token'.split(' ');
+const types = 'primary support'.split(' ')
+const separators = 'csv ssv tsv pipes'.split(' ')
+const protocols = 'rest query custom'.split(' ')
+const paginationTypes = 'number token'.split(' ')
 
 /**
  * Parameter schema
@@ -31,7 +31,7 @@ const parameterSchema = new Schema({
     },
     mappingCDT: [String],
     mappingTerm: [String]
-});
+})
 
 /**
  * Header schema
@@ -45,7 +45,7 @@ const headerSchema = new Schema({
         type: String,
         required: true
     }
-});
+})
 
 /**
  * Item schema
@@ -59,7 +59,7 @@ const itemSchema = new Schema({
         type: String,
         required: true
     }
-});
+})
 
 /**
  * Operate schema
@@ -73,7 +73,7 @@ const operateSchema = new Schema({
         type: String,
         required: true
     }
-});
+})
 
 /**
  * Response schema
@@ -82,7 +82,7 @@ const responseSchema = new Schema({
     list: String,
     items: [itemSchema],
     functions: [operateSchema]
-});
+})
 
 /**
  * Pagination Schema
@@ -99,7 +99,7 @@ const paginationSchema = new Schema({
     },
     tokenAttribute: String,
     pageCountAttribute: String
-});
+})
 
 /**
  * Operation schema
@@ -120,7 +120,7 @@ const operationSchema = new Schema({
     headers: [headerSchema],
     responseMapping: responseSchema,
     pagination: paginationSchema
-});
+})
 
 /**
  * Description schema
@@ -141,7 +141,7 @@ const serviceDescriptionSchema = new Schema({
         enum: protocols
     },
     basePath: String
-});
+})
 
-export const serviceModel = mongoose.model('service', serviceDescriptionSchema);
-export const operationModel = mongoose.model('operation', operationSchema);
+export const serviceModel = mongoose.model('service', serviceDescriptionSchema)
+export const operationModel = mongoose.model('operation', operationSchema)

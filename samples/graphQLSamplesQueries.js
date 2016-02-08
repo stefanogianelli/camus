@@ -57,7 +57,7 @@ let restaurantContext = `
             }
         }
     }
-`;
+`
 
 /**
  * Cinema sample context
@@ -110,7 +110,7 @@ let cinemaContext = `
             }
         }
     }
-`;
+`
 
 /**
  * Hotel sample context
@@ -166,7 +166,7 @@ let hotelContext = `
             }
         }
     }
-`;
+`
 
 /**
  * Museum sample context
@@ -221,7 +221,7 @@ let museumContext = `
             }
         }
     }
-`;
+`
 
 /**
  * Theater sample context
@@ -284,4 +284,4 @@ let theaterContext = `
             }
         }
     }
-`;
+`

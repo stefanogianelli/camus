@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 import {
     GraphQLInputObjectType,
@@ -6,7 +6,7 @@ import {
     GraphQLList,
     GraphQLObjectType,
     GraphQLSchema
-} from 'graphql';
+} from 'graphql'
 
 /**
  * Field schema
@@ -24,7 +24,7 @@ const fieldItemType = new GraphQLInputObjectType({
             type: GraphQLString
         }
     })
-});
+})
 
 /**
  * Parameter schema
@@ -46,7 +46,7 @@ const parameterItemType = new GraphQLInputObjectType({
             type: new GraphQLList(fieldItemType)
         }
     })
-});
+})
 
 /**
  * Context item
@@ -68,7 +68,7 @@ export const contextItemType = new GraphQLInputObjectType({
             type: new GraphQLList(parameterItemType)
         }
     })
-});
+})
 
 /**
  * Support item
@@ -90,4 +90,4 @@ export const supportItemType = new GraphQLInputObjectType({
             type: GraphQLString
         }
     })
-});
+})

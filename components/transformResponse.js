@@ -1,20 +1,20 @@
-'use strict';
+'use strict'
 
-import _ from 'lodash';
-import Promise from 'bluebird';
-import config from 'config';
+import _ from 'lodash'
+import Promise from 'bluebird'
+import config from 'config'
 
-import Metrics from '../utils/MetricsUtils';
+import Metrics from '../utils/MetricsUtils'
 
-let debug = false;
+let debug = false
 if (config.has('debug')) {
-    debug = config.get('debug');
+    debug = config.get('debug')
 }
 
-let metrics = null;
+let metrics = null
 if (debug) {
-    const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt';
-    metrics = new Metrics(filePath);
+    const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt'
+    metrics = new Metrics(filePath)
 }
 
 /**
@@ -29,37 +29,37 @@ export default class {
      * @returns {bluebird|exports|module.exports}
      */
     mappingResponse (response, descriptor) {
-        const start = process.hrtime();
+        const start = process.hrtime()
         return new Promise ((resolve, reject) => {
             if (_.isUndefined(response)) {
-                reject('Empty response. Please add a response to be mapped');
+                reject('Empty response. Please add a response to be mapped')
             }
             if (_.isUndefined(descriptor)) {
-                reject('No descriptor defined. Please add a descriptor for the current service');
+                reject('No descriptor defined. Please add a descriptor for the current service')
             }
             if (_.isUndefined(descriptor.responseMapping)) {
-                reject('No mapping defined. Please add a mapping for the current service');
+                reject('No mapping defined. Please add a mapping for the current service')
             }
             try {
                 //retrieve the base list of items
-                const itemList = this._retrieveListOfResults(response, descriptor.responseMapping.list);
+                const itemList = this._retrieveListOfResults(response, descriptor.responseMapping.list)
                 //transform each item of the response
-                let transformedResponse = [];
+                let transformedResponse = []
                 _.forEach(itemList, i => {
-                    let obj = this._transformItem(i, descriptor);
+                    let obj = this._transformItem(i, descriptor)
                     if (!_.isEmpty(obj)) {
-                        transformedResponse.push(obj);
+                        transformedResponse.push(obj)
                     }
-                });
+                })
                 //execute custom functions on items (if defined)
-                transformedResponse = this._executeFunctions(transformedResponse, descriptor);
+                transformedResponse = this._executeFunctions(transformedResponse, descriptor)
                 if (debug) {
-                    metrics.record('mappingResponse', start);
-                    metrics.saveResults();
+                    metrics.record('mappingResponse', start)
+                    metrics.saveResults()
                 }
-                resolve(transformedResponse);
+                resolve(transformedResponse)
             } catch (e) {
-                reject(e.message);
+                reject(e.message)
             }
         })
     }
@@ -74,27 +74,27 @@ export default class {
      */
     _retrieveListOfResults (response, listItem) {
         if (_.isUndefined(response)) {
-            throw new Error('Empty response. Please add a response to be mapped');
+            throw new Error('Empty response. Please add a response to be mapped')
         }
-        let list = [];
+        let list = []
         if (!_.isUndefined(listItem)) {
             //it was defined a base list item so consider it as root for the transformation
-            list = this._getItemValue(response, listItem);
+            list = this._getItemValue(response, listItem)
         } else {
             //start at the root element
-            list = response;
+            list = response
         }
         //check if the current list is an array, otherwise I transform it in a list from the current set of objects
         if (!_.isArray(list)) {
             if (_.isObject(list)) {
                 return _.map(list, item => {
-                    return item;
-                });
+                    return item
+                })
             } else {
-                return [];
+                return []
             }
         } else {
-            return list;
+            return list
         }
     }
 
@@ -115,21 +115,21 @@ export default class {
      */
     _getItemValue (item, key) {
         if (_.isUndefined(item)) {
-            return null;
+            return null
         }
         if (_.isEmpty(key) || _.isUndefined(key)) {
-            return null;
+            return null
         }
-        let keys = key.split('.');
-        let value = item;
+        let keys = key.split('.')
+        let value = item
         _.forEach(keys, k => {
             if (!_.isUndefined(value)) {
-                value = value[k];
+                value = value[k]
             } else {
-                return null;
+                return null
             }
-        });
-        return value;
+        })
+        return value
     }
 
     /**
@@ -140,22 +140,22 @@ export default class {
      * @private
      */
     _transformItem (item, descriptor) {
-        let obj = {};
+        let obj = {}
         _.forEach(descriptor.responseMapping.items, m => {
             if (_.isString(m.path) && !_.isEmpty(m.path)) {
-                let v = this._getItemValue(item, m.path);
+                let v = this._getItemValue(item, m.path)
                 if (!_.isUndefined(v) && !this._isInvalidValue(v)) {
-                    obj[m.termName] = v;
+                    obj[m.termName] = v
                 }
             }
-        });
+        })
         if (!_.isEmpty(obj)) {
             obj.meta = {
                 name: [descriptor.service.name],
                 rank: descriptor.service.rank
-            };
+            }
         }
-        return obj;
+        return obj
     }
 
     /**
@@ -170,18 +170,18 @@ export default class {
             _.forEach(items, i => {
                 if (_.has(i, f.onAttribute)) {
                     try {
-                        let fn = new Function('value', f.run);
-                        let value = fn(i[f.onAttribute]);
+                        let fn = new Function('value', f.run)
+                        let value = fn(i[f.onAttribute])
                         if (!_.isEmpty(value) && !_.isUndefined(value)) {
-                            i[f.onAttribute] = fn(i[f.onAttribute]);
+                            i[f.onAttribute] = fn(i[f.onAttribute])
                         }
                     } catch (e) {
-                        console.log(e);
+                        console.log(e)
                     }
                 }
-            });
-        });
-        return items;
+            })
+        })
+        return items
     }
 
     /**
@@ -191,6 +191,6 @@ export default class {
      * @private
      */
     _isInvalidValue (value) {
-        return _.isEqual(value, null) || _.isEqual(value, '');
+        return _.isEqual(value, null) || _.isEqual(value, '')
     }
 }

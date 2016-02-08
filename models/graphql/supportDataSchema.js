@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
 import {
     GraphQLString,
     GraphQLObjectType
-} from 'graphql';
+} from 'graphql'
 
 /**
  * Support response schema
@@ -29,4 +29,4 @@ export default new GraphQLObjectType ({
             type: GraphQLString
         }
     })
-});
+})
