@@ -285,31 +285,6 @@ describe('Component: ContextManager', () => {
         })
     })
 
-    describe('#getSupportServiceCategories()', () => {
-        it('check if correct categories are returned', () => {
-            return contextManager
-                ._getSupportServiceCategories(mergedCdt(_idCDT))
-                .then(categories => {
-                    assert.equal(categories.length, 1)
-                    assert.equal(categories[0], 'Transport')
-                })
-        })
-        it('check error when sending empty context', () => {
-            return contextManager
-                ._getSupportServiceCategories(emptySupport(_idCDT))
-                .catch(e => {
-                    assert.equal(e, 'No support services defined')
-                })
-        })
-        it('check error when sending empty object', () => {
-            return contextManager
-                ._getSupportServiceCategories({ })
-                .catch(e => {
-                    assert.equal(e, 'No support services defined')
-                })
-        })
-    })
-
     describe('#getDescendants()', () => {
         it('check if correct descendants are returned', () => {
             const nodes = contextManager._getDescendants(mockModel.cdt, [{value: 'PublicTransport'}])
@@ -455,11 +430,7 @@ let context = idCDT => {
                 value: 'PublicTransport'
             }
         ],
-        support: [
-            {
-                category: 'Transport'
-            }
-        ]
+        support: ['Transport']
     }
 }
 
@@ -522,11 +493,7 @@ let mergedCdt = idCDT => {
                 value: 'PublicTransport'
             }
         ],
-        support: [
-            {
-                category: 'Transport'
-            }
-        ]
+        support: ['Transport']
     }
 }
 

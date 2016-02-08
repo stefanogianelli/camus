@@ -59,8 +59,8 @@ const queryType = new GraphQLObjectType({
                     type: new GraphQLNonNull(new GraphQLList(contextItemType))
                 },
                 support: {
-                    description: 'The list of support services that are requested',
-                    type: new GraphQLList(supportItemType)
+                    description: 'The list of support service categories that will be retrieved in the CDT',
+                    type: new GraphQLList(GraphQLString)
                 }
             },
             resolve: (root, {_id, context, support}) => {

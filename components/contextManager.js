@@ -56,9 +56,7 @@ export default class {
                         this._getSpecificNodes(mergedCdt.context),
                         //find the parameter nodes
                         this._getParameterNodes(mergedCdt.context),
-                        //find the support service categories requested
-                        this._getSupportServiceCategories(mergedCdt),
-                        (interestTopic, filterNodes, rankingNodes, specificNodes, parameterNodes, supportServiceCategories) => {
+                        (interestTopic, filterNodes, rankingNodes, specificNodes, parameterNodes) => {
                             //acquire the descendants of the selected filter nodes
                             filterNodes = _.concat(filterNodes, this._getDescendants(cdt, filterNodes))
                             //acquire the descendants of the selected ranking nodes
@@ -69,7 +67,7 @@ export default class {
                                 rankingNodes: rankingNodes,
                                 specificNodes: specificNodes,
                                 parameterNodes: parameterNodes,
-                                supportServiceCategories: supportServiceCategories,
+                                supportServiceCategories: mergedCdt.support,
                                 _id: mergedCdt._id
                             }
                         }
@@ -413,30 +411,6 @@ export default class {
                 }
             } else {
                 reject('No context selected')
-            }
-        })
-    }
-
-    /**
-     * Return the support service categories to be researched
-     * @param {Object} mergedCdt - The merged CDT
-     * @returns {Array} The list of categories
-     * @private
-     */
-    _getSupportServiceCategories (mergedCdt) {
-        const startTime = process.hrtime()
-        return new Promise (resolve => {
-            let support = mergedCdt.support
-            if (!_.isEmpty(support)) {
-                let categories = _.map(_.filter(support, 'category'), s => {
-                    return s.category
-                })
-                if (debug) {
-                    metrics.record('getSupportServiceCategories', startTime)
-                }
-                resolve(categories)
-            } else {
-                resolve()
             }
         })
     }
