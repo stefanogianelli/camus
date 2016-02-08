@@ -33,11 +33,7 @@ let restaurantContext = `
                     value: "WithCar"
                 }
             ],
-            support: [
-                {
-                    category: "Transport"
-                }
-            ]
+            support: ["Transport"]
         )
         {
             primaryResults {
@@ -85,11 +81,7 @@ let cinemaContext = `
                     value: "WithCar"
                 }
             ],
-            support: [
-                {
-                    category: "Transport"
-                }
-            ]
+            support: ["Transport"]
         )
         {
             primaryResults {
@@ -138,11 +130,7 @@ let hotelContext = `
                     value: "Taxi"
                 }
             ],
-            support: [
-                {
-                    category: "Transport"
-                }
-            ]
+            support: ["Transport"]
         )
         {
             primaryResults {
@@ -194,11 +182,7 @@ let museumContext = `
                     value: "CarSharing"
                 }
             ],
-            support: [
-                {
-                    category: "Transport"
-                }
-            ]
+            support: ["Transport"]
         )
         {
             primaryResults {
@@ -258,11 +242,7 @@ let theaterContext = `
                     value: "WithDriver"
                 }
             ],
-            support: [
-                {
-                    category: "Transport"
-                }
-            ]
+            support: [category: "Transport"]
         )
         {
             primaryResults {
