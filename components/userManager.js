@@ -40,4 +40,20 @@ export default class {
         })
     }
 
+    /**
+     * Retrieve the user's personal data. First it checks that the user is correctly logged in
+     * @param {String} id - The user's identifier
+     * @param {String} token - The session token associated to the user
+     * @returns {Object} The CDT associated to the user
+     */
+    getPersonalData (id, token) {
+        //check if the user is correctly logged in
+        return provider
+            .checkUserLogin(id, token)
+            .then(() => {
+                //retrieve the user CDT
+                return provider.getCdtByUser(id)
+            })
+    }
+
 }

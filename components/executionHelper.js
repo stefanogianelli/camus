@@ -130,3 +130,13 @@ export function getSupportData (decoratedCdt) {
 export function login (mail, password) {
     return userManager.login(mail, password)
 }
+
+/**
+ * Retrieve the user's personal data. First it checks that the user is correctly logged in
+ * @param {String} id - The user's identifier
+ * @param {String} token - The session token associated to the user
+ * @returns {Object} The CDT associated to the user
+ */
+export function getPersonalData (id, token) {
+    return userManager.getPersonalData(id, token)
+}

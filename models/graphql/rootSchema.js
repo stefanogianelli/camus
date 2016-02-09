@@ -7,7 +7,8 @@ import {
 
 import {
     getDecoratedCdt,
-    login
+    login,
+    getPersonalData
 } from './../../components/executionHelper'
 
 import {
@@ -17,8 +18,10 @@ import {
 
 import {
     loginType,
-    loginArgs
-} from './loginSchema'
+    loginArgs,
+    personalDataType,
+    personalDataArgs
+} from './userSchema'
 
 /**
  * Schema for GraphQL query
@@ -41,6 +44,14 @@ const queryType = new GraphQLObjectType({
             args: loginArgs,
             resolve: (root, {mail, password}) => {
                 return login(mail, password)
+            }
+        },
+        getPersonalData: {
+            type: personalDataType,
+            description: 'The endpoint committed to provide personal data about the logged user',
+            args: personalDataArgs,
+            resolve: (root, {id, token}) => {
+                return getPersonalData(id, token)
             }
         }
     })

@@ -1,10 +1,49 @@
 /**
- * Restaurant sample context
+ * LOGIN ENDPOINT
  */
-let restaurantContext = `
+
+const loginQuery = `{
+  login (mail: "COPY_MAIL_HERE", password: "COPY_PASSWORD_HERE") {
+    id
+    token
+  }
+}`
+
+
+/**
+ * PERSONAL DATA ENDPOINT
+ */
+
+const getPersonalData = `{
+  getPersonalData(id: "COPY_ID_HERE", token: "COPY_TOKEN_HERE") {
+    userId
+    context {
+      name
+      for
+      values
+      parameters {
+        name
+        type
+        enum
+        fields {
+          name
+        }
+      }
+      parents
+    }
+  }
+}`
+
+
+/**
+ * EXECUTE QUERY ENDPOINT
+ */
+
+// Restaurant sample context
+const restaurantContext = `
     query Restaurant {
         executeQuery (
-            _id: "566eec3f21e45748095f1aae",
+            _id: "COPY_ID_HERE",
             context: [
                 {
                     dimension: "InterestTopic",
@@ -55,13 +94,11 @@ let restaurantContext = `
     }
 `
 
-/**
- * Cinema sample context
- */
-let cinemaContext = `
+// Cinema sample context
+const cinemaContext = `
     query Cinema {
         executeQuery(
-            _id: "566eec3f21e45748095f1aae",
+            _id: "COPY_ID_HERE",
             context: [
                 {
                     dimension: "InterestTopic",
@@ -104,13 +141,11 @@ let cinemaContext = `
     }
 `
 
-/**
- * Hotel sample context
- */
-let hotelContext = `
+//Hotel sample context
+const hotelContext = `
     query Hotel {
         executeQuery(
-            _id: "566eec3f21e45748095f1aae",
+            _id: "COPY_ID_HERE",
             context: [
                 {
                     dimension: "InterestTopic",
@@ -156,13 +191,11 @@ let hotelContext = `
     }
 `
 
-/**
- * Museum sample context
- */
-let museumContext = `
+// Museum sample context
+const museumContext = `
     query Museum {
         executeQuery(
-            _id: "566eec3f21e45748095f1aae",
+            _id: "COPY_ID_HERE",
             context: [
                 {
                     dimension: "InterestTopic",
@@ -207,13 +240,11 @@ let museumContext = `
     }
 `
 
-/**
- * Theater sample context
- */
-let theaterContext = `
+// Theater sample context
+const theaterContext = `
     query Theater {
         executeQuery(
-            _id: "566eec3f21e45748095f1aae",
+            _id: "COPY_ID_HERE",
             context: [
                 {
                     dimension: "InterestTopic",

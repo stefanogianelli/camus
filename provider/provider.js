@@ -21,6 +21,8 @@ import userModel from '../models/mongoose/user'
 const _radius = 1500
 let instance = null
 
+const ObjectId = mongoose.Types.ObjectId;
+
 /**
  * Provider
  */
@@ -72,10 +74,29 @@ export default class {
      * @returns {Object} Returns the CDT schema
      * @throws {Error} If the identifier does not exists in the database
      */
-    getCdt (idCDT) {
+    getCdtById (idCDT) {
         return new Promise ((resolve, reject) => {
             cdtModel.collection
-                .find({_id: mongoose.Types.ObjectId(idCDT)})
+                .find({_id: ObjectId(idCDT)})
+                .limit(1)
+                .toArray((err, results) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    resolve(results[0])
+                })
+        })
+    }
+
+    /**
+     * Retrieve the CDT schema associated to the user
+     * @param {String} userId - The user's identifier
+     * @returns {Object} The CDT schema found
+     */
+    getCdtByUser (userId) {
+        return new Promise ((resolve, reject) => {
+            cdtModel.collection
+                .find({_userId: ObjectId(userId)})
                 .limit(1)
                 .toArray((err, results) => {
                     if (err) {
@@ -356,6 +377,38 @@ export default class {
                     })
             } else {
                 reject('Invalid mail or password')
+            }
+        })
+    }
+
+    /**
+     * Check if the user is correctly logged in
+     * @param {String} id - The user's identifier
+     * @param {String} token - The session token
+     * @returns {Boolean} If the function returns true, then the user is correctly logged into the system, otherwise returns an error message
+     */
+    checkUserLogin (id, token) {
+        return new Promise ((resolve, reject) => {
+            if (!_.isUndefined(id) && !_.isUndefined(token)) {
+                userModel
+                    .find({
+                        _id: ObjectId(id),
+                        token: token
+                    })
+                    .limit(1)
+                    .lean()
+                    .exec((err, results) => {
+                        if (err) {
+                            reject(err)
+                        }
+                        if (results.length === 1) {
+                            resolve(true)
+                        } else {
+                            reject('User not logged in')
+                        }
+                    })
+            } else {
+                reject('User not logged in')
             }
         })
     }

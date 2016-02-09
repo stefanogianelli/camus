@@ -92,7 +92,7 @@ export default class {
         const startTime = process.hrtime()
         return new Promise ((resolve, reject) => {
             provider
-                .getCdt(context._id)
+                .getCdtById(context._id)
                 .then(cdt => {
                     if (debug) {
                         metrics.record('getCdt', startTime)
