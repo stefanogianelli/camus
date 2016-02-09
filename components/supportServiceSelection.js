@@ -9,13 +9,13 @@ import Metrics from '../utils/MetricsUtils'
 
 const provider = new Provider()
 
-let debug = false
-if (config.has('debug')) {
-    debug = config.get('debug')
+let metricsFlag = false
+if (config.has('metrics')) {
+    metricsFlag = config.get('metrics')
 }
 
 let metrics = null
-if (debug) {
+if (metricsFlag) {
     const filePath = __dirname.replace('components', '') + '/metrics/SupportServiceSelection.txt'
     metrics = new Metrics(filePath)
 }
@@ -35,7 +35,7 @@ export default class {
         return this
             ._selectServiceFromCategory(decoratedCdt.supportServiceCategories, decoratedCdt)
             .finally(() => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('selectServices', startTime)
                     metrics.saveResults()
                 }
@@ -63,7 +63,7 @@ export default class {
                             provider.filterSupportServices(decoratedCdt._id, c, nodes),
                             this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes),
                             (filterServices, customServices) => {
-                                if (debug) {
+                                if (metricsFlag) {
                                     metrics.record('getAssociations', start)
                                 }
                                 //acquire constraint count information
@@ -131,7 +131,7 @@ export default class {
         results = _.filter(results, r => {
             return r.count === maxCount && r.constraintCount === r.count
         })
-        if (debug) {
+        if (metricsFlag) {
             metrics.record('mergeResults', start)
         }
         return _.map(results, '_idOperation')

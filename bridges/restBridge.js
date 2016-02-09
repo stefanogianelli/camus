@@ -24,8 +24,13 @@ if (config.has('debug')) {
     debug = config.get('debug')
 }
 
+let metricsFlag = false
+if (config.has('metrics')) {
+    metricsFlag = config.get('metrics')
+}
+
 let metrics = null
-if (debug) {
+if (metricsFlag) {
     const filePath = __dirname.replace('bridges', '') + '/metrics/RestBridge.txt'
     metrics = new Metrics(filePath)
 }
@@ -68,7 +73,7 @@ export default class extends Bridge {
                 return this._invokeService(descriptor, params, paginationArgs)
             })
             .finally(() => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('executeQuery/' + descriptor.service.name, startTime)
                     metrics.saveResults()
                 }
@@ -222,7 +227,7 @@ export default class extends Bridge {
                 .then(response => {
                     //acquire next page information
                     let {hasNextPage, nextPage} = this._getPaginationStatus(descriptor, startPage, response)
-                    if (debug) {
+                    if (metricsFlag) {
                         metrics.record('invokeService/' + descriptor.service.name, start)
                     }
                     resolve({
@@ -252,7 +257,7 @@ export default class extends Bridge {
             redis
                 .get(address)
                 .then((result) => {
-                    if (debug) {
+                    if (metricsFlag) {
                         metrics.record('accessCache/' + service, start)
                     }
                     if (result) {
@@ -296,7 +301,7 @@ export default class extends Bridge {
                                 }
                                 //caching the response (with associated TTL)
                                 redis.set(address, res.text, 'EX', this._cacheTTL)
-                                if (debug) {
+                                if (metricsFlag) {
                                     metrics.record('makeCall/' + service, start)
                                 }
                                 return resolve(response)

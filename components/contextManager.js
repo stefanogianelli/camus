@@ -9,13 +9,13 @@ import Metrics from '../utils/MetricsUtils'
 
 const provider = new Provider()
 
-let debug = false
-if (config.has('debug')) {
-    debug = config.get('debug')
+let metricsFlag = false
+if (config.has('metrics')) {
+    metricsFlag = config.get('metrics')
 }
 
 let metrics = null
-if (debug) {
+if (metricsFlag) {
     const filePath = __dirname.replace('components', '') + '/metrics/ContextManager.txt'
     metrics = new Metrics(filePath)
 }
@@ -74,7 +74,7 @@ export default class {
                     )
             })
             .finally(() => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('getDecoratedCdt', startTime)
                     metrics.saveResults()
                 }
@@ -94,7 +94,7 @@ export default class {
             provider
                 .getCdtById(context._id)
                 .then(cdt => {
-                    if (debug) {
+                    if (metricsFlag) {
                         metrics.record('getCdt', startTime)
                     }
                     //check if the related CDT is found
@@ -120,7 +120,7 @@ export default class {
                     reject(err)
                 })
                 .finally(() => {
-                    if (debug) {
+                    if (metricsFlag) {
                         metrics.record('mergeCdtAndContext', startTime)
                     }
                 })
@@ -235,7 +235,7 @@ export default class {
         return this
             ._getNodes('filter', mergedCdt, false)
             .finally(() => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('getFilterNodes', startTime)
                 }
             })
@@ -252,7 +252,7 @@ export default class {
         return this
             ._getNodes('ranking', mergedCdt, false)
             .finally(() => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('getRankingNodes', startTime)
                 }
             })
@@ -274,7 +274,7 @@ export default class {
                     return _.concat(parameterNodes, specificNodes)
                 })
             .finally(() => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('getParameterNodes', startTime)
                 }
             })
@@ -292,7 +292,7 @@ export default class {
         return this
             ._getNodes('ranking', mergedCdt, true)
             .finally(() => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('getSpecificNodes', startTime)
                 }
             })
@@ -402,7 +402,7 @@ export default class {
             if (!_.isEmpty(context)) {
                 let r = _.find(context, {name: 'InterestTopic'})
                 if (!_.isUndefined(r)) {
-                    if (debug) {
+                    if (metricsFlag) {
                         metrics.record('getInterestTopic', startTime)
                     }
                     resolve(r.value)
@@ -437,7 +437,9 @@ export default class {
                 })
             }
         })
-        metrics.record('getDescendants', startTime)
+        if (metricsFlag) {
+            metrics.record('getDescendants', startTime)
+        }
         return output
     }
 }

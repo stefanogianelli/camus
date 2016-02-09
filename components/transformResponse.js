@@ -6,13 +6,13 @@ import config from 'config'
 
 import Metrics from '../utils/MetricsUtils'
 
-let debug = false
-if (config.has('debug')) {
-    debug = config.get('debug')
+let metricsFlag = false
+if (config.has('metrics')) {
+    metricsFlag = config.get('metrics')
 }
 
 let metrics = null
-if (debug) {
+if (metricsFlag) {
     const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt'
     metrics = new Metrics(filePath)
 }
@@ -53,7 +53,7 @@ export default class {
                 })
                 //execute custom functions on items (if defined)
                 transformedResponse = this._executeFunctions(transformedResponse, descriptor)
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('mappingResponse', start)
                     metrics.saveResults()
                 }

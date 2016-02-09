@@ -14,8 +14,13 @@ if (config.has('debug')) {
     debug = config.get('debug')
 }
 
+let metricsFlag = false
+if (config.has('metrics')) {
+    metricsFlag = config.get('metrics')
+}
+
 let metrics = null
-if (debug) {
+if (metricsFlag) {
     const filePath = __dirname.replace('components', '') + '/metrics/PrimaryServiceSelection.txt'
     metrics = new Metrics(filePath)
 }
@@ -63,7 +68,7 @@ export default class  {
                     //search for specific associations
                     this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes)
                 ,(filter, ranking, specific) => {
-                    if (debug) {
+                    if (metricsFlag) {
                         metrics.record('getAssociations', startTime)
                     }
                     //merge the ranking and specific list (specific searches are considered ranking)
@@ -89,7 +94,7 @@ export default class  {
                     resolve([])
                 })
                 .finally(() => {
-                    if (debug) {
+                    if (metricsFlag) {
                         metrics.record('selectServices', startTime)
                         metrics.saveResults()
                     }
@@ -128,7 +133,7 @@ export default class  {
                     resolve()
                 })
                 .finally(() => {
-                    if (debug) {
+                    if (metricsFlag) {
                         metrics.record('specificSearches', start)
                     }
                 })
@@ -175,7 +180,7 @@ export default class  {
         rankedList = _.orderBy(rankedList, 'rank', 'desc')
         //take only the first N services
         rankedList = _.take(rankedList, this._n)
-        if (debug) {
+        if (metricsFlag) {
             metrics.record('calculateRanking', start)
         }
         return rankedList
@@ -194,11 +199,11 @@ export default class  {
         return provider
             .searchPrimaryByCoordinates(idCdt, node)
             .then(results => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('dbCoordinatesSearch', start)
                 }
                 if (debug) {
-                    console.log('Found ' + results.length + ' services near the position')
+                    console.log('Found ' + results.length + ' service/s near the position')
                 }
                 return results
             })
@@ -209,7 +214,7 @@ export default class  {
                 }
             })
             .finally(() => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('searchByCoordinates', start)
                 }
             })

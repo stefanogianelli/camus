@@ -14,13 +14,13 @@ const restBridge = new RestBridge()
 const provider = new Provider()
 const transformResponse = new TransformResponse()
 
-let debug = false
-if (config.has('debug')) {
-    debug = config.get('debug')
+let metricsFlag = false
+if (config.has('metrics')) {
+    metricsFlag = config.get('metrics')
 }
 
 let metrics = null
-if (debug) {
+if (metricsFlag) {
     const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt'
     metrics = new Metrics(filePath)
 }
@@ -61,7 +61,7 @@ export default class {
         return provider
             .getServicesByOperationIds(_.map(services, '_idOperation'))
             .map(service => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('getDescriptions', startTime)
                 }
                 //add the ranking value
@@ -76,7 +76,7 @@ export default class {
                 return _.concat(a,b)
             })
             .finally(() => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('executeQueries', startTime)
                     metrics.saveResults()
                 }
@@ -116,7 +116,7 @@ export default class {
         const start = process.hrtime()
         return promise
             .then(response => {
-                if (debug) {
+                if (metricsFlag) {
                     metrics.record('bridgeExecution', start)
                 }
                 //transform the response

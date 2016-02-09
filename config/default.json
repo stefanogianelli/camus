@@ -25,5 +25,6 @@
   "similarity": {
     "threshold": 0.85
   },
-  "debug": true
+  "debug": true,
+  "metrics": false
 }

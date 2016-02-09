@@ -15,8 +15,13 @@ if (config.has('debug')) {
     debug = config.get('debug')
 }
 
+let metricsFlag = false
+if (config.has('metrics')) {
+    metricsFlag = config.get('metrics')
+}
+
 let metrics = null
-if (debug) {
+if (metricsFlag) {
     const filePath = __dirname.replace('components', '') + '/metrics/ResponseAggregator.txt'
     metrics = new Metrics(filePath)
 }
@@ -116,7 +121,7 @@ export default class {
                 output.push(items[0])
             }
         })
-        if (debug) {
+        if (metricsFlag) {
             metrics.record('findSimilarities', startTime)
             metrics.saveResults()
         }

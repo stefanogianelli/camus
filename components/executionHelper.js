@@ -18,13 +18,13 @@ const supportService = new SupportService()
 const responseAggregator = new ResponseAggregator()
 const userManager = new UserManager()
 
-let debug = false
-if (config.has('debug')) {
-    debug = config.get('debug')
+let metricsFlag = false
+if (config.has('metrics')) {
+    metricsFlag = config.get('metrics')
 }
 
 let metrics = null
-if (debug) {
+if (metricsFlag) {
     const filePath = __dirname.replace('components', '') + '/metrics/ExecutionHelper.txt'
     metrics = new Metrics(filePath)
 }
@@ -55,7 +55,7 @@ export function prepareResponse (context) {
                 })
         })
         .finally(() => {
-            if (debug) {
+            if (metricsFlag) {
                 metrics.record('executionTime', start)
                 metrics.saveResults()
             }
@@ -72,7 +72,7 @@ export function getDecoratedCdt (context) {
     return contextManager
         .getDecoratedCdt(context)
         .finally(() => {
-            if (debug) {
+            if (metricsFlag) {
                 metrics.record('getDecoratedCdt', start)
                 metrics.saveResults()
             }
@@ -97,7 +97,7 @@ export function getPrimaryData (decoratedCdt) {
                 .prepareResponse(responses)
         })
         .finally(() => {
-            if (debug) {
+            if (metricsFlag) {
                 metrics.record('getPrimaryData', start)
                 metrics.saveResults()
             }
@@ -114,7 +114,7 @@ export function getSupportData (decoratedCdt) {
     return supportService
         .selectServices(decoratedCdt)
         .finally(() => {
-            if (debug) {
+            if (metricsFlag) {
                 metrics.record('getSupportData', start)
                 metrics.saveResults()
             }
