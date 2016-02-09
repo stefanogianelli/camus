@@ -358,16 +358,14 @@ const cdt = userId => {
                     'Cinema',
                     'Theater',
                     'Hotel',
-                    'Museum'
+                    'Museum',
+                    'Event'
                 ]
             },
             {
                 name: 'Location',
                 for: 'ranking|parameter',
                 parameters: [
-                    {
-                        name: 'CityName'
-                    },
                     {
                         name: 'CityCoord',
                         fields: [
@@ -378,16 +376,6 @@ const cdt = userId => {
                                 name: 'Longitude'
                             }
                         ]
-                    }
-                ]
-            },
-            {
-                name: 'Keyword',
-                for: 'parameter',
-                parameters: [
-                    {
-                        name: 'SearchKey',
-                        type: 'String'
                     }
                 ]
             },
@@ -429,22 +417,33 @@ const googlePlaces = {
 const googlePlacesOperations = idService => {
     return {
         service: idService,
-        name: 'placeTextSearch',
-        path: '/textsearch/json',
+        name: 'nearBySearch',
+        path: '/nearbysearch/json',
         parameters: [
             {
-                name: 'query',
+                name: 'location',
                 required: true,
-                default: 'restaurant+in+milan',
+                default: '-33.8670522,151.1957362',
+                collectionFormat: 'csv',
                 mappingCDT: [
-                    'SearchKey'
+                    'CityCoord.Latitude',
+                    'CityCoord.Longitude'
                 ]
+            },
+            {
+                name: 'radius',
+                required: true,
+                default: '20000'
+            },
+            {
+                name: 'types',
+                required: true,
+                default: 'food|restaurant'
             },
             {
                 name: 'key',
                 required: true,
-                default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio',
-                mappingCDT: []
+                default: 'AIzaSyDyueyso-B0Vx4rO0F6SuOgv-PaWI12Mio'
             }
         ],
         responseMapping: {
@@ -456,7 +455,7 @@ const googlePlacesOperations = idService => {
                 },
                 {
                     termName: 'address',
-                    path: 'formatted_address'
+                    path: 'vicinity'
                 },
                 {
                     termName: 'latitude',
@@ -517,24 +516,32 @@ const eventfulOperations = idService => {
             {
                 name: 'app_key',
                 required: true,
-                default: 'cpxgqQcFnbVSmvc2',
-                mappingCDT: []
+                default: 'cpxgqQcFnbVSmvc2'
             },
             {
-                name: 'keywords',
-                required: false,
-                default: 'restaurant',
+                name: 'date',
+                required: true,
+                default: 'future'
+            },
+            {
+                name: 'where',
+                required: true,
+                default: '32.746682,-117.162741',
+                collectionFormat: 'csv',
                 mappingCDT: [
-                    'SearchKey'
+                    'CityCoord.Latitude',
+                    'CityCoord.Longitude'
                 ]
             },
             {
-                name: 'location',
-                required: false,
-                default: 'chicago',
-                mappingCDT: [
-                    'CityName'
-                ]
+                name: 'within',
+                required: true,
+                default: '20'
+            },
+            {
+                name: 'units',
+                required: true,
+                default: 'km'
             }
         ],
         responseMapping: {
@@ -573,8 +580,8 @@ const eventfulAssociations = (idOperation, idCDT) => {
             _idOperation: idOperation,
             _idCDT: idCDT,
             dimension: 'InterestTopic',
-            value: 'Restaurant',
-            ranking: 2
+            value: 'Event',
+            ranking: 1
         }
     ]
 }
@@ -653,12 +660,19 @@ const cinemaStubOperations = idService => {
         path: '/',
         parameters: [
             {
-                name: 'citta',
+                name: 'gpspos',
                 required: true,
-                default: 'Milano',
+                default: '40.83704,14.23911',
+                collectionFormat: 'csv',
                 mappingCDT: [
-                    'CityName'
+                    'CityCoord.Latitude',
+                    'CityCoord.Longitude'
                 ]
+            },
+            {
+                name: 'raggio',
+                required: true,
+                default: '20'
             }
         ],
         responseMapping: {
@@ -777,7 +791,7 @@ const theaterStubAssociations = (idOperation, idCDT) => {
             _idCDT: idCDT,
             dimension: 'InterestTopic',
             value: 'Theater',
-            ranking: 2
+            ranking: 1
         },
         {
             _idOperation: idOperation,
@@ -809,16 +823,8 @@ const mericiPrimaryOperations = idService => {
                     default: 'hotel'
                 },
                 {
-                    name: 'place',
-                    required: false,
-                    default: 'rome',
-                    mappingCDT: [
-                        'CityName'
-                    ]
-                },
-                {
                     name: 'lat',
-                    required: false,
+                    required: true,
                     default: '45.46867',
                     mappingCDT: [
                         'CityCoord.Latitude'
@@ -826,7 +832,7 @@ const mericiPrimaryOperations = idService => {
                 },
                 {
                     name: 'lon',
-                    required: false,
+                    required: true,
                     default: '9.11144',
                     mappingCDT: [
                         'CityCoord.Longitude'
@@ -882,16 +888,8 @@ const mericiPrimaryOperations = idService => {
                     default: 'food'
                 },
                 {
-                    name: 'place',
-                    required: false,
-                    default: 'rome',
-                    mappingCDT: [
-                        'CityName'
-                    ]
-                },
-                {
                     name: 'lat',
-                    required: false,
+                    required: true,
                     default: '45.46867',
                     mappingCDT: [
                         'CityCoord.Latitude'
@@ -899,7 +897,7 @@ const mericiPrimaryOperations = idService => {
                 },
                 {
                     name: 'lon',
-                    required: false,
+                    required: true,
                     default: '9.11144',
                     mappingCDT: [
                         'CityCoord.Longitude'
@@ -955,16 +953,8 @@ const mericiPrimaryOperations = idService => {
                     default: 'theater'
                 },
                 {
-                    name: 'place',
-                    required: false,
-                    default: 'rome',
-                    mappingCDT: [
-                        'CityName'
-                    ]
-                },
-                {
                     name: 'lat',
-                    required: false,
+                    required: true,
                     default: '45.46867',
                     mappingCDT: [
                         'CityCoord.Latitude'
@@ -972,7 +962,7 @@ const mericiPrimaryOperations = idService => {
                 },
                 {
                     name: 'lon',
-                    required: false,
+                    required: true,
                     default: '9.11144',
                     mappingCDT: [
                         'CityCoord.Longitude'
@@ -1028,16 +1018,8 @@ const mericiPrimaryOperations = idService => {
                     default: 'museum'
                 },
                 {
-                    name: 'place',
-                    required: false,
-                    default: 'rome',
-                    mappingCDT: [
-                        'CityName'
-                    ]
-                },
-                {
                     name: 'lat',
-                    required: false,
+                    required: true,
                     default: '45.46867',
                     mappingCDT: [
                         'CityCoord.Latitude'
@@ -1045,7 +1027,7 @@ const mericiPrimaryOperations = idService => {
                 },
                 {
                     name: 'lon',
-                    required: false,
+                    required: true,
                     default: '9.11144',
                     mappingCDT: [
                         'CityCoord.Longitude'
@@ -1115,7 +1097,7 @@ const mericiPrimaryAssociations = (idCDT, idHotel, idFood, idTheater, idMuseum) 
             _idCDT: idCDT,
             dimension: 'InterestTopic',
             value: 'Theater',
-            ranking: 1
+            ranking: 2
         },
         {
             _idOperation: idMuseum,
@@ -1150,7 +1132,7 @@ const mericiSupportOperations = idService => {
                 },
                 {
                     name: 'lat',
-                    required: false,
+                    required: true,
                     default: '45.46867',
                     mappingTerm: [
                         'latitude'
@@ -1158,7 +1140,7 @@ const mericiSupportOperations = idService => {
                 },
                 {
                     name: 'lon',
-                    required: false,
+                    required: true,
                     default: '9.11144',
                     mappingTerm: [
                         'longitude'
@@ -1178,7 +1160,7 @@ const mericiSupportOperations = idService => {
                 },
                 {
                     name: 'lat',
-                    required: false,
+                    required: true,
                     default: '45.46867',
                     mappingTerm: [
                         'latitude'
@@ -1186,7 +1168,7 @@ const mericiSupportOperations = idService => {
                 },
                 {
                     name: 'lon',
-                    required: false,
+                    required: true,
                     default: '9.11144',
                     mappingTerm: [
                         'longitude'
@@ -1206,7 +1188,7 @@ const mericiSupportOperations = idService => {
                 },
                 {
                     name: 'lat',
-                    required: false,
+                    required: true,
                     default: '45.46867',
                     mappingTerm: [
                         'latitude'
@@ -1214,7 +1196,7 @@ const mericiSupportOperations = idService => {
                 },
                 {
                     name: 'lon',
-                    required: false,
+                    required: true,
                     default: '9.11144',
                     mappingTerm: [
                         'longitude'

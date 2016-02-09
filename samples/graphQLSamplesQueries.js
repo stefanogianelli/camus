@@ -40,259 +40,343 @@ const getPersonalData = `{
  */
 
 // Restaurant sample context
-const restaurantContext = `
-    query Restaurant {
-        executeQuery (
-            _id: "COPY_ID_HERE",
-            context: [
-                {
-                    dimension: "InterestTopic",
-                    value: "Restaurant"
-                },
-                {
-                    dimension: "Location",
-                    parameters: [
-                        {
-                            name: "CityName",
-                            value: "Chicago"
-                        }
-                    ]
-                },
-                {
-                    dimension: "Keyword",
-                    parameters: [
-                        {
-                            name: "SearchKey",
-                            value: "restaurant+in+chicago"
-                        }
-                    ]
-                },
-                {
-                    dimension: "Transport",
-                    value: "WithCar"
-                }
-            ],
-            support: ["Transport"]
-        )
-        {
-            primaryResults {
-                data {
-                    title
-                    address
-                    latitude
-                    longitude
-                }
+const restaurantContext = `query Restaurant {
+    executeQuery (
+        _id: "COPY_ID_HERE",
+        context: [
+            {
+                dimension: "InterestTopic",
+                value: "Restaurant"
+            },
+            {
+                dimension: "Location",
+                parameters: [
+                    {
+                        name: "CityCoord",
+                        fields: [
+                          {
+                            name: "Latitude",
+                            value: "45.4788807"
+                          },
+                          {
+                            name: "Longitude",
+                            value: "9.2321363"
+                          }
+                        ]
+                    }
+                ]
+            },
+            {
+                dimension: "Transport",
+                value: "PublicTransport"
             }
-            supportResults {
-                data {
-                    category
-                    service
-                    url
-                }
+        ],
+        support: ["Transport"]
+    )
+    {
+        primaryResults {
+            data {
+              title
+              address
+              latitude
+              longitude
+              meta {
+                name
+                rank
+              }
+            }
+        }
+        supportResults {
+            data {
+                category
+                service
+                url
             }
         }
     }
-`
+}`
 
 // Cinema sample context
-const cinemaContext = `
-    query Cinema {
-        executeQuery(
-            _id: "COPY_ID_HERE",
-            context: [
-                {
-                    dimension: "InterestTopic",
-                    value: "Cinema"
-                },
-                {
-                    dimension: "Location",
-                    parameters: [
-                        {
-                            name: "CityName",
-                            value: "Milan"
-                        }
-                    ]
-                },
-                {
-                    dimension: "Transport",
-                    value: "WithCar"
-                }
-            ],
-            support: ["Transport"]
-        )
-        {
-            primaryResults {
-                data {
-                    title
-                    address
-                    telephone
-                    latitude
-                    longitude
-                }
+const cinemaContext = `query Cinema {
+    executeQuery (
+        _id: "COPY_ID_HERE",
+        context: [
+            {
+                dimension: "InterestTopic",
+                value: "Cinema"
+            },
+            {
+                dimension: "Location",
+                parameters: [
+                    {
+                        name: "CityCoord",
+                        fields: [
+                          {
+                            name: "Latitude",
+                            value: "45.4788807"
+                          },
+                          {
+                            name: "Longitude",
+                            value: "9.2321363"
+                          }
+                        ]
+                    }
+                ]
+            },
+            {
+                dimension: "Transport",
+                value: "PublicTransport"
             }
-            supportResults {
-                data {
-                    category
-                    service
-                    url
-                }
+        ],
+        support: ["Transport"]
+    )
+    {
+        primaryResults {
+            data {
+              title
+              address
+              latitude
+              longitude
+              meta {
+                name
+                rank
+              }
+            }
+        }
+        supportResults {
+            data {
+                category
+                service
+                url
             }
         }
     }
-`
+}`
 
 //Hotel sample context
-const hotelContext = `
-    query Hotel {
-        executeQuery(
-            _id: "COPY_ID_HERE",
-            context: [
-                {
-                    dimension: "InterestTopic",
-                    value: "Hotel"
-                },
-                {
-                    dimension: "Location",
-                    parameters: [
-                        {
-                            name: "CityName",
-                            value: "Milan"
-                        }
-                    ]
-                },
-                {
-                    dimension: "Tipology",
-                    value: "Taxi"
-                }
-            ],
-            support: ["Transport"]
-        )
-        {
-            primaryResults {
-                data {
-                    title
-                    address
-                    telephone
-                    city
-                    website
-                    email
-                    latitude
-                    longitude
-                }
+const hotelContext = `query Hotel {
+    executeQuery (
+        _id: "COPY_ID_HERE",
+        context: [
+            {
+                dimension: "InterestTopic",
+                value: "Hotel"
+            },
+            {
+                dimension: "Location",
+                parameters: [
+                    {
+                        name: "CityCoord",
+                        fields: [
+                          {
+                            name: "Latitude",
+                            value: "45.4788807"
+                          },
+                          {
+                            name: "Longitude",
+                            value: "9.2321363"
+                          }
+                        ]
+                    }
+                ]
+            },
+            {
+                dimension: "Transport",
+                value: "PublicTransport"
             }
-            supportResults {
-                data {
-                    category
-                    service
-                    url
-                }
+        ],
+        support: ["Transport"]
+    )
+    {
+        primaryResults {
+            data {
+              title
+              address
+              latitude
+              longitude
+              meta {
+                name
+                rank
+              }
+            }
+        }
+        supportResults {
+            data {
+                category
+                service
+                url
             }
         }
     }
-`
+}`
 
 // Museum sample context
-const museumContext = `
-    query Museum {
-        executeQuery(
-            _id: "COPY_ID_HERE",
-            context: [
-                {
-                    dimension: "InterestTopic",
-                    value: "Museum"
-                },
-                {
-                    dimension: "Location",
-                    parameters: [
-                        {
-                            name: "CityName",
-                            value: "Milan"
-                        }
-                    ]
-                },
-                {
-                    dimension: "Tipology",
-                    value: "CarSharing"
-                }
-            ],
-            support: ["Transport"]
-        )
-        {
-            primaryResults {
-                data {
-                    title
-                    address
-                    city
-                    website
-                    email
-                    latitude
-                    longitude
-                }
+const museumContext = `query Museum {
+    executeQuery (
+        _id: "COPY_ID_HERE",
+        context: [
+            {
+                dimension: "InterestTopic",
+                value: "Museum"
+            },
+            {
+                dimension: "Location",
+                parameters: [
+                    {
+                        name: "CityCoord",
+                        fields: [
+                          {
+                            name: "Latitude",
+                            value: "45.4788807"
+                          },
+                          {
+                            name: "Longitude",
+                            value: "9.2321363"
+                          }
+                        ]
+                    }
+                ]
+            },
+            {
+                dimension: "Transport",
+                value: "PublicTransport"
             }
-            supportResults {
-                data {
-                    category
-                    service
-                    url
-                }
+        ],
+        support: ["Transport"]
+    )
+    {
+        primaryResults {
+            data {
+              title
+              address
+              latitude
+              longitude
+              meta {
+                name
+                rank
+              }
+            }
+        }
+        supportResults {
+            data {
+                category
+                service
+                url
             }
         }
     }
-`
+}`
 
 // Theater sample context
-const theaterContext = `
-    query Theater {
-        executeQuery(
-            _id: "COPY_ID_HERE",
-            context: [
-                {
-                    dimension: "InterestTopic",
-                    value: "Theater"
-                },
-                {
-                    dimension: "Location",
-                    parameters: [
-                        {
-                            name: "CityCoord",
-                            fields: [
-                                {
-                                    name: "Latitude",
-                                    value: "45.478869"
-                                },
-                                {
-                                    name: "Longitude",
-                                    value: "9.234337"
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    dimension: "Tipology",
-                    value: "WithDriver"
-                }
-            ],
-            support: [category: "Transport"]
-        )
-        {
-            primaryResults {
-                data {
-                    title
-                    address
-                    telephone
-                    website
-                    latitude
-                    longitude
-                }
+const theaterContext = `query Theater {
+    executeQuery (
+        _id: "COPY_ID_HERE",
+        context: [
+            {
+                dimension: "InterestTopic",
+                value: "Theater"
+            },
+            {
+                dimension: "Location",
+                parameters: [
+                    {
+                        name: "CityCoord",
+                        fields: [
+                          {
+                            name: "Latitude",
+                            value: "45.4788807"
+                          },
+                          {
+                            name: "Longitude",
+                            value: "9.2321363"
+                          }
+                        ]
+                    }
+                ]
+            },
+            {
+                dimension: "Transport",
+                value: "PublicTransport"
             }
-            supportResults {
-                data {
-                    category
-                    service
-                    url
-                }
+        ],
+        support: ["Transport"]
+    )
+    {
+        primaryResults {
+            data {
+              title
+              address
+              latitude
+              longitude
+              meta {
+                name
+                rank
+              }
+            }
+        }
+        supportResults {
+            data {
+                category
+                service
+                url
             }
         }
     }
-`
+}`
+
+// Event sample context
+const eventContext = `query Event {
+    executeQuery (
+        _id: "COPY_ID_HERE",
+        context: [
+            {
+                dimension: "InterestTopic",
+                value: "Event"
+            },
+            {
+                dimension: "Location",
+                parameters: [
+                    {
+                        name: "CityCoord",
+                        fields: [
+                          {
+                            name: "Latitude",
+                            value: "37.7698972"
+                          },
+                          {
+                            name: "Longitude",
+                            value: "-122.4112957"
+                          }
+                        ]
+                    }
+                ]
+            },
+            {
+                dimension: "Transport",
+                value: "PublicTransport"
+            }
+        ],
+        support: ["Transport"]
+    )
+    {
+        primaryResults {
+            data {
+              title
+              address
+              latitude
+              longitude
+              meta {
+                name
+                rank
+              }
+            }
+        }
+        supportResults {
+            data {
+                category
+                service
+                url
+            }
+        }
+    }
+}`
