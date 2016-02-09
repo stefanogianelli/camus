@@ -165,7 +165,7 @@ export default class {
         _.forEach(toAdd, item => {
            obj[item] = secondary[item]
         })
-        obj.meta.name = _.concat(primary.meta.name, secondary.meta.name)
+        obj.meta.name = _.union(primary.meta.name, secondary.meta.name)
         return obj
     }
 }
