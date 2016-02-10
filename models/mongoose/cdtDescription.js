@@ -55,6 +55,20 @@ const cdtSchema = new Schema ({
     context: [NodeSchema]
 })
 
-const cdtModel = mongoose.model('cdt_description', cdtSchema)
+/**
+ * Schema for the global CDT
+ */
+const globalCdtSchema = new Schema({
+    globalId: {
+        type: ObjectId,
+        ref: 'cdt_description'
+    }
+})
 
-export default cdtModel
+const cdtModel = mongoose.model('cdt_description', cdtSchema)
+const globalCdtModel = mongoose.model('global_cdt', globalCdtSchema)
+
+export {
+    cdtModel,
+    globalCdtModel
+}

@@ -97,24 +97,19 @@ export default class {
                     if (metricsFlag) {
                         metrics.record('getCdt', startTime)
                     }
-                    //check if the related CDT is found
-                    if (!_.isEmpty(cdt)) {
-                        //create the map of user context values
-                        let mapContext = this._createMap(context.context)
-                        //merging the CDT description with the user context
-                        let mergedContext = this._mergeObjects(cdt.context, mapContext)
-                        //create the final object
-                        let mergedCdt = {
-                            _id: cdt._id,
-                            context: mergedContext
-                        }
-                        if (_.has(context, 'support')) {
-                            mergedCdt.support = context.support
-                        }
-                        resolve({cdt, mergedCdt})
-                    } else {
-                        reject('No CDT found. Check if the ID is correct')
+                    //create the map of user context values
+                    let mapContext = this._createMap(context.context)
+                    //merging the CDT description with the user context
+                    let mergedContext = this._mergeObjects(cdt.context, mapContext)
+                    //create the final object
+                    let mergedCdt = {
+                        _id: cdt._id,
+                        context: mergedContext
                     }
+                    if (_.has(context, 'support')) {
+                        mergedCdt.support = context.support
+                    }
+                    resolve({cdt, mergedCdt})
                 })
                 .catch(err => {
                     reject(err)

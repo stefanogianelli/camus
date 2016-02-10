@@ -5,7 +5,10 @@ import mongoose from 'mongoose'
 import Promise from 'bluebird'
 
 //load the models
-import cdtModel from '../models/mongoose/cdtDescription'
+import {
+    cdtModel,
+    globalCdtModel
+} from '../models/mongoose/cdtDescription'
 import {
     serviceModel,
     operationModel
@@ -83,13 +86,17 @@ export default class {
                     if (err) {
                         reject(err)
                     }
-                    resolve(results[0])
+                    if (results.length === 1) {
+                        resolve(results[0])
+                    } else {
+                        reject('No CDT found for the provided identifier')
+                    }
                 })
         })
     }
 
     /**
-     * Retrieve the CDT schema associated to the user
+     * Retrieve the CDT schema associated to the user. If the user hasn't got any CDT associated it retrieves the global one
      * @param {String} userId - The user's identifier
      * @returns {Object} The CDT schema found
      */
@@ -102,7 +109,50 @@ export default class {
                     if (err) {
                         reject(err)
                     }
-                    resolve(results[0])
+                    if (results.length === 1) {
+                        resolve(results[0])
+                    } else {
+                        //get the global CDT
+                        globalCdtModel
+                            .find({})
+                            .limit(1)
+                            .populate('globalId')
+                            .lean()
+                            .exec((err, results) => {
+                                if (err) {
+                                    reject(err)
+                                }
+                                if (results.length === 1) {
+                                    resolve(results[0].globalId)
+                                } else {
+                                    reject('No global CDT defined')
+                                }
+                            })
+                    }
+                })
+        })
+    }
+
+    /**
+     * Return the global CDT
+     * @returns {Object} The global CDT
+     */
+    getGlobalCdt () {
+        return new Promise ((resolve, reject) => {
+            globalCdtModel
+                .find({})
+                .limit(1)
+                .populate('globalId')
+                .lean()
+                .exec((err, results) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    if (results.length === 1) {
+                        resolve(results[0].globalId)
+                    } else {
+                        reject('No global CDT defined')
+                    }
                 })
         })
     }

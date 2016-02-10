@@ -8,6 +8,14 @@ export const user = {
     password: 'password'
 }
 
+//another user
+export const anotherUser = {
+    name: 'Marco',
+    surname: 'Bianchi',
+    mail: 'marco.bianchi@mail.com',
+    password: 'password'
+}
+
 //cdt
 export const cdt = userId => {
     return {

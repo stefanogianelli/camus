@@ -116,7 +116,7 @@ describe('Component: ContextManager', () => {
             return contextManager
                 ._mergeCdtAndContext(context(1))
                 .catch(e => {
-                    assert.equal(e, 'No CDT found. Check if the ID is correct')
+                    assert.equal(e, 'No CDT found for the provided identifier')
                 })
         })
     })

@@ -12,7 +12,10 @@ import {
     supportAssociation,
     supportConstraint
 } from '../models/mongoose/supportServiceAssociation'
-import CdtModel from '../models/mongoose/cdtDescription'
+import {
+    cdtModel,
+    globalCdtModel
+} from '../models/mongoose/cdtDescription'
 import UserModel from '../models/mongoose/user'
 
 let instance = null
@@ -41,24 +44,34 @@ export default class {
                 callback => {
                     async.waterfall([
                         callback => {
+                            new UserModel(mockData.anotherUser).save(err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
                             new UserModel(mockData.user).save((err, user) => {
                                 callback(err, user.id)
                             })
                         },
                         (userId, callback) => {
-                            new CdtModel(mockData.cdt(userId)).save((err, cdt) => {
+                            new cdtModel(mockData.cdt(userId)).save((err, cdt) => {
                                 _idCDT = cdt._id
+                                callback(err, cdt._id, userId)
+                            })
+                        },
+                        (idCdt, userId, callback) => {
+                            new globalCdtModel({globalId: idCdt}).save(err => {
                                 callback(err, userId)
                             })
                         },
                         (userId, callback) => {
-                            new CdtModel(mockData.nestedCdt(userId)).save((err, cdt) => {
+                            new cdtModel(mockData.nestedCdt(userId)).save((err, cdt) => {
                                 _idNestedCdt = cdt._id
                                 callback(err, userId)
                             })
                         },
                         (userId, callback) => {
-                            new CdtModel(mockData.multipleSonsCdt(userId)).save((err, cdt) => {
+                            new cdtModel(mockData.multipleSonsCdt(userId)).save((err, cdt) => {
                                 _idMultipleSonsCdt = cdt._id
                                 callback(err)
                             })
@@ -386,7 +399,12 @@ export default class {
                     })
                 },
                 callback => {
-                    CdtModel.remove({}, err => {
+                    cdtModel.remove({}, err => {
+                        callback(err)
+                    })
+                },
+                callback => {
+                    globalCdtModel.remove({}, err => {
                         callback(err)
                     })
                 },

@@ -85,6 +85,16 @@ describe('Component: UserManager', () => {
                     assert.equal(err, 'User not logged in')
                 })
         })
+        it('check if global CDT is returned when the user hasn\'t any CDT associated', () => {
+            return user
+                .login(mockModel.anotherUser.mail, mockModel.anotherUser.password)
+                .then(result => {
+                    return user.getPersonalData(result.id, result.token)
+                })
+                .then(cdt => {
+                    assert.equal(cdt._id.toString(), _idCdt)
+                })
+        })
     })
 
     after(done => {
