@@ -3,12 +3,6 @@
     "port": 3001,
     "hostname": "localhost"
   },
-  "database": {
-    "address": "mongodb://localhost/camus"
-  },
-  "redis": {
-    "address": "localhost:6379"
-  },
   "rest": {
     "timeout": {
       "service": "3000",
@@ -26,5 +20,5 @@
     "threshold": 0.85
   },
   "debug": true,
-  "metrics": true
+  "metrics": false
 }
