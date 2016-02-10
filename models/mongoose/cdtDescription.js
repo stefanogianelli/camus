@@ -51,10 +51,7 @@ const NodeSchema = new Schema({
  * Schema for CDT
  */
 const cdtSchema = new Schema ({
-    _userId: {
-        type: ObjectId,
-        ref: 'user'
-    },
+    _userId: [ObjectId],
     context: [NodeSchema]
 })
 

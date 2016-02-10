@@ -348,7 +348,7 @@ const user = {
 //CDT
 const cdt = userId => {
     return {
-        _userId: userId,
+        _userId: [userId],
         context: [
             {
                 name: 'InterestTopic',

@@ -11,7 +11,7 @@ export const user = {
 //cdt
 export const cdt = userId => {
     return {
-        _userId: userId,
+        _userId: [userId],
         context: [
             {
                 name: 'InterestTopic',
