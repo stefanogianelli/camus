@@ -90,36 +90,31 @@ export default class {
      */
     _mergeCdtAndContext (context) {
         const startTime = process.hrtime()
-        return new Promise ((resolve, reject) => {
-            provider
-                .getCdtById(context._id)
-                .then(cdt => {
-                    if (metricsFlag) {
-                        metrics.record('getCdt', startTime)
-                    }
-                    //create the map of user context values
-                    let mapContext = this._createMap(context.context)
-                    //merging the CDT description with the user context
-                    let mergedContext = this._mergeObjects(cdt.context, mapContext)
-                    //create the final object
-                    let mergedCdt = {
-                        _id: cdt._id,
-                        context: mergedContext
-                    }
-                    if (_.has(context, 'support')) {
-                        mergedCdt.support = context.support
-                    }
-                    resolve({cdt, mergedCdt})
-                })
-                .catch(err => {
-                    reject(err)
-                })
-                .finally(() => {
-                    if (metricsFlag) {
-                        metrics.record('mergeCdtAndContext', startTime)
-                    }
-                })
-        })
+        return provider
+            .getCdtById(context._id)
+            .then(cdt => {
+                if (metricsFlag) {
+                    metrics.record('getCdt', startTime)
+                }
+                //create the map of user context values
+                let mapContext = this._createMap(context.context)
+                //merging the CDT description with the user context
+                let mergedContext = this._mergeObjects(cdt.context, mapContext)
+                //create the final object
+                let mergedCdt = {
+                    _id: cdt._id,
+                    context: mergedContext
+                }
+                if (_.has(context, 'support')) {
+                    mergedCdt.support = context.support
+                }
+                return {cdt, mergedCdt}
+            })
+            .finally(() => {
+                if (metricsFlag) {
+                    metrics.record('mergeCdtAndContext', startTime)
+                }
+            })
     }
 
     /**
