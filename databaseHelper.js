@@ -13,7 +13,10 @@ import {
     supportAssociation,
     supportConstraint
 } from './models/mongoose/supportServiceAssociation'
-import CdtModel from './models/mongoose/cdtDescription'
+import {
+    cdtModel,
+    globalCdtModel
+} from './models/mongoose/cdtDescription'
 import UserModel from './models/mongoose/user'
 
 /**
@@ -34,8 +37,13 @@ export default class {
                 },
                 (userId, callback) => {
                     //create the CDT
-                    new CdtModel(cdt(userId)).save((err, savedCdt) => {
+                    new cdtModel(cdt(userId)).save((err, savedCdt) => {
                         callback(err, savedCdt._id)
+                    })
+                },
+                (idCdt, callback) => {
+                    new globalCdtModel({globalId: idCdt}).save(err => {
+                        callback(err, idCdt)
                     })
                 },
                 (idCdt, callback) => {
@@ -293,7 +301,12 @@ export default class {
                     })
                 },
                 callback => {
-                    CdtModel.remove({}, err => {
+                    cdtModel.remove({}, err => {
+                        callback(err)
+                    })
+                },
+                callback => {
+                    globalCdtModel.remove({}, err => {
                         callback(err)
                     })
                 },
