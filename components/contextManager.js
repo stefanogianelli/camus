@@ -16,8 +16,7 @@ if (config.has('metrics')) {
 
 let metrics = null
 if (metricsFlag) {
-    const filePath = __dirname.replace('components', '') + '/metrics/ContextManager.txt'
-    metrics = new Metrics(filePath)
+    metrics = Metrics.getInstance()
 }
 
 /**
@@ -75,8 +74,7 @@ export default class {
             })
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('getDecoratedCdt', startTime)
-                    metrics.saveResults()
+                    metrics.record('ContextManager', 'getDecoratedCdt', startTime)
                 }
             })
     }
@@ -94,7 +92,7 @@ export default class {
             .getCdtById(context._id)
             .then(cdt => {
                 if (metricsFlag) {
-                    metrics.record('getCdt', startTime)
+                    metrics.record('ContextManager', 'getCdt', startTime)
                 }
                 //create the map of user context values
                 let mapContext = this._createMap(context.context)
@@ -112,7 +110,7 @@ export default class {
             })
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('mergeCdtAndContext', startTime)
+                    metrics.record('ContextManager', 'mergeCdtAndContext', startTime)
                 }
             })
     }
@@ -226,7 +224,7 @@ export default class {
             ._getNodes('filter', mergedCdt, false)
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('getFilterNodes', startTime)
+                    metrics.record('ContextManager', 'getFilterNodes', startTime)
                 }
             })
     }
@@ -243,7 +241,7 @@ export default class {
             ._getNodes('ranking', mergedCdt, false)
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('getRankingNodes', startTime)
+                    metrics.record('ContextManager', 'getRankingNodes', startTime)
                 }
             })
     }
@@ -265,7 +263,7 @@ export default class {
                 })
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('getParameterNodes', startTime)
+                    metrics.record('ContextManager', 'getParameterNodes', startTime)
                 }
             })
     }
@@ -283,7 +281,7 @@ export default class {
             ._getNodes('ranking', mergedCdt, true)
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('getSpecificNodes', startTime)
+                    metrics.record('ContextManager', 'getSpecificNodes', startTime)
                 }
             })
     }
@@ -393,7 +391,7 @@ export default class {
                 let r = _.find(context, {name: 'InterestTopic'})
                 if (!_.isUndefined(r)) {
                     if (metricsFlag) {
-                        metrics.record('getInterestTopic', startTime)
+                        metrics.record('ContextManager', 'getInterestTopic', startTime)
                     }
                     resolve(r.value)
                 } else {
@@ -428,7 +426,7 @@ export default class {
             }
         })
         if (metricsFlag) {
-            metrics.record('getDescendants', startTime)
+            metrics.record('ContextManager', 'getDescendants', startTime)
         }
         return output
     }

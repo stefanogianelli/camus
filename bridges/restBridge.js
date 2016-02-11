@@ -31,8 +31,7 @@ if (config.has('metrics')) {
 
 let metrics = null
 if (metricsFlag) {
-    const filePath = __dirname.replace('bridges', '') + '/metrics/RestBridge.txt'
-    metrics = new Metrics(filePath)
+    metrics = Metrics.getInstance()
 }
 
 /**
@@ -74,8 +73,7 @@ export default class extends Bridge {
             })
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('executeQuery/' + descriptor.service.name, startTime)
-                    metrics.saveResults()
+                    metrics.record('RestBridge', 'executeQuery/' + descriptor.service.name, startTime)
                 }
             })
     }
@@ -228,7 +226,7 @@ export default class extends Bridge {
                     //acquire next page information
                     let {hasNextPage, nextPage} = this._getPaginationStatus(descriptor, startPage, response)
                     if (metricsFlag) {
-                        metrics.record('invokeService/' + descriptor.service.name, start)
+                        metrics.record('RestBridge', 'invokeService/' + descriptor.service.name, start)
                     }
                     resolve({
                         hasNextPage: hasNextPage,
@@ -258,7 +256,7 @@ export default class extends Bridge {
                 .get(address)
                 .then((result) => {
                     if (metricsFlag) {
-                        metrics.record('accessCache/' + service, start)
+                        metrics.record('RestBridge', 'accessCache/' + service, start)
                     }
                     if (result) {
                         //return immediately the cached response
@@ -302,7 +300,7 @@ export default class extends Bridge {
                                 //caching the response (with associated TTL)
                                 redis.set(address, res.text, 'EX', this._cacheTTL)
                                 if (metricsFlag) {
-                                    metrics.record('makeCall/' + service, start)
+                                    metrics.record('RestBridge', 'makeCall/' + service, start)
                                 }
                                 return resolve(response)
                             }

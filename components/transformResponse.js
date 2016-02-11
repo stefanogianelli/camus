@@ -13,8 +13,7 @@ if (config.has('metrics')) {
 
 let metrics = null
 if (metricsFlag) {
-    const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt'
-    metrics = new Metrics(filePath)
+    metrics = Metrics.getInstance()
 }
 
 /**
@@ -54,8 +53,7 @@ export default class {
                 //execute custom functions on items (if defined)
                 transformedResponse = this._executeFunctions(transformedResponse, descriptor)
                 if (metricsFlag) {
-                    metrics.record('mappingResponse', start)
-                    metrics.saveResults()
+                    metrics.record('TransformResponse', 'mappingResponse', start)
                 }
                 resolve(transformedResponse)
             } catch (e) {

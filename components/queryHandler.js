@@ -21,8 +21,7 @@ if (config.has('metrics')) {
 
 let metrics = null
 if (metricsFlag) {
-    const filePath = __dirname.replace('components', '') + '/metrics/QueryHandler.txt'
-    metrics = new Metrics(filePath)
+    metrics = Metrics.getInstance()
 }
 
 System.config({
@@ -62,7 +61,7 @@ export default class {
             .getServicesByOperationIds(_.map(services, '_idOperation'))
             .map(service => {
                 if (metricsFlag) {
-                    metrics.record('getDescriptions', startTime)
+                    metrics.record('QueryHandler', 'getDescriptions', startTime)
                 }
                 //add the ranking value
                 service.service.rank = _.result(_.find(services, s => {
@@ -77,8 +76,7 @@ export default class {
             })
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('executeQueries', startTime)
-                    metrics.saveResults()
+                    metrics.record('QueryHandler', 'executeQueries', startTime)
                 }
             })
     }
@@ -117,7 +115,7 @@ export default class {
         return promise
             .then(response => {
                 if (metricsFlag) {
-                    metrics.record('bridgeExecution', start)
+                    metrics.record('QueryHandler', 'bridgeExecution', start)
                 }
                 //transform the response
                 return transformResponse.mappingResponse(response.response, descriptor)

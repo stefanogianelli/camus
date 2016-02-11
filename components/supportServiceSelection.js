@@ -16,8 +16,7 @@ if (config.has('metrics')) {
 
 let metrics = null
 if (metricsFlag) {
-    const filePath = __dirname.replace('components', '') + '/metrics/SupportServiceSelection.txt'
-    metrics = new Metrics(filePath)
+    metrics = Metrics.getInstance()
 }
 
 /**
@@ -36,8 +35,7 @@ export default class {
             ._selectServiceFromCategory(decoratedCdt.supportServiceCategories, decoratedCdt)
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('selectServices', startTime)
-                    metrics.saveResults()
+                    metrics.record('SupportServiceSelection', 'selectServices', startTime)
                 }
             })
     }
@@ -64,7 +62,7 @@ export default class {
                             this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes),
                             (filterServices, customServices) => {
                                 if (metricsFlag) {
-                                    metrics.record('getAssociations', start)
+                                    metrics.record('SupportServiceSelection', 'getAssociations', start)
                                 }
                                 //acquire constraint count information
                                 const ids = _.unionWith(filterServices, customServices, (arrVal, othVal) => {
@@ -132,7 +130,7 @@ export default class {
             return r.count === maxCount && r.constraintCount === r.count
         })
         if (metricsFlag) {
-            metrics.record('mergeResults', start)
+            metrics.record('SupportServiceSelection', 'mergeResults', start)
         }
         return _.map(results, '_idOperation')
     }

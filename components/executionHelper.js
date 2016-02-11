@@ -25,9 +25,10 @@ if (config.has('metrics')) {
 
 let metrics = null
 if (metricsFlag) {
-    const filePath = __dirname.replace('components', '') + '/metrics/ExecutionHelper.txt'
-    metrics = new Metrics(filePath)
+    metrics = Metrics.getInstance()
 }
+
+let timer = null
 
 /**
  * Given a user context, it invokes the components in the correct order, then return the final response
@@ -36,6 +37,9 @@ if (metricsFlag) {
  */
 export function prepareResponse (context) {
     const start = process.hrtime()
+    if (metricsFlag) {
+        timer = _startTimer()
+    }
     return contextManager
         .getDecoratedCdt(context)
         .then(decoratedCdt => {
@@ -56,8 +60,7 @@ export function prepareResponse (context) {
         })
         .finally(() => {
             if (metricsFlag) {
-                metrics.record('executionTime', start)
-                metrics.saveResults()
+                metrics.record('ExecutionHelper', 'executionTime', start)
             }
         })
 }
@@ -69,12 +72,14 @@ export function prepareResponse (context) {
  */
 export function getDecoratedCdt (context) {
     const start = process.hrtime()
+    if (metricsFlag) {
+        timer = _startTimer()
+    }
     return contextManager
         .getDecoratedCdt(context)
         .finally(() => {
             if (metricsFlag) {
-                metrics.record('getDecoratedCdt', start)
-                metrics.saveResults()
+                metrics.record('ExecutionHelper', 'getDecoratedCdt', start)
             }
         })
 }
@@ -98,8 +103,7 @@ export function getPrimaryData (decoratedCdt) {
         })
         .finally(() => {
             if (metricsFlag) {
-                metrics.record('getPrimaryData', start)
-                metrics.saveResults()
+                metrics.record('ExecutionHelper', 'getPrimaryData', start)
             }
         })
 }
@@ -115,8 +119,7 @@ export function getSupportData (decoratedCdt) {
         .selectServices(decoratedCdt)
         .finally(() => {
             if (metricsFlag) {
-                metrics.record('getSupportData', start)
-                metrics.saveResults()
+                metrics.record('ExecutionHelper', 'getSupportData', start)
             }
         })
 }
@@ -139,4 +142,17 @@ export function login (mail, password) {
  */
 export function getPersonalData (id, token) {
     return userManager.getPersonalData(id, token)
+}
+
+/**
+ * Start the timer for saving the metrics results
+ * @returns {Object} The timeout object
+ * @private
+ */
+function _startTimer () {
+    console.log('Starting timeout ...')
+    clearTimeout(timer)
+    return setTimeout(() => {
+        metrics.saveResults()
+    }, 3000)
 }

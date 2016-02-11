@@ -22,8 +22,7 @@ if (config.has('metrics')) {
 
 let metrics = null
 if (metricsFlag) {
-    const filePath = __dirname.replace('components', '') + '/metrics/ResponseAggregator.txt'
-    metrics = new Metrics(filePath)
+    metrics = Metrics.getInstance()
 }
 
 /**
@@ -122,8 +121,7 @@ export default class {
             }
         })
         if (metricsFlag) {
-            metrics.record('findSimilarities', startTime)
-            metrics.saveResults()
+            metrics.record('ResponseAggregator', 'findSimilarities', startTime)
         }
         return output
     }

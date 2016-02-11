@@ -6,63 +6,75 @@ import Promise from 'bluebird'
 
 Promise.promisifyAll(fs)
 
+const dir = './metrics'
+const path = dir + '/data.json'
+
+let instance = null
+
 /**
  * Helper class for recording execution time of each component
  */
-export default class {
+export default class Metrics {
 
     /**
-     * The class constructor. Needs a file path to store the results
-     * @param filePath The file path
+     * The class constructor
+     * @constructor
      */
-    constructor (filePath) {
-        if (_.isUndefined(filePath) || _.isEmpty(filePath)) {
-            throw new Error('File path not set! Please specify a file path')
+    constructor () {
+        //check if exists the metrics folder
+        if (!fs.existsSync(dir)){
+            fs.mkdirSync(dir);
         }
-        this._path = filePath
         //clear the file content
         fs
-            .writeFileAsync(this._path, '')
-            .catch(() => {
+            .writeFileAsync(path, '')
+            .catch((err) => {
                 //do nothing
+                console.log(err)
             })
-        this._map = new Map()
+        this._results = []
+    }
+
+    static getInstance () {
+        if (_.isNull(instance)) {
+            instance = new Metrics()
+        }
+        return instance
     }
 
     /**
      * This function records a value.
      * The times are collected by the label name.
-     * @param label The label name
-     * @param start The start time acquired by process.hrtime()
+     * @param {String} component - The component name
+     * @param {String} label - The label name
+     * @param {Array} start - The start time acquired by process.hrtime()
      */
-    record (label, start) {
-        if (_.isUndefined(label) || !_.isString(label)) {
-            throw new Error('Invalid label')
+    record (component, label, start) {
+        if (_.isUndefined(component) || _.isUndefined(label)) {
+            throw new Error('Invalid component or label')
         }
         const end = process.hrtime(start)
         const time = end[0] * 1000 + end[1] / 1000000
-        if (this._map.has(label)) {
-            this._map.get(label).push(time)
-        } else {
-            this._map.set(label, [time])
-        }
+        this._results.push({
+            component: component,
+            label: label,
+            time: time
+        })
     }
 
     /**
      * This function saves the collected results into the specified file
      */
     saveResults () {
-        let output = ''
-        this._map.forEach((item, key) => {
-            item.forEach(time => {
-                output += key + '\t' + time.toString().replace('.', ',') + '\n'
-            })
-        })
-        this._map.clear()
+        console.log('[METRICS] Saving results ...')
         fs
-            .appendFileAsync(this._path, output)
-            .catch(() => {
+            .writeFileAsync(path, JSON.stringify(this._results, 0, 4))
+            .then(() => {
+                this._results.splice(0,this._results.length)
+            })
+            .catch((err) => {
                 //do nothing
+                console.log(err)
             })
     }
 
