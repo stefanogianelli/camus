@@ -35,7 +35,7 @@ export default class {
             ._selectServiceFromCategory(decoratedCdt.supportServiceCategories, decoratedCdt)
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('SupportServiceSelection', 'selectServices', startTime)
+                    metrics.record('SupportServiceSelection', 'selectServices', 'MAIN', startTime)
                 }
             })
     }
@@ -62,7 +62,7 @@ export default class {
                             this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes),
                             (filterServices, customServices) => {
                                 if (metricsFlag) {
-                                    metrics.record('SupportServiceSelection', 'getAssociations', start)
+                                    metrics.record('SupportServiceSelection', 'getAssociations', 'DB', start)
                                 }
                                 //acquire constraint count information
                                 const ids = _.unionWith(filterServices, customServices, (arrVal, othVal) => {
@@ -130,7 +130,7 @@ export default class {
             return r.count === maxCount && r.constraintCount === r.count
         })
         if (metricsFlag) {
-            metrics.record('SupportServiceSelection', 'mergeResults', start)
+            metrics.record('SupportServiceSelection', 'mergeResults', 'FUN', start)
         }
         return _.map(results, '_idOperation')
     }

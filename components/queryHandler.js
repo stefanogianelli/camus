@@ -61,7 +61,7 @@ export default class {
             .getServicesByOperationIds(_.map(services, '_idOperation'))
             .map(service => {
                 if (metricsFlag) {
-                    metrics.record('QueryHandler', 'getDescriptions', startTime)
+                    metrics.record('QueryHandler', 'getDescriptions', 'DB', startTime)
                 }
                 //add the ranking value
                 service.service.rank = _.result(_.find(services, s => {
@@ -76,7 +76,7 @@ export default class {
             })
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('QueryHandler', 'executeQueries', startTime)
+                    metrics.record('QueryHandler', 'executeQueries', 'MAIN', startTime)
                 }
             })
     }
@@ -115,7 +115,7 @@ export default class {
         return promise
             .then(response => {
                 if (metricsFlag) {
-                    metrics.record('QueryHandler', 'bridgeExecution', start)
+                    metrics.record('QueryHandler', 'bridgeExecution', 'FUN', start)
                 }
                 //transform the response
                 return transformResponse.mappingResponse(response.response, descriptor)

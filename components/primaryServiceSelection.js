@@ -68,7 +68,7 @@ export default class  {
                     this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes)
                 ,(filter, ranking, specific) => {
                     if (metricsFlag) {
-                        metrics.record('PrimaryServiceSelection', 'getAssociations', startTime)
+                        metrics.record('PrimaryServiceSelection', 'getAssociations', 'DB', startTime)
                     }
                     //merge the ranking and specific list (specific searches are considered ranking)
                     //discard the ranking nodes that haven't a correspondence in the filter nodes list
@@ -94,7 +94,7 @@ export default class  {
                 })
                 .finally(() => {
                     if (metricsFlag) {
-                        metrics.record('PrimaryServiceSelection', 'selectServices', startTime)
+                        metrics.record('PrimaryServiceSelection', 'selectServices', 'MAIN', startTime)
                     }
                 })
         })
@@ -132,7 +132,7 @@ export default class  {
                 })
                 .finally(() => {
                     if (metricsFlag) {
-                        metrics.record('PrimaryServiceSelection', 'specificSearches', start)
+                        metrics.record('PrimaryServiceSelection', 'specificSearches', 'FUN', start)
                     }
                 })
         })
@@ -179,7 +179,7 @@ export default class  {
         //take only the first N services
         rankedList = _.take(rankedList, this._n)
         if (metricsFlag) {
-            metrics.record('PrimaryServiceSelection', 'calculateRanking', start)
+            metrics.record('PrimaryServiceSelection', 'calculateRanking', 'FUN', start)
         }
         return rankedList
     }
@@ -198,7 +198,7 @@ export default class  {
             .searchPrimaryByCoordinates(idCdt, node)
             .then(results => {
                 if (metricsFlag) {
-                    metrics.record('PrimaryServiceSelection', 'dbCoordinatesSearch', start)
+                    metrics.record('PrimaryServiceSelection', 'dbCoordinatesSearch', 'DB', start)
                 }
                 if (debug) {
                     console.log('Found ' + results.length + ' service/s near the position')
@@ -213,7 +213,7 @@ export default class  {
             })
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('PrimaryServiceSelection', 'searchByCoordinates', start)
+                    metrics.record('PrimaryServiceSelection', 'searchByCoordinates', 'FUN', start)
                 }
             })
     }

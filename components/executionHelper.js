@@ -60,7 +60,7 @@ export function prepareResponse (context) {
         })
         .finally(() => {
             if (metricsFlag) {
-                metrics.record('ExecutionHelper', 'executionTime', start)
+                metrics.record('ExecutionHelper', 'executionTime', 'MAIN', start)
             }
         })
 }
@@ -79,7 +79,7 @@ export function getDecoratedCdt (context) {
         .getDecoratedCdt(context)
         .finally(() => {
             if (metricsFlag) {
-                metrics.record('ExecutionHelper', 'getDecoratedCdt', start)
+                metrics.record('ExecutionHelper', 'getDecoratedCdt', 'MAIN', start)
             }
         })
 }
@@ -103,7 +103,7 @@ export function getPrimaryData (decoratedCdt) {
         })
         .finally(() => {
             if (metricsFlag) {
-                metrics.record('ExecutionHelper', 'getPrimaryData', start)
+                metrics.record('ExecutionHelper', 'getPrimaryData', 'MAIN', start)
             }
         })
 }
@@ -119,7 +119,7 @@ export function getSupportData (decoratedCdt) {
         .selectServices(decoratedCdt)
         .finally(() => {
             if (metricsFlag) {
-                metrics.record('ExecutionHelper', 'getSupportData', start)
+                metrics.record('ExecutionHelper', 'getSupportData', 'MAIN', start)
             }
         })
 }
@@ -150,9 +150,8 @@ export function getPersonalData (id, token) {
  * @private
  */
 function _startTimer () {
-    console.log('Starting timeout ...')
     clearTimeout(timer)
     return setTimeout(() => {
         metrics.saveResults()
-    }, 3000)
+    }, 4000)
 }

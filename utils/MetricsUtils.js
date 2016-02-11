@@ -47,17 +47,19 @@ export default class Metrics {
      * The times are collected by the label name.
      * @param {String} component - The component name
      * @param {String} label - The label name
+     * @param {String} type - The function type (MAIN, FUN, DB, CACHE, EXT)
      * @param {Array} start - The start time acquired by process.hrtime()
      */
-    record (component, label, start) {
-        if (_.isUndefined(component) || _.isUndefined(label)) {
-            throw new Error('Invalid component or label')
+    record (component, label, type, start) {
+        if (_.isUndefined(component) || _.isUndefined(type) || _.isUndefined(label)) {
+            throw new Error('Invalid component, type or label')
         }
         const end = process.hrtime(start)
         const time = end[0] * 1000 + end[1] / 1000000
         this._results.push({
             component: component,
             label: label,
+            type: type,
             time: time
         })
     }

@@ -53,7 +53,7 @@ export default class {
                 //execute custom functions on items (if defined)
                 transformedResponse = this._executeFunctions(transformedResponse, descriptor)
                 if (metricsFlag) {
-                    metrics.record('TransformResponse', 'mappingResponse', start)
+                    metrics.record('TransformResponse', 'mappingResponse', 'MAIN', start)
                 }
                 resolve(transformedResponse)
             } catch (e) {

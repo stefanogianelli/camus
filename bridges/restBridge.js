@@ -73,7 +73,7 @@ export default class extends Bridge {
             })
             .finally(() => {
                 if (metricsFlag) {
-                    metrics.record('RestBridge', 'executeQuery/' + descriptor.service.name, startTime)
+                    metrics.record('RestBridge', 'executeQuery/' + descriptor.service.name, 'MAIN', startTime)
                 }
             })
     }
@@ -226,7 +226,7 @@ export default class extends Bridge {
                     //acquire next page information
                     let {hasNextPage, nextPage} = this._getPaginationStatus(descriptor, startPage, response)
                     if (metricsFlag) {
-                        metrics.record('RestBridge', 'invokeService/' + descriptor.service.name, start)
+                        metrics.record('RestBridge', 'invokeService/' + descriptor.service.name, 'FUN', start)
                     }
                     resolve({
                         hasNextPage: hasNextPage,
@@ -256,7 +256,7 @@ export default class extends Bridge {
                 .get(address)
                 .then((result) => {
                     if (metricsFlag) {
-                        metrics.record('RestBridge', 'accessCache/' + service, start)
+                        metrics.record('RestBridge', 'accessCache/' + service, 'CACHE', start)
                     }
                     if (result) {
                         //return immediately the cached response
@@ -300,7 +300,7 @@ export default class extends Bridge {
                                 //caching the response (with associated TTL)
                                 redis.set(address, res.text, 'EX', this._cacheTTL)
                                 if (metricsFlag) {
-                                    metrics.record('RestBridge', 'makeCall/' + service, start)
+                                    metrics.record('RestBridge', 'makeCall/' + service, 'EXT', start)
                                 }
                                 return resolve(response)
                             }

@@ -121,7 +121,7 @@ export default class {
             }
         })
         if (metricsFlag) {
-            metrics.record('ResponseAggregator', 'findSimilarities', startTime)
+            metrics.record('ResponseAggregator', 'findSimilarities', 'MAIN', startTime)
         }
         return output
     }
