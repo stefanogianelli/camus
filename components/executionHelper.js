@@ -131,6 +131,9 @@ export function getSupportData (decoratedCdt) {
  * @returns {Object} The user's identifier and session token
  */
 export function login (mail, password) {
+    if (metricsFlag) {
+        timer = _startTimer()
+    }
     return userManager.login(mail, password)
 }
 
@@ -141,6 +144,9 @@ export function login (mail, password) {
  * @returns {Object} The CDT associated to the user
  */
 export function getPersonalData (id, token) {
+    if (metricsFlag) {
+        timer = _startTimer()
+    }
     return userManager.getPersonalData(id, token)
 }
 
