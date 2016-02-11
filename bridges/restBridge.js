@@ -93,7 +93,7 @@ export default class extends Bridge {
     _parameterMapping (descriptor, paramNodes) {
         return new Promise((resolve, reject) => {
             let params = []
-            _.forEach(descriptor.parameters, p => {
+            _(descriptor.parameters).forEach(p => {
                 if (_.isEmpty(p.mappingCDT)) {
                     //use default value if the parameter is required and no mapping on the CDT was added
                     if (!_.isUndefined(p.default)) {
@@ -125,7 +125,7 @@ export default class extends Bridge {
                             separator = '|'
                             break
                     }
-                    _.forEach(p.mappingCDT, m => {
+                    _(p.mappingCDT).forEach(m => {
                         let v = this._searchMapping(paramNodes, m)
                         if (!_.isEmpty(v)) {
                             if (_.isEmpty(values)) {
@@ -163,13 +163,13 @@ export default class extends Bridge {
         let names = name.split('.')
         let obj = {}
         if (names.length > 0) {
-            obj = _.find(nodes, {name: names[0]})
+            obj = _(nodes).find({name: names[0]})
         }
         if (!_.isUndefined(obj)) {
             if (names.length > 1) {
-                obj = _.find(obj.fields, {name: names[1]})
+                obj = _(obj.fields).find({name: names[1]})
             }
-            return _.result(obj, 'value')
+            return obj.value
         }
     }
 
@@ -184,20 +184,20 @@ export default class extends Bridge {
      */
     _invokeService (descriptor, params, pagination) {
         const start = process.hrtime()
-        return new Promise ((resolve, reject) => {
-            //configure parameters (the default ones are useful for standard query composition)
-            let querySymbols = {
-                start: '?',
-                assign: '=',
-                separator: '&'
-            }
-            //change parameter value if the service is REST
-            if (descriptor.service.protocol === 'rest') {
-                querySymbols.start = querySymbols.assign = querySymbols.separator = '/'
-            }
-            //setting up the query path and parameters
-            let address = descriptor.service.basePath + descriptor.path + querySymbols.start
-            let parameters = _.reduce(params, (output, p) => {
+        //configure parameters (the default ones are useful for standard query composition)
+        let querySymbols = {
+            start: '?',
+            assign: '=',
+            separator: '&'
+        }
+        //change parameter value if the service is REST
+        if (descriptor.service.protocol === 'rest') {
+            querySymbols.start = querySymbols.assign = querySymbols.separator = '/'
+        }
+        //setting up the query path and parameters
+        let address = descriptor.service.basePath + descriptor.path + querySymbols.start
+        let parameters = _(params)
+            .reduce((output, p) => {
                 //add the value(s) to the query
                 if (_.isEmpty(output)) {
                     return p.name + querySymbols.assign + p.value
@@ -205,39 +205,35 @@ export default class extends Bridge {
                     return output + querySymbols.separator + p.name + querySymbols.assign + p.value
                 }
             }, '')
-            //acquire pagination parameters
-            let startPage = this._getStartPage(descriptor, pagination)
-            //check if next page is defined
-            let currentPageAddress = null
-            if (startPage) {
-                currentPageAddress = descriptor.pagination.attributeName + querySymbols.assign + startPage
-            }
-            //add the address to the request object
-            let fullAddress = address + parameters
-            if (currentPageAddress) {
-                fullAddress += querySymbols.separator + currentPageAddress
-            }
-            if (debug) {
-                console.log('Querying service \'' + descriptor.service.name + '\': ' + fullAddress)
-            }
-            this
-                ._makeCall(fullAddress, descriptor.headers, descriptor.service.name)
-                .then(response => {
-                    //acquire next page information
-                    let {hasNextPage, nextPage} = this._getPaginationStatus(descriptor, startPage, response)
-                    if (metricsFlag) {
-                        metrics.record('RestBridge', 'invokeService/' + descriptor.service.name, 'FUN', start)
-                    }
-                    resolve({
-                        hasNextPage: hasNextPage,
-                        nextPage: nextPage,
-                        response: response
-                    })
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
+        //acquire pagination parameters
+        let startPage = this._getStartPage(descriptor, pagination)
+        //check if next page is defined
+        let currentPageAddress = null
+        if (startPage) {
+            currentPageAddress = descriptor.pagination.attributeName + querySymbols.assign + startPage
+        }
+        //add the address to the request object
+        let fullAddress = address + parameters
+        if (currentPageAddress) {
+            fullAddress += querySymbols.separator + currentPageAddress
+        }
+        if (debug) {
+            console.log('Querying service \'' + descriptor.service.name + '\': ' + fullAddress)
+        }
+        return this
+            ._makeCall(fullAddress, descriptor.headers, descriptor.service.name)
+            .then(response => {
+                //acquire next page information
+                let {hasNextPage, nextPage} = this._getPaginationStatus(descriptor, startPage, response)
+                if (metricsFlag) {
+                    metrics.record('RestBridge', 'invokeService/' + descriptor.service.name, 'FUN', start)
+                }
+                return {
+                    hasNextPage: hasNextPage,
+                    nextPage: nextPage,
+                    response: response
+                }
+            })
     }
 
     /**
@@ -266,7 +262,7 @@ export default class extends Bridge {
                         //creating the agent
                         let request = agent.get(address)
                         //adding header information
-                        _.forEach(headers, h => {
+                        _(headers).forEach(h => {
                             request.set(h.name, h.value)
                         })
                         //setting timeout
@@ -322,7 +318,7 @@ export default class extends Bridge {
         let hasNextPage = false
         let nextPage = null
         //check if the service has pagination parameters associated
-        if (_.has(descriptor, 'pagination')) {
+        if (_(descriptor).has('pagination')) {
             const paginationConfig = descriptor.pagination
             //acquire the next page identifier
             if (paginationConfig.type === 'number') {
@@ -367,7 +363,7 @@ export default class extends Bridge {
     _getStartPage (descriptor, paginationArgs) {
         let startPage = null
         //check if the service has pagination parameters associated
-        if (_.has(descriptor, 'pagination') && !_.isUndefined(paginationArgs)) {
+        if (_(descriptor).has('pagination') && !_.isUndefined(paginationArgs)) {
             //check if exists a start page placeholder
             if (!_.isUndefined(paginationArgs.startPage)) {
                 startPage = paginationArgs.startPage

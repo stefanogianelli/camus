@@ -44,7 +44,7 @@ export default class {
                 const itemList = this._retrieveListOfResults(response, descriptor.responseMapping.list)
                 //transform each item of the response
                 let transformedResponse = []
-                _.forEach(itemList, i => {
+                _(itemList).forEach(i => {
                     let obj = this._transformItem(i, descriptor)
                     if (!_.isEmpty(obj)) {
                         transformedResponse.push(obj)
@@ -85,9 +85,11 @@ export default class {
         //check if the current list is an array, otherwise I transform it in a list from the current set of objects
         if (!_.isArray(list)) {
             if (_.isObject(list)) {
-                return _.map(list, item => {
-                    return item
-                })
+                return _(list)
+                    .map(item => {
+                        return item
+                    })
+                    .value()
             } else {
                 return []
             }
@@ -120,7 +122,7 @@ export default class {
         }
         let keys = key.split('.')
         let value = item
-        _.forEach(keys, k => {
+        _(keys).forEach(k => {
             if (!_.isUndefined(value)) {
                 value = value[k]
             } else {
@@ -139,7 +141,7 @@ export default class {
      */
     _transformItem (item, descriptor) {
         let obj = {}
-        _.forEach(descriptor.responseMapping.items, m => {
+        _(descriptor.responseMapping.items).forEach(m => {
             if (_.isString(m.path) && !_.isEmpty(m.path)) {
                 let v = this._getItemValue(item, m.path)
                 if (!_.isUndefined(v) && !this._isInvalidValue(v)) {
@@ -164,9 +166,9 @@ export default class {
      * @private
      */
     _executeFunctions (items, descriptor) {
-        _.forEach(descriptor.responseMapping.functions, f => {
-            _.forEach(items, i => {
-                if (_.has(i, f.onAttribute)) {
+        _(descriptor.responseMapping.functions).forEach(f => {
+            _(items).forEach(i => {
+                if (_(i).has(f.onAttribute)) {
                     try {
                         let fn = new Function('value', f.run)
                         let value = fn(i[f.onAttribute])

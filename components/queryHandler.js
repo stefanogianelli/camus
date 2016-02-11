@@ -64,9 +64,7 @@ export default class {
                     metrics.record('QueryHandler', 'getDescriptions', 'DB', startTime)
                 }
                 //add the ranking value
-                service.service.rank = _.result(_.find(services, s => {
-                    return s._idOperation.equals(service._id)
-                }), 'rank')
+                service.service.rank = _(services).find(s => s._idOperation.equals(service._id)).rank
                 //make call to the current service
                 return this._callService(service, decoratedCdt.parameterNodes)
             })

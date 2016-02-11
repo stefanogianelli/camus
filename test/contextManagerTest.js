@@ -122,101 +122,89 @@ describe('Component: ContextManager', () => {
 
     describe('#getFilterNodes()', () => {
         it('check if correct filter nodes are returned', () => {
-            return contextManager
-                ._getFilterNodes(mergedCdt(_idCDT).context)
-                .then(results => {
-                    assert.equal(results.length, 3)
-                    assert.equal(results[0].name, 'InterestTopic')
-                    assert.equal(results[0].value, 'Restaurant')
-                    assert.equal(results[1].name, 'Budget')
-                    assert.equal(results[1].value, 'Low')
-                    assert.equal(results[2].name, 'Transport')
-                    assert.equal(results[2].value, 'PublicTransport')
-                })
+            let results = contextManager._getFilterNodes(mergedCdt(_idCDT).context)
+            assert.equal(results.length, 3)
+            assert.equal(results[0].name, 'InterestTopic')
+            assert.equal(results[0].value, 'Restaurant')
+            assert.equal(results[1].name, 'Budget')
+            assert.equal(results[1].value, 'Low')
+            assert.equal(results[2].name, 'Transport')
+            assert.equal(results[2].value, 'PublicTransport')
         })
     })
 
     describe('#getRankingNodes()', () => {
         it('check if correct ranking nodes are returned', () => {
-            return contextManager
-                ._getRankingNodes(mergedCdt(_idCDT).context)
-                .then(results => {
-                    assert.equal(results.length, 2)
-                    assert.equal(results[0].name, 'CityName')
-                    assert.equal(results[0].value, 'Milan')
-                    assert.equal(results[1].name, 'Festivita')
-                    assert.equal(results[1].value, 'Capodanno')
-                })
+            let results = contextManager._getRankingNodes(mergedCdt(_idCDT).context)
+            assert.equal(results.length, 2)
+            assert.equal(results[0].name, 'CityName')
+            assert.equal(results[0].value, 'Milan')
+            assert.equal(results[1].name, 'Festivita')
+            assert.equal(results[1].value, 'Capodanno')
         })
     })
 
     describe('#getParameterNodes()', () => {
         it('check if correct parameter nodes are returned', () => {
-            return contextManager
-                ._getParameterNodes(mergedCdt(_idCDT).context)
-                .then(results => {
-                    assert.equal(results.length, 4)
-                    assert.equal(results[0].name, 'CityName')
-                    assert.equal(results[0].value, 'Milan')
-                    assert.equal(results[1].name, 'Number')
-                    assert.equal(results[1].value, 4)
-                    assert.equal(results[2].name, 'Budget')
-                    assert.equal(results[2].value, 'Low')
-                    assert.equal(results[3].name, 'CityCoord')
-                    assert.equal(results[3].fields[0].name, 'Longitude')
-                    assert.equal(results[3].fields[0].value, '9.234297')
-                    assert.equal(results[3].fields[1].name, 'Latitude')
-                    assert.equal(results[3].fields[1].value, '45.478906')
-                })
+            let results = contextManager._getParameterNodes(mergedCdt(_idCDT).context)
+            assert.equal(results.length, 4)
+            assert.equal(results[0].name, 'CityName')
+            assert.equal(results[0].value, 'Milan')
+            assert.equal(results[1].name, 'Number')
+            assert.equal(results[1].value, 4)
+            assert.equal(results[2].name, 'Budget')
+            assert.equal(results[2].value, 'Low')
+            assert.equal(results[3].name, 'CityCoord')
+            assert.equal(results[3].fields[0].name, 'Longitude')
+            assert.equal(results[3].fields[0].value, '9.234297')
+            assert.equal(results[3].fields[1].name, 'Latitude')
+            assert.equal(results[3].fields[1].value, '45.478906')
         })
     })
 
     describe('#getSpecificNodes()', () => {
         it('check if correct specific nodes are returned', () => {
-            return contextManager
-                ._getSpecificNodes(mergedCdt(_idCDT).context)
-                .then(results => {
-                    assert.equal(results.length, 1)
-                    assert.equal(results[0].name, 'CityCoord')
-                    assert.equal(results[0].fields[0].name, 'Longitude')
-                    assert.equal(results[0].fields[0].value, '9.234297')
-                    assert.equal(results[0].fields[1].name, 'Latitude')
-                    assert.equal(results[0].fields[1].value, '45.478906')
-                })
+            let results = contextManager._getSpecificNodes(mergedCdt(_idCDT).context)
+            assert.equal(results.length, 1)
+            assert.equal(results[0].name, 'CityCoord')
+            assert.equal(results[0].fields[0].name, 'Longitude')
+            assert.equal(results[0].fields[0].value, '9.234297')
+            assert.equal(results[0].fields[1].name, 'Latitude')
+            assert.equal(results[0].fields[1].value, '45.478906')
         })
     })
 
     describe('#getNodes()', () => {
-        it('check empty list when no nodes are selected', () => {
+        /*it('check empty list when no nodes are selected', () => {
             return Promise
                 .join(
                     contextManager
-                        ._getFilterNodes(_idCDT, onlyParameter(_idCDT).context)
+                        ._getFilterNodes(onlyParameter(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0)
                         }),
                     contextManager
-                        ._getFilterNodes(_idCDT, onlyRanking(_idCDT).context)
+                        ._getFilterNodes(onlyRanking(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0)
                         }),
                     contextManager
-                        ._getParameterNodes(_idCDT, onlyFilter(_idCDT).context)
+                        ._getParameterNodes(onlyFilter(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0)
                         }),
                     contextManager
-                        ._getParameterNodes(_idCDT, onlyRanking(_idCDT).context)
+                        ._getParameterNodes(onlyRanking(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0)
                         }),
                     contextManager
-                        ._getRankingNodes(_idCDT, onlyFilter(_idCDT).context)
+                        ._getRankingNodes(onlyFilter(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0)
                         }),
                     contextManager
-                        ._getRankingNodes(_idCDT, onlyParameter(_idCDT).context)
+                        ._getRankingNodes(onlyParameter(_idCDT).context)
                         .then(results => {
                             assert.equal(results.length, 0)
                         }),
@@ -236,20 +224,20 @@ describe('Component: ContextManager', () => {
                             assert.equal(results.length, 0)
                         })
                 )
-        })
+        })*/
         it('check error when an invalid type is selected', () => {
-            return contextManager
-                ._getNodes('invalid', onlyFilter(_idCDT).context, false)
-                .catch(e => {
-                    assert.equal(e, 'Invalid type selected')
-                })
+            try {
+                contextManager._getNodes('invalid', onlyFilter(_idCDT).context, false)
+            } catch(e) {
+                assert.equal(e.message, 'Invalid type selected')
+            }
         })
         it('check error when an empty item list is provided', () => {
-            return contextManager
-                ._getNodes('filter', null, false)
-                .catch(e => {
-                    assert.equal(e, 'No items selected')
-                })
+            try {
+                contextManager._getNodes('filter', [], false)
+            } catch(e) {
+                assert.equal(e.message, 'No items selected')
+            }
         })
     })
 

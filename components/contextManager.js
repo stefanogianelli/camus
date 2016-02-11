@@ -58,12 +58,12 @@ export default class {
                             //acquire the descendants of the selected ranking nodes
                             rankingNodes = _.concat(rankingNodes, this._getDescendants(cdt, rankingNodes))
                             return {
+                                _id: mergedCdt._id,
                                 filterNodes: filterNodes,
                                 rankingNodes: rankingNodes,
                                 specificNodes: specificNodes,
                                 parameterNodes: parameterNodes,
-                                supportServiceCategories: mergedCdt.support,
-                                _id: mergedCdt._id
+                                supportServiceCategories: mergedCdt.support
                             }
                         }
                     )
@@ -99,7 +99,7 @@ export default class {
                     _id: cdt._id,
                     context: mergedContext
                 }
-                if (_.has(context, 'support')) {
+                if (_(context).has('support')) {
                     mergedCdt.support = context.support
                 }
                 return {cdt, mergedCdt}
@@ -119,22 +119,22 @@ export default class {
      */
     _createMap (list) {
         let map = new Map()
-        list.forEach (item => {
-            if (_.has(item, 'dimension') && _.has(item, 'value')) {
+        _(list).forEach (item => {
+            if (_(item).has('dimension') && _(item).has('value')) {
                 if (!map.has(item.dimension)) {
                     map.set(item.dimension, item.value)
                 }
             }
-            if (_.has(item, 'parameters')) {
-                item.parameters.forEach(param => {
-                    if (_.has(param, 'name') && _.has(param, 'value')) {
+            if (_(item).has('parameters')) {
+                _(item.parameters).forEach(param => {
+                    if (_(param).has('name') && _(param).has('value')) {
                         if (!map.has(param.name)) {
                             map.set(param.name, param.value)
                         }
                     }
-                    if (_.has(param, 'fields')) {
+                    if (_(param).has('fields')) {
                         param.fields.forEach(field => {
-                           if (_.has(field, 'name') && _.has(field, 'value')) {
+                           if (_(field).has('name') && _(field).has('value')) {
                                if (!map.has(field.name)) {
                                    map.set(field.name, field.value)
                                }
@@ -156,10 +156,10 @@ export default class {
      */
     _mergeObjects (list, map) {
         let output = []
-        list.forEach(item => {
+        _(list).forEach(item => {
             let addObject = false
             //get the dimension name
-            let dim = item.dimension || item.name
+            let dim = item.name
             //acquire the value from the user context, if exists
             let value = undefined
             if (map.has(dim)) {
@@ -187,10 +187,10 @@ export default class {
                 let obj = {
                     name: dim
                 }
-                if (_.has(item, 'for')) {
+                if (_(item).has('for')) {
                     obj.for = item.for
                 }
-                if (_.has(item, 'parents')) {
+                if (_(item).has('parents')) {
                     obj.parents = item.parents
                 }
                 if (!_.isUndefined(value)) {
@@ -216,13 +216,11 @@ export default class {
      */
     _getFilterNodes (mergedCdt) {
         const startTime = process.hrtime()
-        return this
-            ._getNodes('filter', mergedCdt, false)
-            .finally(() => {
-                if (metricsFlag) {
-                    metrics.record('ContextManager', 'getFilterNodes', 'FUN', startTime)
-                }
-            })
+        let results = this._getNodes('filter', mergedCdt, false)
+        if (metricsFlag) {
+            metrics.record('ContextManager', 'getFilterNodes', 'FUN', startTime)
+        }
+        return results
     }
 
     /**
@@ -233,13 +231,11 @@ export default class {
      */
     _getRankingNodes (mergedCdt) {
         const startTime = process.hrtime()
-        return this
-            ._getNodes('ranking', mergedCdt, false)
-            .finally(() => {
-                if (metricsFlag) {
-                    metrics.record('ContextManager', 'getRankingNodes', 'FUN', startTime)
-                }
-            })
+        let results = this._getNodes('ranking', mergedCdt, false)
+        if (metricsFlag) {
+            metrics.record('ContextManager', 'getRankingNodes', 'FUN', startTime)
+        }
+        return results
     }
 
     /**
@@ -250,18 +246,14 @@ export default class {
      */
     _getParameterNodes (mergedCdt) {
         const startTime = process.hrtime()
-        return Promise
-            .join(
-                this._getNodes('parameter', mergedCdt, false),
-                this._getNodes('parameter', mergedCdt, true),
-                (parameterNodes, specificNodes) => {
-                    return _.concat(parameterNodes, specificNodes)
-                })
-            .finally(() => {
-                if (metricsFlag) {
-                    metrics.record('ContextManager', 'getParameterNodes', 'FUN', startTime)
-                }
-            })
+        let results = _.concat(
+            this._getNodes('parameter', mergedCdt, false),
+            this._getNodes('parameter', mergedCdt, true)
+        )
+        if (metricsFlag) {
+            metrics.record('ContextManager', 'getParameterNodes', 'FUN', startTime)
+        }
+        return results
     }
 
     /**
@@ -273,13 +265,11 @@ export default class {
      */
     _getSpecificNodes (mergedCdt) {
         const startTime = process.hrtime()
-        return this
-            ._getNodes('ranking', mergedCdt, true)
-            .finally(() => {
-                if (metricsFlag) {
-                    metrics.record('ContextManager', 'getSpecificNodes', 'FUN', startTime)
-                }
-            })
+        let results = this._getNodes('ranking', mergedCdt, true)
+        if (metricsFlag) {
+            metrics.record('ContextManager', 'getSpecificNodes', 'FUN', startTime)
+        }
+        return results
     }
 
     /**
@@ -298,78 +288,57 @@ export default class {
         if (_.isEqual(type, 'filter') || _.isEqual(type, 'ranking') || _.isEqual(type, 'parameter')) {
             if (!_.isUndefined(items) && !_.isEmpty(items)) {
                 //filter the items that belongs to the selected category
-                items = _.filter(items, item => {
-                    return _.includes(item.for, type)
-                })
+                items = _(items).filter(item => _(item.for).includes(type)).value()
                 let list = []
                 let index = 0
                 //according to the value of the specific flag, select or discard the specific nodes
                 //a parameter with multiple fields defined it's considered as specific
                 if (specificFlag) {
                     //consider only the specific nodes (the parameter items are flattened to the root)
-                    _.forEach(_.filter(items, 'parameters'), item => {
-                        _.forEach(item.parameters, p => {
-                            if (_.has(p, 'fields') && !_.isEmpty(p.fields)) {
-                                list[index++] = p
-                            }
+                    _(items)
+                        .filter('parameters')
+                        .forEach(item => {
+                            _(item.parameters).forEach(p => {
+                                if (_(p).has('fields') && !_.isEmpty(p.fields)) {
+                                    list[index++] = p
+                                }
+                            })
                         })
-                    })
                 } else {
                     //reject the specific nodes
                     //the dimension and parameter nodes are flattened to the root
-                    _.forEach(items, item => {
-                        if (_.has(item, 'value')) {
+                    _(items).forEach(item => {
+                        if (_(item).has('value')) {
                             list[index++] = item
-                        } else if (_.has(item, 'parameters')) {
-                            _.forEach(item.parameters, p => {
-                                if (!_.has(p, 'fields')) {
+                        } else if (_(item).has('parameters')) {
+                            _(item.parameters).forEach(p => {
+                                if (!_(p).has('fields')) {
                                     list[index++] = p
                                 }
                             })
                         }
                     })
                 }
-                return Promise
-                    .map(list, item => {
-                        //return the value
-                        if (_.has(item, 'value')) {
-                            return {
-                                name: item.dimension || item.name,
-                                value: item.value
-                            }
-                            //if the parameter has fields, return them without modifications
-                        } else if (_.has(item, 'fields')) {
+                return _(list)
+                    .map(item => {
+                        if (_(item).has('fields')) {
                             return {
                                 name: item.name,
                                 fields: item.fields
                             }
-                        }
-                    })
-                    //merge the various list
-                    .reduce((a, b) => {
-                        let results = []
-                        if (_.isArray(a)) {
-                            results = a
                         } else {
-                            results.push(a)
+                            return {
+                                name: item.name,
+                                value: item.value
+                            }
                         }
-                        results.push(b)
-                        return results
                     })
-                    .then(results => {
-                        if (_.isUndefined(results)) {
-                            return []
-                        }
-                        if (!_.isArray(results)) {
-                            return [results]
-                        }
-                        return results
-                    })
+                    .value()
             } else {
-                return Promise.reject('No items selected')
+                throw new Error('No items selected')
             }
         } else {
-            return Promise.reject('Invalid type selected')
+            throw new Error('Invalid type selected')
         }
     }
 
@@ -383,11 +352,11 @@ export default class {
     _getDescendants (cdt, nodes) {
         const startTime = process.hrtime()
         let output = []
-        const nodeValues = _.map(nodes, 'value')
-        cdt.context.forEach(item => {
+        const nodeValues = _(nodes).map('value').value()
+        _(cdt.context).forEach(item => {
             const intersect = _.intersection(item.parents, nodeValues)
-            if (!_.isEmpty(intersect) && _.has(item, 'values')) {
-                item.values.forEach(value => {
+            if (!_.isEmpty(intersect) && _(item).has('values')) {
+                _(item.values).forEach(value => {
                     output.push({
                         name: item.name,
                         value: value

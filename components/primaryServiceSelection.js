@@ -72,17 +72,15 @@ export default class  {
                     }
                     //merge the ranking and specific list (specific searches are considered ranking)
                     //discard the ranking nodes that haven't a correspondence in the filter nodes list
-                        ranking = _(ranking)
-                            .concat(specific)
-                            .intersectionWith(filter, (s, i) => {
-                                return s._idOperation.equals(i._idOperation)
-                            })
-                            .value()
+                    ranking = _(ranking)
+                        .concat(specific)
+                        .intersectionWith(filter, (s, i) =>  s._idOperation.equals(i._idOperation))
+                        .value()
                     //add the weight values for each item
-                    _.forEach(filter, i => {
+                    _(filter).forEach(i => {
                         i['weight'] = this._filterWeight
                     })
-                    _.forEach(ranking, i => {
+                    _(ranking).forEach(i => {
                         i['weight'] = this._rankingWeight
                     })
                     //calculate the ranking of the merged list
@@ -110,32 +108,30 @@ export default class  {
      */
     _specificSearch (idCdt, nodes) {
         const start = process.hrtime()
-        return new Promise (resolve => {
-            let promises = []
-            //check if the node dimension have a specific search associated
-            _.forEach(nodes, node => {
-                switch (node.name) {
-                    case 'CityCoord':
-                        //load specific coordinates search
-                        promises.push(this._searchByCoordinates(idCdt, node))
-                        break
+        let promises = []
+        //check if the node dimension have a specific search associated
+        _(nodes).forEach(node => {
+            switch (node.name) {
+                case 'CityCoord':
+                    //load specific coordinates search
+                    promises.push(this._searchByCoordinates(idCdt, node))
+                    break
+            }
+        })
+        return Promise
+            .all(promises)
+            .then(results => {
+                return _.flatten(results)
+            })
+            .catch(e => {
+                console.log(e)
+                return []
+            })
+            .finally(() => {
+                if (metricsFlag) {
+                    metrics.record('PrimaryServiceSelection', 'specificSearches', 'FUN', start)
                 }
             })
-            Promise
-                .all(promises)
-                .then(results => {
-                    resolve(_.flatten(results))
-                })
-                .catch(e => {
-                    console.log(e)
-                    resolve()
-                })
-                .finally(() => {
-                    if (metricsFlag) {
-                        metrics.record('PrimaryServiceSelection', 'specificSearches', 'FUN', start)
-                    }
-                })
-        })
     }
 
     /**
@@ -150,19 +146,15 @@ export default class  {
         }
         const start = process.hrtime()
         let rankedList = []
-        _.forEach(services, s => {
+        _(services).forEach(s => {
             //calculate the ranking of the current service
-            let rank
+            let rank = s.weight
             //avoid infinity results
             if (s.ranking > 0) {
                 rank = s.weight * (1 / s.ranking)
-            } else {
-                rank = s.weight
             }
             //check if the service is already in the list
-            let index = _.findIndex(rankedList, i => {
-                return i._idOperation.equals(s._idOperation)
-            })
+            let index = _(rankedList).findIndex(i => i._idOperation.equals(s._idOperation))
             if (index === -1) {
                 //if not exists creates the entry
                 rankedList.push({
@@ -177,10 +169,11 @@ export default class  {
         if (debug) {
             console.log('Found ' + rankedList.length + ' service/s')
         }
-        //sort the list by the rank in descending order
-        rankedList = _.orderBy(rankedList, 'rank', 'desc')
-        //take only the first N services
-        rankedList = _.take(rankedList, this._n)
+        //sort the list by the rank in descending order and take only the first N services
+        rankedList = _(rankedList)
+            .orderBy('rank', 'desc')
+            .take(this._n)
+            .value()
         if (metricsFlag) {
             metrics.record('PrimaryServiceSelection', 'calculateRanking', 'FUN', start)
         }

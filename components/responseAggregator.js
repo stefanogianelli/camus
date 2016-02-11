@@ -68,7 +68,7 @@ export default class {
         const startTime = process.hrtime()
         //create a map of items that sounds similar (using SoundEx algorithm)
         let clusters = new Map()
-        _.forEach(response, item => {
+        _(response).forEach(item => {
             const phonetic = SoundEx.process(item.title)
             if (clusters.has(phonetic)) {
                 //add the current item to the cluster
@@ -139,7 +139,7 @@ export default class {
         //take into account only the attributes in common for both the objects
         let intersect = _.intersection(_.keysIn(obj1), _.keysIn(obj2))
         let count = 0
-        let similaritySum = _.reduce(intersect, (sum, i) => {
+        let similaritySum = _(intersect).reduce((sum, i) => {
             //consider only string values
             if (_.isString(obj1[i]) && _.isString(obj2[i])) {
                 count++
@@ -165,7 +165,7 @@ export default class {
         const secondaryKeys = _.keys(secondary)
         const toAdd = _.difference(secondaryKeys, _.intersection(primaryKeys, secondaryKeys))
         let obj = _.cloneDeep(primary)
-        _.forEach(toAdd, item => {
+        _(toAdd).forEach(item => {
            obj[item] = secondary[item]
         })
         obj.meta.name = _.union(primary.meta.name, secondary.meta.name)
