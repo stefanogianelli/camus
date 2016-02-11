@@ -146,7 +146,7 @@ export default class  {
      */
     _calculateRanking (services) {
         if (debug) {
-            console.log('Found ' + services.length + ' service/s')
+            console.log('Found ' + services.length + ' association/s')
         }
         const start = process.hrtime()
         let rankedList = []
@@ -174,6 +174,9 @@ export default class  {
                 rankedList[index].rank += rank
             }
         })
+        if (debug) {
+            console.log('Found ' + rankedList.length + ' service/s')
+        }
         //sort the list by the rank in descending order
         rankedList = _.orderBy(rankedList, 'rank', 'desc')
         //take only the first N services
