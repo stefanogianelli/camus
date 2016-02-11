@@ -28,7 +28,6 @@ export default class {
      * It takes as input the user's context and transform it into the decorated one.
      * This context is first merged with the full CDT in the database.
      * Decorated CDT mean an object composed in this way:
-     * - interestTopic: the interest topic selected
      * - filterNodes: the list of filter nodes (also include the descendants of each node)
      * - rankingNodes: the list of ranking nodes (also include the descendants of each node)
      * - specificNodes: the list of specific nodes (assumed that they are ranking nodes)
@@ -45,8 +44,6 @@ export default class {
             .then(({cdt, mergedCdt}) => {
                 return Promise
                     .join(
-                        //get the interest topic
-                        this._getInterestTopic(mergedCdt),
                         //find the filter nodes
                         this._getFilterNodes(mergedCdt.context),
                         //find the ranking nodes
@@ -55,13 +52,12 @@ export default class {
                         this._getSpecificNodes(mergedCdt.context),
                         //find the parameter nodes
                         this._getParameterNodes(mergedCdt.context),
-                        (interestTopic, filterNodes, rankingNodes, specificNodes, parameterNodes) => {
+                        (filterNodes, rankingNodes, specificNodes, parameterNodes) => {
                             //acquire the descendants of the selected filter nodes
                             filterNodes = _.concat(filterNodes, this._getDescendants(cdt, filterNodes))
                             //acquire the descendants of the selected ranking nodes
                             rankingNodes = _.concat(rankingNodes, this._getDescendants(cdt, rankingNodes))
                             return {
-                                interestTopic: interestTopic,
                                 filterNodes: filterNodes,
                                 rankingNodes: rankingNodes,
                                 specificNodes: specificNodes,
@@ -375,32 +371,6 @@ export default class {
         } else {
             return Promise.reject('Invalid type selected')
         }
-    }
-
-    /**
-     * Search the selected interest topic
-     * @param {Object} mergedCdt - The merged CDT
-     * @returns {String} The interest topic name
-     * @private
-     */
-    _getInterestTopic (mergedCdt) {
-        const startTime = process.hrtime()
-        return new Promise((resolve, reject) => {
-            let context = mergedCdt.context
-            if (!_.isEmpty(context)) {
-                let r = _.find(context, {name: 'InterestTopic'})
-                if (!_.isUndefined(r)) {
-                    if (metricsFlag) {
-                        metrics.record('ContextManager', 'getInterestTopic', 'FUN', startTime)
-                    }
-                    resolve(r.value)
-                } else {
-                    reject('No interest topic selected')
-                }
-            } else {
-                reject('No context selected')
-            }
-        })
     }
 
     /**

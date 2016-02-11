@@ -34,7 +34,6 @@ describe('Component: ContextManager', () => {
             return contextManager
                 .getDecoratedCdt(context(_idCDT))
                 .then(data => {
-                    assert.equal(data.interestTopic, 'Restaurant')
                     //filter nodes
                     assert.equal(data.filterNodes.length, 5)
                     assert.equal(data.filterNodes[0].name, 'InterestTopic')
@@ -254,37 +253,6 @@ describe('Component: ContextManager', () => {
         })
     })
 
-    describe('#getInterestTopic()', () => {
-        it('check if correct interest topic are returned', () => {
-            return contextManager
-                ._getInterestTopic(mergedCdt(_idCDT))
-                .then(interestTopic => {
-                    assert.equal(interestTopic, 'Restaurant')
-                })
-        })
-        it('check error when sending empty context', () => {
-            return contextManager
-                ._getInterestTopic(emptyContext(_idCDT))
-                .catch(e => {
-                    assert.equal(e, 'No context selected')
-                })
-        })
-        it('check error when sending empty object', () => {
-            return contextManager
-                ._getInterestTopic({ })
-                .catch(e => {
-                        assert.equal(e, 'No context selected')
-                })
-        })
-        it('check error when sending context without interest topic', () => {
-            return contextManager
-                ._getInterestTopic(noInterestTopicContext(_idCDT))
-                .catch(e => {
-                    assert.equal(e, 'No interest topic selected')
-                })
-        })
-    })
-
     describe('#getDescendants()', () => {
         it('check if correct descendants are returned', () => {
             const nodes = contextManager._getDescendants(mockModel.cdt(1), [{value: 'PublicTransport'}])
@@ -330,40 +298,6 @@ describe('Component: ContextManager', () => {
         })
     })
 })
-
-//context with no dimensions selected
-let emptyContext = idCDT => {
-    return {
-        _id: idCDT,
-        context: []
-    }
-}
-
-//context with no support services selected
-let emptySupport = idCDT => {
-    return {
-        _id: idCDT,
-        support: []
-    }
-}
-
-//context without interest topic
-let noInterestTopicContext = idCDT => {
-    return {
-        _id: idCDT,
-        context: [
-            {
-                dimension: 'Location',
-                parameters: [
-                    {
-                        name: 'City',
-                        value: 'newyork'
-                    }
-                ]
-            }
-        ]
-    }
-}
 
 //context used to test the merging function
 let context = idCDT => {
