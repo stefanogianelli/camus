@@ -81,7 +81,7 @@ export default class {
     /**
      * Call the correct service's bridge and transform the response to make an array of items
      * @param descriptor The service description
-     * @param decoratedCdt The list of parameters from the CDT
+     * @param decoratedCdt The decorated CDT
      * @returns {Promise.<T>} The list of the responses, in order of service ranking
      * @private
      */

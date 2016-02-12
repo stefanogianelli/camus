@@ -49,7 +49,7 @@ export default class extends Bridge {
      * It executes the mapping between the service parameters and the values in the CDT.
      * Then compose the query and invoke the service
      * @param descriptor The service description
-     * @param decoratedCdt The parameter nodes of the CDT
+     * @param decoratedCdt The decorated CDT
      * @param paginationArgs Define the starting point for pagination and how many pages retrieve, if they are available
      * @returns {Promise|Request|Promise.<T>} The promise with the service responses
      */
@@ -70,7 +70,7 @@ export default class extends Bridge {
     /**
      * Map the service parameters to the values derived from the CDT
      * @param descriptor The service description
-     * @param decoratedCdt The list of parameter nodes of the CDT
+     * @param decoratedCdt The decorated CDT
      * @returns {bluebird|exports|module.exports} The mapped parameters
      * These object are composed as follow:
      * {
@@ -149,7 +149,7 @@ export default class extends Bridge {
 
     /**
      * Search the value of a dimension in the CDT
-     * @param nodes The parameter nodes of the CDT
+     * @param nodes The nodes of the CDT to be taken into account
      * @param name The name of the dimension
      * @returns {*} The value found, if exists
      * @private
