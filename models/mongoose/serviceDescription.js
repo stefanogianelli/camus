@@ -11,6 +11,20 @@ const protocols = 'rest query custom'.split(' ')
 const paginationTypes = 'number token'.split(' ')
 
 /**
+ * Translate schema
+ */
+const translateSchema = new Schema({
+    from: {
+        type: String,
+        required: true
+    },
+    to: {
+        type: String,
+        required: true
+    }
+})
+
+/**
  * Parameter schema
  */
 const parameterSchema = new Schema({
@@ -30,7 +44,8 @@ const parameterSchema = new Schema({
         enum: separators
     },
     mappingCDT: [String],
-    mappingTerm: [String]
+    mappingTerm: [String],
+    translate: [translateSchema]
 })
 
 /**

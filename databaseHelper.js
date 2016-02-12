@@ -169,18 +169,12 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    async.map(mericiPrimaryOperations(idService),
-                                        (op, callback) => {
-                                            new operationModel(op).save((err, operation) => {
-                                                callback(err, operation.id)
-                                            })
-                                        },
-                                        (err, operations) => {
-                                            callback(err, operations[0], operations[1], operations[2], operations[3])
-                                        })
+                                    new operationModel(mericiPrimaryOperation(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
                                 },
-                                (idHotel, idFood, idTheater, idMuseum, callback) => {
-                                    async.each(mericiPrimaryAssociations(idCdt, idHotel, idFood, idTheater, idMuseum), (a, callback) => {
+                                (idOperation, callback) => {
+                                    async.each(mericiPrimaryAssociations(idCdt, idOperation), (a, callback) => {
                                         new PrimaryServiceModel(a).save(err => {
                                             callback(err)
                                         })
@@ -823,297 +817,121 @@ const mericiPrimary = {
 }
 
 //merici primary operations
-const mericiPrimaryOperations = idService => {
-    return [
-        {
-            service: idService,
-            name: 'searchHotel',
-            path: '/service_process.php',
-            parameters: [
-                {
-                    name: 'service',
-                    required: true,
-                    default: 'hotel'
-                },
-                {
-                    name: 'lat',
-                    required: true,
-                    default: '45.46867',
-                    mappingCDT: [
-                        'CityCoord.Latitude'
-                    ]
-                },
-                {
-                    name: 'lon',
-                    required: true,
-                    default: '9.11144',
-                    mappingCDT: [
-                        'CityCoord.Longitude'
-                    ]
-                }
-            ],
-            responseMapping: {
-                list: 'services',
-                items: [
+const mericiPrimaryOperation = idService => {
+    return {
+        service: idService,
+        name: 'search',
+        path: '/service_process.php',
+        parameters: [
+            {
+                name: 'service',
+                required: true,
+                mappingCDT: [
+                    'InterestTopic'
+                ],
+                translate: [
                     {
-                        termName: 'title',
-                        path: 'name'
+                        from: 'Hotel',
+                        to: 'hotel'
                     },
                     {
-                        termName: 'address',
-                        path: 'route'
+                        from: 'Restaurant',
+                        to: 'food'
                     },
                     {
-                        termName: 'city',
-                        path: 'locality'
+                        from: 'Theater',
+                        to: 'theater'
                     },
                     {
-                        termName: 'telephone',
-                        path: 'phone'
-                    },
-                    {
-                        termName: 'website',
-                        path: 'site'
-                    },
-                    {
-                        termName: 'email',
-                        path: 'email'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'latitude'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'longitude'
+                        from: 'Museum',
+                        to: 'museum'
                     }
                 ]
-            }
-        },
-        {
-            service: idService,
-            name: 'searchFood',
-            path: '/service_process.php',
-            parameters: [
-                {
-                    name: 'service',
-                    required: true,
-                    default: 'food'
-                },
-                {
-                    name: 'lat',
-                    required: true,
-                    default: '45.46867',
-                    mappingCDT: [
-                        'CityCoord.Latitude'
-                    ]
-                },
-                {
-                    name: 'lon',
-                    required: true,
-                    default: '9.11144',
-                    mappingCDT: [
-                        'CityCoord.Longitude'
-                    ]
-                }
-            ],
-            responseMapping: {
-                list: 'services',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'name'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'route'
-                    },
-                    {
-                        termName: 'city',
-                        path: 'locality'
-                    },
-                    {
-                        termName: 'telephone',
-                        path: 'phone'
-                    },
-                    {
-                        termName: 'website',
-                        path: 'site'
-                    },
-                    {
-                        termName: 'email',
-                        path: 'email'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'latitude'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'longitude'
-                    }
+
+            },
+            {
+                name: 'lat',
+                required: true,
+                default: '45.46867',
+                mappingCDT: [
+                    'CityCoord.Latitude'
+                ]
+            },
+            {
+                name: 'lon',
+                required: true,
+                default: '9.11144',
+                mappingCDT: [
+                    'CityCoord.Longitude'
                 ]
             }
-        },
-        {
-            service: idService,
-            name: 'searchTheater',
-            path: '/service_process.php',
-            parameters: [
+        ],
+        responseMapping: {
+            list: 'services',
+            items: [
                 {
-                    name: 'service',
-                    required: true,
-                    default: 'theater'
+                    termName: 'title',
+                    path: 'name'
                 },
                 {
-                    name: 'lat',
-                    required: true,
-                    default: '45.46867',
-                    mappingCDT: [
-                        'CityCoord.Latitude'
-                    ]
+                    termName: 'address',
+                    path: 'route'
                 },
                 {
-                    name: 'lon',
-                    required: true,
-                    default: '9.11144',
-                    mappingCDT: [
-                        'CityCoord.Longitude'
-                    ]
+                    termName: 'city',
+                    path: 'locality'
+                },
+                {
+                    termName: 'telephone',
+                    path: 'phone'
+                },
+                {
+                    termName: 'website',
+                    path: 'site'
+                },
+                {
+                    termName: 'email',
+                    path: 'email'
+                },
+                {
+                    termName: 'latitude',
+                    path: 'latitude'
+                },
+                {
+                    termName: 'longitude',
+                    path: 'longitude'
                 }
-            ],
-            responseMapping: {
-                list: 'services',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'name'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'route'
-                    },
-                    {
-                        termName: 'city',
-                        path: 'locality'
-                    },
-                    {
-                        termName: 'telephone',
-                        path: 'phone'
-                    },
-                    {
-                        termName: 'website',
-                        path: 'site'
-                    },
-                    {
-                        termName: 'email',
-                        path: 'email'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'latitude'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'longitude'
-                    }
-                ]
-            }
-        },
-        {
-            service: idService,
-            name: 'searchMuseum',
-            path: '/service_process.php',
-            parameters: [
-                {
-                    name: 'service',
-                    required: true,
-                    default: 'museum'
-                },
-                {
-                    name: 'lat',
-                    required: true,
-                    default: '45.46867',
-                    mappingCDT: [
-                        'CityCoord.Latitude'
-                    ]
-                },
-                {
-                    name: 'lon',
-                    required: true,
-                    default: '9.11144',
-                    mappingCDT: [
-                        'CityCoord.Longitude'
-                    ]
-                }
-            ],
-            responseMapping: {
-                list: 'services',
-                items: [
-                    {
-                        termName: 'title',
-                        path: 'name'
-                    },
-                    {
-                        termName: 'address',
-                        path: 'route'
-                    },
-                    {
-                        termName: 'city',
-                        path: 'locality'
-                    },
-                    {
-                        termName: 'telephone',
-                        path: 'phone'
-                    },
-                    {
-                        termName: 'website',
-                        path: 'site'
-                    },
-                    {
-                        termName: 'email',
-                        path: 'email'
-                    },
-                    {
-                        termName: 'latitude',
-                        path: 'latitude'
-                    },
-                    {
-                        termName: 'longitude',
-                        path: 'longitude'
-                    }
-                ]
-            }
+            ]
         }
-    ]
+    }
 }
 
 //merici primary service associations
-const mericiPrimaryAssociations = (idCDT, idHotel, idFood, idTheater, idMuseum) => {
+const mericiPrimaryAssociations = (idCDT, idOperation) => {
     return [
         {
-            _idOperation: idHotel,
+            _idOperation: idOperation,
             _idCDT: idCDT,
             dimension: 'InterestTopic',
             value: 'Hotel',
             ranking: 1
         },
         {
-            _idOperation: idFood,
+            _idOperation: idOperation,
             _idCDT: idCDT,
             dimension: 'InterestTopic',
             value: 'Restaurant',
             ranking: 3
         },
         {
-            _idOperation: idTheater,
+            _idOperation: idOperation,
             _idCDT: idCDT,
             dimension: 'InterestTopic',
             value: 'Theater',
             ranking: 2
         },
         {
-            _idOperation: idMuseum,
+            _idOperation: idOperation,
             _idCDT: idCDT,
             dimension: 'InterestTopic',
             value: 'Museum',

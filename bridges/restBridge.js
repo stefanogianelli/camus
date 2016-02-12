@@ -49,14 +49,14 @@ export default class extends Bridge {
      * It executes the mapping between the service parameters and the values in the CDT.
      * Then compose the query and invoke the service
      * @param descriptor The service description
-     * @param paramNodes The parameter nodes of the CDT
+     * @param decoratedCdt The parameter nodes of the CDT
      * @param paginationArgs Define the starting point for pagination and how many pages retrieve, if they are available
      * @returns {Promise|Request|Promise.<T>} The promise with the service responses
      */
-    executeQuery (descriptor, paramNodes, paginationArgs) {
+    executeQuery (descriptor, decoratedCdt, paginationArgs) {
         const startTime = process.hrtime()
         return this
-            ._parameterMapping(descriptor, paramNodes)
+            ._parameterMapping(descriptor, decoratedCdt)
             .then(params => {
                 return this._invokeService(descriptor, params, paginationArgs)
             })
@@ -70,7 +70,7 @@ export default class extends Bridge {
     /**
      * Map the service parameters to the values derived from the CDT
      * @param descriptor The service description
-     * @param paramNodes The list of parameter nodes of the CDT
+     * @param decoratedCdt The list of parameter nodes of the CDT
      * @returns {bluebird|exports|module.exports} The mapped parameters
      * These object are composed as follow:
      * {
@@ -79,9 +79,10 @@ export default class extends Bridge {
      * }
      * @private
      */
-    _parameterMapping (descriptor, paramNodes) {
+    _parameterMapping (descriptor, decoratedCdt) {
         return new Promise((resolve, reject) => {
             let params = []
+            let nodes = _.concat(decoratedCdt.filterNodes, decoratedCdt.parameterNodes)
             _(descriptor.parameters).forEach(p => {
                 if (_.isEmpty(p.mappingCDT)) {
                     //use default value if the parameter is required and no mapping on the CDT was added
@@ -115,8 +116,13 @@ export default class extends Bridge {
                             break
                     }
                     _(p.mappingCDT).forEach(m => {
-                        let v = this._searchMapping(paramNodes, m)
-                        if (!_.isEmpty(v)) {
+                        //search value in the CDT
+                        let v = this._searchMapping(nodes, m)
+                        if (!_.isUndefined(v)) {
+                            //if needed translate the acquired value
+                            if (_(p).has('translate') && !_.isEmpty(p.translate)) {
+                                v = this._translateValue(v, p.translate)
+                            }
                             if (_.isEmpty(values)) {
                                 values = v
                             } else {
@@ -160,6 +166,24 @@ export default class extends Bridge {
             }
             return obj.value
         }
+    }
+
+    /**
+     * Translate a value into another, based on mapping rule.
+     * A mapping rule consist in objects with the fileds 'from' and 'to', where 'from' is the value to be searched
+     * and 'to' is the output value
+     * @param {String} value - The current value
+     * @param {Array} rules - The list of translation rules
+     * @returns {String} The translated value, or the original value if no mappings are found
+     * @private
+     */
+    _translateValue (value, rules) {
+        for (let rule of rules) {
+            if (rule.from === value) {
+                return rule.to
+            }
+        }
+        return value
     }
 
     /**

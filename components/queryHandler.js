@@ -65,7 +65,7 @@ export default class {
                 //add the ranking value
                 service.service.rank = _(services).find(s => s._idOperation.equals(service._id)).rank
                 //make call to the current service
-                return this._callService(service, decoratedCdt.parameterNodes)
+                return this._callService(service, decoratedCdt)
             })
             //merge the results
             .reduce((a, b) => {
@@ -81,17 +81,17 @@ export default class {
     /**
      * Call the correct service's bridge and transform the response to make an array of items
      * @param descriptor The service description
-     * @param params The list of parameters from the CDT
+     * @param decoratedCdt The list of parameters from the CDT
      * @returns {Promise.<T>} The list of the responses, in order of service ranking
      * @private
      */
-    _callService (descriptor, params) {
+    _callService (descriptor, decoratedCdt) {
         let promise
         //check if the protocol of the current service is 'rest' o 'query'
         if (descriptor.service.protocol === 'rest' || descriptor.service.protocol === 'query') {
             //use the rest bridge
             const paginationArgs = {}
-            promise = this._restBridge.executeQuery(descriptor, params, paginationArgs)
+            promise = this._restBridge.executeQuery(descriptor, decoratedCdt, paginationArgs)
         } else if (descriptor.service.protocol === 'custom') {
             //call the custom bridge
             //check if a bridge name is defined
@@ -101,7 +101,7 @@ export default class {
                     .import(this._bridgeFolder + descriptor.bridgeName)
                     .then(Module => {
                         const module = new Module.default()
-                        return module.executeQuery(params)
+                        return module.executeQuery(decoratedCdt)
                     })
             } else {
                 console.log('ERROR: The service \'' + descriptor.service.name + '\' must define a custom bridge')
