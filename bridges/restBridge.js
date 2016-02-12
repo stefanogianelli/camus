@@ -17,19 +17,17 @@ export default class extends Bridge {
     constructor () {
         super()
         //timeout for the requests (in ms)
+        this._timeout = 3000
         if (config.has('rest.timeout.service')) {
             this._timeout = config.get('rest.timeout.service')
-        } else {
-            this._timeout = 3000
         }
         //validity time for cache content (in s)
+        this._cacheTTL = 3600
         if (config.has('rest.timeout.cache')) {
             this._cacheTTL = config.get('rest.timeout.cache')
-        } else {
-            this._cacheTTL = 3600
         }
-        //acquire Redis instance
-        this._redis = Provider.getInstance().getRedisInstance()
+        //initialize provider
+        this._provider = Provider.getInstance()
         //initialize debug flag
         this._debug = false
         if (config.has('debug')) {
@@ -239,13 +237,13 @@ export default class extends Bridge {
         const start = process.hrtime()
         return new Promise ((resolve, reject) => {
             //check if a copy of the response exists in the cache
-            this._redis
-                .get(address)
+            this._provider
+                .getRedisValue(address)
                 .then((result) => {
-                    if (this._metricsFlag) {
-                        this._metrics.record('RestBridge', 'accessCache/' + service, 'CACHE', start)
-                    }
                     if (result) {
+                        if (this._metricsFlag) {
+                            this._metrics.record('RestBridge', 'accessCache/' + service, 'CACHE', start)
+                        }
                         //return immediately the cached response
                         return resolve(JSON.parse(result))
                     } else {
@@ -285,7 +283,7 @@ export default class extends Bridge {
                                     response = JSON.parse(res.text)
                                 }
                                 //caching the response (with associated TTL)
-                                this._redis.set(address, res.text, 'EX', this._cacheTTL)
+                                this._provider.setRedisValue(address, res.text, this._cacheTTL)
                                 if (this._metricsFlag) {
                                     this._metrics.record('RestBridge', 'makeCall/' + service, 'EXT', start)
                                 }

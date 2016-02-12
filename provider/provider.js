@@ -89,14 +89,6 @@ export default class Provider {
     }
 
     /**
-     * Return the Redis object
-     * @returns {Object} The Redis instance
-     */
-    getRedisInstance () {
-        return this._redis
-    }
-
-    /**
      * -------------------------------------
      * CDT METHODS
      * -------------------------------------
@@ -542,5 +534,42 @@ export default class Provider {
                 resolve([])
             }
         })
+    }
+
+    /**
+     * -------------------------------------
+     * REDIS METHODS
+     * -------------------------------------
+     */
+
+    /**
+     * Get the value associated to the specified key
+     * @param {String} key - The key to be searched
+     * @returns {Object} The value saved in the cache
+     */
+    getRedisValue (key) {
+        if (_.isNull(key) || _.isUndefined(key)) {
+            throw new Error('Please specify a key to be searched')
+        }
+        return this._redis.get(key)
+    }
+
+    /**
+     * Create a new key and associate the specified value
+     * @param {String} key - The key to be created
+     * @param {Object} value - The value to be associated to the specified key
+     * @param {Number} ttl - The time the key live in the cace
+     */
+    setRedisValue (key, value, ttl) {
+        if (_.isNull(key) || _.isUndefined(key)) {
+            throw new Error('Please specify a key')
+        }
+        if (_.isNull(value) || _.isUndefined(value)) {
+            throw new Error('Please specify a value')
+        }
+        if (!_.isNumber(ttl)) {
+            throw new Error('The ttl must be a number')
+        }
+        this._redis.set(key, value, 'EX', ttl)
     }
 }

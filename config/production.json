@@ -5,8 +5,8 @@
   },
   "rest": {
     "timeout": {
-      "service": "3000",
-      "cache": "3600"
+      "service": 3000,
+      "cache": 3600
     }
   },
   "primaryService": {
