@@ -3,36 +3,11 @@
 import _ from 'lodash'
 import Promise from 'bluebird'
 import agent from 'superagent'
-import Redis from 'ioredis'
 import config from 'config'
 
 import Bridge from './bridge'
+import Provider from '../provider/provider'
 import Metrics from '../utils/MetricsUtils'
-
-//acquire redis configuration
-let address = 'localhost:6379'
-if (!_.isUndefined(process.env.REDIS_URL)) {
-    address = process.env.REDIS_URL
-} else if (config.has('redis.address')) {
-    address = config.get('redis.address')
-}
-
-const redis = new Redis(address)
-
-let debug = false
-if (config.has('debug')) {
-    debug = config.get('debug')
-}
-
-let metricsFlag = false
-if (config.has('metrics')) {
-    metricsFlag = config.get('metrics')
-}
-
-let metrics = null
-if (metricsFlag) {
-    metrics = Metrics.getInstance()
-}
 
 /**
  * REST Bridge
@@ -53,6 +28,22 @@ export default class extends Bridge {
         } else {
             this._cacheTTL = 3600
         }
+        //acquire Redis instance
+        this._redis = Provider.getInstance().getRedisInstance()
+        //initialize debug flag
+        this._debug = false
+        if (config.has('debug')) {
+            this._debug = config.get('debug')
+        }
+        //initialize metrics utility
+        this._metricsFlag = false
+        if (config.has('metrics')) {
+            this._metricsFlag = config.get('metrics')
+        }
+        this._metrics = null
+        if (this._metricsFlag) {
+            this._metrics = Metrics.getInstance()
+        }
     }
 
     /**
@@ -72,8 +63,8 @@ export default class extends Bridge {
                 return this._invokeService(descriptor, params, paginationArgs)
             })
             .finally(() => {
-                if (metricsFlag) {
-                    metrics.record('RestBridge', 'executeQuery/' + descriptor.service.name, 'MAIN', startTime)
+                if (this._metricsFlag) {
+                    this._metrics.record('RestBridge', 'executeQuery/' + descriptor.service.name, 'MAIN', startTime)
                 }
             })
     }
@@ -217,7 +208,7 @@ export default class extends Bridge {
         if (currentPageAddress) {
             fullAddress += querySymbols.separator + currentPageAddress
         }
-        if (debug) {
+        if (this._debug) {
             console.log('Querying service \'' + descriptor.service.name + '\': ' + fullAddress)
         }
         return this
@@ -225,8 +216,8 @@ export default class extends Bridge {
             .then(response => {
                 //acquire next page information
                 let {hasNextPage, nextPage} = this._getPaginationStatus(descriptor, startPage, response)
-                if (metricsFlag) {
-                    metrics.record('RestBridge', 'invokeService/' + descriptor.service.name, 'FUN', start)
+                if (this._metricsFlag) {
+                    this._metrics.record('RestBridge', 'invokeService/' + descriptor.service.name, 'FUN', start)
                 }
                 return {
                     hasNextPage: hasNextPage,
@@ -248,11 +239,11 @@ export default class extends Bridge {
         const start = process.hrtime()
         return new Promise ((resolve, reject) => {
             //check if a copy of the response exists in the cache
-            redis
+            this._redis
                 .get(address)
                 .then((result) => {
-                    if (metricsFlag) {
-                        metrics.record('RestBridge', 'accessCache/' + service, 'CACHE', start)
+                    if (this._metricsFlag) {
+                        this._metrics.record('RestBridge', 'accessCache/' + service, 'CACHE', start)
                     }
                     if (result) {
                         //return immediately the cached response
@@ -294,9 +285,9 @@ export default class extends Bridge {
                                     response = JSON.parse(res.text)
                                 }
                                 //caching the response (with associated TTL)
-                                redis.set(address, res.text, 'EX', this._cacheTTL)
-                                if (metricsFlag) {
-                                    metrics.record('RestBridge', 'makeCall/' + service, 'EXT', start)
+                                this._redis.set(address, res.text, 'EX', this._cacheTTL)
+                                if (this._metricsFlag) {
+                                    this._metrics.record('RestBridge', 'makeCall/' + service, 'EXT', start)
                                 }
                                 return resolve(response)
                             }

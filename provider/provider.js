@@ -4,18 +4,9 @@ import _ from 'lodash'
 import mongoose from 'mongoose'
 import Promise from 'bluebird'
 import config from 'config'
+import Redis from 'ioredis'
 
 import Metrics from '../utils/MetricsUtils'
-
-let metricsFlag = false
-if (config.has('metrics')) {
-    metricsFlag = config.get('metrics')
-}
-
-let metrics = null
-if (metricsFlag) {
-    metrics = Metrics.getInstance()
-}
 
 //load the models
 import {
@@ -33,49 +24,75 @@ import {
 } from '../models/mongoose/supportServiceAssociation'
 import userModel from '../models/mongoose/user'
 
-//radius for the coordinate search
-const _radius = 1500
-let instance = null
-
 const ObjectId = mongoose.Types.ObjectId;
+
+let instance = null
 
 /**
  * Provider
  */
-export default class {
+export default class Provider {
 
     /**
      * Create the instance
      * @constructor
      */
     constructor () {
+        //acquire db address. The environment variable address have the precedence over the configuration one
+        this._dbUrl = null
+        if (!_.isUndefined(process.env.MONGOLAB_URI) || !_.isUndefined(process.env.MONGO_URI)) {
+            this._dbUrl = process.env.MONGOLAB_URI || process.env.MONGO_URI
+        } else if (config.has('database.address')) {
+            this._dbUrl = config.get('database.address')
+        } else {
+            throw Error('[ERROR] No database URL defined in the config file!')
+        }
+        //connect to the db
+        mongoose.connect(this._dbUrl)
+        console.log('[INFO] Successfully connected to the database')
+        //define error logging
+        mongoose.connection.on('error', function (err) {
+            console.log('[ERROR] Mongoose default connection error: ' + err)
+        })
+        //acquire redis configuration
+        this._redisAddress = 'localhost:6379'
+        if (!_.isUndefined(process.env.REDIS_URL)) {
+            this._redisAddress = process.env.REDIS_URL
+        } else if (config.has('redis.address')) {
+            this._redisAddress = config.get('redis.address')
+        }
+        //initialize redis connection
+        this._redis = new Redis(this._redisAddress)
+        //initialize metrics utility
+        this._metricsFlag = false
+        if (config.has('metrics')) {
+            this._metricsFlag = config.get('metrics')
+        }
+        this._metrics = null
+        if (this._metricsFlag) {
+            this._metrics = Metrics.getInstance()
+        }
+        //radius for the coordinate search
+        this._radius = 1500
+    }
+
+    /**
+     * Return the Provider object
+     * @returns {Object} The Provider instance
+     */
+    static getInstance () {
         if (!instance) {
-            mongoose.connection.on('error', function (err) {
-                console.log('[ERROR] Mongoose default connection error: ' + err)
-            })
-            instance = this
+            instance = new Provider()
         }
         return instance
     }
 
     /**
-     * Create a connection to MongoDB
-     * @param {String} url - The database url
+     * Return the Redis object
+     * @returns {Object} The Redis instance
      */
-    createConnection (url) {
-        if (!_.isUndefined(url)) {
-            mongoose.connect(url)
-            console.log('[INFO] Successfully connected to the database')
-        } else {
-            throw Error('No database URL specified')
-        }
-    }
-
-    /**
-     * Close the connection with MongoDB
-     */
-    closeConnection () {
-        mongoose.connection.close()
+    getRedisInstance () {
+        return this._redis
     }
 
     /**
@@ -101,8 +118,8 @@ export default class {
                         reject(err)
                     }
                     if (results.length === 1) {
-                        if (metricsFlag) {
-                            metrics.record('Provider', 'getCdtById', 'DB', start)
+                        if (this._metricsFlag) {
+                            this._metrics.record('Provider', 'getCdtById', 'DB', start)
                         }
                         resolve(results[0])
                     } else {
@@ -128,8 +145,8 @@ export default class {
                         reject(err)
                     }
                     if (results.length === 1) {
-                        if (metricsFlag) {
-                            metrics.record('Provider', 'getCdtByUser', 'DB', start)
+                        if (this._metricsFlag) {
+                            this._metrics.record('Provider', 'getCdtByUser', 'DB', start)
                         }
                         resolve(results[0])
                     } else {
@@ -144,8 +161,8 @@ export default class {
                                     reject(err)
                                 }
                                 if (results.length === 1) {
-                                    if (metricsFlag) {
-                                        metrics.record('Provider', 'getCdtByUser', 'DB', start)
+                                    if (this._metricsFlag) {
+                                        this._metrics.record('Provider', 'getCdtByUser', 'DB', start)
                                     }
                                     resolve(results[0].globalId)
                                 } else {
@@ -174,8 +191,8 @@ export default class {
                         reject(err)
                     }
                     if (results.length === 1) {
-                        if (metricsFlag) {
-                            metrics.record('Provider', 'getGlobalCdt', 'DB', start)
+                        if (this._metricsFlag) {
+                            this._metrics.record('Provider', 'getGlobalCdt', 'DB', start)
                         }
                         resolve(results[0].globalId)
                     } else {
@@ -210,8 +227,8 @@ export default class {
                         if (err) {
                             reject(err)
                         }
-                        if (metricsFlag) {
-                            metrics.record('Provider', 'getServiceByOperationId', 'DB', start)
+                        if (this._metricsFlag) {
+                            this._metrics.record('Provider', 'getServiceByOperationId', 'DB', start)
                         }
                         resolve(results[0])
                     })
@@ -239,8 +256,8 @@ export default class {
                         if (err) {
                             reject(err)
                         }
-                        if (metricsFlag) {
-                            metrics.record('Provider', 'getServicesByOperationIds', 'DB', start)
+                        if (this._metricsFlag) {
+                            this._metrics.record('Provider', 'getServicesByOperationIds', 'DB', start)
                         }
                         resolve(results)
                     })
@@ -289,8 +306,8 @@ export default class {
                         if (err) {
                             reject(err)
                         }
-                        if (metricsFlag) {
-                            metrics.record('Provider', 'filterPrimaryServices', 'DB', start)
+                        if (this._metricsFlag) {
+                            this._metrics.record('Provider', 'filterPrimaryServices', 'DB', start)
                         }
                         resolve(results)
                     })
@@ -309,7 +326,7 @@ export default class {
     searchPrimaryByCoordinates (idCdt, node) {
         const start = process.hrtime()
         return new Promise ((resolve, reject) => {
-            const radius = _radius / 6371
+            const radius = this._radius / 6371
             const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value')
             const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value')
             if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
@@ -326,8 +343,8 @@ export default class {
                         if (err) {
                             reject(err)
                         }
-                        if (metricsFlag) {
-                            metrics.record('Provider', 'searchPrimaryByCoordinates', 'DB', start)
+                        if (this._metricsFlag) {
+                            this._metrics.record('Provider', 'searchPrimaryByCoordinates', 'DB', start)
                         }
                         resolve(results)
                     })
@@ -375,8 +392,8 @@ export default class {
                         if (err) {
                             reject(err)
                         }
-                        if (metricsFlag) {
-                            metrics.record('Provider', 'filterSupportServices', 'DB', start)
+                        if (this._metricsFlag) {
+                            this._metrics.record('Provider', 'filterSupportServices', 'DB', start)
                         }
                         resolve(results)
                     })
@@ -404,8 +421,8 @@ export default class {
                        if (err) {
                            reject(err)
                        }
-                       if (metricsFlag) {
-                           metrics.record('Provider', 'getServicesConstraintCount', 'DB', start)
+                       if (this._metricsFlag) {
+                           this._metrics.record('Provider', 'getServicesConstraintCount', 'DB', start)
                        }
                        resolve(results)
                    })
@@ -424,7 +441,7 @@ export default class {
     searchSupportByCoordinates (idCdt, node) {
         const start = process.hrtime()
         return new Promise ((resolve, reject) => {
-            const radius = _radius / 6371
+            const radius = this._radius / 6371
             const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value')
             const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value')
             if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
@@ -441,8 +458,8 @@ export default class {
                         if (err) {
                             reject(err)
                         }
-                        if (metricsFlag) {
-                            metrics.record('Provider', 'searchSupportByCoordinates', 'DB', start)
+                        if (this._metricsFlag) {
+                            this._metrics.record('Provider', 'searchSupportByCoordinates', 'DB', start)
                         }
                         resolve(results)
                     })
@@ -477,8 +494,8 @@ export default class {
                             reject(err)
                         }
                         if (user.length === 1) {
-                            if (metricsFlag) {
-                                metrics.record('Provider', 'getUser', 'DB', start)
+                            if (this._metricsFlag) {
+                                this._metrics.record('Provider', 'getUser', 'DB', start)
                             }
                             resolve(user[0])
                         } else {
@@ -513,8 +530,8 @@ export default class {
                             reject(err)
                         }
                         if (results.length === 1) {
-                            if (metricsFlag) {
-                                metrics.record('Provider', 'checkUserLogin', 'DB', start)
+                            if (this._metricsFlag) {
+                                this._metrics.record('Provider', 'checkUserLogin', 'DB', start)
                             }
                             resolve(true)
                         } else {

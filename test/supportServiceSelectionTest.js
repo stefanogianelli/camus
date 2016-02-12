@@ -5,22 +5,18 @@ import assert from 'assert'
 import SupportServiceSelection from '../components/supportServiceSelection'
 import * as mockData from './mockModel'
 import MockDatabase from './mockDatabaseCreator'
-import Provider from '../provider/provider'
 
 const supportServiceSelection = new SupportServiceSelection()
 const mockDatabase = new MockDatabase()
-const provider = new Provider()
 
-let _idCDT
+let _idCDT = null
 
 describe('Component: SupportServiceSelection', () => {
 
     before(function(done) {
-        provider.createConnection('mongodb://localhost/camus_test')
         mockDatabase.createDatabase((err, idCDT) => {
-            assert.equal(err, null)
             _idCDT = idCDT
-            done()
+            done(err)
         })
     })
 
@@ -63,7 +59,6 @@ describe('Component: SupportServiceSelection', () => {
     after(function (done) {
         mockDatabase.deleteDatabase(err => {
             assert.equal(err, null)
-            provider.closeConnection()
             done()
         })
     })

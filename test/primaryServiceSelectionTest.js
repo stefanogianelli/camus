@@ -8,22 +8,20 @@ import Provider from '../provider/provider'
 
 const serviceManager = new ServiceManager()
 const mockDatabase = new MockDatabase()
-const provider = new Provider()
+const provider = Provider.getInstance()
 
-let _idCDT
-let _idNestedCDT
-let _idMultipleSonCDT
+let _idCDT = null
+let _idNestedCDT = null
+let _idMultipleSonCDT = null
 
 describe('Component: PrimaryServiceSelection', () => {
 
     before(function(done) {
-        provider.createConnection('mongodb://localhost/camus_test')
         mockDatabase.createDatabase((err, idCDT, idNestedCDT, idMultipleSonCDT) => {
-            assert.equal(err, null)
             _idCDT = idCDT
             _idNestedCDT = idNestedCDT
             _idMultipleSonCDT = idMultipleSonCDT
-            done()
+            done(err)
         })
     })
 
@@ -108,9 +106,7 @@ describe('Component: PrimaryServiceSelection', () => {
 
     after(done => {
         mockDatabase.deleteDatabase(err => {
-            assert.equal(err, null)
-            provider.closeConnection()
-            done()
+            done(err)
         })
     })
 })

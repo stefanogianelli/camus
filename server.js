@@ -7,7 +7,6 @@ import config from 'config'
 import _ from 'lodash'
 
 import DatabaseHelper from'./databaseHelper'
-import Provider from './provider/provider'
 
 import {
     camusSchema
@@ -17,7 +16,6 @@ import {
     prepareResponse
 } from './components/executionHelper'
 
-const provider = new Provider()
 const databaseHelper = new DatabaseHelper()
 
 const app = express()
@@ -79,19 +77,8 @@ if (!_.isUndefined(process.env.PORT)) {
 }
 app.set('port', port)
 
-let dbUrl = ''
-if (!_.isUndefined(process.env.MONGOLAB_URI)) {
-    dbUrl = process.env.MONGOLAB_URI
-} else if (config.has('database.address')) {
-    dbUrl = config.get('database.address')
-} else {
-    throw Error('[ERROR] No database URL defined in the config file!')
-}
-
 //start the server
 app.listen(app.get('port'), () => {
-    //connect to the DB
-    provider.createConnection(dbUrl)
     //print the server stats
     console.log('[INFO] Server listening on port ' + port)
     const debugStatus = config.get('debug') ? 'on' : 'off'

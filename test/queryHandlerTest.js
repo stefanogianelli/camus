@@ -6,23 +6,19 @@ import MockDatabase from './mockDatabaseCreator'
 import * as mockData from './mockModel'
 import ServiceManager from '../components/primaryServiceSelection'
 import QueryHandler from '../components/queryHandler'
-import Provider from '../provider/provider'
 
 const mockDatabase = new MockDatabase()
 const serviceManager = new ServiceManager()
 const queryHandler = new QueryHandler()
-const provider = new Provider()
 
-let _idCDT
+let _idCDT = null
 
 describe('Component: QueryHandler', () => {
 
     before(function(done) {
-        provider.createConnection('mongodb://localhost/camus_test')
         mockDatabase.createDatabase((err, idCDT) => {
-            assert.equal(err, null)
             _idCDT = idCDT
-            done()
+            done(err)
         })
     })
 
@@ -65,9 +61,7 @@ describe('Component: QueryHandler', () => {
 
     after(done => {
         mockDatabase.deleteDatabase(err => {
-            assert.equal(err, null)
-            provider.closeConnection()
-            done()
+            done(err)
         })
     })
 

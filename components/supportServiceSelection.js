@@ -7,22 +7,24 @@ import config from 'config'
 import Provider from '../provider/provider'
 import Metrics from '../utils/MetricsUtils'
 
-const provider = new Provider()
-
-let metricsFlag = false
-if (config.has('metrics')) {
-    metricsFlag = config.get('metrics')
-}
-
-let metrics = null
-if (metricsFlag) {
-    metrics = Metrics.getInstance()
-}
-
 /**
  * SupportServiceSelection
  */
 export default class {
+
+    constructor () {
+        //initialize provider
+        this._provider = Provider.getInstance()
+        //initialize metrics utility
+        this._metricsFlag = false
+        if (config.has('metrics')) {
+            this._metricsFlag = config.get('metrics')
+        }
+        this._metrics = null
+        if (this._metricsFlag) {
+            this._metrics = Metrics.getInstance()
+        }
+    }
 
     /**
      * Create the list of support services associated to the current context
@@ -38,8 +40,8 @@ export default class {
                 return []
             })
             .finally(() => {
-                if (metricsFlag) {
-                    metrics.record('SupportServiceSelection', 'selectServices', 'MAIN', startTime)
+                if (this._metricsFlag) {
+                    this._metrics.record('SupportServiceSelection', 'selectServices', 'MAIN', startTime)
                 }
             })
     }
@@ -62,22 +64,24 @@ export default class {
                 .map(categories, c => {
                     return Promise
                         .join(
-                            provider.filterSupportServices(decoratedCdt._id, c, nodes),
+                            this._provider.filterSupportServices(decoratedCdt._id, c, nodes),
                             this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes),
                             (filterServices, customServices) => {
-                                if (metricsFlag) {
-                                    metrics.record('SupportServiceSelection', 'getAssociations', 'DB', start)
+                                if (this._metricsFlag) {
+                                    this._metrics.record('SupportServiceSelection', 'getAssociations', 'DB', start)
                                 }
                                 //acquire constraint count information
                                 const ids = _(filterServices).unionWith(customServices, (arrVal, othVal) => arrVal._idOperation.equals(othVal._idOperation)).value()
-                                return provider
+                                return this._provider
                                     .getServicesConstraintCount(decoratedCdt._id, c, _.map(ids, '_idOperation'))
                                     .then(constraintCount => {
                                         return this._mergeResults(filterServices, customServices, constraintCount)
                                     })
                             }
                         )
-                        .then(provider.getServicesByOperationIds)
+                        .then(identifiers => {
+                            return this._provider.getServicesByOperationIds(identifiers)
+                        })
                         .then(services => {
                             //compose the queries
                             return this._composeQueries(services, c)
@@ -127,8 +131,8 @@ export default class {
             .filter(r => (r.count === maxCount && r.constraintCount === r.count))
             .map('_idOperation')
             .value()
-        if (metricsFlag) {
-            metrics.record('SupportServiceSelection', 'mergeResults', 'FUN', start)
+        if (this._metricsFlag) {
+            this._metrics.record('SupportServiceSelection', 'mergeResults', 'FUN', start)
         }
         return results
     }
@@ -245,6 +249,6 @@ export default class {
      * @private
      */
     _searchByCoordinates (idCdt, node) {
-        return provider.searchSupportByCoordinates(idCdt, node)
+        return this._provider.searchSupportByCoordinates(idCdt, node)
     }
 }

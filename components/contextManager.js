@@ -7,22 +7,24 @@ import config from 'config'
 import Provider from '../provider/provider'
 import Metrics from '../utils/MetricsUtils'
 
-const provider = new Provider()
-
-let metricsFlag = false
-if (config.has('metrics')) {
-    metricsFlag = config.get('metrics')
-}
-
-let metrics = null
-if (metricsFlag) {
-    metrics = Metrics.getInstance()
-}
-
 /**
  * ContextManager
  */
 export default class {
+    
+    constructor () {
+        //initialize provider
+        this._provider = Provider.getInstance()
+        //initialize metrics utility
+        this._metricsFlag = false
+        if (config.has('metrics')) {
+            this._metricsFlag = config.get('metrics')
+        }
+        this._metrics = null
+        if (this._metricsFlag) {
+            this._metrics = Metrics.getInstance()
+        }
+    }
 
     /**
      * It takes as input the user's context and transform it into the decorated one.
@@ -69,8 +71,8 @@ export default class {
                     )
             })
             .finally(() => {
-                if (metricsFlag) {
-                    metrics.record('ContextManager', 'getDecoratedCdt', 'MAIN', startTime)
+                if (this._metricsFlag) {
+                    this._metrics.record('ContextManager', 'getDecoratedCdt', 'MAIN', startTime)
                 }
             })
     }
@@ -84,11 +86,11 @@ export default class {
      */
     _mergeCdtAndContext (context) {
         const startTime = process.hrtime()
-        return provider
+        return this._provider
             .getCdtById(context._id)
             .then(cdt => {
-                if (metricsFlag) {
-                    metrics.record('ContextManager', 'getCdt', 'DB', startTime)
+                if (this._metricsFlag) {
+                    this._metrics.record('ContextManager', 'getCdt', 'DB', startTime)
                 }
                 //create the map of user context values
                 let mapContext = this._createMap(context.context)
@@ -105,8 +107,8 @@ export default class {
                 return {cdt, mergedCdt}
             })
             .finally(() => {
-                if (metricsFlag) {
-                    metrics.record('ContextManager', 'mergeCdtAndContext', 'FUN', startTime)
+                if (this._metricsFlag) {
+                    this._metrics.record('ContextManager', 'mergeCdtAndContext', 'FUN', startTime)
                 }
             })
     }
@@ -217,8 +219,8 @@ export default class {
     _getFilterNodes (mergedCdt) {
         const startTime = process.hrtime()
         let results = this._getNodes('filter', mergedCdt, false)
-        if (metricsFlag) {
-            metrics.record('ContextManager', 'getFilterNodes', 'FUN', startTime)
+        if (this._metricsFlag) {
+            this._metrics.record('ContextManager', 'getFilterNodes', 'FUN', startTime)
         }
         return results
     }
@@ -232,8 +234,8 @@ export default class {
     _getRankingNodes (mergedCdt) {
         const startTime = process.hrtime()
         let results = this._getNodes('ranking', mergedCdt, false)
-        if (metricsFlag) {
-            metrics.record('ContextManager', 'getRankingNodes', 'FUN', startTime)
+        if (this._metricsFlag) {
+            this._metrics.record('ContextManager', 'getRankingNodes', 'FUN', startTime)
         }
         return results
     }
@@ -250,8 +252,8 @@ export default class {
             this._getNodes('parameter', mergedCdt, false),
             this._getNodes('parameter', mergedCdt, true)
         )
-        if (metricsFlag) {
-            metrics.record('ContextManager', 'getParameterNodes', 'FUN', startTime)
+        if (this._metricsFlag) {
+            this._metrics.record('ContextManager', 'getParameterNodes', 'FUN', startTime)
         }
         return results
     }
@@ -266,8 +268,8 @@ export default class {
     _getSpecificNodes (mergedCdt) {
         const startTime = process.hrtime()
         let results = this._getNodes('ranking', mergedCdt, true)
-        if (metricsFlag) {
-            metrics.record('ContextManager', 'getSpecificNodes', 'FUN', startTime)
+        if (this._metricsFlag) {
+            this._metrics.record('ContextManager', 'getSpecificNodes', 'FUN', startTime)
         }
         return results
     }
@@ -364,8 +366,8 @@ export default class {
                 })
             }
         })
-        if (metricsFlag) {
-            metrics.record('ContextManager', 'getDescendants', 'FUN', startTime)
+        if (this._metricsFlag) {
+            this._metrics.record('ContextManager', 'getDescendants', 'FUN', startTime)
         }
         return output
     }

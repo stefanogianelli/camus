@@ -6,20 +6,22 @@ import config from 'config'
 
 import Metrics from '../utils/MetricsUtils'
 
-let metricsFlag = false
-if (config.has('metrics')) {
-    metricsFlag = config.get('metrics')
-}
-
-let metrics = null
-if (metricsFlag) {
-    metrics = Metrics.getInstance()
-}
-
 /**
  * TransformResponse
  */
 export default class {
+
+    constructor () {
+        //initialize metrics utility
+        this._metricsFlag = false
+        if (config.has('metrics')) {
+            this._metricsFlag = config.get('metrics')
+        }
+        this._metrics = null
+        if (this._metricsFlag) {
+            this._metrics = Metrics.getInstance()
+        }
+    }
 
     /**
      * It transforms the response of the service to make it in internal representation
@@ -52,8 +54,8 @@ export default class {
                 })
                 //execute custom functions on items (if defined)
                 transformedResponse = this._executeFunctions(transformedResponse, descriptor)
-                if (metricsFlag) {
-                    metrics.record('TransformResponse', 'mappingResponse', 'MAIN', start)
+                if (this._metricsFlag) {
+                    this._metrics.record('TransformResponse', 'mappingResponse', 'MAIN', start)
                 }
                 resolve(transformedResponse)
             } catch (e) {

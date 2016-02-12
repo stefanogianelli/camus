@@ -6,26 +6,22 @@ import Promise from 'bluebird'
 import ContextManager from '../components/contextManager'
 import MockDatabase from './mockDatabaseCreator'
 import * as mockModel from './mockModel'
-import Provider from '../provider/provider'
 
 const contextManager = new ContextManager()
 const mockDatabase = new MockDatabase()
-const provider = new Provider()
 
-let _idCDT
-let _nestedCDT
-let _multipleSonsCDT
+let _idCDT = null
+let _nestedCDT = null
+let _multipleSonsCDT = null
 
 describe('Component: ContextManager', () => {
 
     before(done => {
-        provider.createConnection('mongodb://localhost/camus_test')
         mockDatabase.createDatabase((err, idCDT, nestedCDT, multipleSonsCDT) => {
-            assert.equal(err, null)
             _idCDT = idCDT
             _nestedCDT = nestedCDT
             _multipleSonsCDT = multipleSonsCDT
-            done()
+            done(err)
         })
     })
 
@@ -280,9 +276,7 @@ describe('Component: ContextManager', () => {
 
     after(done => {
         mockDatabase.deleteDatabase(err => {
-            assert.equal(err, null)
-            provider.closeConnection()
-            done()
+            done(err)
         })
     })
 })

@@ -12,19 +12,18 @@ import Provider from '../provider/provider'
 
 const user = new User()
 const mockDatabase = new MockDatabase()
-const provider = new Provider()
+const provider = Provider.getInstance()
 
-let _idCdt = ''
 const ObjectId = mongoose.Types.ObjectId
+
+let _idCdt = null
 
 describe('Component: UserManager', () => {
 
     before(done => {
-        provider.createConnection('mongodb://localhost/camus_test')
-        mockDatabase.createDatabase((err, idCDT, nestedCDT, multipleSonsCDT) => {
-            assert.equal(err, null)
+        mockDatabase.createDatabase((err, idCDT) => {
             _idCdt = idCDT
-            done()
+            done(err)
         })
     })
 
@@ -99,9 +98,7 @@ describe('Component: UserManager', () => {
 
     after(done => {
         mockDatabase.deleteDatabase(err => {
-            assert.equal(err, null)
-            provider.closeConnection()
-            done()
+            done(err)
         })
     })
 

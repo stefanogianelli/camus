@@ -10,21 +10,6 @@ import {
 
 import Metrics from '../utils/MetricsUtils'
 
-let debug = false
-if (config.has('debug')) {
-    debug = config.get('debug')
-}
-
-let metricsFlag = false
-if (config.has('metrics')) {
-    metricsFlag = config.get('metrics')
-}
-
-let metrics = null
-if (metricsFlag) {
-    metrics = Metrics.getInstance()
-}
-
 /**
  * ResponseAggregator
  */
@@ -32,10 +17,24 @@ export default class {
 
     constructor () {
         //this threshold is used for identify a pair of items as similar. Greater value is better (0.9 means 90% similarity)
+        this._threshold = 0.85
         if (config.has('similarity.threshold')) {
             this._threshold = config.get('similarity.threshold')
-        } else {
-            this._threshold = 0.85
+        }
+        //initialize debug flag
+        this._debug = false
+        if (config.has('debug')) {
+            this._debug = config.get('debug')
+        }
+        //initialize metrics utility
+        this._metricsFlag = false
+        if (config.has('metrics')) {
+            this._metricsFlag = config.get('metrics')
+        }
+
+        this._metrics = null
+        if (this._metricsFlag) {
+            this._metrics = Metrics.getInstance()
         }
     }
 
@@ -92,7 +91,7 @@ export default class {
                         const sim = this._calculateObjectSimilarity(items[i], items[j])
                         //if the similarity is greater or equal of the threshold, then merge the two items
                         if (sim >= this._threshold) {
-                            if (debug) {
+                            if (this._debug) {
                                 console.log('Found similar items \'' + items[i].title + '\' and \'' + items[j].title + '\' (' + sim + ')')
                             }
                             //merge the two items
@@ -120,8 +119,8 @@ export default class {
                 output.push(items[0])
             }
         })
-        if (metricsFlag) {
-            metrics.record('ResponseAggregator', 'findSimilarities', 'MAIN', startTime)
+        if (this._metricsFlag) {
+            this._metrics.record('ResponseAggregator', 'findSimilarities', 'MAIN', startTime)
         }
         return output
     }

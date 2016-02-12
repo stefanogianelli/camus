@@ -10,20 +10,6 @@ import Provider from '../provider/provider'
 import TransformResponse from './transformResponse'
 import Metrics from '../utils/MetricsUtils'
 
-const restBridge = new RestBridge()
-const provider = new Provider()
-const transformResponse = new TransformResponse()
-
-let metricsFlag = false
-if (config.has('metrics')) {
-    metricsFlag = config.get('metrics')
-}
-
-let metrics = null
-if (metricsFlag) {
-    metrics = Metrics.getInstance()
-}
-
 System.config({
     baseURL: '../',
     transpiler: 'traceur',
@@ -42,6 +28,20 @@ export default class {
     constructor () {
         //shortcut to the bridges folder
         this._bridgeFolder = '../server/bridges/'
+        //initialize components
+        this._restBridge = new RestBridge()
+        this._provider = Provider.getInstance()
+        this._transformResponse = new TransformResponse()
+        //initialize metrics utility
+        this._metricsFlag = false
+        if (config.has('metrics')) {
+            this._metricsFlag = config.get('metrics')
+        }
+
+        this._metrics = null
+        if (this._metricsFlag) {
+            this._metrics = Metrics.getInstance()
+        }
     }
 
     /**
@@ -57,11 +57,11 @@ export default class {
             return Promise.resolve()
         }
         const startTime = process.hrtime()
-        return provider
+        return this._provider
             .getServicesByOperationIds(_.map(services, '_idOperation'))
             .map(service => {
-                if (metricsFlag) {
-                    metrics.record('QueryHandler', 'getDescriptions', 'DB', startTime)
+                if (this._metricsFlag) {
+                    this._metrics.record('QueryHandler', 'getDescriptions', 'DB', startTime)
                 }
                 //add the ranking value
                 service.service.rank = _(services).find(s => s._idOperation.equals(service._id)).rank
@@ -73,8 +73,8 @@ export default class {
                 return _.concat(a,b)
             })
             .finally(() => {
-                if (metricsFlag) {
-                    metrics.record('QueryHandler', 'executeQueries', 'MAIN', startTime)
+                if (this._metricsFlag) {
+                    this._metrics.record('QueryHandler', 'executeQueries', 'MAIN', startTime)
                 }
             })
     }
@@ -92,7 +92,7 @@ export default class {
         if (descriptor.service.protocol === 'rest' || descriptor.service.protocol === 'query') {
             //use the rest bridge
             const paginationArgs = {}
-            promise = restBridge.executeQuery(descriptor, params, paginationArgs)
+            promise = this._restBridge.executeQuery(descriptor, params, paginationArgs)
         } else if (descriptor.service.protocol === 'custom') {
             //call the custom bridge
             //check if a bridge name is defined
@@ -112,11 +112,11 @@ export default class {
         const start = process.hrtime()
         return promise
             .then(response => {
-                if (metricsFlag) {
-                    metrics.record('QueryHandler', 'bridgeExecution', 'FUN', start)
+                if (this._metricsFlag) {
+                    this._metrics.record('QueryHandler', 'bridgeExecution', 'FUN', start)
                 }
                 //transform the response
-                return transformResponse.mappingResponse(response.response, descriptor)
+                return this._transformResponse.mappingResponse(response.response, descriptor)
             })
             .catch(e => {
                 console.log('[' + descriptor.service.name + '] ' + e)

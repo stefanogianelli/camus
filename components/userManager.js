@@ -5,9 +5,11 @@ import Promise from 'bluebird'
 
 import Provider from '../provider/provider'
 
-const provider = new Provider()
-
 export default class {
+
+    constructor () {
+        this._provider = Provider.getInstance()
+    }
 
     /**
      * Check if the specified mail and password correspond to a valid user.
@@ -19,7 +21,7 @@ export default class {
     login (mail, password) {
         return new Promise ((resolve, reject) => {
             //check the correctness of the input data
-            provider
+            this._provider
                 .getUser(mail, password)
                 .then(user => {
                     //create and update the session token
@@ -48,11 +50,11 @@ export default class {
      */
     getPersonalData (id, token) {
         //check if the user is correctly logged in
-        return provider
+        return this._provider
             .checkUserLogin(id, token)
             .then(() => {
                 //retrieve the user CDT
-                return provider.getCdtByUser(id)
+                return this._provider.getCdtByUser(id)
             })
     }
 
