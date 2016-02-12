@@ -171,56 +171,26 @@ describe('Component: ContextManager', () => {
     })
 
     describe('#getNodes()', () => {
-        /*it('check empty list when no nodes are selected', () => {
-            return Promise
-                .join(
-                    contextManager
-                        ._getFilterNodes(onlyParameter(_idCDT).context)
-                        .then(results => {
-                            assert.equal(results.length, 0)
-                        }),
-                    contextManager
-                        ._getFilterNodes(onlyRanking(_idCDT).context)
-                        .then(results => {
-                            assert.equal(results.length, 0)
-                        }),
-                    contextManager
-                        ._getParameterNodes(onlyFilter(_idCDT).context)
-                        .then(results => {
-                            assert.equal(results.length, 0)
-                        }),
-                    contextManager
-                        ._getParameterNodes(onlyRanking(_idCDT).context)
-                        .then(results => {
-                            assert.equal(results.length, 0)
-                        }),
-                    contextManager
-                        ._getRankingNodes(onlyFilter(_idCDT).context)
-                        .then(results => {
-                            assert.equal(results.length, 0)
-                        }),
-                    contextManager
-                        ._getRankingNodes(onlyParameter(_idCDT).context)
-                        .then(results => {
-                            assert.equal(results.length, 0)
-                        }),
-                    contextManager
-                        ._getSpecificNodes(onlyFilter(_idCDT).context)
-                        .then(results => {
-                            assert.equal(results.length, 0)
-                        }),
-                    contextManager
-                        ._getSpecificNodes(onlyParameter(_idCDT).context)
-                        .then(results => {
-                            assert.equal(results.length, 0)
-                        }),
-                    contextManager
-                        ._getSpecificNodes(onlyRanking(_idCDT).context)
-                        .then(results => {
-                            assert.equal(results.length, 0)
-                        })
-                )
-        })*/
+        it('check empty list when no nodes are selected', () => {
+            let results = contextManager._getFilterNodes(onlyParameter(_idCDT).context)
+            assert.equal(results.length, 0)
+            results = contextManager._getFilterNodes(onlyRanking(_idCDT).context)
+            assert.equal(results.length, 0)
+            results = contextManager._getParameterNodes(onlyFilter(_idCDT).context)
+            assert.equal(results.length, 0)
+            results = contextManager._getParameterNodes(onlyRanking(_idCDT).context)
+            assert.equal(results.length, 0)
+            results = contextManager._getRankingNodes(onlyFilter(_idCDT).context)
+            assert.equal(results.length, 0)
+            results = contextManager._getRankingNodes(onlyParameter(_idCDT).context)
+            assert.equal(results.length, 0)
+            results = contextManager._getSpecificNodes(onlyFilter(_idCDT).context)
+            assert.equal(results.length, 0)
+            results = contextManager._getSpecificNodes(onlyParameter(_idCDT).context)
+            assert.equal(results.length, 0)
+            results = contextManager._getSpecificNodes(onlyRanking(_idCDT).context)
+            assert.equal(results.length, 0)
+        })
         it('check error when an invalid type is selected', () => {
             try {
                 contextManager._getNodes('invalid', onlyFilter(_idCDT).context, false)
