@@ -37,7 +37,6 @@ export default class {
         if (config.has('metrics')) {
             this._metricsFlag = config.get('metrics')
         }
-
         this._metrics = null
         if (this._metricsFlag) {
             this._metrics = Metrics.getInstance()
