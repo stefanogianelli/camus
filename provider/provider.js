@@ -34,7 +34,8 @@ let instance = null
 export default class Provider {
 
     /**
-     * Create the instance
+     * Class constructor.
+     * Initialize the connection to MongoDB and Redis
      * @constructor
      */
     constructor () {
@@ -324,34 +325,7 @@ export default class Provider {
      * @returns {Array} The list of operation identifiers found
      */
     searchPrimaryByCoordinates (idCdt, node) {
-        const start = process.hrtime()
-        return new Promise ((resolve, reject) => {
-            const radius = this._radius / 6371
-            const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value')
-            const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value')
-            if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
-                primaryServiceModel
-                    .find({
-                        _idCDT: idCdt,
-                        loc: {
-                            $near: [longitude, latitude],
-                            $maxDistance: radius
-                        }
-                    }, {_idOperation: 1, _id: 0})
-                    .lean()
-                    .exec((err, results) => {
-                        if (err) {
-                            reject(err)
-                        }
-                        if (this._metricsFlag) {
-                            this._metrics.record('Provider', 'searchPrimaryByCoordinates', 'DB', start)
-                        }
-                        resolve(results)
-                    })
-            } else {
-                resolve([])
-            }
-        })
+        return this._searchByCoordinates(primaryServiceModel, idCdt, node, 'searchPrimaryByCoordinates')
     }
 
     /**
@@ -382,10 +356,7 @@ export default class Provider {
                         value: a.value
                     }
                 })
-                const projection = {
-                    _idOperation: 1,
-                    _id: 0
-                }
+                const projection = { _idOperation: 1, _id: 0 }
                 supportAssociation.collection
                     .find(clause, projection)
                     .toArray((err, results) => {
@@ -403,6 +374,13 @@ export default class Provider {
         })
     }
 
+    /**
+     * Search the constraints number associated to an operation
+     * @param {ObjectId} idCDT - The CDT identifier
+     * @param {String} category The support service category
+     * @param {Array} idOperations The operations identifiers
+     * @returns {Array} The list of services identifiers with associated the constraint count
+     */
     getServicesConstraintCount (idCDT, category, idOperations) {
         const start = process.hrtime()
         return new Promise ((resolve, reject) => {
@@ -439,38 +417,13 @@ export default class Provider {
      * @returns {Array} The list of operation identifiers found
      */
     searchSupportByCoordinates (idCdt, node) {
-        const start = process.hrtime()
-        return new Promise ((resolve, reject) => {
-            const radius = this._radius / 6371
-            const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value')
-            const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value')
-            if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
-                supportAssociation
-                    .find({
-                        _idCDT: idCdt,
-                        loc: {
-                            $near: [longitude, latitude],
-                            $maxDistance: radius
-                        }
-                    }, {_idOperation: 1, _id: 0})
-                    .lean()
-                    .exec((err, results) => {
-                        if (err) {
-                            reject(err)
-                        }
-                        if (this._metricsFlag) {
-                            this._metrics.record('Provider', 'searchSupportByCoordinates', 'DB', start)
-                        }
-                        resolve(results)
-                    })
-            } else {
-                resolve([])
-            }
-        })
+        return this._searchByCoordinates(supportAssociation, idCdt, node, 'searchSupportByCoordinates')
     }
 
     /**
+     * -------------------------------------
      * USER METHODS
+     * -------------------------------------
      */
 
     /**
@@ -540,6 +493,53 @@ export default class Provider {
                     })
             } else {
                 reject('User not logged in')
+            }
+        })
+    }
+
+    /**
+     * -------------------------------------
+     * COMMON METHODS
+     * -------------------------------------
+     */
+
+    /**
+     * Search the services that are associated near the current position
+     * It uses the global variable 'radius' as the maximum radius for the search
+     * @param {Object} model - The mongoose model that will be used to search the services
+     * @param {ObjectId} idCdt - The CDT identifier
+     * @param {Object} node - The current position node
+     * @param {String} metricsName - The function's appearing name in the metrics log
+     * @returns {Array} The list of operation identifiers found
+     * @private
+     */
+    _searchByCoordinates (model, idCdt, node, metricsName) {
+        const start = process.hrtime()
+        return new Promise ((resolve, reject) => {
+            const radius = this._radius / 6371
+            const latitude = _.result(_.find(node.fields, {name: 'Latitude'}), 'value')
+            const longitude = _.result(_.find(node.fields, {name: 'Longitude'}), 'value')
+            if (!_.isUndefined(latitude) && !_.isUndefined(longitude)) {
+                model
+                    .find({
+                        _idCDT: idCdt,
+                        loc: {
+                            $near: [longitude, latitude],
+                            $maxDistance: radius
+                        }
+                    }, {_idOperation: 1, _id: 0})
+                    .lean()
+                    .exec((err, results) => {
+                        if (err) {
+                            reject(err)
+                        }
+                        if (this._metricsFlag) {
+                            this._metrics.record('Provider', metricsName, 'DB', start)
+                        }
+                        resolve(results)
+                    })
+            } else {
+                resolve([])
             }
         })
     }
