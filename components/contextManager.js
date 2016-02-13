@@ -47,18 +47,14 @@ export default class {
                 return Promise
                     .join(
                         //find the filter nodes
-                        this._getFilterNodes(mergedCdt.context),
+                        this._getFilterNodes(mergedCdt.context, cdt),
                         //find the ranking nodes
-                        this._getRankingNodes(mergedCdt.context),
+                        this._getRankingNodes(mergedCdt.context, cdt),
                         //find the specific nodes
                         this._getSpecificNodes(mergedCdt.context),
                         //find the parameter nodes
                         this._getParameterNodes(mergedCdt.context),
                         (filterNodes, rankingNodes, specificNodes, parameterNodes) => {
-                            //acquire the descendants of the selected filter nodes
-                            filterNodes = _.concat(filterNodes, this._getDescendants(cdt, filterNodes))
-                            //acquire the descendants of the selected ranking nodes
-                            rankingNodes = _.concat(rankingNodes, this._getDescendants(cdt, rankingNodes))
                             return {
                                 _id: mergedCdt._id,
                                 filterNodes: filterNodes,
@@ -211,14 +207,18 @@ export default class {
     }
 
     /**
-     * Return the list of filter nodes
+     * Return the list of filter nodes, with the descendants of the selected nodes
      * @param {Object} mergedCdt - The merged CDT
+     * @param {Object} cdt - The full CDT object
      * @returns {Array} The list of filter nodes
      * @private
      */
-    _getFilterNodes (mergedCdt) {
+    _getFilterNodes (mergedCdt, cdt) {
         const startTime = process.hrtime()
         let results = this._getNodes('filter', mergedCdt, false)
+        if (!_.isEmpty(results)) {
+            results = _.concat(results, this._getDescendants(cdt, results))
+        }
         if (this._metricsFlag) {
             this._metrics.record('ContextManager', 'getFilterNodes', 'FUN', startTime)
         }
@@ -226,14 +226,18 @@ export default class {
     }
 
     /**
-     * Return the list of ranking nodes
+     * Return the list of ranking nodes, with the descendants of the selected nodes
      * @param {Object} mergedCdt - The merged CDT
+     * @param {Object} cdt - The full CDT object
      * @returns {Array} The list of ranking nodes
      * @private
      */
-    _getRankingNodes (mergedCdt) {
+    _getRankingNodes (mergedCdt, cdt) {
         const startTime = process.hrtime()
         let results = this._getNodes('ranking', mergedCdt, false)
+        if (!_.isEmpty(results)) {
+            results = _.concat(results, this._getDescendants(cdt, results))
+        }
         if (this._metricsFlag) {
             this._metrics.record('ContextManager', 'getRankingNodes', 'FUN', startTime)
         }

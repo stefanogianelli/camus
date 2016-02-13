@@ -118,20 +118,24 @@ describe('Component: ContextManager', () => {
 
     describe('#getFilterNodes()', () => {
         it('check if correct filter nodes are returned', () => {
-            let results = contextManager._getFilterNodes(mergedCdt(_idCDT).context)
-            assert.equal(results.length, 3)
+            let results = contextManager._getFilterNodes(mergedCdt(_idCDT).context, mockModel.cdt(1))
+            assert.equal(results.length, 5)
             assert.equal(results[0].name, 'InterestTopic')
             assert.equal(results[0].value, 'Restaurant')
             assert.equal(results[1].name, 'Budget')
             assert.equal(results[1].value, 'Low')
             assert.equal(results[2].name, 'Transport')
             assert.equal(results[2].value, 'PublicTransport')
+            assert.equal(results[3].name, 'Tipology')
+            assert.equal(results[3].value, 'Bus')
+            assert.equal(results[4].name, 'Tipology')
+            assert.equal(results[4].value, 'Train')
         })
     })
 
     describe('#getRankingNodes()', () => {
         it('check if correct ranking nodes are returned', () => {
-            let results = contextManager._getRankingNodes(mergedCdt(_idCDT).context)
+            let results = contextManager._getRankingNodes(mergedCdt(_idCDT).context, mockModel.cdt(1))
             assert.equal(results.length, 2)
             assert.equal(results[0].name, 'CityName')
             assert.equal(results[0].value, 'Milan')
@@ -172,17 +176,17 @@ describe('Component: ContextManager', () => {
 
     describe('#getNodes()', () => {
         it('check empty list when no nodes are selected', () => {
-            let results = contextManager._getFilterNodes(onlyParameter(_idCDT).context)
+            let results = contextManager._getFilterNodes(onlyParameter(_idCDT).context, mockModel.cdt(1))
             assert.equal(results.length, 0)
-            results = contextManager._getFilterNodes(onlyRanking(_idCDT).context)
+            results = contextManager._getFilterNodes(onlyRanking(_idCDT).context, mockModel.cdt(1))
             assert.equal(results.length, 0)
             results = contextManager._getParameterNodes(onlyFilter(_idCDT).context)
             assert.equal(results.length, 0)
             results = contextManager._getParameterNodes(onlyRanking(_idCDT).context)
             assert.equal(results.length, 0)
-            results = contextManager._getRankingNodes(onlyFilter(_idCDT).context)
+            results = contextManager._getRankingNodes(onlyFilter(_idCDT).context, mockModel.cdt(1))
             assert.equal(results.length, 0)
-            results = contextManager._getRankingNodes(onlyParameter(_idCDT).context)
+            results = contextManager._getRankingNodes(onlyParameter(_idCDT).context, mockModel.cdt(1))
             assert.equal(results.length, 0)
             results = contextManager._getSpecificNodes(onlyFilter(_idCDT).context)
             assert.equal(results.length, 0)
