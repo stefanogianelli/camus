@@ -445,7 +445,19 @@ const googlePlacesOperations = idService => {
             {
                 name: 'types',
                 required: true,
-                default: 'food|restaurant'
+                mappingCDT: [
+                    'InterestTopic'
+                ],
+                translate: [
+                    {
+                        from: 'Restaurant',
+                        to: 'food|restaurant'
+                    },
+                    {
+                        from: 'Museum',
+                        to: 'museum'
+                    }
+                ]
             },
             {
                 name: 'key',
@@ -501,6 +513,13 @@ const googlePlacesAssociations = (idOperation, idCDT) => {
             dimension: 'InterestTopic',
             value: 'Restaurant',
             ranking: 1
+        },
+        {
+            _idOperation: idOperation,
+            _idCDT: idCDT,
+            dimension: 'InterestTopic',
+            value: 'Museum',
+            ranking: 2
         }
     ]
 }
