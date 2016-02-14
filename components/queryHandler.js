@@ -86,6 +86,7 @@ export default class {
      * @private
      */
     _callService (descriptor, decoratedCdt) {
+        const start = process.hrtime()
         let promise
         //check if the protocol of the current service is 'rest' o 'query'
         if (descriptor.service.protocol === 'rest' || descriptor.service.protocol === 'query') {
@@ -108,14 +109,20 @@ export default class {
                 return Promise.resolve([])
             }
         }
-        const start = process.hrtime()
         return promise
             .then(response => {
                 if (this._metricsFlag) {
                     this._metrics.record('QueryHandler', 'bridgeExecution', 'FUN', start)
                 }
+                var startTransf = process.hrtime()
                 //transform the response
-                return this._transformResponse.mappingResponse(response.response, descriptor)
+                return this._transformResponse
+                    .mappingResponse(response.response, descriptor)
+                    .finally(() => {
+                        if (this._metricsFlag) {
+                            this._metrics.record('QueryHandler', 'mappingResponse', 'FUN', startTransf)
+                        }
+                    })
             })
             .catch(e => {
                 console.log('[' + descriptor.service.name + '] ' + e)

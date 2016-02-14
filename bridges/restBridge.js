@@ -58,6 +58,9 @@ export default class extends Bridge {
         return this
             ._parameterMapping(descriptor, decoratedCdt)
             .then(params => {
+                if (this._metricsFlag) {
+                    this._metrics.record('RestBridge', 'parameterMapping/' + descriptor.service.name, 'FUN', startTime)
+                }
                 return this._invokeService(descriptor, params, paginationArgs)
             })
             .finally(() => {
