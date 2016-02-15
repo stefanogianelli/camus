@@ -128,6 +128,11 @@ const operationSchema = new Schema({
         type: String,
         required: true
     },
+    type: {
+        type: String,
+        required: true,
+        enum: types
+    },
     description: String,
     path: String,
     bridgeName: String,
@@ -146,11 +151,6 @@ const serviceDescriptionSchema = new Schema({
         required: true
     },
     description: String,
-    type: {
-        type: String,
-        required: true,
-        enum: types
-    },
     protocol: {
         type: String,
         enum: protocols

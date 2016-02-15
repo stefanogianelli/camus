@@ -415,7 +415,6 @@ const cdt = userId => {
 //googlePlaces service
 const googlePlaces = {
     name: 'GooglePlaces',
-    type: 'primary',
     protocol: 'query',
     basePath: 'https://maps.googleapis.com/maps/api/place'
 }
@@ -425,6 +424,7 @@ const googlePlacesOperations = idService => {
     return {
         service: idService,
         name: 'nearBySearch',
+        type: 'primary',
         path: '/nearbysearch/json',
         parameters: [
             {
@@ -527,7 +527,6 @@ const googlePlacesAssociations = (idOperation, idCDT) => {
 //eventful service
 const eventful = {
     name: 'eventful',
-    type: 'primary',
     protocol: 'query',
     basePath: 'http://api.eventful.com/json'
 }
@@ -537,6 +536,7 @@ const eventfulOperations = idService => {
     return {
         service: idService,
         name: 'eventSearch',
+        type: 'primary',
         path: '/events/search',
         parameters: [
             {
@@ -615,7 +615,6 @@ const eventfulAssociations = (idOperation, idCDT) => {
 //google maps service
 const googleMaps = {
     name: 'GoogleMaps',
-    type: 'support',
     protocol: 'query',
     basePath: 'https://maps.googleapis.com/maps/api'
 }
@@ -625,6 +624,7 @@ const googleMapsOperations = idService => {
     return {
         service: idService,
         name: 'distanceMatrix',
+        type: 'support',
         path: '/distancematrix/json',
         parameters: [
             {
@@ -673,7 +673,6 @@ const googleMapsConstraint = (idOperation, idCDT) => {
 //cinema stub service
 const cinemaStub = {
     name: 'cinemaStub',
-    type: 'primary',
     protocol: 'query',
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/cinema/api/v1/queryDB'
 }
@@ -683,6 +682,7 @@ const cinemaStubOperations = idService => {
     return {
         service: idService,
         name: 'search',
+        type: 'primary',
         path: '/',
         parameters: [
             {
@@ -748,7 +748,6 @@ const cinemaStubAssociations = (idOperation, idCDT) => {
 //theater stub service
 const theaterStub = {
     name: 'theaterStub',
-    type: 'primary',
     protocol: 'query',
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/milanotheater'
 }
@@ -758,6 +757,7 @@ const theaterStubOperations = idService => {
     return {
         service: idService,
         name: 'search',
+        type: 'primary',
         path: '/rest.php',
         parameters: [
             {
@@ -830,7 +830,6 @@ const theaterStubAssociations = (idOperation, idCDT) => {
 //merici primary service
 const mericiPrimary = {
     name: 'mericiPrimary',
-    type: 'primary',
     protocol: 'query',
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici'
 }
@@ -840,6 +839,7 @@ const mericiPrimaryOperation = idService => {
     return {
         service: idService,
         name: 'search',
+        type: 'primary',
         path: '/service_process.php',
         parameters: [
             {
@@ -962,7 +962,6 @@ const mericiPrimaryAssociations = (idCDT, idOperation) => {
 //merici support service
 const mericiSupport = {
     name: 'mericiSupport',
-    type: 'support',
     protocol: 'query',
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici'
 }
@@ -973,6 +972,7 @@ const mericiSupportOperations = idService => {
         {
             service: idService,
             name: 'searchTaxi',
+            type: 'support',
             path: '/service_process.php',
             parameters: [
                 {
@@ -1001,6 +1001,7 @@ const mericiSupportOperations = idService => {
         {
             service: idService,
             name: 'searchCarSharing',
+            type: 'support',
             path: '/service_process.php',
             parameters: [
                 {
@@ -1029,6 +1030,7 @@ const mericiSupportOperations = idService => {
         {
             service: idService,
             name: 'searchDriver',
+            type: 'support',
             path: '/service_process.php',
             parameters: [
                 {

@@ -285,7 +285,6 @@ export const decoratedCdt = idCDT => {
 //googlePlaces service
 export const googlePlaces = {
     name: 'GooglePlaces',
-    type: 'primary',
     protocol: 'rest',
     basePath: 'http://localhost:3000/maps/api/place'
 }
@@ -294,6 +293,7 @@ export const googlePlacesOperation = idService => {
     return {
         service: idService,
         name: 'placeTextSearch',
+        type: 'primary',
         path: '/textsearch/json',
         parameters: [
             {
@@ -342,7 +342,6 @@ export const googlePlacesOperation = idService => {
 //eventful service
 export const eventful = {
     name: 'Eventful',
-    type: 'primary',
     protocol: 'rest',
     basePath: 'http://localhost:3000/json'
 }
@@ -351,6 +350,7 @@ export const eventfulOperation = idService => {
     return {
         service: idService,
         name: 'eventSearch',
+        type: 'primary',
         path: '/events/search',
         parameters: [
             {
@@ -407,7 +407,6 @@ export const eventfulOperation = idService => {
 //fake service with wrong URL
 export const fakeService = {
     name: 'fakeService',
-    type: 'primary',
     protocol: 'rest',
     basePath: 'http://localhost:3000/jsonn'
 }
@@ -416,6 +415,7 @@ export const fakeServiceOperation = idService => {
     return {
         service: idService,
         name: 'eventSearch',
+        type: 'primary',
         path: '/events/search',
         parameters: [
             {
@@ -467,7 +467,6 @@ export const fakeServiceOperation = idService => {
 //service created for custom bridge testing
 export const testBridge = {
     name: 'testBridge',
-    type: 'primary',
     protocol: 'custom'
 }
 
@@ -475,6 +474,7 @@ export const testBridgeOperation = idService => {
     return {
         service: idService,
         name: 'placeTextSearch',
+        type: 'primary',
         bridgeName: 'testBridge',
         responseMapping: {
             list: 'results',
@@ -510,7 +510,6 @@ export const testBridgeOperation = idService => {
 //google maps support service
 export const flickr = {
     name: 'Flickr',
-    type: 'support',
     protocol: 'rest',
     basePath: 'http://api.flickr.com'
 }
@@ -519,6 +518,7 @@ export const flickrOperations = idService => {
     return {
         service: idService,
         name: 'searchPhoto',
+        type: 'support',
         path: '/photos',
         parameters: [
             {
@@ -534,7 +534,6 @@ export const flickrOperations = idService => {
 //google maps support service
 export const googleMaps = {
     name: 'GoogleMaps',
-    type: 'support',
     protocol: 'query',
     basePath: 'https://maps.googleapis.com/maps/api'
 }
@@ -543,6 +542,7 @@ export const googleMapsOperations = idService => {
     return {
         service: idService,
         name: 'distanceMatrix',
+        type: 'support',
         path: '/distancematrix/json',
         parameters: [
             {
@@ -568,7 +568,6 @@ export const googleMapsOperations = idService => {
 //ATM support service
 export const atm = {
     name: 'ATM',
-    type: 'support',
     protocol: 'query',
     basePath: 'http://api.atm-mi.it'
 }
@@ -577,6 +576,7 @@ export const atmOperations = idService => {
     return {
         service: idService,
         name: 'searchAddress',
+        type: 'support',
         path: '/searchAddress',
         parameters: [
             {
@@ -606,7 +606,6 @@ export const atmOperations = idService => {
 //ATAC support service
 export const atac = {
     name: 'ATAC',
-    type: 'support',
     protocol: 'query',
     basePath: 'http://api.atac.it'
 }
@@ -615,6 +614,7 @@ export const atacOperations = idService => {
     return {
         service: idService,
         name: 'searchAddress',
+        type: 'support',
         path: '/searchAddress',
         parameters: [
             {
@@ -644,21 +644,20 @@ export const atacOperations = idService => {
 //FS support service
 export const fs = {
     name: 'FS',
-    type: 'support',
     protocol: 'query'
 }
 
 export const fsOperations = idService => {
     return {
         service: idService,
-        name: 'searchAddress'
+        name: 'searchAddress',
+        type: 'support'
     }
 }
 
 //Trenord support service
 export const trenord = {
     name: 'Trenord',
-    type: 'support',
     protocol: 'rest',
     basePath: 'http://api.trenord.it'
 }
@@ -667,6 +666,7 @@ export const trenordOperations = idService => {
     return {
         service: idService,
         name: 'searchStation',
+        type: 'support',
         path: '/searchStation',
         parameters: [
             {
