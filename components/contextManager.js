@@ -86,7 +86,7 @@ export default class {
             .getCdtById(context._id)
             .then(cdt => {
                 if (this._metricsFlag) {
-                    this._metrics.record('ContextManager', 'getCdt', 'DB', startTime)
+                    this._metrics.record('ContextManager', 'getCdt', 'MAINDB', startTime)
                 }
                 //create the map of user context values
                 let mapContext = this._createMap(context.context)

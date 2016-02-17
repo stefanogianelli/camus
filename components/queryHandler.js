@@ -60,7 +60,7 @@ export default class {
             .getServicesByOperationIds(_.map(services, '_idOperation'))
             .map(service => {
                 if (this._metricsFlag) {
-                    this._metrics.record('QueryHandler', 'getDescriptions', 'DB', startTime)
+                    this._metrics.record('QueryHandler', 'getDescriptions', 'MAINDB', startTime)
                 }
                 //add the ranking value
                 service.service.rank = _(services).find(s => s._idOperation.equals(service._id)).rank

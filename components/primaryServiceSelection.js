@@ -64,7 +64,7 @@ export default class  {
                     this._specificSearch(decoratedCdt._id, decoratedCdt.specificNodes)
                 ,(filter, ranking, specific) => {
                     if (this._metricsFlag) {
-                        this._metrics.record('PrimaryServiceSelection', 'getAssociations', 'DB', startTime)
+                        this._metrics.record('PrimaryServiceSelection', 'getAssociations', 'MAINDB', startTime)
                     }
                     //merge the ranking and specific list (specific searches are considered ranking)
                     //discard the ranking nodes that haven't a correspondence in the filter nodes list

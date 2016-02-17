@@ -451,7 +451,7 @@ const googlePlacesOperations = idService => {
                 translate: [
                     {
                         from: 'Restaurant',
-                        to: 'food|restaurant'
+                        to: 'restaurant'
                     },
                     {
                         from: 'Museum',
