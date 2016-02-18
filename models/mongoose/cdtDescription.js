@@ -7,6 +7,20 @@ const ObjectId = Schema.Types.ObjectId
 const forEnum = 'filter parameter ranking filter|parameter ranking|parameter'.split(' ')
 
 /**
+ * Default values schema
+ */
+const defaultSchema = new Schema({
+    dimension: {
+        type: String,
+        required: true
+    },
+    value: {
+        type: String,
+        required: true
+    }
+})
+
+/**
  * Field schema
  */
 const fieldSchema = new Schema({
@@ -52,7 +66,8 @@ const NodeSchema = new Schema({
  */
 const cdtSchema = new Schema ({
     _userId: [ObjectId],
-    context: [NodeSchema]
+    context: [NodeSchema],
+    defaultValues: [defaultSchema]
 })
 
 /**

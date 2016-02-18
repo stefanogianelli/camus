@@ -31,6 +31,10 @@ const getPersonalData = `{
       }
       parents
     }
+    defaultValues {
+      dimension
+      value
+    }
   }
 }`
 

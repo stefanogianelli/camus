@@ -3,7 +3,8 @@
 import {
     GraphQLObjectType,
     GraphQLString,
-    GraphQLList
+    GraphQLList,
+    GraphQLNonNull
 } from 'graphql'
 
 const fieldSchema = new GraphQLObjectType ({
@@ -57,4 +58,20 @@ const nodeSchema = new GraphQLObjectType({
     })
 })
 
-export default nodeSchema
+const defaultSchema = new GraphQLObjectType({
+    name: 'defaultValues',
+    description: 'The list of values that are always valid',
+    fields: () => ({
+        dimension: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        value: {
+            type: new GraphQLNonNull(GraphQLString)
+        }
+    })
+})
+
+export {
+    nodeSchema,
+    defaultSchema
+}

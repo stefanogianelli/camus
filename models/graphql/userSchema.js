@@ -7,7 +7,10 @@ import {
     GraphQLList
 } from 'graphql'
 
-import nodeType from './cdtSchema'
+import {
+    nodeSchema,
+    defaultSchema
+} from './cdtSchema'
 
 /**
  * LOGIN SCHEMA
@@ -53,7 +56,10 @@ export const personalDataType = new GraphQLObjectType({
             resolve: (cdt) => cdt._id
         },
         context: {
-            type: new GraphQLList(nodeType)
+            type: new GraphQLList(nodeSchema)
+        },
+        defaultValues: {
+            type: new GraphQLList(defaultSchema)
         }
     })
 })
