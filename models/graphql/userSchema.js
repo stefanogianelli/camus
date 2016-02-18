@@ -47,9 +47,10 @@ export const personalDataType = new GraphQLObjectType({
     name: 'personalData',
     description: 'The personal data of the user (CDT)',
     fields: () => ({
-        userId: {
+        idCdt: {
             type: GraphQLString,
-            resolve: (cdt) => cdt._userId
+            description: 'The CDT identifier',
+            resolve: (cdt) => cdt._id
         },
         context: {
             type: new GraphQLList(nodeType)

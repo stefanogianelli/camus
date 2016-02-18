@@ -16,7 +16,7 @@ const loginQuery = `{
 
 const getPersonalData = `{
   getPersonalData(id: "COPY_ID_HERE", token: "COPY_TOKEN_HERE") {
-    userId
+    idCdt
     context {
       name
       for
