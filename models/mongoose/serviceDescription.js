@@ -158,5 +158,10 @@ const serviceDescriptionSchema = new Schema({
     basePath: String
 })
 
-export const serviceModel = mongoose.model('service', serviceDescriptionSchema)
-export const operationModel = mongoose.model('operation', operationSchema)
+const serviceModel = mongoose.model('service', serviceDescriptionSchema)
+const operationModel = mongoose.model('operation', operationSchema)
+
+export {
+    serviceModel,
+    operationModel
+}

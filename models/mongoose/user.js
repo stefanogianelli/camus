@@ -3,6 +3,9 @@
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
+/**
+ * The user schema
+ */
 const userSchema = new Schema({
     name: String,
     surname: String,

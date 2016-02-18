@@ -29,6 +29,7 @@ export function primaryConnection () {
         connectionFields: () => ({
             data: {
                 type: new GraphQLList(primaryData),
+                description: 'The list of results items',
                 resolve: (conn) => conn.edges.map(edge => edge.node)
             }
         })
@@ -53,6 +54,7 @@ export function supportConnection () {
         connectionFields: () => ({
             data: {
                 type: new GraphQLList(supportData),
+                description: 'The list of support services found',
                 resolve: (conn) => conn.edges.map(edge => edge.node)
             }
         })

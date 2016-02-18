@@ -56,10 +56,12 @@ export const personalDataType = new GraphQLObjectType({
             resolve: (cdt) => cdt._id
         },
         context: {
-            type: new GraphQLList(nodeSchema)
+            type: new GraphQLList(nodeSchema),
+            description: 'The context nodes that the CDT is composed'
         },
         defaultValues: {
-            type: new GraphQLList(defaultSchema)
+            type: new GraphQLList(defaultSchema),
+            description: 'The list of default values that are always enabled in the context-based search'
         }
     })
 })

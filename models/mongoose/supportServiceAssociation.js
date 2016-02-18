@@ -53,5 +53,10 @@ const supportServiceConstraintSchema = new Schema({
     }
 })
 
-export const supportAssociation = mongoose.model('support_service', supportServiceSchema)
-export const supportConstraint = mongoose.model('support_constraint', supportServiceConstraintSchema)
+const supportAssociation = mongoose.model('support_service', supportServiceSchema)
+const supportConstraint = mongoose.model('support_constraint', supportServiceConstraintSchema)
+
+export {
+    supportAssociation,
+    supportConstraint
+}
