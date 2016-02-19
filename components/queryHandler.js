@@ -112,7 +112,7 @@ export default class {
         return promise
             .then(response => {
                 if (this._metricsFlag) {
-                    this._metrics.record('QueryHandler', 'bridgeExecution', 'FUN', start)
+                    this._metrics.record('QueryHandler', 'bridgeExecution', 'EXT', start)
                 }
                 var startTransf = process.hrtime()
                 //transform the response
