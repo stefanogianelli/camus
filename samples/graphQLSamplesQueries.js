@@ -19,7 +19,6 @@ const getPersonalData = `{
     idCdt
     context {
       name
-      for
       values
       parameters {
         name
