@@ -3,8 +3,7 @@
 import {
     GraphQLObjectType,
     GraphQLString,
-    GraphQLList,
-    GraphQLNonNull
+    GraphQLList
 } from 'graphql'
 
 /**
@@ -86,11 +85,11 @@ const defaultSchema = new GraphQLObjectType({
     fields: () => ({
         dimension: {
             description: 'The dimension name',
-            type: new GraphQLNonNull(GraphQLString)
+            type: GraphQLString
         },
         value: {
             description: 'The value',
-            type: new GraphQLNonNull(GraphQLString)
+            type: GraphQLString
         }
     })
 })
