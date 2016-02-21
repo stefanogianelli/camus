@@ -478,7 +478,7 @@ export default class Provider {
                             if (this._metricsFlag) {
                                 this._metrics.record('Provider', 'checkUserLogin', 'DB', start)
                             }
-                            resolve(true)
+                            resolve(results[0])
                         } else {
                             reject('User not logged in')
                         }

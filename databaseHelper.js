@@ -31,22 +31,15 @@ export default class {
         return new Promise((resolve, reject) => {
             async.waterfall([
                 callback => {
-                    new UserModel(user).save((err, user) => {
-                        callback(err, user.id)
-                    })
-                },
-                (userId, callback) => {
                     //create the CDT
-                    new cdtModel(cdt(userId)).save((err, savedCdt) => {
-                        callback(err, savedCdt._id)
-                    })
+                    new cdtModel(cdt).save((err, savedCdt) => callback(err, savedCdt._id))
                 },
                 (idCdt, callback) => {
-                    new globalCdtModel({globalId: idCdt}).save(err => {
-                        callback(err, idCdt)
-                    })
+                    new globalCdtModel({globalId: idCdt}).save(err => callback(err, idCdt))
                 },
                 (idCdt, callback) => {
+                    //save the CDT identifier
+                    this._idCdt = idCdt
                     //create the services and save their associations
                     async.parallel([
                         /*
@@ -269,14 +262,488 @@ export default class {
                          END SERVICE INSERTION
                          */
                     ], err => {
-                        callback(err, idCdt)
+                        callback(err)
+                    })
+                },
+                /**
+                 * ADD THE FIRST USER
+                 */
+                callback => {
+                    new UserModel(user1).save((err, user) => callback(err, user.id))
+                },
+                (userId, callback) => {
+                    //create the CDT
+                    new cdtModel(cdt1(userId)).save((err, cdt) => callback(err, cdt._id))
+                },
+                (idCdt, callback) => {
+                    //create the services and save their associations
+                    async.parallel([
+                        /*
+                         ADD PRIMARY SERVICES BELOW
+                         */
+                        callback => {
+                            //save google places service
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(googlePlaces).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(googlePlacesOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(googlePlacesAssociations(idOperation, idCdt), (a, callback) => {
+                                            new PrimaryServiceModel(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save eventful service
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(eventful).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(eventfulOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(eventfulAssociations(idOperation, idCdt), (a, callback) => {
+                                            new PrimaryServiceModel(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save cinema stub
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(cinemaStub).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(cinemaStubOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(cinemaStubAssociations(idOperation, idCdt), (a, callback) => {
+                                            new PrimaryServiceModel(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save theater stub
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(theaterStub).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(theaterStubOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(theaterStubAssociations(idOperation, idCdt), (a, callback) => {
+                                            new PrimaryServiceModel(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save merici stub
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(mericiPrimary).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(mericiPrimaryOperation(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(mericiPrimaryAssociations(idCdt, idOperation), (a, callback) => {
+                                            new PrimaryServiceModel(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        /*
+                         ADD SUPPORT SERVICES BELOW
+                         */
+                        callback => {
+                            //save google maps service
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(googleMaps).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(googleMapsOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(googleMapsAssociations(idOperation, idCdt), (a, callback) => {
+                                            new supportAssociation(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err, idOperation)
+                                        })
+                                },
+                                (idOperation, callback) => {
+                                    new supportConstraint(googleMapsConstraint(idOperation, idCdt)).save(err => {
+                                        callback(err)
+                                    })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save merici support service
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(mericiSupport).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    async.map(mericiSupportOperations(idService),
+                                        (op, callback) => {
+                                            new operationModel(op).save((err, operation) => {
+                                                callback(err, operation.id)
+                                            })
+                                        },
+                                        (err, operations) => {
+                                            callback(err, operations[0], operations[1], operations[2])
+                                        })
+                                },
+                                (idTaxi, idCarSharing, idDriver, callback) => {
+                                    async.each(mericiSupportAssociations(idCdt, idTaxi, idCarSharing, idDriver), (a, callback) => {
+                                            new supportAssociation(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err, idTaxi, idCarSharing, idDriver)
+                                        })
+                                },
+                                (idTaxi, idCarSharing, idDriver, callback) => {
+                                    async.each(mericiSupportConstraints(idCdt, idTaxi, idCarSharing, idDriver), (c, callback) => {
+                                            new supportConstraint(c).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        }
+                        /*
+                         END SERVICE INSERTION
+                         */
+                    ], err => {
+                        callback(err)
+                    })
+                },
+                /**
+                 * ADD THE SECOND USER
+                 */
+                callback => {
+                    new UserModel(user2).save((err, user) => {
+                        callback(err, user.id)
+                    })
+                },
+                (userId, callback) => {
+                    //create the CDT
+                    new cdtModel(cdt2(userId)).save((err, cdt) => callback(err, cdt._id))
+                },
+                (idCdt, callback) => {
+                    //create the services and save their associations
+                    async.parallel([
+                        /*
+                         ADD PRIMARY SERVICES BELOW
+                         */
+                        callback => {
+                            //save google places service
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(googlePlaces).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(googlePlacesOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(googlePlacesAssociations(idOperation, idCdt), (a, callback) => {
+                                            new PrimaryServiceModel(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save eventful service
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(eventful).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(eventfulOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(eventfulAssociations(idOperation, idCdt), (a, callback) => {
+                                            new PrimaryServiceModel(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save cinema stub
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(cinemaStub).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(cinemaStubOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(cinemaStubAssociations(idOperation, idCdt), (a, callback) => {
+                                            new PrimaryServiceModel(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save theater stub
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(theaterStub).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(theaterStubOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(theaterStubAssociations(idOperation, idCdt), (a, callback) => {
+                                            new PrimaryServiceModel(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save merici stub
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(mericiPrimary).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(mericiPrimaryOperation(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(mericiPrimaryAssociations(idCdt, idOperation), (a, callback) => {
+                                            new PrimaryServiceModel(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        /*
+                         ADD SUPPORT SERVICES BELOW
+                         */
+                        callback => {
+                            //save google maps service
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(googleMaps).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(googleMapsOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(googleMapsAssociations(idOperation, idCdt), (a, callback) => {
+                                            new supportAssociation(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err, idOperation)
+                                        })
+                                },
+                                (idOperation, callback) => {
+                                    new supportConstraint(googleMapsConstraint(idOperation, idCdt)).save(err => {
+                                        callback(err)
+                                    })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save merici support service
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(mericiSupport).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    async.map(mericiSupportOperations(idService),
+                                        (op, callback) => {
+                                            new operationModel(op).save((err, operation) => {
+                                                callback(err, operation.id)
+                                            })
+                                        },
+                                        (err, operations) => {
+                                            callback(err, operations[0], operations[1], operations[2])
+                                        })
+                                },
+                                (idTaxi, idCarSharing, idDriver, callback) => {
+                                    async.each(mericiSupportAssociations(idCdt, idTaxi, idCarSharing, idDriver), (a, callback) => {
+                                            new supportAssociation(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err, idTaxi, idCarSharing, idDriver)
+                                        })
+                                },
+                                (idTaxi, idCarSharing, idDriver, callback) => {
+                                    async.each(mericiSupportConstraints(idCdt, idTaxi, idCarSharing, idDriver), (c, callback) => {
+                                            new supportConstraint(c).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        }
+                        /*
+                         END SERVICE INSERTION
+                         */
+                    ], err => {
+                        callback(err)
                     })
                 }
-            ], (err, idCdt) => {
+            ], err => {
                 if (err) {
                     reject(err)
                 } else {
-                    resolve(idCdt)
+                    resolve(this._idCdt)
                 }
             })
         })
@@ -344,16 +811,137 @@ export default class {
  * MODELS
  */
 
-//User
-const user = {
+//Sample user 1
+const user1 = {
     name: 'Mario',
     surname: 'Rossi',
-    mail: 'mario.rossi@mail.com',
+    mail: 'mrossi@mail.com',
     password: 'camus2016'
 }
 
-//CDT
-const cdt = userId => {
+//Sample user 2
+const user2 = {
+    name: 'Roberto',
+    surname: 'Bianchi',
+    mail: 'rbianchi@mail.com',
+    password: 'camus2016'
+}
+
+//Universal CDT
+const cdt = {
+    context: [
+        {
+            name: 'InterestTopic',
+            for: 'filter',
+            values: [
+                'Restaurant',
+                'Cinema',
+                'Theater',
+                'Hotel',
+                'Museum',
+                'Event'
+            ]
+        },
+        {
+            name: 'Location',
+            for: 'ranking|parameter',
+            parameters: [
+                {
+                    name: 'CityCoord',
+                    fields: [
+                        {
+                            name: 'Latitude'
+                        },
+                        {
+                            name: 'Longitude'
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            name: 'Transport',
+            for: 'filter',
+            values: [
+                'PublicTransport',
+                'WithCar'
+            ]
+        },
+        {
+            name: 'Tipology',
+            for: 'filter',
+            values: [
+                'Bus',
+                'Train',
+                'Taxi',
+                'CarSharing',
+                'WithDriver'
+            ],
+            parents: [
+                'PublicTransport'
+            ]
+        }
+    ]
+}
+
+//Tailored CDT 1
+const cdt1 = userId => {
+    return {
+        _userId: [userId],
+        context: [
+            {
+                name: 'InterestTopic',
+                for: 'filter',
+                values: [
+                    'Restaurant',
+                    'Event'
+                ]
+            },
+            {
+                name: 'Location',
+                for: 'ranking|parameter',
+                parameters: [
+                    {
+                        name: 'CityCoord',
+                        fields: [
+                            {
+                                name: 'Latitude'
+                            },
+                            {
+                                name: 'Longitude'
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                name: 'Transport',
+                for: 'filter',
+                values: [
+                    'PublicTransport',
+                    'WithCar'
+                ]
+            },
+            {
+                name: 'Tipology',
+                for: 'filter',
+                values: [
+                    'Bus',
+                    'Train',
+                    'Taxi',
+                    'CarSharing',
+                    'WithDriver'
+                ],
+                parents: [
+                    'PublicTransport'
+                ]
+            }
+        ]
+    }
+}
+
+//Tailored CDT 2
+const cdt2 = userId => {
     return {
         _userId: [userId],
         context: [
