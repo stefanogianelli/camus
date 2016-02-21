@@ -432,6 +432,9 @@ export default class Provider {
                     .find({
                         mail: mail,
                         password: password
+                    }, {
+                        token: 0,
+                        password: 0
                     })
                     .limit(1)
                     .exec((err, user) => {
@@ -467,6 +470,9 @@ export default class Provider {
                     .find({
                         _id: ObjectId(id),
                         token: token
+                    }, {
+                        token: 0,
+                        password: 0
                     })
                     .limit(1)
                     .lean()
