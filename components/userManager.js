@@ -30,10 +30,9 @@ export default class {
                         if (err) {
                             reject(err)
                         }
-                        resolve({
-                            id: user.id,
-                            token: token
-                        })
+                        //update user token
+                        user.token = token
+                        resolve(user)
                     })
                 })
                 .catch(err => {

@@ -24,6 +24,18 @@ export const loginType = new GraphQLObjectType({
             description: 'The user\'s identifier',
             type: GraphQLString
         },
+        name: {
+            description: 'The user\'s name',
+            type: GraphQLString
+        },
+        surname: {
+            description: 'The user\'s surname',
+            type: GraphQLString
+        },
+        email: {
+            description: 'The user\'s email address',
+            type: GraphQLString
+        },
         token: {
             description: 'The session token',
             type: GraphQLString

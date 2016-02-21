@@ -5,6 +5,8 @@
 const loginQuery = `{
   login (mail: "COPY_MAIL_HERE", password: "COPY_PASSWORD_HERE") {
     id
+    name
+    surname
     token
   }
 }`
