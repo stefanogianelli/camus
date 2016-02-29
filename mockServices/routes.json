@@ -1,0 +1,8 @@
+{
+	"/json/events/search/app_key/:key/keywords/restaurantinnewyork/location/Milan": "/eventful1",
+	"/maps/api/place/textsearch/json/query/restaurantinnewyork/key/:key": "/googlePlaces1",
+	"/json/events/search/app_key/:key/keywords/restaurantinchicago/location/Chicago": "/eventful2",
+	"/json/events/search/app_key/:key/keywords/restaurantinchicago/location/Chicago/page_number/2": "/eventful3",
+	"/maps/api/place/textsearch/json/query/restaurantinchicago/key/:key": "/googlePlaces2",
+	"/maps/api/place/textsearch/json/query/restaurantinchicago/key/:key/pagetoken/CvQB4wAAACyq43I7jMJi_TuiM-RXYdAh1OtGERF8ZAhL19xDHtqDy4lnxzvppe0wYAqsL1qkjaWc44aN_RxLwczd1PRlr2t69av-UcGJqx8gTys2PJDn13n6XumTbSRrp4XNPT1QIDafvXIR7Mq1oVLslZBZhcHjirSb3W7TOHtJQSoU9VryuWl1QWu2Cds3xyeJTm8uviirECVQb7U-rzJHmHz3sJb8iPcFREOmIvJUHRDKc9gIMu8S3DI_cRrbmwN4fQxZMHZCj-i6mvVuWFC-wVej-58dULEJUty1yqUOPPfhmhkK1KpTGxeNs2vQrYC_UFepkBIQtMderqhFbATn6fLcd7l4OxoUk5qOngHfqGO_OVfsx-k6Sz8r8ds": "/googlePlaces3"
+}

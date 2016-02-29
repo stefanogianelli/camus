@@ -1,0 +1,1891 @@
+{
+  "eventful1": {
+    "last_item":null,
+    "total_items":"134","first_item":null,"page_number":"1","page_size":"10","page_items":null,"search_time":"0.074","page_count":"14","events":{"event":[{"watching_count":null,"olson_path":"America/New_York","calendar_count":null,"comment_count":null,"region_abbr":"NY","postal_code":"10001","going_count":null,"all_day":"2","latitude":"40.757644","groups":null,"url":"http://newyorkcity.eventful.com/events/international-restaurant-foodservice-shownew-yo-/E0-001-075872526-9?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-075872526-9","privacy":"1","city_name":"New York","link_count":null,"longitude":"-74.002962","country_name":"United States","country_abbr":"USA","region_name":"New York","start_time":"2016-03-06 00:00:00","tz_id":null,"description":" International Restaurant & Foodservice Show-New York is happening on 06 Mar 2016 at Jacob K. Javits Convention Center New York, United States Of America. Its a premier event in Hotel, Restaurant & Catering industry. <br><br><a href=\"http://login.10times.com/stall-book/3663\" rel=\"nofollow\">Book a stall at 10times.com!</a>","modified":"2015-07-11 13:24:05","venue_display":"1","tz_country":null,"performers":null,"title":"International Restaurant & Foodservice Show-New York","venue_address":"655 West 34th Street","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s4.evcdn.com/images/small/I0-001/019/699/871-3.jpeg_/international-restaurant-foodservice-shownew-york-71.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s4.evcdn.com/images/medium/I0-001/019/699/871-3.jpeg_/international-restaurant-foodservice-shownew-york-71.jpeg","height":"128"},"url":"http://s4.evcdn.com/images/small/I0-001/019/699/871-3.jpeg_/international-restaurant-foodservice-shownew-york-71.jpeg","thumb":{"width":"48","url":"http://s4.evcdn.com/images/thumb/I0-001/019/699/871-3.jpeg_/international-restaurant-foodservice-shownew-york-71.jpeg","height":"48"},"height":"48"},"created":"2014-10-04 01:46:07","venue_id":"V0-001-001661911-8","tz_city":null,"stop_time":"2016-03-08 00:00:00","venue_name":"Jacob K. Javits Convention Center","venue_url":"http://newyorkcity.eventful.com/venues/jacob-k-javits-convention-center-/V0-001-001661911-8?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/New_York","calendar_count":null,"comment_count":null,"region_abbr":"NY","postal_code":"11237","going_count":null,"all_day":"0","latitude":"40.7041","groups":null,"url":"http://newyorkcity.eventful.com/events/evolution-new-york-city-restaurant-/E0-001-087446170-2?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-087446170-2","privacy":"1","city_name":"Brooklyn","link_count":null,"longitude":"-73.9181","country_name":"United States","country_abbr":"USA","region_name":"New York","start_time":"2015-11-14 20:00:00","tz_id":null,"description":" New York City is home to thousands of restaurants. Indulging in fine dining, sampling the latest food craze, grabbing a bite on the go – one thing is for certain, New Yorkers love their restaurants. Begin your meal in early 19th century Manhattan, when New York was still just a small town and eat your way through the century as the concept of the restaurant evolved alongside the rapidly expanding Big Apple. Diners can expect dishes like Roast Duck, Mock Turtle Soup and Silver Shell Oysters along with wine pairings. Our host will explain how housing, gender roles and the influence of foreign immigrant cuisine converged to create New York&#39;s cultural mecca: the restaurant. Dinner will take place at Cafe Ghia on October 17, 2015 at 8pm. For more information email info@ediblehistorynyc.com ","modified":"2015-10-30 07:20:20","venue_display":"1","tz_country":null,"performers":null,"title":"The Evolution of The New York City Restaurant","venue_address":"24 Irving Ave","geocode_type":"Zip Code Based GeoCodes","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s3.evcdn.com/images/small/I0-001/024/112/270-6.jpeg_/evolution-new-york-city-restaurant-70.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s3.evcdn.com/images/medium/I0-001/024/112/270-6.jpeg_/evolution-new-york-city-restaurant-70.jpeg","height":"128"},"url":"http://s3.evcdn.com/images/small/I0-001/024/112/270-6.jpeg_/evolution-new-york-city-restaurant-70.jpeg","thumb":{"width":"48","url":"http://s3.evcdn.com/images/thumb/I0-001/024/112/270-6.jpeg_/evolution-new-york-city-restaurant-70.jpeg","height":"48"},"height":"48"},"created":"2015-09-18 12:47:00","venue_id":"V0-001-009206519-9","tz_city":null,"stop_time":null,"venue_name":"Cafe Ghia","venue_url":"http://newyorkcity.eventful.com/venues/cafe-ghia-/V0-001-009206519-9?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/New_York","calendar_count":null,"comment_count":null,"region_abbr":"NY","postal_code":"10036","going_count":null,"all_day":"0","latitude":"40.7583428","groups":null,"url":"http://newyorkcity.eventful.com/events/view-restaurant-5course-wine-dinner-/E0-001-087237232-5?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-087237232-5","privacy":"1","city_name":"New York","link_count":null,"longitude":"-73.9855814","country_name":"United States","country_abbr":"USA","region_name":"New York","start_time":"2015-11-17 18:00:00","tz_id":null,"description":" Join us at The View Restaurant on November 17th for dinner and conversation with Chimney Rock. Come experience this unique opportunity to sample wines from across the legendary Chimney Rock portfolio. The evening includes a five-course dinner with wine pairings and special guest Winemaker, Elizabeth Vianna. Tag us in your photos for a chance to be featured on the NY Marquis social media platforms. @MHMarquisNYC #ViewfromTheView ","modified":"2015-09-10 13:52:32","venue_display":"1","tz_country":null,"performers":null,"title":"The View Restaurant 5-Course Wine Dinner","venue_address":"1535 Broadway","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2015-09-10 13:52:32","venue_id":"V0-001-002510095-9","tz_city":null,"stop_time":null,"venue_name":"New York Marriot Marquis","venue_url":"http://newyorkcity.eventful.com/venues/new-york-marriot-marquis-/V0-001-002510095-9?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/New_York","calendar_count":null,"comment_count":null,"region_abbr":"NY","postal_code":"10038","going_count":null,"all_day":"0","latitude":"40.7095","groups":null,"url":"http://newyorkcity.eventful.com/events/business-planning-restaurants-/E0-001-087942809-4?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-087942809-4","privacy":"1","city_name":"New York","link_count":null,"longitude":"-74.0012","country_name":"United States","country_abbr":"USA","region_name":"New York","start_time":"2015-11-16 10:00:00","tz_id":null,"description":" Business Planning for Restaurants  NYSRA in partnership with NYC Business Solutions is hosting a seminar that will cover the necessary planning needed to grow your restaurant. Topics will include legal issues, accounting practices, along with general business planning information around marketing, financing and growth. Restaurant owners often find themselves unaware of the necessary planning that is needed to grow their business to the next level. Through this event, the Lower Manhattan NYC Business Solutions center and New York State Restaurant Association hope to provide some guidance as well as present all of the resources that are available to restaurant owners. During this seminar, we will focus on legal issues, accounting practices, along with general business planning information around marketing, financing and growth. Come join us and discover how to grow your business!     Agenda:   10:00 – 11:00AM: Business Planning Basics presentation  11:05 – 11:35AM: Legal presentation  11:40 – 12:10PM: Accounting presentation  12:15 – 1:00PM: Networking    Sponsors Include: NYC Department of Small Business Services New York State Restaurant Association The event is for FREE and opened to all entrepreneurs.    Contact: lowermanhattanbsc@nycbusiness-solutions.com Please provide your name, business, and topics of interest! ","modified":"2015-10-07 01:12:13","venue_display":"1","tz_country":null,"performers":null,"title":"Business Planning for Restaurants","venue_address":"110 William St., 4th Floor","geocode_type":"Zip Code Based GeoCodes","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2015-10-07 01:12:13","venue_id":"V0-001-007878597-8","tz_city":null,"stop_time":null,"venue_name":"NYC Business Solutions Lower Manhattan Center","venue_url":"http://newyorkcity.eventful.com/venues/nyc-business-solutions-lower-manhattan-center-/V0-001-007878597-8?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/New_York","calendar_count":null,"comment_count":null,"region_abbr":"NY","postal_code":"10038","going_count":null,"all_day":"0","latitude":"40.7095","groups":null,"url":"http://newyorkcity.eventful.com/events/restaurant-management-bootcamp-20-lower-manhatta-/E0-001-088124645-7?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-088124645-7","privacy":"1","city_name":"New York","link_count":null,"longitude":"-74.0012","country_name":"United States","country_abbr":"USA","region_name":"New York","start_time":"2015-11-09 17:30:00","tz_id":null,"description":" Restaurant Management Bootcamp 2.0: Legal Considerations when Opening a Bar or Restaurant An insider look at tips, tricks, and best practices to start your first restaurant in NYC, presented by Restaurant Attorney James D. DiPasquale.  To start and run a successful restaurant you must understand many different legal considerations which make operating in New York City, particularly unique.  Whether you are a new or existing restaurant owner, this special follow-up to the Restaurant Management Bootcamp class will help you gain a deeper understanding of all of the basic requirements to get your business up and running.   You will learn about: Incorporating or forming a Limited Liability Company (pros/cons of each) Partnership Considerations (The legalities of dealing with your business partners and investors) Finding  your restaurant space (Buying an existing restaurant vs. straight lease) Negotiating your Restaurant’s lease. Liquor License overview General discussion on permits needed (food service/cabaret/sidewalk café, etc.) ","modified":"2015-10-14 14:18:32","venue_display":"1","tz_country":null,"performers":null,"title":"Restaurant Management Bootcamp 2.0, Lower Manhattan 11/9/15","venue_address":"110 William St., 4th Floor","geocode_type":"Zip Code Based GeoCodes","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s2.evcdn.com/images/small/I0-001/023/626/265-7.jpeg_/restaurant-management-bootcamp-20-lower-manhattan-65.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s2.evcdn.com/images/medium/I0-001/023/626/265-7.jpeg_/restaurant-management-bootcamp-20-lower-manhattan-65.jpeg","height":"128"},"url":"http://s2.evcdn.com/images/small/I0-001/023/626/265-7.jpeg_/restaurant-management-bootcamp-20-lower-manhattan-65.jpeg","thumb":{"width":"48","url":"http://s2.evcdn.com/images/thumb/I0-001/023/626/265-7.jpeg_/restaurant-management-bootcamp-20-lower-manhattan-65.jpeg","height":"48"},"height":"48"},"created":"2015-10-14 14:18:32","venue_id":"V0-001-007878597-8","tz_city":null,"stop_time":null,"venue_name":"NYC Business Solutions Lower Manhattan Center","venue_url":"http://newyorkcity.eventful.com/venues/nyc-business-solutions-lower-manhattan-center-/V0-001-007878597-8?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/New_York","calendar_count":null,"comment_count":null,"region_abbr":"NY","postal_code":"11201","going_count":null,"all_day":"0","latitude":"40.6942","groups":null,"url":"http://newyorkcity.eventful.com/events/restaurant-management-bootcamp-20-legal-considerat-/E0-001-087391373-0?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-087391373-0","privacy":"1","city_name":"Brooklyn","link_count":null,"longitude":"-73.9906","country_name":"United States","country_abbr":"USA","region_name":"New York","start_time":"2015-12-02 17:00:00","tz_id":null,"description":" Restaurant Management Bootcamp 2.0: Legal Considerations when Opening a Bar or Restaurant An insider look at tips, tricks, and best practices to start your first restaurant in NYC, presented by Restaurant Attorney James D. DiPasquale.  To start and run a successful restaurant you must understand many different legal considerations which make operating in New York City, particularly unique.  Whether you are a new or existing restaurant owner, this special follow-up to the Restaurant Management Bootcamp class will help you gain a deeper understanding of all of the basic requirements to get your business up and running.  You will learn about: Incorporating or forming a Limited Liability Company (pros/cons of each) Partnership Considerations (The legalities of dealing with your business partners and investors) Finding  your restaurant space (Buying an existing restaurant vs. straight lease) Negotiating your Restaurant’s lease Liquor License overview General discussion on permits needed (food service/cabaret/sidewalk café, etc.) ","modified":"2015-09-15 22:38:04","venue_display":"1","tz_country":null,"performers":null,"title":"Restaurant Management Bootcamp 2.0: Legal Considerations When Opening a Bar/Restaurant, (1 Session), Brooklyn 12/2/15","venue_address":"9 Bond Street, 5th Floor","geocode_type":"Zip Code Based GeoCodes","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2015-09-15 22:38:04","venue_id":"V0-001-007878592-3","tz_city":null,"stop_time":null,"venue_name":"NYC Business Solutions Brooklyn Center","venue_url":"http://newyorkcity.eventful.com/venues/nyc-business-solutions-brooklyn-center-/V0-001-007878592-3?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/New_York","calendar_count":null,"comment_count":null,"region_abbr":"NY","postal_code":null,"going_count":null,"all_day":"0","latitude":"40.7142589","groups":null,"url":"http://newyorkcity.eventful.com/events/new-years-eve-dueling-pianos-shakerattleroll-/E0-001-076844958-0?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-076844958-0","privacy":"1","city_name":"New York","link_count":null,"longitude":"-74.0079081","country_name":"United States","country_abbr":"USA","region_name":"New York","start_time":"2015-12-31 22:00:00","tz_id":null,"description":" Celebrate New Year&#39;s Eve Downtown with Dueling Pianos <br><br>Start 2016 off right at an all-request rock &#39;n&#39; roll party downtown. The no-holds-barred dueling piano performance <em>Shake, Rattle and Roll</em> is the ultimate good time, where you can sing, dance and laugh along to your heart&#39;s content. The two piano masters seldom get a request they can&#39;t handle -- from Britney Spears to Billy Joel to the Beatles to Bon Jovi and beyond, there&#39;s something for everyone among their repertoire of thousands of hit songs. So light it up with some live music in New York this New Year&#39;s Eve. There will be an open bar featuring top-shelf spirits, plus light appetizers.","modified":"2015-11-04 01:29:52","venue_display":"1","tz_country":null,"performers":null,"title":"New Year's Eve: Dueling Pianos' \"Shake, Rattle & Roll\"","venue_address":"22 Warren Street","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s2.evcdn.com/images/small/I0-001/017/245/421-3.jpeg_/new-years-eve-dueling-pianos-shakerattleroll-21.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s2.evcdn.com/images/medium/I0-001/017/245/421-3.jpeg_/new-years-eve-dueling-pianos-shakerattleroll-21.jpeg","height":"128"},"url":"http://s2.evcdn.com/images/small/I0-001/017/245/421-3.jpeg_/new-years-eve-dueling-pianos-shakerattleroll-21.jpeg","thumb":{"width":"48","url":"http://s2.evcdn.com/images/thumb/I0-001/017/245/421-3.jpeg_/new-years-eve-dueling-pianos-shakerattleroll-21.jpeg","height":"48"},"height":"48"},"created":"2014-10-29 04:11:52","venue_id":"V0-001-001992409-3","tz_city":null,"stop_time":null,"venue_name":"Brick Restaurant & Lounge","venue_url":"http://newyorkcity.eventful.com/venues/brick-restaurant-lounge-/V0-001-001992409-3?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/New_York","calendar_count":null,"comment_count":null,"region_abbr":"NY","postal_code":null,"going_count":null,"all_day":"0","latitude":"40.7142","groups":null,"url":"http://newyorkcity.eventful.com/events/dinner-terry-george-new-york-/E0-001-088486926-8?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-088486926-8","privacy":"1","city_name":"New York","link_count":null,"longitude":"-74.0064","country_name":"United States","country_abbr":"USA","region_name":"New York","start_time":"2015-11-20 19:30:00","tz_id":null,"description":" Come have dinner with Terry and George Check On are a culinary duo from England who know how to host a bloody great party. Started in 2013 by friends Terry Edwards (a Liverpudlian chef trained in the kitchens of Michael Roux and Mark Hix) and Yorkshireman George Craig (Burberry model and One Night Only front-man) Check On have taken the London pop-up restaurant scene by storm. Their exciting one-off events celebrate the best of British food,drink and music and have been featured in the food pages of Vogue and Esquire,with The Times calling them Britain&#39;s most fashionable foodies! Terry and George are bringing their pop-up dining experience to New York for a week of intimate dinners with a British-themed tasting menu. Modern British classics like Fish and Chips, Eggs and Soldiers,Yorkshire puddings and Scotch eggs will all be playfully recreated. Terry and George will be offering diners a multi course ticketed tasting menu for $110 per head,including drinks and service charge. With only 36 tickets available across the week, this promises to be their most exciting and exclusive event yet.  www.checkonpresents.co.uk Instagram: Checkonpresents Twitter:  @checkon_ ","modified":"2015-10-28 05:08:09","venue_display":"1","tz_country":null,"performers":null,"title":"Dinner with Terry & George in New York","venue_address":"306 West 51st Street","geocode_type":"City Based GeoCodes","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s4.evcdn.com/images/small/I0-001/024/037/719-6.jpeg_/dinner-terry-george-new-york-19.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s4.evcdn.com/images/medium/I0-001/024/037/719-6.jpeg_/dinner-terry-george-new-york-19.jpeg","height":"128"},"url":"http://s4.evcdn.com/images/small/I0-001/024/037/719-6.jpeg_/dinner-terry-george-new-york-19.jpeg","thumb":{"width":"48","url":"http://s4.evcdn.com/images/thumb/I0-001/024/037/719-6.jpeg_/dinner-terry-george-new-york-19.jpeg","height":"48"},"height":"48"},"created":"2015-10-28 05:08:09","venue_id":"V0-001-009458041-6","tz_city":null,"stop_time":null,"venue_name":"New York","venue_url":"http://newyorkcity.eventful.com/venues/new-york-/V0-001-009458041-6?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/New_York","calendar_count":null,"comment_count":null,"region_abbr":"NY","postal_code":null,"going_count":null,"all_day":"0","latitude":"40.7142","groups":null,"url":"http://newyorkcity.eventful.com/events/new-york-city-jumpstart-alumni-focus-group-/E0-001-088657523-9?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-088657523-9","privacy":"1","city_name":"New York","link_count":null,"longitude":"-74.0064","country_name":"United States","country_abbr":"USA","region_name":"New York","start_time":"2015-11-17 18:00:00","tz_id":null,"description":" New York City Jumpstart Alumni Focus Group Tuesday, November 17, 2015 | 6:00pm EST NY Jumpstart Office, 505 8th Ave.(Suite 1100), New York, NY   The Jumpstart Alumni Network is excited to offer an opportunity to reconnect with Jumpstart in New York City! We&#39;re looking for 10-15 Jumpstart alumni to join us for our first ever alumni focus group on Tuesday, November 17th from 6pm-7:30pm at the Jumpstart offices in New York City (505 Eighth Ave, Suite 1100, NYC). Following our focus group, we will head to McGarry’s Bar and Restaurant (417 Ninth Ave, New York, NY) for drinks and appetizers! From alumni swag to resources, events, and networking opportunities, we want to pick your brains! Plus, take advantage of this great networking opportunity to connect with Jumpstart alumni in NYC!  NYC Alumni Agenda: 6:00pm-6:30pm: Networking 6:30pm-7:30pm: Focus Group 7:30pm-8:30pm: Drinks and Appetizers at McGarry&#39;s Bar and Restaurant If you know of fellow Jumpstart alumni living around NYC, help us spread the word by sharing this page to your Jumpstart alumni connections!   Contact alumni@jstart.org for more information! ","modified":"2015-11-05 07:51:22","venue_display":"1","tz_country":null,"performers":null,"title":"New York City Jumpstart Alumni Focus Group","venue_address":"505 8th Avenue , Suite 1100","geocode_type":"City Based GeoCodes","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s1.evcdn.com/images/small/I0-001/024/174/628-7.jpeg_/new-york-city-jumpstart-alumni-focus-group-28.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s1.evcdn.com/images/medium/I0-001/024/174/628-7.jpeg_/new-york-city-jumpstart-alumni-focus-group-28.jpeg","height":"128"},"url":"http://s1.evcdn.com/images/small/I0-001/024/174/628-7.jpeg_/new-york-city-jumpstart-alumni-focus-group-28.jpeg","thumb":{"width":"48","url":"http://s1.evcdn.com/images/thumb/I0-001/024/174/628-7.jpeg_/new-york-city-jumpstart-alumni-focus-group-28.jpeg","height":"48"},"height":"48"},"created":"2015-11-04 09:09:49","venue_id":"V0-001-009646035-6","tz_city":null,"stop_time":null,"venue_name":"New York Jumpstart Office","venue_url":"http://newyorkcity.eventful.com/venues/new-york-jumpstart-office-/V0-001-009646035-6?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/New_York","calendar_count":null,"comment_count":null,"region_abbr":"NY","postal_code":"10282","going_count":null,"all_day":"0","latitude":"40.7146608","groups":null,"url":"http://newyorkcity.eventful.com/events/third-annual-santas-winte-/E0-001-088145931-6@2015120514?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-088145931-6@2015120514","privacy":"1","city_name":"New York","link_count":null,"longitude":"-74.0151044","country_name":"United States","country_abbr":"USA","region_name":"New York","start_time":"2015-12-05 14:30:00","tz_id":null,"description":"Back by popular demand – the Conrad New York will host three Santa’s Winter Workshop events this December, welcoming hotel guests and local New York families to take part in the holiday festivities. Children will have the chance to meet and take photos with Santa, make their very own personalized hot chocolate creations at the hotel’s hot chocolate bar and engage in fun arts & crafts activities with the Children’s Museum of the Arts. Tea sandwiches and other small bites will also be available for mom and dad.\n\nThis year’s events will be held from 2:30-4:30pm on the first three Saturdays of December (5th, 12th, 19th)\nRESERVATIONS REQUIRED:  Please call 646.796.4250 or email the hotel at Atrio.Restaurant@hilton.com\n\n$30 per child, $15 per adult, cost includes photos with Santa.","modified":"2015-10-17 08:01:46","venue_display":"1","tz_country":null,"performers":null,"title":"Third Annual Santa’s Winter Workshop at the Conrad New York","venue_address":"102 North End Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":"weekly on Saturdays for 3 times","calendars":null,"owner":"DKCNews1","going":null,"country_abbr2":"US","image":null,"created":"2015-10-15 09:14:04","venue_id":"V0-001-000847844-6","tz_city":null,"stop_time":"2015-12-05 16:30:00","venue_name":"Embassy Suites New York","venue_url":"http://newyorkcity.eventful.com/venues/embassy-suites-new-york-/V0-001-000847844-6?utm_source=apis&utm_medium=apim&utm_campaign=apic"}]}},
+  "eventful2": {
+    "last_item":null,"total_items":"83","first_item":null,"page_number":"1","page_size":"10","page_items":null,"search_time":"0.126","page_count":"2","events":{"event":[{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60616","going_count":null,"all_day":"2","latitude":"41.854092","groups":null,"url":"http://chicago.eventful.com/events/national-restaurant-association-/E0-001-075877851-7?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-075877851-7","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.6127372","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-05-21 00:00:00","tz_id":null,"description":" National Restaurant Association is happening on 21 May 2016 at McCormick Place Convention Center Chicago, United States Of America. Its a premier event in Hotel, Restaurant & Catering industry. <br><br><a href=\"http://login.10times.com/stall-book/6266\" rel=\"nofollow\">Book a stall at 10times.com!</a>","modified":"2015-07-11 13:31:06","venue_display":"1","tz_country":null,"performers":null,"title":"National Restaurant Association","venue_address":"2301 S. Lake Shore Drive","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s4.evcdn.com/images/small/I0-001/017/458/863-9.jpeg_/national-restaurant-association-63.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s4.evcdn.com/images/medium/I0-001/017/458/863-9.jpeg_/national-restaurant-association-63.jpeg","height":"128"},"url":"http://s4.evcdn.com/images/small/I0-001/017/458/863-9.jpeg_/national-restaurant-association-63.jpeg","thumb":{"width":"48","url":"http://s4.evcdn.com/images/thumb/I0-001/017/458/863-9.jpeg_/national-restaurant-association-63.jpeg","height":"48"},"height":"48"},"created":"2014-10-04 03:14:46","venue_id":"V0-001-004815602-7","tz_city":null,"stop_time":"2016-05-24 00:00:00","venue_name":"McCormick Place Convention Center","venue_url":"http://chicago.eventful.com/venues/mccormick-place-convention-center-/V0-001-004815602-7?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60523","going_count":null,"all_day":"0","latitude":"41.8361","groups":null,"url":"http://chicago.eventful.com/events/ring-new-year-style-chicagolands-hottest-spanish-r-/E0-001-089372349-0?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-089372349-0","privacy":"1","city_name":"Oak Brook","link_count":null,"longitude":"-87.9649","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2015-12-31 21:00:00","tz_id":null,"description":"Enjoy delectable dining, craft cocktails, live entertainment by one of the area’s hottest party bands, and breathtaking views from the 9th floor of the chic hotel Le Méridien Chicago – Oakbrook Center\n\nAfter the success and popularity of its first NYE event in 2014, modern Spanish restaurant El Tapeo invites guests to ring in 2016 with the 2nd Annual New Year’s Eve party on Thursday, December 31. Located on the 9th floor of Le Méridien Chicago – Oakbrook Center, El Tapeo will offer two dinner seatings, each featuring a complimentary glass of sangria or sparkling champagne, as well as a festive party from 9 p.m. until 2 a.m. Guests who book the second dinner seating will be granted complimentary access to the party, also open to guests who are not dining to attend, featuring live entertainment from Cherry and The Definitives, party favors, and a midnight toast. \n\nThe first seating, offered between 5 p.m. to 6:30 p.m., until 8:30 p.m., will feature El Tapeo’s signature à la carte menu. Highlights include traditional Spanish tapas, such as Albondigas, lamb and bacon meatballs, romesco, toasted almonds & parsley; Tortilla Española made of confit artichoke, spinach, goat cheese omelet, romesco & crème fraiche; as well as a number of elegant entrees including Vieiras, pan-seared scallops, slow cooked lentil risotto, crispy kale & paprika honey migas; and Gambas a la Plancha, grilled whole prawns, chorizo sofrito, frisée & caper vinaigrette. \n\nThe second seating, offered from 9 p.m. until 10:30 p.m. will feature a prix-fixe, three course meal for $85 per person. The menu spotlights a number of El Tapeo’s most popular tapas, artfully constructed main dishes, and rich desserts.  First course options include Croquetas de Tocineta, ibérico bacon and pumpkin fritters with sage aioli; Gambas, sautéed shrimp, garlic, fresh herbs, smoked paprika, and piquillo pepper; Dátiles, fried medjool dates stuffed with marcona almonds and wrapped in cherry wood bacon; Ensalada de Pera, rioja wine poached pear, baby spinach, blue cheese and toasted almonds.  Main dishes include Carne Asada, Pollo, orange tomato glaze half amish chicken with garlic purple potato; and Pescado del Dia, two year aged serrano ham wrapped monkfish, sautéed manila clams and frisée citrus salad. Ending the meal on a sweet note, guests can select from an array of dessert options including Tarta de Limón; Panna Cotta de Coco; or Leche Frita, burnt caramel, ice cream, fried milk and apple compote. The prix-fixe option also includes complimentary access to the party.\n\nLive music will be provided throughout dinner and the party by Cherry and The Definitives, one of the most sought after live party bands in the Unites States.  The band entertains with a wide variety of music genres including Jazz, Latin, Pop, R&B, Disco, 80&#39;s, Motown, and current Top 40 Dance Music. Their distinctive style has mesmerized audiences (including our very own El Tapeo guests this summer), keeping the dance floor hot. Female lead singer Cherry Pineda has toured Malaysia, Singapore, Indonesia, Thailand, Philippines, and has recently appeared in Las Vegas at The Excalibur and Tuscany Hotel. She frequently performs with various orchestras and has won numerous awards including F.A.M.E.&#39;s &quot;Best Female Vocalist&quot;.  Backing her up are The Definitives, comprised of some of the most top-notch musicians in the live entertainment circuit. \n\nReservations are required. Guests of the first dinner seating who would like to enjoy the party, or those who would like to only attend the party, can do so for an entrance fee of $35. \nLe Méridien Chicago – Oakbrook Center has created an Overnight Package for guests who would like to make a night of it for an incredible discounted price of $149 plus tax. In order to receive this discount, guests must have a confirmed El Tapeo reservation for one of the options above. \n\nLocated in Greater Chicago directly adjacent to Oakbrook Center and steps from sophisticated shops and upscale dining, Le Méridien Chicago- Oakbrook Center is a destination of choice for visitors to the western Chicago suburbs.  From floor plan to room key, Le Méridien Chicago- Oakbrook Center brings a new lens on Oak Brook through the work of local Chicago artists and abstract installations representing notable Chicago symbols.  Mies Van der Rohe inspired furnishings greet arriving guests, along with a grand, one-of-a-kind mural depicting the architecture of the city by famed muralist Justus Roe.  Floor by floor, guests rise to uncover moments that are uniquely Chicago, including images taken from Chicago’s signature “L” train, stunning photographs portraying Chicagoland locals caught in the rain, and custom graphic patterns throughout, created by Starwood’s award-winning design team, abstract designs of local contextual nuances, including original Daniel Burnham city plans for Chicago and maps of the public spaces of the Windy City.  Le Méridien Chicago - Oakbrook Center offers 3,500 square feet of event space and 172 artfully designed guestrooms and suites including two luxurious Spa Suites, unparalleled in the Western Suburbs. The ninth floor features spectacular panoramic views from floor to ceiling windows, a 3,000 square foot Grand Salon Ballroom, Executive Club Lounge, and the area’s hottest new restaurant, El Tapeo, offering authentic Spanish cuisine, infused with bold and authentic flavors. Le Méridien Chicago- Oakbrook Center offers all the benefits of the Starwood Preferred Guest Loyalty program.  For more information visit www.lemeridienoakbrook.com","modified":"2015-12-04 04:01:06","venue_display":"1","tz_country":null,"performers":null,"title":"RING IN THE NEW YEAR IN STYLE AT CHICAGOLAND’S HOTTEST SPANISH RESTAURANT EL TAPEO","venue_address":"2100 Spring Road","geocode_type":"Zip Code Based GeoCodes","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"Hollyf7b6c","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s4.evcdn.com/images/small/I0-001/024/522/255-4.jpeg_/ring-new-year-style-chicagolands-hottest-spanish-r-55.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s4.evcdn.com/images/medium/I0-001/024/522/255-4.jpeg_/ring-new-year-style-chicagolands-hottest-spanish-r-55.jpeg","height":"128"},"url":"http://s4.evcdn.com/images/small/I0-001/024/522/255-4.jpeg_/ring-new-year-style-chicagolands-hottest-spanish-r-55.jpeg","thumb":{"width":"48","url":"http://s4.evcdn.com/images/thumb/I0-001/024/522/255-4.jpeg_/ring-new-year-style-chicagolands-hottest-spanish-r-55.jpeg","height":"48"},"height":"48"},"created":"2015-12-03 08:00:47","venue_id":"V0-001-007964603-8","tz_city":null,"stop_time":"2016-01-01 02:00:00","venue_name":"Le Meridien Chicago - Oakbrook Center","venue_url":"http://chicago.eventful.com/venues/le-meridien-chicago-oakbrook-center-/V0-001-007964603-8?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/henhouse-prowlers-miles-over-mountains-/E0-001-076459412-9?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-076459412-9","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2015-12-30 21:00:00","tz_id":null,"description":" Wed, Dec 30 - 9pm - $15<p> <a href=\"http://www.henhouseprowlers.com/\" rel=\"nofollow\">Henhouse Prowlers</a> <a href=\"https://www.facebook.com/milesovermountainsband\" rel=\"nofollow\">Miles over Mountains</a> <p> Ten years in the making, Chicago’s Henhouse Prowlers have built a reputation for hard work and non-stop touring, playing music inspired by the roots of bluegrass while branching out into a sound uniquely their own. From lightning fast picking, to sentimental ballads—playing storied original material, traditional songs, and contemporary covers—The Prowlers’ live show leaves no one wanting.Their most recent album “Breaking Ground” grew out of collaboration and time well spent, having completed it within months of multiple cross-country US tours and the band’s third trip to Europe. Produced by Greg Cahill (Grammy nominated band-leader of Special Consensus), with special guests Josh Williams (of Rhonda Vincent and the Rage) and Anders Beck (of Greensky Bluegrass), this recording packs punch after punch.The band recently performed with the US State Department on two separate trips in five different countries in Central and West Africa, as well as heading back to Europe in the spring of 2014 for their largest tour abroad to date. The Prowlers continue to push the envelope with their highly original songwriting, tight arrangements, and electrifying stage presence. With the bluegrass mantle on their shoulders and the best fans in the world by their side, The Henhouse Prowlers are here to stay for a long, long time. </p></p>","modified":"2015-12-05 09:24:19","venue_display":"1","tz_country":null,"performers":{"performer":[{"creator":"artistdata","linker":"evdb","name":"Chicago Farmer","url":"http://eventful.com/performers/chicago-farmer-/P0-001-000195040-0?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000195040-0","short_bio":"No biography provided"},{"creator":"hhprowlers","linker":"evdb","name":"The Henhouse Prowlers","url":"http://concerts.eventful.com/The-Henhouse-Prowlers?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000102953-3","short_bio":"Chicago Bluegrass"}]},"title":"Henhouse Prowlers - Miles over Mountains","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s4.evcdn.com/images/small/I0-001/002/836/387-8.jpeg_/chicago-farmer-87.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s4.evcdn.com/images/medium/I0-001/002/836/387-8.jpeg_/chicago-farmer-87.jpeg","height":"128"},"url":"http://s4.evcdn.com/images/small/I0-001/002/836/387-8.jpeg_/chicago-farmer-87.jpeg","thumb":{"width":"48","url":"http://s4.evcdn.com/images/thumb/I0-001/002/836/387-8.jpeg_/chicago-farmer-87.jpeg","height":"48"},"height":"48"},"created":"2014-10-18 12:48:34","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60616","going_count":null,"all_day":"2","latitude":"41.854092","groups":null,"url":"http://chicago.eventful.com/events/bar-beverage-alchohol-restaurants-/E0-001-075872073-2?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-075872073-2","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.6127372","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-05-22 00:00:00","tz_id":null,"description":" Bar Beverage Alchohol for Restaurants is happening on 22 May 2016 at McCormick Place Convention Center Chicago, United States Of America. Its a premier event in Wine & Spirits industry. <br><br><a href=\"http://login.10times.com/stall-book/32866\" rel=\"nofollow\">Book a stall at 10times.com!</a>","modified":"2015-09-13 09:51:37","venue_display":"1","tz_country":null,"performers":null,"title":"Bar Beverage Alchohol for Restaurants","venue_address":"2301 S. Lake Shore Drive","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2014-10-04 01:40:23","venue_id":"V0-001-004815602-7","tz_city":null,"stop_time":"2016-05-23 00:00:00","venue_name":"McCormick Place Convention Center","venue_url":"http://chicago.eventful.com/venues/mccormick-place-convention-center-/V0-001-004815602-7?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60661","going_count":null,"all_day":"0","latitude":"41.8824","groups":null,"url":"http://chicago.eventful.com/events/first-bites-bash-2016-official-kickoff-event-chi-/E0-001-089352433-0?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-089352433-0","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.6436","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-01-21 17:30:00","tz_id":null,"description":" First Bites Bash is the official kick-off event for the 9th annual Chicago Restaurant Week, produced by Choose Chicago. Tony Priolo, Executive Chef/Partner of Piccolo Sogno & Piccolo Sogno Due, will host this year&#39;s event, from which a portion of the proceeds will benefit the Anthony Rizzo Family Foundation. Join us inside the magnificent Great Hall at Chicago Union Station, where you will enjoy savory and sweet tastings from over 60 of Chicago&#39;s most celebrated chefs and restaurants. Toast to the city&#39;s culinary scene with beer, wine, and cocktail pairings from Goose Island Beer Company, Terlato Wines International, and spirit partners. For a list of participating restaurants, and all other event information, please visit www.firstbitesbash.com.  ***Ticket sales will close at noon on January 21. TICKETS WILL NOT BE AVAILABLE FOR PURCHASE AT THE DOOR. *** Admission Details: All ticket sales are final. Must be 21 years or older with valid photo identification to be admitted. All guests must enter through the Jackson Street entrance only. Doors will open at 5:30pm. Complimentary coat check is located upon entering the Jackson St. entrance, with a second location at the bottom of the stairs after check-in. Bring a printed ticket or have your mobile ticket ready to scan at the door. All food and beverage items will be tasting portions. Parking: Entrance to the self-park parking garage is located on S. Canal St. between Van Buren & Jackson. Click here for a map and driving directions. Business or cocktail party attire is suggested.   Get Social! Share your photos at the event #FirstBites16 @ChooseChicago ","modified":"2015-12-02 20:02:22","venue_display":"1","tz_country":null,"performers":null,"title":"First Bites Bash 2016: Official Kick-Off Event for Chicago Restaurant Week","venue_address":"500 W. Jackson Blvd","geocode_type":"Zip Code Based GeoCodes","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2015-12-02 20:02:22","venue_id":"V0-001-007337475-9","tz_city":null,"stop_time":null,"venue_name":"The Great Hall at Union Station","venue_url":"http://chicago.eventful.com/venues/the-great-hall-at-union-station-/V0-001-007337475-9?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/yeni-trk-/E0-001-018908563-1?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-018908563-1","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-01-30 21:00:00","tz_id":null,"description":" Sat, Jan 30 - 9pm - $35adv/$45door<p> <a href=\"https://www.facebook.com/yeniturku/?fref=ts\" rel=\"nofollow\">Yeni Türkü</a> <p> Yeni Türkü (means New Türkü in Turkish) is a band in Turkey. The group has held concerts and has recorded a number of albums since forming in 1978. Their musical style is characterized by a combination of traditional Turkish and modern musical instruments, including the oud, baglama, kemenche, qanun and guitar. Their music reflects influences of music from around the world. </p></p>","modified":"2015-12-12 13:21:35","venue_display":"1","tz_country":null,"performers":{"performer":[{"creator":"DANNIE25","linker":"chuck","name":"The Sometimes Family","url":"http://concerts.eventful.com/The-Sometimes-Family?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000122894-9","short_bio":"A great acoustic group out of Chicago, IL"},{"creator":"flippenferdinand","linker":"evdb","name":"Leslie Hunt","url":"http://concerts.eventful.com/Leslie-Hunt?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000131085-1","short_bio":"Indie/Rock/Alternative"}]},"title":"Yeni Türkü","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s1.evcdn.com/images/small/I0-001/004/230/700-9.jpeg_/the-sometimes-family-00.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s1.evcdn.com/images/medium/I0-001/004/230/700-9.jpeg_/the-sometimes-family-00.jpeg","height":"128"},"url":"http://s1.evcdn.com/images/small/I0-001/004/230/700-9.jpeg_/the-sometimes-family-00.jpeg","thumb":{"width":"48","url":"http://s1.evcdn.com/images/thumb/I0-001/004/230/700-9.jpeg_/the-sometimes-family-00.jpeg","height":"48"},"height":"48"},"created":"2009-01-17 08:46:40","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/henhouse-prowlers-wandering-boys-/E0-001-087691699-6?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-087691699-6","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2015-12-31 20:00:00","tz_id":null,"description":" Thu, Dec 31 - 8pm - $20<p> <a href=\"http://www.henhouseprowlers.com/\" rel=\"nofollow\">Henhouse Prowlers</a> <a href=\"https://www.facebook.com/thewanderingboys?fref=ts\" rel=\"nofollow\">The Wandering Boys</a> <p> Ten years in the making, Chicago’s Henhouse Prowlers have built a reputation for hard work and non-stop touring, playing music inspired by the roots of bluegrass while branching out into a sound uniquely their own. From lightning fast picking, to sentimental ballads—playing storied original material, traditional songs, and contemporary covers—The Prowlers’ live show leaves no one wanting.Their most recent album “Breaking Ground” grew out of collaboration and time well spent, having completed it within months of multiple cross-country US tours and the band’s third trip to Europe. Produced by Greg Cahill (Grammy nominated band-leader of Special Consensus), with special guests Josh Williams (of Rhonda Vincent and the Rage) and Anders Beck (of Greensky Bluegrass), this recording packs punch after punch.The band recently performed with the US State Department on two separate trips in five different countries in Central and West Africa, as well as heading back to Europe in the spring of 2014 for their largest tour abroad to date. The Prowlers continue to push the envelope with their highly original songwriting, tight arrangements, and electrifying stage presence. With the bluegrass mantle on their shoulders and the best fans in the world by their side, The Henhouse Prowlers are here to stay for a long, long time. </p></p>","modified":"2015-12-05 09:24:20","venue_display":"1","tz_country":null,"performers":{"performer":{"creator":"hhprowlers","linker":"evdb","name":"The Henhouse Prowlers","url":"http://concerts.eventful.com/The-Henhouse-Prowlers?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000102953-3","short_bio":"Chicago Bluegrass"}},"title":"Henhouse Prowlers - The Wandering Boys","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s2.evcdn.com/images/small/I0-001/000/748/861-3.jpeg_/the-henhouse-prowlers-61.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s2.evcdn.com/images/medium/I0-001/000/748/861-3.jpeg_/the-henhouse-prowlers-61.jpeg","height":"128"},"url":"http://s2.evcdn.com/images/small/I0-001/000/748/861-3.jpeg_/the-henhouse-prowlers-61.jpeg","thumb":{"width":"48","url":"http://s2.evcdn.com/images/thumb/I0-001/000/748/861-3.jpeg_/the-henhouse-prowlers-61.jpeg","height":"48"},"height":"48"},"created":"2015-09-26 16:00:48","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/henhouse-prowlers--friends-don-stiernberg-gre-/E0-001-087691700-1?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-087691700-1","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-01-01 21:00:00","tz_id":null,"description":" Fri, Jan 1 - 9pm - $12adv/$15door<p> <a href=\"http://www.henhouseprowlers.com/\" rel=\"nofollow\">Henhouse Prowlers</a> <a href=\"http://www.martyrslive.com/\" rel=\"nofollow\">& Friends</a> <a href=\"http://www.donstiernberg.com/\" rel=\"nofollow\">Don Stiernberg & Greg Cahill</a> <a href=\"http://www.henhouseprowlers.com/\" rel=\"nofollow\">plus all your favorite former Prowlers as special guests!</a> <p> Ten years in the making, Chicago’s Henhouse Prowlers have built a reputation for hard work and non-stop touring, playing music inspired by the roots of bluegrass while branching out into a sound uniquely their own. From lightning fast picking, to sentimental ballads—playing storied original material, traditional songs, and contemporary covers—The Prowlers’ live show leaves no one wanting.Their most recent album “Breaking Ground” grew out of collaboration and time well spent, having completed it within months of multiple cross-country US tours and the band’s third trip to Europe. Produced by Greg Cahill (Grammy nominated band-leader of Special Consensus), with special guests Josh Williams (of Rhonda Vincent and the Rage) and Anders Beck (of Greensky Bluegrass), this recording packs punch after punch.The band recently performed with the US State Department on two separate trips in five different countries in Central and West Africa, as well as heading back to Europe in the spring of 2014 for their largest tour abroad to date. The Prowlers continue to push the envelope with their highly original songwriting, tight arrangements, and electrifying stage presence. With the bluegrass mantle on their shoulders and the best fans in the world by their side, The Henhouse Prowlers are here to stay for a long, long time. </p></p>","modified":"2015-12-05 09:24:23","venue_display":"1","tz_country":null,"performers":{"performer":[{"creator":"hhprowlers","linker":"evdb","name":"The Henhouse Prowlers","url":"http://concerts.eventful.com/The-Henhouse-Prowlers?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000102953-3","short_bio":"Chicago Bluegrass"},{"creator":"evdb","linker":"evdb","name":"Don Stiernberg","url":"http://concerts.eventful.com/Don-Stiernberg?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000825624-2","short_bio":"Country / Folk / Jazz"}]},"title":"Henhouse Prowlers - & Friends - Don Stiernberg & Greg Cahill - plus all your favorite former Prowlers as special guests!","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s2.evcdn.com/images/small/I0-001/000/748/861-3.jpeg_/the-henhouse-prowlers-61.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s2.evcdn.com/images/medium/I0-001/000/748/861-3.jpeg_/the-henhouse-prowlers-61.jpeg","height":"128"},"url":"http://s2.evcdn.com/images/small/I0-001/000/748/861-3.jpeg_/the-henhouse-prowlers-61.jpeg","thumb":{"width":"48","url":"http://s2.evcdn.com/images/thumb/I0-001/000/748/861-3.jpeg_/the-henhouse-prowlers-61.jpeg","height":"48"},"height":"48"},"created":"2015-09-26 16:00:49","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60610","going_count":null,"all_day":"0","latitude":"41.8931471","groups":null,"url":"http://chicago.eventful.com/events/happy-hour-has-landed-har-/E0-001-089030066-9@2015122616?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-089030066-9@2015122616","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.6305227","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2015-12-26 16:00:00","tz_id":null,"description":"Oh, happy day! For the first time since 1989, Chicago restaurants and bars can now offer timely drink discounts. To celebrate, Hard Rock Cafe Chicago has launched a new happy hour program featuring great food and drink specials available Monday through Friday from 4 to 6 p.m. \n\nHard Rock Cafe Chicago’s happy hour features half-priced appetizers* including Spinach Artichoke Dip, Classic Nachos, Balsamic Tomato Bruschetta, Tupelo Chicken Tenders, Potato Skins, and Wings in a choice of Buffalo Style, Hard Rock’s Classic Rock, Tangy or Heavy Metal sauces.\n\nHappy Hour drink specials include $5 drafts, $5 pours of house red and white wine from Inspiration Vineyards and $6 shots of Jameson, Fireball and Jack Daniel’s. \n\nFor more information, visit www.hardrock.com/chicago.\n\n* Half-priced appetizer Happy Hour special excludes Hard Rock Cafe Chicago’s Jumbo Combo.","modified":"2015-11-18 13:09:43","venue_display":"1","tz_country":null,"performers":null,"title":"Happy Hour has landed at Hard Rock Cafe Chicago","venue_address":"63 W Ontario","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":"daily until November 17, 2016","calendars":null,"owner":"brittanyj3","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s4.evcdn.com/images/small/I0-001/024/342/047-1.jpeg_/happy-hour-has-landed-hard-rock-cafe-c-47.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s4.evcdn.com/images/medium/I0-001/024/342/047-1.jpeg_/happy-hour-has-landed-hard-rock-cafe-c-47.jpeg","height":"128"},"url":"http://s4.evcdn.com/images/small/I0-001/024/342/047-1.jpeg_/happy-hour-has-landed-hard-rock-cafe-c-47.jpeg","thumb":{"width":"48","url":"http://s4.evcdn.com/images/thumb/I0-001/024/342/047-1.jpeg_/happy-hour-has-landed-hard-rock-cafe-c-47.jpeg","height":"48"},"height":"48"},"created":"2015-11-18 10:17:52","venue_id":"V0-001-000599225-5","tz_city":null,"stop_time":null,"venue_name":"Hard Rock Cafe Chicago","venue_url":"http://chicago.eventful.com/venues/hard-rock-cafe-chicago-/V0-001-000599225-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60654","going_count":null,"all_day":"0","latitude":"41.8876","groups":null,"url":"http://chicago.eventful.com/events/new-years-eve-2016-io-god-/E0-001-088114831-3@2015123120?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-088114831-3@2015123120","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.6368","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2015-12-31 20:00:00","tz_id":null,"description":" Experience the New Year in style with a beautiful view of Chicago, great people, great food and amazing chef influenced cocktails. From the fourth floor perch of The Godfrey Hotel Chicago at the epicenter of River North, I|O offers 10,000 square feet of space for you to cheer in the year 2016.  Enjoy the party with a General Admission ticket or bring your group and book a table. New for this year you can also book a hotel room which includes tickets to the party as defined below. Please note, the only hotel room types that include tickets to the New Years Eve party are those listed on this site. Rooms booked through any other source do not include tickets. For those wanting dinner and dancing, you can book a seating for dinner beforehand in our groundfloor restaurant, Dolce Italian. Last year NYE video:  https://www.youtube.com/watch?v=6PFFunW1u0s General Admission (GA) Tickets Information: Includes entry to I|O located at The Godfrey Hotel Chicago, tray passed hors d&#39;oeuvres and champagne toast at midnight  Expedited Admission (EA) Tickets Information: Includes expedited entry and a GA into I|O located at The Godfrey Hotel Chicago, tray passed hors d&#39;oeuvres and champagne toast at midnight Early Dinner Seating in Dolce Italian Plus I|O Tickets Information: Includes a special NYE tasting menu in Dolce Italian before celebrating the New Year with us at I|O. Seatings begin promptly at 7pm, are $100 plus tax per person (excluding alcohol) and are available for groups of 2, 4 or 6 only. Table | Private Room Booking Information: $1000 - Indoor Lounge tables include expedited entry (EA) for up to 10 guests, a table in I Lounge &quot;Indoor room,&quot; and a bottle of Dom Perignon or guests choice up to $400 in spirits/champagne bottle service. For additional guests please purchase GA tickets and we will add their name to the EA list. Tables are considered home base style space. Service fee of 21% is not included and will be charged while at the event $2000 - Outdoor Lounge booth include expedited entry (EA) for up to 10 guests, a booth in O Lounge &quot;Indoor room&quot;, and two bottles of Dom Perignon or guests choice up to $1000 in spirits/champagne bottle service. For additional guests please purchase GA tickets and we will add their name to the EA list. Tables are considered home base style space. Service fee of 21% is not included and will be charged while at the event $3000 - Giant Booths include expedited entry for up to 20 guests, a giant booth (one of 4) in O Lounge retractable roof &quot;main room&quot; and 4 bottles of Dom Perignon or guests choice up to $2000 in spirits/champagne bottles. For additional guests please purchase GA tickets. Tables are considered home base style space. Service fee of 21% is not included and will be charged while at the event $10,000 - South Truss Room is an adjoining room at I|O on the fourth floor for our private events. The room has access to the main room and its own private balcony with fire pit. The South Truss Room can handle 100 people standing so 50 people will feel spacious. $10,000 Ticket includes 50 Expedited Admission tickets (EA) , tray passed apps from 9-11pm and a glass of champagne for the midnight toast as well as exclusive use of the South Truss Room with its own private patio and fire pit (patio and fire pit close at midnight). Cash bar with bartender is available in room. Additional tickets available via GA Hotel Room Booking Information: Hotel Rooms include Expedited Entry tickets to I|O at The Godfrey Hotel&#39;s New Years Eve Party. The number of tickets included with each room will be listed in the ticket description for that room type. Price will increase as more rooms are sold. Please note a $300 Security Deposit Hold will be added to the registered guest&#39;s credit card on check-in and will be released following inspection of the room after departure. NYE party favors, food from 9-11pm, late night snack and entertainment provided. Cash Bar available DJ&#39;s: RYTHMC | Victor R | Louie Loop | James Alexander FAQs   Are there ID requirements or an age limit to enter the event? 21+ only   Where can I contact the organizer with any questions? E: info@iogodfrey.com ","modified":"2015-12-20 06:07:37","venue_display":"1","tz_country":null,"performers":null,"title":"New Years Eve 2016 I|O at the Godfrey Hotel Chicago","venue_address":"127 West Huron Street","geocode_type":"Zip Code Based GeoCodes","tz_olson_path":null,"recur_string":"daily until January 1, 2016","calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s1.evcdn.com/images/small/I0-001/024/489/792-6.jpeg_/new-years-eve-2016-io-godfrey-hotel-ch-92.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s1.evcdn.com/images/medium/I0-001/024/489/792-6.jpeg_/new-years-eve-2016-io-godfrey-hotel-ch-92.jpeg","height":"128"},"url":"http://s1.evcdn.com/images/small/I0-001/024/489/792-6.jpeg_/new-years-eve-2016-io-godfrey-hotel-ch-92.jpeg","thumb":{"width":"48","url":"http://s1.evcdn.com/images/thumb/I0-001/024/489/792-6.jpeg_/new-years-eve-2016-io-godfrey-hotel-ch-92.jpeg","height":"48"},"height":"48"},"created":"2015-10-14 09:36:23","venue_id":"V0-001-007567257-6","tz_city":null,"stop_time":null,"venue_name":"The Godfrey Hotel Chicago","venue_url":"http://chicago.eventful.com/venues/the-godfrey-hotel-chicago-/V0-001-007567257-6?utm_source=apis&utm_medium=apim&utm_campaign=apic"}]}
+    },
+  "eventful3": {
+    "last_item":null,"total_items":"83","first_item":null,"page_number":"2","page_size":"10","page_items":null,"search_time":"0.052","page_count":"2","events":{"event":[{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60657","going_count":null,"all_day":"0","latitude":"41.9433520","groups":null,"url":"http://chicago.eventful.com/events/new-years-eve-2016-party-/E0-001-088860100-6@2015123120?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-088860100-6@2015123120","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.6547030","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2015-12-31 20:00:00","tz_id":null,"description":" Join Standard Bar as we celebrate 2016 for our 5th anual New Years Eve party.  Our Premium package will be from 9pm to 2am with check in at 8pm.  We will have plenty of party favors and the DJ will be keeping the party going to 2am!  Standard is just a couple blocks from the Blue Line stop and they are offering free rides all night.  We will not be selling tickets at the door and we sold out by December 5th last year so get your tickets early.  Our dinner buffet gets rave reviews every year.  It will consist of appetizers, entrees and dessert.  Our Premium package will not leave you dissapointed.  Photo Booth Free coat check Champagne Toast at Midnight Standard is fully staffed and there will not be a wait for drinks! Two floors with 3 lounges and plenty of high top seating Dinner Buffet Includes: Our famous house Wings (voted best in Chicago) Our two time best Burgers (Cortland and Mac and Cheese) Brisket and Buffalo chicken sandwiches Breaded Chicken Tenders Chicken Parmesian Dessert Cart that will leave you drooling! Vegetarian Options: Our homemade Mac and Cheese Grilled Cheese Sandwiches Salads and Hummus Our Premium Bar Package will include all of your favorite spirits, beer and wine.  We will have all 18 draft beers available including Not Your Fathers Rootbeer!  Spirits will include all your favorites including Jameson, Crown Royal, Hendricks Gin, Ketel One, Grey Goose, Avion Tequilla, etc.. Please book your tickets early and save money. Feel Free to check us out at Standardbarandgrill.com The food and bar package are included with the ticket.   FAQs   Are there ID requirements or an age limit to enter the event?  21 and over with a valid ID What are my transport/parking options getting to the event? Division Blue Line and plenty of meter parking behind the building   Where can I contact the organizer with any questions? dan@ncpchicago.com   Can I update my registration information? Ticket can be transferred   Do I have to bring my printed ticket to the event? Yes   What is the refund policy? No refunds!   ","modified":"2015-11-30 03:42:38","venue_display":"1","tz_country":null,"performers":null,"title":"New Years Eve 2016 Party at Standard Bar and Grill Chicago NYE 2015","venue_address":"3358 North Sheffield Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":"daily until January 1, 2016","calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s2.evcdn.com/images/small/I0-001/024/292/081-3.jpeg_/new-years-eve-2016-party-standard-bar-81.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s2.evcdn.com/images/medium/I0-001/024/292/081-3.jpeg_/new-years-eve-2016-party-standard-bar-81.jpeg","height":"128"},"url":"http://s2.evcdn.com/images/small/I0-001/024/292/081-3.jpeg_/new-years-eve-2016-party-standard-bar-81.jpeg","thumb":{"width":"48","url":"http://s2.evcdn.com/images/thumb/I0-001/024/292/081-3.jpeg_/new-years-eve-2016-party-standard-bar-81.jpeg","height":"48"},"height":"48"},"created":"2015-11-12 08:14:42","venue_id":"V0-001-000484479-3","tz_city":null,"stop_time":null,"venue_name":"Redmond's","venue_url":"http://chicago.eventful.com/venues/redmonds-/V0-001-000484479-3?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/new-candy-store-prophets-monkees-/E0-001-026772448-9?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-026772448-9","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-01-11 20:00:00","tz_id":null,"description":" Mon, Jan 11 - 8pm - $7<p> <a href=\"http://www.philangotti.com/\" rel=\"nofollow\">New Candy Store Prophets as the Monkees</a> <p> New Candy Store Prophets are a group of Chicago pop veterans - Phil Angotti (Idea- Beatle Brothers) John San Juan (Hushdrops) Jason Walker, Tim Fowler, Anthony Illarde (Chamber Strings) and Cathy Norden (old Town School of Folk) all Monkee fanatics, First assembled to play the premier of the Boyce and Hart movie in Chicago the NCSP have added more songs to their Monkees set- list , so you better get ready- they&#39;re coming to your town!!!! </p></p>","modified":"2015-11-07 16:35:06","venue_display":"1","tz_country":null,"performers":{"performer":[{"creator":"chuck","linker":"evdb","name":"DALE WATSON","url":"http://concerts.eventful.com/DALE-WATSON?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000106013-2","short_bio":"Country / Alternative"},{"creator":"sharbearaustin","linker":"evdb","name":"Rosie Flores","url":"http://concerts.eventful.com/Rosie-Flores?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000114415-1","short_bio":"Rosie Flores' music blends the best of honky tonk, rockabilly, and jazz with the traditional sounds of her Tex-Mex heritage"},{"creator":"trajikmagic","linker":"evdb","name":"cropduster","url":"http://concerts.eventful.com/cropduster?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000179416-9","short_bio":"allston"}]},"title":"New Candy Store Prophets as the Monkees","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2009-12-06 08:38:13","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60607","going_count":null,"all_day":"0","latitude":"41.8745","groups":null,"url":"http://chicago.eventful.com/events/lets-do-lunch-seminar-series-/E0-001-089046513-3?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-089046513-3","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.6503","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-02-20 11:30:00","tz_id":null,"description":" Come have Lunch & TALK with Emmy Award-Winning Journalist, and Host of Small TALK™ Web Series, Samantha Thomas! Find out how Samantha turned her Passion into Reality, and hear from an AMAZING Guest Speaker she&#39;s met along her journey, in the first session of this Seminar Series!  Registration includes: Plated Lunch (from GRUB Chicago Restaurant)  Guest Speaker Workshop Materials High-Level Networking Get ready to Turn Your Passion into Reality, and prepare to walk away with your roadmap to Success! #LDL16 ","modified":"2015-11-19 07:06:41","venue_display":"1","tz_country":null,"performers":null,"title":"LET'S DO LUNCH! - Seminar Series","venue_address":"1230 W. TAYLOR","geocode_type":"Zip Code Based GeoCodes","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s1.evcdn.com/images/small/I0-001/024/348/272-7.jpeg_/lets-do-lunch-seminar-series-72.jpeg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s1.evcdn.com/images/medium/I0-001/024/348/272-7.jpeg_/lets-do-lunch-seminar-series-72.jpeg","height":"128"},"url":"http://s1.evcdn.com/images/small/I0-001/024/348/272-7.jpeg_/lets-do-lunch-seminar-series-72.jpeg","thumb":{"width":"48","url":"http://s1.evcdn.com/images/thumb/I0-001/024/348/272-7.jpeg_/lets-do-lunch-seminar-series-72.jpeg","height":"48"},"height":"48"},"created":"2015-11-19 07:06:41","venue_id":"V0-001-008535081-3","tz_city":null,"stop_time":null,"venue_name":"GRUB CHICAGO","venue_url":"http://chicago.eventful.com/venues/grub-chicago-/V0-001-008535081-3?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/phil-angotti-friends-lennon-show-rachel-drew-/E0-001-026377434-3?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-026377434-3","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2015-12-29 20:00:00","tz_id":null,"description":" Tue, Dec 29 - 8pm - $7<p> <a href=\"http://www.philangotti.com/\" rel=\"nofollow\">Phil Angotti & Friends - The Lennon Show</a> <a href=\"https://www.facebook.com/Rachel-Drew-the-Bitter-Roots-118408008185633/\" rel=\"nofollow\">Rachel Drew & the Bitter Roots</a> <a href=\"http://brynrich.com/\" rel=\"nofollow\">Bryn Rich</a> <p> Phil Angotti and Friends - the Lennon ShowPhil has been singing Lennon (and McCartney) songs since he was a teenager and is well known as one of the finest at it- he has performed this music not only in the states but in Belgium, Spain and Liverpool England. He will be joined by top notch Chicago musicians Tommi Zender, Dann Moor and Joe Camarillo for this special set of a John Lennon songs. </p></p>","modified":"2015-12-05 09:24:19","venue_display":"1","tz_country":null,"performers":null,"title":"Phil Angotti & Friends - The Lennon Show - Rachel Drew & the Bitter Roots - Bryn Rich","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2009-11-16 22:39:17","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/diego-sol-metronomes-crisp-calamity-flamtet-/E0-001-089276441-8?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-089276441-8","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-01-08 21:00:00","tz_id":null,"description":" Fri, Jan 8 - 9pm - $8<p> <a href=\"https://www.facebook.com/pages/Diego-Sol-The-Metronomes/303541743009284?fref=ts\" rel=\"nofollow\">Diego Sol & the Metronomes</a> <a href=\"http://www.crispband.com/\" rel=\"nofollow\">Crisp</a> <a href=\"https://www.facebook.com/CalamityFlamtet?fref=ts\" rel=\"nofollow\">Calamity Flamtet</a> <p> The children of Song and Style, forged in the fires of funk, and seducing your eardrums with whispers and grooves, Diego Sol and The Metronomes hit the Chicago Music scene with a hay-maker performance in October of 2011. These four fine young gentlemen bring the heat every time they touch stage. Scintillating you with their sound, Diego Sol along with Tick Tock Nick, BLev, and Sweet Pete will always dress to the 9&#39;s and turn it up to 11. Diego Sol & The Metronomes: Suit Up. Get Down. </p></p>","modified":"2015-12-02 13:23:55","venue_display":"1","tz_country":null,"performers":null,"title":"Diego Sol & the Metronomes - Crisp - Calamity Flamtet","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2015-11-29 09:43:43","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/brazilian-carnaval-2016-hosted-marcos-oliveira-/E0-001-043766871-9?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-043766871-9","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-02-06 21:00:00","tz_id":null,"description":" Sat, Feb 6 - 9pm - $20adv/$25door<p> <a href=\"http://www.swingbrasileiro.net/live/\" rel=\"nofollow\">BRAZILIAN CARNAVAL 2016</a> <a href=\"http://www.martyrslive.com/\" rel=\"nofollow\">Hosted by Marcos Oliveira</a> <p> Our annual Brazilian Carnaval celebration, hosted by Marcos Oliveira, is a yearly highlight. One of the most vibrant celebrations of Carnaval in the world happens every year in Rio de Jenairo Brazil. Sound Culture and Swing Brasileiro are proud to bring the tradition and vibe of Brazilian Carnaval to Chicago! The night will feature local Brazilian super group SWING BRASILEIRO which combines some of the area’s most accomplished Brazilian musicians playing popular Carnaval musical styles such as Samba, Marchinhas, Samba Reggae, Frevo and Batucadas. The evening also includes Carnaval costume dance performances and other Brazilian traditional forms. THIS EVENT SELLS OUT EVERY YEAR! Advanced discounted tickets available while supplies last, so get your tickets early! </p></p>","modified":"2015-12-18 21:39:28","venue_display":"1","tz_country":null,"performers":null,"title":"BRAZILIAN CARNAVAL 2016 - Hosted by Marcos Oliveira","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2011-11-20 05:40:44","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/way-down-wanderers-railway-gamblers-charlie-hi-/E0-001-087866375-1?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-087866375-1","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-01-09 21:00:00","tz_id":null,"description":" Sat, Jan 9 - 9pm - $10adv/$12door<p> <a href=\"http://thewaydownwanderers.com/\" rel=\"nofollow\">Way Down Wanderers</a> <a href=\"http://www.railwaygamblers.com/\" rel=\"nofollow\">Railway Gamblers</a> <a href=\"http://charliehirschmusic.com/\" rel=\"nofollow\">Charlie Hirsch</a> <p> Equal parts fast-paced and soulful, alternative folk band from Chicago, The Way Down Wanderers, not only draw listeners in with their energy and originality but also captivate fans with their unique and touching story; Banjo player, Ben Montalbano and fiddle/mandolin player, Collin Krause, are half brothers who met each other for the first time 5 years ago. The two were shocked to find that not only were they both pursuing careers in music, but that they were each drawn to the same genres. In addition to their unexpected brotherly collaboration, the other band member&#39;s dramatically diverse backgrounds in bluegrass, jazz, classical, rap and the spoken word, blend together to form unique harmony vocals, soaring instrumentals, lively dynamics and standout melodies. </p></p>","modified":"2015-11-21 07:25:50","venue_display":"1","tz_country":null,"performers":null,"title":"Way Down Wanderers - Railway Gamblers - Charlie Hirsch","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2015-10-03 18:29:45","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/dog-1-coyote-riot-mad-bread-pat-otto-/E0-001-018908557-0?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-018908557-0","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-01-23 21:00:00","tz_id":null,"description":" Sat, Jan 23 - 9pm - $10<p> <a href=\"https://www.facebook.com/Dog1Bluegrass\" rel=\"nofollow\">DOG 1</a> <a href=\"https://www.facebook.com/pages/Coyote-Riot/246808652000030\" rel=\"nofollow\">Coyote Riot</a> <a href=\"http://www.madbreadband.com/\" rel=\"nofollow\">Mad Bread</a> <a href=\"https://www.facebook.com/patottomusic/\" rel=\"nofollow\">Pat Otto</a> <p> At first glance, Dog 1 may appear to be new to the scene, but each member of the group is a seasoned performer and top-notch musician. Formed in 2011, the band is based in the roots of traditional bluegrass music while pushing the boundaries and incorporating other styles into their sound. Their shows range from laid-back and intimate to a high lonesome, high energy, good time atmosphere so there’s a little bit for everyone.Dog 1 can play all the standards you know and love, but what really sets them apart are some great, unique covers (nope – I’m not giving it away, you’ll just have to come to a show and find out what they are) AND to top it off they have an ever-increasing collection of original songs – many of which are included on their upcoming EP, aptly titled: ‘Dog 1 – the EP’.So, bluegrass from Chicago? It happens a lot more than you might think. So come on out, see a show, pick up a CD and spend a little time with Dog 1… I promise you, you’ll be glad you did. </p></p>","modified":"2015-12-12 13:21:29","venue_display":"1","tz_country":null,"performers":{"performer":[{"creator":"humcity","linker":"evdb","name":"Ekoostik Hookah","url":"http://concerts.eventful.com/Ekoostik-Hookah?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000048177-2","short_bio":"rock from Ohio"},{"creator":"DamonCawley","linker":"evdb","name":"Stretch","url":"http://concerts.eventful.com/performers/stretch-/P0-001-000105704-0?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000105704-0","short_bio":"Blues"}]},"title":"DOG 1 - Coyote Riot - Mad Bread - Pat Otto","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":{"small":{"width":"48","url":"http://s4.evcdn.com/images/small/I0-001/000/434/655-6.jpg_/ekoostik-hookah-55.jpg","height":"48"},"width":"48","caption":null,"medium":{"width":"128","url":"http://s4.evcdn.com/images/medium/I0-001/000/434/655-6.jpg_/ekoostik-hookah-55.jpg","height":"128"},"url":"http://s4.evcdn.com/images/small/I0-001/000/434/655-6.jpg_/ekoostik-hookah-55.jpg","thumb":{"width":"48","url":"http://s4.evcdn.com/images/thumb/I0-001/000/434/655-6.jpg_/ekoostik-hookah-55.jpg","height":"48"},"height":"48"},"created":"2009-01-17 08:46:28","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/manuals-xavier-breaker-coalition-stereo-genius-/E0-001-035425140-3?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-035425140-3","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-01-05 20:00:00","tz_id":null,"description":" Tue, Jan 5 - 8pm - $7<p> <a href=\"https://www.facebook.com/manualsdrums\" rel=\"nofollow\">Manuals</a> <a href=\"https://www.facebook.com/XBreakerCoalition/?fref=ts\" rel=\"nofollow\">Xavier Breaker Coalition</a> <a href=\"http://thebeatpusha.com/post/23047392769/stereo-genius-miracle-year-ether\" rel=\"nofollow\">Stereo Genius</a> <p> Manuals (Gabriel Wallace) is a sonic shredder in size 10 sneakers. The Midwestern drummer and solo artist commands a dexterous style, fortified by top-flight experience. He has worked with some of the music industry&#39;s elite: Gorillaz, Damon Albarn, Paul Simonon and Mick Jones (The Clash), late greats Bobby Womack and Lou Reed, De La Soul, Bootie Brown (The Pharcyde), Del Tha Funky Homosapien, Snoop Dogg, yasiin bey (fka Mos Def), Will.I.Am, apl.de.ap (Black Eyed Peas), Little Dragon, Corinne Bailey Rae, Childish Gambino, Quadron, 2NE1, Hypnotic Brass Ensemble, Peven Everett, Celia Faussart (Les Nubians), Jesse Fischer, Margot Bingham and more. A product of the Chicago area, his boundless energy, intensity, and focus stems from a dense athletic background. Gabriel&#39;s percussive grit is shaped via the shed, the road, and the studio. He has independently composed, arranged, and produced two albums thus far. 2012&#39;s MID ONE (Manuals Instrumental Disc One) is a thump-clap beat fest (a mixtape for vibe heads). The upcoming MID 1.5 is a fat-free, filthy recording, primed to further Manuals&#39; &quot;1 of 1&quot; soundprint. Wallace is a DW Drums, Zildjian Cymbals, and Vic Firth Sticks Artist. </p></p>","modified":"2015-12-12 13:21:36","venue_display":"1","tz_country":null,"performers":{"performer":{"creator":"artistdata","linker":"evdb","name":"Robbie Gold","url":"http://concerts.eventful.com/Robbie-Gold?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"P0-001-000202802-7","short_bio":"No biography provided"}},"title":"Manuals - Xavier Breaker Coalition - Stereo Genius","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2010-11-27 01:33:10","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"},{"watching_count":null,"olson_path":"America/Chicago","calendar_count":null,"comment_count":null,"region_abbr":"IL","postal_code":"60613","going_count":null,"all_day":"0","latitude":"41.95200420392062","groups":null,"url":"http://chicago.eventful.com/events/big-c-jamboree-tiny-miles-trio-/E0-001-043766985-1?utm_source=apis&utm_medium=apim&utm_campaign=apic","id":"E0-001-043766985-1","privacy":"1","city_name":"Chicago","link_count":null,"longitude":"-87.67706629881133","country_name":"United States","country_abbr":"USA","region_name":"Illinois","start_time":"2016-01-07 21:30:00","tz_id":null,"description":" Thu, Jan 7 - 9:30pm - No Cover<p> <a href=\"http://www.bigcjam.com/\" rel=\"nofollow\">Big C Jamboree...</a> <a href=\"http://tinymilestrio.com/\" rel=\"nofollow\">Tiny Miles Trio</a> <p> A night of drinking, dancing, socializing, networking and non-stop music since 1991. For die hard rockabilly devotees and civilian music fans. Over the last decade, this highly organized vibrant jam session, held the first Thursday of every month at Martyrs&#39;, has become rockabilly central for many of the musicians & fans of Chicago&#39;s American roots scene. Although the monthly jam is devoted to rockabilly, the Big C Jamboree has also offered the span of &#39;40&#39;s-&#39;50&#39;s Amereicn roots music from Hillbilly Boogie to Western Swing, Jump Blues and 1st generation Rock-n-Roll. The night is run swiftly and simply: a host band performs a short set, followed by a myriad of roots musicians who do 3 songs each. The party like atmosphere includes socializing, drinking & dancing galore while the rotating line-up onstage usually features the raucous sounds of pompadoured rockabilly musicians wailing away on upright basses and hallow-bodied electric guitars; and there&#39;s NEVER a cover! It&#39;s one of the most dedicated evenings of music in the city. </p></p>","modified":"2015-11-21 07:25:50","venue_display":"1","tz_country":null,"performers":null,"title":"Big C Jamboree... Tiny Miles Trio","venue_address":"3855 N. Lincoln Avenue","geocode_type":"EVDB Geocoder","tz_olson_path":null,"recur_string":null,"calendars":null,"owner":"evdb","going":null,"country_abbr2":"US","image":null,"created":"2011-11-20 05:44:10","venue_id":"V0-001-000243586-5","tz_city":null,"stop_time":null,"venue_name":"Martyrs'","venue_url":"http://chicago.eventful.com/venues/martyrs-/V0-001-000243586-5?utm_source=apis&utm_medium=apim&utm_campaign=apic"}]}
+  },
+  "googlePlaces1":
+    {
+     "html_attributions" : [],
+     "next_page_token" : "CvQB4QAAAByZ1A3A83MktCYtqcNHKPTde6NbYIWM11WIK3eMteDRuDli9ZzO24z1OW67_iv1Q3GmYZIpNQm4A5_Mf7yMpuNFCWN8sptrYLXmnu12HT3Dt2UZVpM4L5Q9KvCYwCDbSRPY9gknBqZwxESEuoLk2Q1okgl7q-fHElvMOHOU9iCpUxAZbEml8TKJZON9xKDlH4sgU7sV9ozT8VqzmsSx4J7HEiUNQxN-1hVMZwj2NqqaXAy_uKc1Vq6e8PsgMxwscKsuL2SkfSr68FB-XikSJ_MzT6hGilZoKl5cwO8mejRR76sivBA6y9PaRUoZn69SJBIQwoL-1MFeBClMXU9kBYlXRhoU8ItR7UELsLkPq29FTyNcLH5gi_A",
+     "results" : [
+        {
+           "formatted_address" : "163 Duane St, New York, NY 10013, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7169501,
+                 "lng" : -74.0089346
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "be3c977c03d8c4f54b3c30f6bd8ca02a483cd4a0",
+           "name" : "Bouley",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1200,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAVxF_26SuU1099GachAwwnI5Wy1QdIFy2h_p0sPoCz6ccogFmY2JaULbdmcINZQIiAaIDOCM0Q9kAskDZkKCdAhxeM15PKYqen4nBFeDAmwTp7UmZf2RAgbsDUzc0pkfCEhBDGeCN8Xqsf7DFxGP0umRKGhTT-WQ4d9sHxIMMQXdXvZZyo7B9zw",
+                 "width" : 1800
+              }
+           ],
+           "place_id" : "ChIJC0SVqR9awokRjAPTlk8pUb0",
+           "price_level" : 4,
+           "rating" : 4.6,
+           "reference" : "CmRaAAAAVsqLBid9bUp2lCvlPUoaRNsjglvG-xwTyaGw4a05CuR8HLC23lHl71RhTvPVtntykZRA8WiJ9VjEg2R_SPU9sxBB-fJ6aDq3fttWHmew6O6ScyghPNYes11CJ8fXdGzmEhDGoSn33jdj2HgxjD73LY6xGhTRIDICKRxFw1kHubkiTv-nfICB1Q",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "11 Madison Ave, New York, NY 10010, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.741509,
+                 "lng" : -73.9864808
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "f758e0d7f68c659682afdb4b1c0749e7d3623839",
+           "name" : "Eleven Madison Park",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 612,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/109012451737457056148\"\u003eJennifer Lee Donaker\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAvsYZ8Kv4eq7ec1xU1Nbs1YdR_ROU3PDgdECgl_snPAVxqJJ__FV5Mu-NF1kxLZlcmEnw32d02wUJXyxroDjeavuqVavoRJero3b58QIgcXBYlzF-ulTQpG5sH0EgndWpEhAXC4ozQHnIfVRt9DvlQXpgGhQRJyUibQvFPtI8uWAykhk2FhvdiA",
+                 "width" : 816
+              }
+           ],
+           "place_id" : "ChIJEWbXz6ZZwokRLKmKrtPfVFY",
+           "price_level" : 4,
+           "rating" : 4.6,
+           "reference" : "CnRmAAAAsdv3D0z3NyAG6P3lnTAU2BeMVxF3uT8GLhnijE3IwNuD0SKCr-nrcyP2r6LHiP8f8cQYbRs8pqYjchJ6qSoP914khOiSK6k5jxIZ6iLh6sa3jUT7rhO23dwa8hXjogWUOddZ6oRMoG1RR3UMM-t7sxIQQRtbbae39zvMtal0NeH0iRoUwjvQlERhKUcmxTuZwhT3CvHCmtM",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "42 E 20th St, New York, NY 10003, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7384596,
+                 "lng" : -73.9885037
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "1f003ef829cecac6974e677cd495b3aa9d54594e",
+           "name" : "Gramercy Tavern",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1152,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/117313296997732479889\"\u003eGramercy Tavern\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAACrlC7krXwkR_eYAwZomPIatqHeahl5XtUrReQ1c7_y_THonXVI9Tm0wnX8hDXhcwJSD7UTu2MX2Sp9UwC4Z6uTy2kaLZaPBQdMqlEesREXLDkl9CTO7RZFMhEBxrE_qwEhB_QQsfo8XE7tsqEQpnKb0jGhQCZMLgQR5kNnDH2gqfeHSg5TWUzQ",
+                 "width" : 2048
+              }
+           ],
+           "place_id" : "ChIJvSQIgqFZwokRFYQbJdzceSs",
+           "price_level" : 4,
+           "rating" : 4.6,
+           "reference" : "CnRiAAAAI24l5z-43vD3zUApwpIJpUWiL43bJbHkExtZHHAESLT0_b9MBBdb06aOQoA51h7xV41BFsyIb30ZLks2IK5DVaM7aREDfSuXcKhy9aJ56dWOCI9OPLBs910AoRiHsjc-ioSAf8qjHijBmn6C7FwWcBIQPM1TjOzf6V7ycbVsROvdBxoUX-eifQX6aTiqlNlrxUJP1mCAuwk",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "155 W 51st St, New York, NY 10019, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7616941,
+                 "lng" : -73.98188309999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "ad0a76f04ef4567ae3420ffa1881057b1f8180a7",
+           "name" : "Le Bernardin",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1398,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAJll_DQwhBlmi5HQ5VlBMNqQamLt1uNYIqAX-rPBZMB_UjthjJmUSwXVIr5TfNSP0Eg5YCMXcTxdB7JTpCof0wgOPsySCrsv1_J_EkYhXQjNUv-Zkwn0L5rZd3HoUpsu8EhApdCH7pP1z4cEnRvOQudGXGhTituwdngspQg_i6l9re_3hx0lDbA",
+                 "width" : 2048
+              }
+           ],
+           "place_id" : "ChIJVSKXkPhYwokRVgXdrRfFxh0",
+           "price_level" : 4,
+           "rating" : 4.7,
+           "reference" : "CmRfAAAAjoQ_Je1D0lfDbrcp8AcXyrMjlZIfgOAwafydtl0n8OBRXZbXGTDO9kYizjMtisewE24jlDXga40uyjZ7B24yxlgxdJ7L9LWjYdzqTEVZ7aqqjz8lTkryensSts6VRd_wEhCHwWJ9hvkD5lhkqqmJL6dyGhSi2IEQEvD3ggRd4C9tPhgc8pLb-g",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "60 E 65th St, New York, NY 10065, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7667384,
+                 "lng" : -73.96760949999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "0fcae36cae92d503d097a515746e4700e021995a",
+           "name" : "Daniel",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1520,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/111192969447456401878\"\u003eDaniel\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAASRiRYS1-jBMTYCRmpBt5kiftSQ9QzE4TIQe8vfxSApIxUKhWkLGXiHagdIIYWqbyVm9Hz56dudUPd3Vv3IFRI_7G58jUTn9ILgRJokx9HVdUflNjify--1JLJchgU4oYEhBWVUoVVOHED0_f2JtOBkMcGhTEabopCyzB3HixXeUXCZpmAThoSQ",
+                 "width" : 1520
+              }
+           ],
+           "place_id" : "ChIJ09ZGju5YwokRXOcNC23JRwk",
+           "price_level" : 4,
+           "rating" : 4.6,
+           "reference" : "CmRZAAAAoAqsaPGObLSPe9Ml8HVOKzKXjGXo6DC092EYBg4dvZmias94aHGIveB1XkYv_srJV0r2NrrAUzs-5eBwYThiGZ6VtK-5To89ZRFx4AZWpK5Jf8W8HU8HkGfKz02WGMBnEhDM7l-6cmCuZR0QWs13SvPXGhQNpujvFXPO7vVPzGEaLJ_n9OJE0Q",
+           "types" : [ "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "1 Central Park West, New York, NY 10023, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.769084,
+                 "lng" : -73.981431
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "f7fcd3d4379d1f0b4b93693a01050f2a32ac5fd8",
+           "name" : "Jean-Georges",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1200,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAA6CM52B8H5fTaocxGIrM3t-zkoW6-2_ABt_g4xzuvS4vWoYlEW1y8xdridCgiFshY2JJyaUGO50AUG-jWM3haqqMYzu2D96vz-9LzBdfUkwe0qBKkMDn_gC227MGn-iq-EhDZ9S7OsDHhkdRhfVpAlNW0GhQYtlWKUe_Xxhs2R8pHoYqt5-7XXw",
+                 "width" : 1800
+              }
+           ],
+           "place_id" : "ChIJh5JzbfZYwokRR7KqJOksL7Y",
+           "price_level" : 4,
+           "rating" : 4.5,
+           "reference" : "CmRgAAAA2Qs0UQqr5ugvsL6WUg8mlbClWd52Ro0bhdgofTJaPqTlZxSQeZ8ULGcI8GL2O9c2EfS9CdApg3aadOcc5o1E1KP8Maf-gztLtdZXCSvoibAiL4HthsAfsDdmvca7QRBREhCSULscV8izXCyanXuEUsdLGhSD78QnuHWCTgmwOoGvrpbo544kHw",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "4, 10 Columbus Cir, New York, NY 10019, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7683519,
+                 "lng" : -73.98319839999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "37c516575be01a32ba25362a2ca116578eca3ef0",
+           "name" : "Per Se",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 600,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/103565644244028407440\"\u003eWorld&#39;s Leading Restaurants\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAA-xlT84-uyj2PZI437QfDI1oAR3Z6NPMhzRdFtkGVvxrBcwOZZJFgzT8r15NokhSEXqHPg2AypO4O2RfZXUDc3Z-nXBFYh0F-MMBrtsxfzcxwCeIRFM9-ga3mkY3OTzdpEhCEIjP4REY7-45Lq3c8aD2MGhS9SIdeHAOpESBAUtxxd-m3l-ieTg",
+                 "width" : 800
+              }
+           ],
+           "place_id" : "ChIJp3PsL_ZYwokRZYqs_40RJF4",
+           "price_level" : 4,
+           "rating" : 4.6,
+           "reference" : "CmRZAAAA-O0Q4__IzZH9HH723Zk_BH4RosbDzk6ttqpNfQMjyg1oSL9PobddqUFDgq5ewZz2pVtGHYEUPzfQ1p5z677PrDqvC34JGLj_oYXYBSnVX7c_y7iXGKT5J8X6CyRJSK28EhAYB950VRz8R_-dZR44NIDTGhRM0JVudAhutqy0ScQ04j3cmw8ilA",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "9 W 53rd St, New York, NY 10019, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7610805,
+                 "lng" : -73.9767531
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "804d4d52a0fb7770d8acfe511699538ec5f0958d",
+           "name" : "The Modern",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1124,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAEvjv-IlensLiTUrE-8ABvl4roT-2dO8rANiEGDTEHwUBMdE-fv02e5XUdN1EVEAlzaAiXCd0r68b4J7yxWSpW3JgUzWrZkv9nQRH4FODsamGYqV6_nrdihFsrzoqtj9GEhBZmPvmJ6LeiPdHgnIHMR-OGhTVuTEkgz08C2OlYXA54zAL4hFr4w",
+                 "width" : 1685
+              }
+           ],
+           "place_id" : "ChIJMW-gxPtYwokRzDlnsRgq9rA",
+           "price_level" : 4,
+           "rating" : 4.5,
+           "reference" : "CmReAAAAfMvB8AAGV3kr4_F4EcOlfdjJX_BfG1daX1LeXd8k9tLD9UatVCWoLn7zm4AVZGFnv1uxXHGCfKMIV7Q4952C16hows3BWzoBaodMkeaerdGAWcy0irjVuQLI7zeyyAZoEhAgIc9JHeOfRCDS6PYY251_GhS2R4Orc7UUZBYJds4zStYSdNORGA",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "240 Central Park S, New York, NY 10019, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7674054,
+                 "lng" : -73.98105679999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "e18aecba1e7a99e7e2c5870aa878667bd55fe2b4",
+           "name" : "Marea",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1200,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAbncIO72uvB7wDO6lNa4VdxQvl11fBfLSPktrErf4rwuMOT0hvVGA10dnlnrCeFCcr7ydGd_XX88UzCKnOSzdOTaavR-Weejkks_2ObFAhjpn5Ht4fvPX996WiZwqd-mHEhDO_82fUpUVsdQtYXzXbcPGGhRdiycLCZzGP-o4_ygOfey7UTHfwg",
+                 "width" : 1800
+              }
+           ],
+           "place_id" : "ChIJvWSDS_ZYwokRiG9D395loxo",
+           "price_level" : 4,
+           "rating" : 4.5,
+           "reference" : "CmRYAAAAbC_PBfFFZfsqpMY2NhxSDtOQZ_FkljxsAY5JmmfoO_osCxlGs_zRwyDwt9oDpJOS6aOZn4EmkfCY5GoOE0AR3PoHM9xoS4-LQ4GBb7rMFyGpdQo5h-2ioDBqAk80lnVXEhCKQEHYalgHYkA6EbJmfKV3GhR96qV9vSM-gYNRTh11QoF6-w27Jg",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "135 W 42nd St, New York, NY 10036, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7556325,
+                 "lng" : -73.9852575
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "03904a8cca3e64248febcd8876b83a27e191e6d0",
+           "name" : "Aureole",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1200,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAANZipa7BRDz9wpVgPrv0QGNytXdPFZYDPab-dAJx4vFD8Ylrk7A7zcd198ae9VHR9KfPHzNkKYFGhEIvXU46djsaVTASh3qOzR0YfbWI_yKnC7IcmFCJUhwarUmspWOKOEhBTA97jFSbLbFZlQkZisW_lGhQNAqVXt-R2w3hNKq7dBvnnJkIkbA",
+                 "width" : 1799
+              }
+           ],
+           "place_id" : "ChIJp4zfw-9YwokR5V6tmTVAuBI",
+           "price_level" : 4,
+           "rating" : 4.5,
+           "reference" : "CmRaAAAAUuPhlnZwR_cI6huTRihQcHF8EPBAPqOABD5A6euvZJvkTW-ShculB5sey0LKuDgG10mYiwMAeDvIgwU5oqs5gRudBtWbffn6y7wUCoq-IXtHFn8huIYJW4mzWmitU_D3EhCeOZ8h459DOc_DV9x8mtyjGhSH_CsqOAM67VPw_azz3h87fQrVDA",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "12 E 12th St, New York, NY 10003, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7340835,
+                 "lng" : -73.99380309999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "343b062c1a8af2bd222c4aedad863f3f91391b0a",
+           "name" : "Gotham Bar & Grill",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1371,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAjyn-QzDxTRW6rAtAQlXe6vMojOsgOM8-JJF2UB-tiFu5JSt-qqRI6gwYWtxCNrw1k2ZaUOdJsVsu2jTbydW-rBiXQoZL5Q6l6_yIsRV5yeiuO03c72NtQU6AYbEhEpTaEhCI48qKRMYIGb-hVaqMO2JVGhROcxMlouTSh5MBFU6I48xKCoO_Mw",
+                 "width" : 2048
+              }
+           ],
+           "place_id" : "ChIJZ72FzplZwokRmcA7CQzDMj0",
+           "price_level" : 4,
+           "rating" : 4.5,
+           "reference" : "CnRlAAAAlBnN0V5Xx4qlg8ma4l9U6HLsZ2vnLA64RAaHRS4IznwbZkYqSYocK4sM4IHkEuI36r8Qoyb08cw3sPMQIezIEwF2EeuWULNopFtTMwYFA2R_AB40BiyJIm3rZSKf1UrpA4kyUVkYpB97OHotSYhrBhIQjmnJbitXJdd6vPc2W7J5rRoUvc_RtiANS9dqiCr-mo5GttyTrmA",
+           "types" : [
+              "store",
+              "bar",
+              "restaurant",
+              "food",
+              "point_of_interest",
+              "establishment"
+           ]
+        },
+        {
+           "formatted_address" : "99 E 52nd St, New York, NY 10022, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7584364,
+                 "lng" : -73.9721783
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "23baea13139c8dc097dc0d175b7bc0e62ac87592",
+           "name" : "The Four Seasons",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1350,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAARTjbpnEatxPEtjK1ZI2ZS8wQGJSpysNMVqXrNGutqOpzywCb2dlrbT7G71dWCIeEbVnC9rNvaG_xjei081hSKICG-9OtdDXB1dAt5NhtDQ1IUWrueTiKSsjXsgfKGIBDEhCRdEqxYDyqCbNEG4Noetm7GhQFUFtI0Crn53uHQNBErfFYz6GnEg",
+                 "width" : 1800
+              }
+           ],
+           "place_id" : "ChIJ68J3tfpYwokRz2cAXs-5aC4",
+           "price_level" : 4,
+           "rating" : 4.6,
+           "reference" : "CnRjAAAAV2jDfgnVzb6nv0kaAkJilqFtVdk92c4w4_B6N1q1rECRgGlGL68uvX7QTMZQ6aQad82irzQnmNv04sjyhUj2SYO2sVc7f5GkkwhPuI2wT-nH0uIGWJ2aNYwIQHKeBJN2cflbtZH3N1G96l8L372sZxIQt4tn3nJFLGalIw01GLOymBoUZQLibNjjDqzHza664Q1EYqRcgXU",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "75 Washington Pl, New York, NY 10011, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.73202819999999,
+                 "lng" : -73.9996946
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "600a5658caea36ff8779d688397f69001a71b86f",
+           "name" : "Blue Hill",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1371,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAjSFSHskd2_oJghlw2oT-euVJ0jPmd2ekEE6pSgLXxHFzK8m176sTeWmISwX3T8K9auF_0KfH96fAO5krAKlFR4qtvWCsGDIpFBHcWK9N97Keso7HM4tzQP7tcS8uw1CaEhAxHkCaJdjmbLz2XDlggnf0GhTKTwWINCBSAICfLZUuc-iB5AXOFA",
+                 "width" : 2048
+              }
+           ],
+           "place_id" : "ChIJi9BURJFZwokRDcqvIgxdXds",
+           "price_level" : 4,
+           "rating" : 4.5,
+           "reference" : "CmRdAAAAAeiCq7-ady0-BNRBRVJAI48H6aSzZ4VQzwWDsYm-9ovEiFsR5PWlMO_e1MbGfJkIut1UsKs5Z_WHuKbXdCb6I5KUks2Geqil-07zlqh0LAmHcsJ5JymXcQgeVmo-I54BEhBjgvpp2cd5jnjdXEabNBcWGhTAt_eCyA0MiqmlPeg3K2RbIkLkPQ",
+           "types" : [ "restaurant", "bar", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "13 Barrow St, New York, NY 10014, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7325755,
+                 "lng" : -74.00244289999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "d11acb5f3e3610471fd3afcbb24d1689d813fd06",
+           "name" : "Annisa",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1200,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAa6P18WkjApMG0DxuBxOEF1xIVCDA2dsINTkAXalqb6ggYXLCVlyIvtc_Psa-pY98fxnKOxRWpExTyQu2aLy5KIdUUbB5D2k80qa0GrlgYr-FYgKtg2eNoWCgPsG75SVBEhDOC3DfFSF_LeNy50Wc6LLhGhRcTB8Op9xxOalbLUOvev2I7J1UzA",
+                 "width" : 1800
+              }
+           ],
+           "place_id" : "ChIJcT1-jpNZwokREm_ls2oe4Kw",
+           "price_level" : 4,
+           "rating" : 4.5,
+           "reference" : "CmRaAAAA7Gm8XBbqSrzKCGesi25yYOIaICCB_t5RE02TB8b9l6gPzqm6SsS1OnaU-VrJPShSjjNzQ57zYiz9DFsJkmJ9BaK3Ut8F3ekUznpssHPN54-QFHJ7zEDpl-6V0qzV4g0rEhAOLRAnjFMtcucUt3wfvaCZGhR59uRfo83D43zGWojAZ9mBWheF5A",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "3 E 52nd St, New York, NY 10022, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.75965900000001,
+                 "lng" : -73.97559699999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "f67b35ccae0c10031e8bcd364b95159d7fdcbc34",
+           "name" : "La Grenouille",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1026,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/114683273267173141121\"\u003eLa Grenouille\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAA9CwLJ6AINrOA5kwGBwWzhLvTnnm1milyffYiluyX7JgGnv7ApL3Ynj-fLN8ybTb-UFdXaccm36Tf0w0tk1A7A1q8fnItDDBuBVshx9DKUAMwREITnHa8e2b4P-BtPUVQEhDJH-A00rN8Q9bjWExpHOXMGhROZlw-Vp0R6N8xnuGoL9kH0vrT4w",
+                 "width" : 1026
+              }
+           ],
+           "place_id" : "ChIJY6LmkvtYwokRF9f8cvuztK4",
+           "price_level" : 4,
+           "rating" : 4.6,
+           "reference" : "CnRhAAAAvuvaVx4-si1FsNPqt1ilYrUBEFhkjl7IuJy8_ifO2D7seNkyCVcxRKPvz-PWWxnSBEh7b_70IQimpREI5CgxTBt024coTWLAD3kBWjdeR5UyH-5H5-egrmDxW9DTdtyKYj2fufm80HXL5GfE5AJliBIQtAJE-N6bFe9Y_-QlPpmG-RoUVdrPuskdh-0JVt2_JB70OIHVmP0",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "355 W 14th St, New York, NY 10014, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.74093789999999,
+                 "lng" : -74.00481409999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "3d058bdac52d67913ea81d075fd8f7bb75887f44",
+           "name" : "Scarpetta",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 315,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/109938846905004437020\"\u003eScarpetta\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAdpAOGLx6Nia64kZIlxS9UeJxKurGBWWf-5764rI0z0MtHVzUjbpnGoW0vcl9rRd8fJmay1cvNsLrd8cdaIaGYNwkiX3BgbW3G98AttLszJUruRcJJ4gAePDNlvF-6683EhCMboED68staq_bcAvyawKsGhSCFVZAUmJhW79Zynsy9IPw4bOEtg",
+                 "width" : 527
+              }
+           ],
+           "place_id" : "ChIJt8W7n79ZwokRsyXs3QDbE3o",
+           "price_level" : 3,
+           "rating" : 4.4,
+           "reference" : "CmRcAAAA76qN6DOQ75kQX9bJHJU_Ze99q-sFnwgYqZANttKqA24RdfPe-XGuNbuBXDH1WaYOXel92kK3OxjanPRwFaJnREnhZ0PJsh6CG8piM1La_Y7NXTH8i6zz7PieN1RzHxo7EhCXutkQWOzZraoEFp5wi7oSGhQm-UrMFz2JxvWTnfSTx1a_Y6Vlug",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "2 Lexington Ave, New York, NY 10010, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7385242,
+                 "lng" : -73.9857366
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "44bbf91712b7ae22a71f18f854275f1b5dca2793",
+           "name" : "Maialino",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 2048,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/111262266168992201819\"\u003eMeg Smith\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAA9wmoJuXKhyC6aZQlDEwaaTFjFQc2tDyYvlW69lcH5P7kLiZkkksh0LcFdVU053Kds8PIC4q3H1u03Edp89VS_wk684gr7pDtRskhvqTL6wHJoSH19yZp9mxUjwoqKTPlEhBceqXXjzKp5xnrKHmja26zGhTrel9sTcwcUwHAXESIFKMkvwWYtg",
+                 "width" : 1536
+              }
+           ],
+           "place_id" : "ChIJ2YfN_aBZwokR4i0_kCIix3o",
+           "price_level" : 3,
+           "rating" : 4.4,
+           "reference" : "CmRbAAAAO4-B67078Bc37kgCmRvomsPpQ2gZppmI9CAyrPKgMm1VgUJKlHcH2cDNjxKijZEk0A_pIvDr4HCZQPYoibhn6TNq1LP7RWwHxmCbtdEcpAJ9wciYIKsFOdYTufNx0x8jEhD99vxFJGmKU1UeMBe_HIzFGhSSIMALUqHABGHrJXEjyM6M9EjG4g",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "151 E 58th St, New York, NY 10022, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.76131150000001,
+                 "lng" : -73.9675393
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "326ca724bd4d363bb233593399536eccc3a9d740",
+           "name" : "Le Cirque",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1365,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAiCP7oNv1ofZ2jqNMN7UbAqcZAc22PPWPP6Maa4HKRbryjiHJX2owNqkJ-F-FdKQ3qSwYKvw8gn3_e9bGQYTSaOxqXVFd2ts3mZ3rBUvwOB5TBUVSgE42U6Z6l4Z4uiekEhAGc5Y7IwWa2yZOu5-Vzwb9GhR_wZJ0jmGkPp8LSAHdq22MFAy2OA",
+                 "width" : 2048
+              }
+           ],
+           "place_id" : "ChIJ3zcwbPxYwokRplnnKw1fKbs",
+           "price_level" : 4,
+           "rating" : 4.3,
+           "reference" : "CmRdAAAAnbWWzQvOam0KCmo4o3yLydb6A-0I-0OEK2L1RIU9LX8YiAz2LEJND6PhRRgWakIUf74HmZ-l26n0ITrf8lA_-hEUgAgbf3z0Lia-GMYbKVVsjtNSFZbQGNg7kaNi01RVEhAUfA6_wyhngbYwH7hvhVNiGhTqM-SF1iCVANLz1ZOycX2kmO9o5A",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "35 E 18th St, New York, NY 10003, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.73775819999999,
+                 "lng" : -73.989625
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "3953351861ed5aa574ec343a7509c759b0f6e146",
+           "name" : "ABC Kitchen",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 800,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAzpkdZbYI55p2-vpDGwLgb29qHsUpQKiO6JJXGjW2fxYqvjzj8i1tdpbqJzXTXfHRuxpTIm72PRpGAd0BzjgwdhuHNl76PVsb53SQdghq-vxgr825gR3yXMX4tQ0JP17uEhDqqLxP6FhSyEDyx2uwWcxXGhRqbVUp2URBYn-Yjo7eJgUxGewO_w",
+                 "width" : 1200
+              }
+           ],
+           "place_id" : "ChIJSXmIIqJZwokRIhhDroV3qX8",
+           "price_level" : 3,
+           "rating" : 4.3,
+           "reference" : "CmReAAAABpmKoq2PhGBno5BzC9InaU20rt55Li3K19xx2E3mQtV2zhxNBIJE4Kf2VvWb3WJ3b4CMrZCDC95mY9hESDYO1isgdHhYqnbm8C6oUeuGleAIscjq6bnHE_p7QaYGjYLZEhCDGx1DCAH7lDW54V83_UpHGhSGl1a0F0NDWBikHe1ygc8W3ckS-g",
+           "types" : [ "restaurant", "bar", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "west 10019, 40 W 57th St, New York, NY 10019, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 40.7635397,
+                 "lng" : -73.97642279999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "b9ce5ed245e2e454cf4d02c542dfc184c2828faa",
+           "name" : "Nobu Fifty Seven",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1200,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAABAj_iEV22p3dgMcVu4enGgBcpqLqm5K8DFHxfRXyanA63xaclqk8dpqZ2B1XrJKHw0sg1Cbv2JPUgoEcOeDvaVNymvcYCMDbxn9sGLQ9JlchNccOI-hG4z0sYGrLsdxLEhApBUUL_dYodAe9o_EynPZgGhSc21xVU-rBP6CFHKCbEqSExRlYBA",
+                 "width" : 1800
+              }
+           ],
+           "place_id" : "ChIJPX5iCfpYwokRACnACAf2pJw",
+           "price_level" : 4,
+           "rating" : 4.4,
+           "reference" : "CnRkAAAAP4UWgT_3uYH7MXFJynAKy_N6I0-DqaxQsx-q5ZuHgLb4dIAlaChLnh-sIYyl6Q8UERX97MbUqVM1as5bz908PtB-j_91oEA_fp8AnGgJCcT2ITPY_7WA3JVf5xds93L4KjORXabc7HiK2TjXBm8axxIQVjW30v0KYFYT5qmfXe2ZkhoUmSkUpWC3eJCUwt7Wd4CEvUo5f8k",
+           "types" : [ "restaurant", "food", "point_of_interest", "establishment" ]
+        }
+     ],
+     "status" : "OK"
+  },
+  "googlePlaces2": {
+     "html_attributions" : [],
+     "next_page_token" : "CvQB4wAAACyq43I7jMJi_TuiM-RXYdAh1OtGERF8ZAhL19xDHtqDy4lnxzvppe0wYAqsL1qkjaWc44aN_RxLwczd1PRlr2t69av-UcGJqx8gTys2PJDn13n6XumTbSRrp4XNPT1QIDafvXIR7Mq1oVLslZBZhcHjirSb3W7TOHtJQSoU9VryuWl1QWu2Cds3xyeJTm8uviirECVQb7U-rzJHmHz3sJb8iPcFREOmIvJUHRDKc9gIMu8S3DI_cRrbmwN4fQxZMHZCj-i6mvVuWFC-wVej-58dULEJUty1yqUOPPfhmhkK1KpTGxeNs2vQrYC_UFepkBIQtMderqhFbATn6fLcd7l4OxoUk5qOngHfqGO_OVfsx-k6Sz8r8ds",
+     "results" : [
+        {
+           "formatted_address" : "809 W Randolph St, Chicago, IL 60607, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8841133,
+                 "lng" : -87.64800409999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "d224332900f932b7de863b9083ccf7b6ec036111",
+           "name" : "Girl & the Goat",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1366,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/116218922709794678656/photos\"\u003eCharlie Shay\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAbDEC6d7_xh81csBqiiyinBR5fUdrGONJllkLXq9TOubWssRCqTiOBm4KvXGmaStKtqGfFOI2AEUnaaOsntmI4EKKVbb0ewP1IKhtDK34Rav3DitpcPWPgv7NCZpamBxeEhDzKomd1SmXzJxEy-k3z4oFGhT5cD0xTGfnJOmZRB5HTDY_y8C_9Q",
+                 "width" : 2048
+              }
+           ],
+           "place_id" : "ChIJs8mbNsUsDogRUnpg-b_IK5E",
+           "price_level" : 2,
+           "rating" : 4.6,
+           "reference" : "CnRjAAAAkUgkfH4_aQOpy_RozP3l5gkzkk_vMYNiiPqvGxfGCpUz_cZg3fyXo_bDTkcWS-zJSc3GIK9qJY4E3pcy50VCpM7zUUT6mF8EgIfI-ZoiVqGWOuJsborMbHHyZ6cXeiHLf0Gepf4eI6pYb59FgvCSNRIQWLYDYZw_5692sT5zMaYP3RoUc96e-INiMelEfa0ehv2i2TkgLNE",
+           "types" : [ "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "535 N Michigan Ave, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8918882,
+                 "lng" : -87.62385739999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "b81ffca558b39fd8f5dcc99f46dfeb51fd693541",
+           "name" : "Bandera",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1350,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/114051225232196891758/photos\"\u003eBandera\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAXlqYSQz5hxlaWW8xteK78Wj7zTRXThNmZRU6yh97a_NDdjRafHTKPwO2MlscJdKZ57pZOIsUFwOhE8W4Ks_4ewkqAmcixfn51bTxB3DdidZ01_YcXF1DJsAF2jr1RC0eEhDpfS4UQqiJrHm5Vp1MGIXGGhQPkkmR3yUWB5q5KFjy2_MTmQ0agA",
+                 "width" : 1347
+              }
+           ],
+           "place_id" : "ChIJkzrKcawsDogRmmr3XEBfoj4",
+           "price_level" : 2,
+           "rating" : 4.4,
+           "reference" : "CmRaAAAA-QgJAK1AqOT9b3YHZ77BsOcpyK3y2cqUaQpBRMl5deHtExrRE1IOTJsg0ql1T7V65Fvp9YH9RRFrlBgiGxqouZgINNkao8rf5yh-wteLQzyeZpcMRgbXIjoqGeWMQmcFEhDojHdgP0EZGwUgqxJq5UKKGhQdtqS76EZiTi7TNLXe12k6xjZKDQ",
+           "types" : [ "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "445 N Clark St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8904802,
+                 "lng" : -87.6309026
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "b9f1be33f3ceeeb3eca6d45308c2fce24e9ab439",
+           "name" : "Frontera Grill",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 861,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/109280093592457086407/photos\"\u003eAdam Inzelberg\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAhrO9Xr0Lk2XXwwXL_FxB0-P5ukXMPW-U75hqPyhJlVDAY79NlGDndYyBbqD0PYw29gfR7kXJFztPv6Us1TuRyhsw_EHuerbi6yiYvCmLwm0qArUHZJvAYkoJ4Klru2IsEhAsbpvZeP_uTeou7ysE7N6fGhQIZtf0a4ThmBFvj0kMrHPC_quUnQ",
+                 "width" : 1296
+              }
+           ],
+           "place_id" : "ChIJ25jYKrIsDogR13tC4wGGODg",
+           "price_level" : 2,
+           "rating" : 4.3,
+           "reference" : "CnRhAAAA-iKjtQ1OZztgfCUSMgL7Jrt-TAelK4X4KFZGk3BicTBhaBCYQF32OO4j2xu5Oov9l-IVJovxJaFhCrxJAX0QBUvRufypcNxCJGlCCNEGOF-kdEjPgdqTmeppjJyBQexTvTZnLmAdX-fUovuOKJdkfxIQ-Bmjl6Y5HphgCEeydeSb2BoUwrKcerKOUnfdTaCiaV_J6_N36Ps",
+           "types" : [
+              "night_club",
+              "bar",
+              "restaurant",
+              "food",
+              "point_of_interest",
+              "establishment"
+           ]
+        },
+        {
+           "formatted_address" : "500 N Michigan Ave, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.89114589999999,
+                 "lng" : -87.62469829999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "6527030e5057a767208be29502b15f5d003bc30f",
+           "name" : "The Purple Pig",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1632,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104117192501575883019/photos\"\u003eRobert Elroy\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAA5NbMx3_1CeNchay-Lg9fCeRToUXerRrjRH57wpUuyEhNFILdNoPBgSmqm6gyySJB4k1Bfu9sqi4_OWvfUmAugXvd671aY2pefipZ7k40dElZ-VUxnPUbIl4eT_dj2d_KEhAHaCNbPp7YC2x4fQDIeix5GhRSsT1ZYedlqKWyytnn_KlBe3xLWw",
+                 "width" : 1224
+              }
+           ],
+           "place_id" : "ChIJl8NTEawsDogRwXH-IVDyH2A",
+           "price_level" : 2,
+           "rating" : 4.4,
+           "reference" : "CnRhAAAALlBMRCgAg-rAtJHjECJXEEpzrZG78DB9Yp_RJvT4Q4M37_KDe1gLpGKZ4bFkcO6SLMqYnxHHWV7ENSTwh6ZypZLDKTBnzO36Bg5ejn1904Iwb6L-xa6WGDXDnkNtwdp-bWnqj5_fKXiYmWhbRXaGnhIQO3LUK7vVKFQSxxKnfmdiRhoU3WrmcIdxozmQA7gVTiaNVGG7-8g",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "60 E Grand Ave, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8919614,
+                 "lng" : -87.6256389
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "7da3637043a492b61b33e8f499bbd3321c10670d",
+           "name" : "Joe's Seafood, Prime Steak & Stone Crab",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1124,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234/photos\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAFS0H9mCopPeypcowj3ayo7tNQ1kthMFdmVTG1Dho7CMsYuFQqO-X_C-Xll0diMkUtITb1gqS2bLroX3fCejXqOvnOB9HGvF3EW-odAHkkdGd_2d5ZDLxOBRqJEkpu8oyEhAvvk6H6LdzJDrH1zEzMB8cGhS9d3m8YIcdWUQh3_CyN_gYFuT0mQ",
+                 "width" : 1500
+              }
+           ],
+           "place_id" : "ChIJ_7CjSKwsDogRLvZStKKlxbs",
+           "price_level" : 3,
+           "rating" : 4.6,
+           "reference" : "CoQBewAAAHCu5V7Uqje-CgAWb8nI0f0zHUy0lMkQO5YRC6VElNt2mddVdas_VPNcCLkOhstqgmXRXzpUcO_YHNPOmycNkP5xdFEH6ABNi9WyNML2sEiubLkSj__e3lugWtahkXNdU5fDWJdipW_l7sDMMnZnOnKixojh21kCfuUQejoVcqCVEhBIblRLs-iTDw8LPTDDfSV6GhSq5MwlC14nA6wGvBxA5oMW3OQ1Og",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "21 E Hubbard St, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8898727,
+                 "lng" : -87.6271137
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "2de69eb46ac3dbfd2c5178282ee50be3aecc65b8",
+           "name" : "Shaw's Crab House",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 586,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/117632798552887595327/photos\"\u003eShaw&#39;s Crab House\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAADPxVgYaWMrzAVSVvQbFLB5zFfDt9hUWYwV7NsrX8C3ReeDX1I5hjFWA-m01n4sVlr_OqhgNGKaOrYGuc2JiH0jmCyUDsbnCsyGzQRmspC48BnjS23XjpzXolQVPBH9zREhCVvsoeQof6PVXMHIWRDY-WGhS-T-LUk3WMqfoFJPBKtjZpRdbOPA",
+                 "width" : 900
+              }
+           ],
+           "place_id" : "ChIJcdOuC64sDogRO4O8lHWPFfs",
+           "price_level" : 3,
+           "rating" : 4.4,
+           "reference" : "CnRlAAAArgOPLDwO5QLy2zcs2lSYvYc1bEZ5O2HOdR5k6vztMIu-kYnpS40CH8DYmPMzoWE22lDj9VPafY-66dzzWmcEasaWYp8HHY__2YKKjMs5_rP3UAbHAvw8E7HvLCLexga2kUtyeTZ7bUugNA2EnADacRIQD3YVz2x9hkcgsSmbFx8gPBoUGqkdVXjUOcGfrMQtp9muEXzrVxs",
+           "types" : [ "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "800 N Michigan Ave, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8969702,
+                 "lng" : -87.62505999999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "29793ba4d23f98291bb8295d20745d3909037eb5",
+           "name" : "Nomi Restaurant",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "place_id" : "ChIJYc01E1PTD4gRzz8xH_xDLNw",
+           "price_level" : 3,
+           "rating" : 4.5,
+           "reference" : "CnRjAAAAnJITrycTn4_9xLDvmpb_jXVJtbYj8IVvgtf5NoDfk8TeZGX2wXjTi_EoEDL8dVmZ6FPD5OLRD0iT9VHrO7ZpPJgn_5ZEdeWFIcNVhR_l8f7-O5y7vxN5oaWvYfCOUTqqQQDjg0hj0pcX3oukZbarGBIQPzTNLI0uW_kbTCpRpaownhoUye8oVqxfe2MYPsn7bpoLOQh2SE8",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "440 S La Salle St, Chicago, IL 60605, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8758504,
+                 "lng" : -87.63219169999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "280b640265653e3450bfde21c08dfa364ca8c10c",
+           "name" : "Everest",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 2000,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/118160163002999247860/photos\"\u003eEverest\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAKptNv4OlkQb2uHsOPkOi7JWb6Jx7c9OV6T6icIh2KWZyOEnHnZ-4Xm0KjOd34dG9voAxrlWBz08T4SGck7higYHHZWmj3VsTM5suqhWIp7WlkKS-5FRdBrnvgRDxJNs7EhBnJsjQ3X989QT5JnhJyS4zGhS_2wG9rvOQukA7cRypjno-cACdKA",
+                 "width" : 3000
+              }
+           ],
+           "place_id" : "ChIJK3Ymib0sDogR2KtHH8tIvno",
+           "price_level" : 4,
+           "rating" : 4.3,
+           "reference" : "CmRaAAAAirSzpUUPB1bUHVxUUXSe_13Ln33fpq1AAk2k5Z4ibAUC1UkevrGinOhqtZAWwaOXBZcLaavU6lZRyAQQLsF1FpEPzlshwufu20-NwLjTS6GoMPZNgwYconIvjvkmhhkFEhBkhTul6Sn03J8oBTow91kuGhQCuIwAIOZlQ5_7vfh4x5H7KyxrSg",
+           "types" : [ "restaurant", "bar", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "500 N Clark St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8909968,
+                 "lng" : -87.6314122
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "532a260e1f59667b10fab4da8989c2bc59f384bf",
+           "name" : "Naha",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 478,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/105638421474098477833/photos\"\u003eAmy Ravit Korin\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAA2Ski-euZK8RLWos08_AZ8I_U8RwLgFNGqUBRmwtqiCsp-aaP00F1PBCDOJWyk2-nt8d8yuyuM9Rg6H9vTWI982ek9vy53qA8zlUl5yoft5GU4B1FJtQMeXzydzpKnZ3eEhCLKQVE4OliP0DNrBfKw7R1GhTP_xAyk8INOHncWPKaPmZqfKTu_Q",
+                 "width" : 640
+              }
+           ],
+           "place_id" : "ChIJ5b350rMsDogRpdcxe5Fd1m0",
+           "price_level" : 3,
+           "rating" : 4.4,
+           "reference" : "CmRXAAAAk7ZhsAfCwbN4QAyuiVd659aGH1ALOmhj6lYS6oaLsAtu4zrFIDga6_z1IKkuXVBvb2TnUV5RmavfxAbkGOALYaGNx9I9VVFUn3DKEhGLl4TXkdH_tPjeK3dpjd7M8bgBEhBHrnlX3jI3i5Hb3xXcDw3zGhT5a63o5C438w89dHakSFFWPJLsMQ",
+           "types" : [ "restaurant", "bar", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "721 W Grand Ave, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.89103069999999,
+                 "lng" : -87.64682429999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "34351bb724a72b382d904929dea1969bad234f88",
+           "name" : "La Scarola",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1334,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234/photos\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAYIFQOtl0i2bs332Mtq0D3m6tbJd0SNhSes87lS2KSvP_3FrwC0qDQAXJtPS4sC_5J3A75poEQEjspzmcJCIq8XhgR9K4oQlUHU2xXzUTHtgSmCut0y7JMCcCp4A9qNQLEhAJluppSQm-BVyMT0zHIxFGGhRRvlTOqOmfAy2bhj5bI2fQEIBS1g",
+                 "width" : 2048
+              }
+           ],
+           "place_id" : "ChIJ8TFl3M0sDogRlO3_4QWlWVE",
+           "price_level" : 2,
+           "rating" : 4.4,
+           "reference" : "CmRdAAAA7xt1vpBekHtnZOW_xIn2UUMF6H4pNk5zwqSJmGfTc8XAE6PVihQ1pR4j1vOwNz6OTn9C1ZTQHmLt_QBX1PlGNFIDNk-QmQb0WBEDKrmVYKTnhEQAvjCzsWNK0x-XlPA_EhA6PmIIT0rlBzbNLkKlAdmZGhQZy7Yx7m0j7bozDUXQSuJQB9J7uQ",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "449 N Clark St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8907052,
+                 "lng" : -87.63086869999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "af78f4971ebbb6cd78958d8ee2b54823b6a7852e",
+           "name" : "XOCO",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 2448,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/103322116725763248280/photos\"\u003eEugene C\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAASngPzRTuyL6nfvEgBm9GZ1xG-8sxbsdutYCZZPWJqW_nMikwA-lUPHHOI4AYXSR4OQFlaGZt3PnmNYGB7eYLs3bZ_q9BAM1fTdIoc8QohfN9o2xCDO4EAVIyN3XvCyV1EhBrkhNy3HFyW-vB7Pv4Ukz1GhRk7mMXXg9kLOJUH-6fgEFvrQKVAA",
+                 "width" : 3264
+              }
+           ],
+           "place_id" : "ChIJFyS_LLIsDogRfYRCJl5tTRk",
+           "price_level" : 2,
+           "rating" : 4.3,
+           "reference" : "CmRXAAAAOgtCD1nftQP7yOEFry9TilapfLhA8ogV3KT2xlicazIplVnHt5dIHe7isig2aNz4RGqGn3XVviJ8R0_WI564nCGms1s2kCJut3kDlvgQIWTZhiLoRRx9lZ3A0CglCFUPEhDp4GPw5l4rO9o6O5tODEm5GhQBv7O3FVN3f9stP4cfLACtbHXHJA",
+           "types" : [ "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "445 N Clark St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8905629,
+                 "lng" : -87.63088499999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "312d152ea2b6821328b921cd33e9b526fa07a9e8",
+           "name" : "Topolobampo",
+           "photos" : [
+              {
+                 "height" : 648,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/112027771483008453746/photos\"\u003eWalkerfour CHI\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAqKsBuNmoNxeY63rPA-fZxoTWLiH62z_cmVoAEe0cIHhxJMIu_SCZOrKFRnWoUIBKwvMlreQ0ps7cke-r34nBf3fJE7xIiw2WzZNtxAVLXyVIpdCANNXr8qAoRJaxe4e4EhB4QOznADy-UXqtlZdZF9l4GhSqJvIP3gwfvhE2POa6EvNnrex0Ag",
+                 "width" : 1152
+              }
+           ],
+           "place_id" : "ChIJ25jYKrIsDogRhv_ykBvwfOQ",
+           "price_level" : 3,
+           "rating" : 4.3,
+           "reference" : "CmRfAAAA-71ekR2tCWNboN2Ix3vTsUUwI6gi45ZDYwbrRqLsrAIGpSRVf3GMIl_oenJpZ2tJD8cZVam7BZp11QgKDBowBAPfFJrU4h49eHc5BHINhYPp-wkyIjqe2ld8uJ7BsG3pEhAaQojuma9JVZ62I38HQ8XWGhRIoKaOQLKe1uwu_mzUPuthwB5k-Q",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "633 N St Clair St, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8937867,
+                 "lng" : -87.62235249999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "a6d2d5cf80965bdb848bd57cf3463f68c2e84418",
+           "name" : "The Capital Grille",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 460,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/106935396663355791606/photos\"\u003eJake Penner\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAdaTwmBZ_bnQgm4sQxWirmqjh2KBWnTLMAhkPxScKRr8RhrZQGPaopFTM_hPcc6tHznA1c7cZXqCdOZsAGR-sxddTVg2LkhwRu7HPoo7NE0ip9gL_k0mLD012_0QRffI9EhAsQT5-al3VQvdDq5bC6ZljGhSfQtzprkm9h3dA8jVHyvzM3OcMow",
+                 "width" : 816
+              }
+           ],
+           "place_id" : "ChIJo9QCaqssDogRmmJ0MAf-aeE",
+           "price_level" : 3,
+           "rating" : 4.4,
+           "reference" : "CnRmAAAAFKWge7CEp3MCWnKEL5adCBSwZEOhr1Wa2r9eqb0exQnIZHU3q97i20syxBEaG0Kj29iZBJJYmaCc4iqw3ig-kvMVPg8oMt_1dpDjM7li9rbMRZhwR7OvNiQYT7K5-FO-Ym-Ez6P_qzRCuLqMKFzq7RIQF894KT8zhC6NrQWcyDSVmBoUM0JG7IhLYcVaAYnGKXPM42z5lTE",
+           "types" : [ "restaurant", "food", "bar", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "626 N State St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.89343299999999,
+                 "lng" : -87.62832499999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "226128ef5613c693f2fe61fadbe9ce7896078e23",
+           "name" : "Quartino Ristorante",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 600,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/113732964947416204109/photos\"\u003eQuartino Ristorante\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAsCrFvSAzUUrl4AZUEpGnkQrzl1ZeKGsYraIuoqNAS-WLuWvKATV8tHs16tUFIs29vxp4_3Fz0C_aJPr-29Y215EQO49sr1nwC_UIXTDZd8rjggMZk-YEzFQy3NcgpGqQEhBCfXQN2FBej5nG1Poo0O0kGhRfuIdQ4JUuyfdmRwlgkaZEx6kVaw",
+                 "width" : 1000
+              }
+           ],
+           "place_id" : "ChIJqfIkY60sDogRMP2otSWdKJA",
+           "price_level" : 2,
+           "rating" : 4.4,
+           "reference" : "CnRnAAAA8Slx_adHPEdAO-gR0XQ3SYYHBMvO4DOXbnocsj95xxUrAi9bNdic4fXwPa50ZFrDO-z09EgH3lOR1uTtA4mm_xYuspsWjBWtc47ZOWmUU7ppmxkhyjetohN5tLTvv8okOZo793N4gBB6gDGkSQjmOhIQaw8aMDxw_ur1RJbdHGLcHxoUrVq1aCdOiA6etKCRWm5kMAu3gdQ",
+           "types" : [ "restaurant", "food", "bar", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "110 W Illinois St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.89106220000001,
+                 "lng" : -87.63172469999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "414fda9043b419f3bac478a74b661fabc39d16a2",
+           "name" : "Sunda",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 395,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/101998354003765498310/photos\"\u003eSunda\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAK_g48h99rMprnw_owfzk44d7rCZBw1gGzS7-xRFLjCd0Ldato5I5Lu6uIQWtpdvUMqIeWsAjKAsQXiychIV2p3Y9j308oKmsFIeWbMFtAQAtkHoy8_XzhK5UUXWrJFhxEhDdHzT2x7XWX7EMipkr9c0_GhTrG-upOW6F9BEucXpNLNnnxWIhHg",
+                 "width" : 593
+              }
+           ],
+           "place_id" : "ChIJpdvW2rMsDogRmOSgw59PVdo",
+           "price_level" : 2,
+           "rating" : 4.3,
+           "reference" : "CmRZAAAAemsryk_Jsj9xH6jkVpG_0taLAO7uPULzDsEeHhaIKGFedi5pRWZqR94KwGIdw1EJM_hwp4olap7sxeGZpTZo1WdhQ5j6x-q1S0mpV3AYN58klfIHrli8fXTvefXYheIWEhDZfI0kswudMC4jG6jr6VUXGhQUw2I7dqLkzKtIPpoR6z4Nyl_nHw",
+           "types" : [ "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "1723 N Halsted St, Chicago, IL 60614, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.9134401,
+                 "lng" : -87.648055
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "b1911b922bcd65130e7d94850887df5d955ce19e",
+           "name" : "Alinea",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 2048,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104111246635874032234/photos\"\u003eZAGAT\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAqdD4ncin_bEkh5QFNFldDEPVG18pXk1NyKB2_pwh90iHaxcZ0kgwAESRP_8Yn2JKUVwYQT4zrl7VioPp5o874U619fm5dyoGzEUV8G5r-TNEnkrAuYm3fBegS0FpxqpXEhBmU5RM90YIQOEU1-wmSZzjGhRJPwsTK2vRC-9OKdWuvAFay9UVSQ",
+                 "width" : 1585
+              }
+           ],
+           "place_id" : "ChIJuyI60yLTD4gROwTWENq1He0",
+           "price_level" : 4,
+           "rating" : 4.5,
+           "reference" : "CmRaAAAAZWrlDns0O5RZ8-HInDwgtc_G3jGUFA0raqwKTK7PZZt8_XvIKadnEw7XigLoPmcRFr17kvgy-V9qKpetmPHIWRGzG4qFr0JIEWkW3NxyacyhMZeqWORQmQHIRT-VB6aqEhDeDqjegNA34vNwqEUJrJkVGhRUlrTiKzRJIzwCYN95i7JQHFyyQw",
+           "types" : [ "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "159 W Erie St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.89357500000001,
+                 "lng" : -87.63327799999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "6dfd93896635f3dc27d6f10c89faa35ac95481a9",
+           "name" : "Wildfire Chicago",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 712,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/107592432005411810813/photos\"\u003eWildfire Chicago\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAPylpBaG0Odi_1-JPlLK2zFv4egCPbd4hEKUJE-MJ3W86Pm9o5DdPCoBIQcvzYQAkcxAk93gn_z0nAnrsEt5Ad24x6LTAKAdSaIe3vSnnD5sRcvgTUa2sxxBkDNZllWbUEhC5_M7cp9OtEFTdZcHAlZHwGhSNe95VOfsOfnIkE3WxxO4aLrtJPA",
+                 "width" : 712
+              }
+           ],
+           "place_id" : "ChIJbUZRYLMsDogRmaVlU28JtqY",
+           "price_level" : 2,
+           "rating" : 4.3,
+           "reference" : "CnRkAAAALdfpW54GVdcomB_-O7zQAK0Q-4vZjM5qJt8mhgRfvJyn6z8ZjeWcgDOpo3PmQEKNOAa2RSuyZUT6h3z0UExcz1e4R99Ify81RicK93G_yJFxQo9VQXNhKsTK-XDRy9_lPMFMVE4WyDUlRtoIWoXp3xIQQP20A-9VUyBC-4hSnLSiQxoUW1vyYdLw38EIBdQAb3cdstfXkqA",
+           "types" : [ "restaurant", "bar", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "720 N Rush St, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8955286,
+                 "lng" : -87.6257497
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "1dddc1b57588623a154a5d64b39288f440e33f41",
+           "name" : "Rosebud on Rush",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 270,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/117848916184386580966/photos\"\u003eRosebud on Rush\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAp0hANuRGDKFvH3omF55mtREPQnq8wSWZQAMcxCWnIod6R3yVOHWL91S2re5t-yaeaUsFVCquwcPpFznZW0tpSNXV3XZZR5bbo5ACslvfHPdM64f81COp8f4CLoGi56b-EhCInSglDr2TfU9Xyb2uAsNvGhSox3tElxBGtI5hSjV2f2n-_h02gA",
+                 "width" : 270
+              }
+           ],
+           "place_id" : "ChIJs-YDMlPTD4gRdEtlWNGqV4k",
+           "price_level" : 2,
+           "rating" : 4.3,
+           "reference" : "CnRjAAAAPtUdknJuTUtbY-yLBNfqBtcYO87Rb1Ho3FsXwPk1VzFOYfexHUFLTYipIf7ZS0KJs2x9CsqHfOPv37mVppArGrF0zQBQXOn7fiqy-XrOk3PjEnexxZU5XMnujunqstkXqY0-dQplKkqhSRElPxHo0BIQhxzwGtzbCrXTKrxL-IoWOxoUBk8bfXbbYOWChxmc7JYeQylei2E",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "2701 N Halsted St, Chicago, IL 60614, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.9316661,
+                 "lng" : -87.64885679999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "f7ee0a29d1910d8f94d9934c55bd040f63c59c6f",
+           "name" : "Sapori Trattoria",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 648,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104156642074501513045/photos\"\u003eWalkersix CHI\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAc9d58Zzshil_CWeGl3YWNnTAHgWWM0lIKEpBhoQ51whGnvb0jZSoK50Qy1snjYaTtFE9Bl1FbQS8VhjxvvuMXEKcmoGm-gXml8og_edcEqQCB1EuYhyTIQqFV9k0S0e7EhCpHxbMF4ldejT34SSQGJDaGhQWjs6dzo0gH1-nZIciXFYJjLpgwA",
+                 "width" : 1152
+              }
+           ],
+           "place_id" : "ChIJ1VStIgbTD4gRt1Rj342S-vs",
+           "price_level" : 2,
+           "rating" : 4.5,
+           "reference" : "CnRkAAAA1onTg_Y4l5KHBs5yozEXhupBRMeXxji4IdRp7FVQSItHlydkrYdnHaHgU9779N9ZjpRRZos1bj6dtsQLHgl7VneRHZDiDd1yPD-TTBCTfcTNxRS3cUaLMHj8IW_kKbXtuW1DMvy43skMa-B_dlBCnBIQhN0rhTdLziGtEiF2gHp_0BoUg2sZ3p-4RgAY69BwlEN5EZXoLEk",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "676 N St Clair St, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8945224,
+                 "lng" : -87.6229369
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "ef6feb6c30f9c5caba5be8376b74c7830ab496c9",
+           "name" : "Tru",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1081,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/101553818906989301618/photos\"\u003eTru\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAABYRAOJY6_NrR-RGAHJ1ABVhMvl8mfHxAsAbpGrc252Uu15jpw0izQlKoFnPZNgJ9ttMDjeZ7Na5TwAaelWehJCmX0bNceVApCX_brG6GDHodz0Wj5pA4UEJhF8TqbCdOEhCQ5k1lTWab691J0EfhdhI_GhTDhsmUNDNTpkF3hxDzoytsJ1mqgA",
+                 "width" : 1081
+              }
+           ],
+           "place_id" : "ChIJjTP5T6ssDogRhTmlYCSH7xE",
+           "price_level" : 4,
+           "rating" : 4.4,
+           "reference" : "CmRWAAAAS6HmBGYAXWXypfxxAznapQYvgXcrd_p3biuYjyMn8H3AaR6Rxcozq0OgeNiknq_ljgX2MtPWHecVHy7qIx5Iz-lKRe6acUn5Hr-c7Jn0tmCDHR-wYMKfdDRoVLyJY_WdEhBSjRFOAxmUxMwIQx_zX8RjGhRTmu2DG77cj6QsKoZb5sXQSAO-DQ",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        }
+     ],
+     "status" : "OK"
+  },
+  "googlePlaces3": {
+     "html_attributions" : [],
+     "next_page_token" : "",
+     "results" : [
+        {
+           "formatted_address" : "2701 N Halsted St, Chicago, IL 60614, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.9316661,
+                 "lng" : -87.64885679999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "f7ee0a29d1910d8f94d9934c55bd040f63c59c6f",
+           "name" : "Sapori Trattoria",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 648,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104156642074501513045/photos\"\u003eWalkersix CHI\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAy9Se69EBOlzwzKUZO7HJRxGMBxkRCPqgRNKbaEUIpwlcqeC_1UKbTVCDXVc2GwePmrAUN3T6NElIKLRCv3HnGPjZjnbCXiXjgja1wiHVz77NrIhEFE0b_VAc8m9LejvcEhC8ChTfR4wjYE-GpLJEPQfaGhROnXobEOEnwW8GrAsXf6Sj882t0w",
+                 "width" : 1152
+              }
+           ],
+           "place_id" : "ChIJ1VStIgbTD4gRt1Rj342S-vs",
+           "price_level" : 2,
+           "rating" : 4.5,
+           "reference" : "CnRkAAAAXc43hnWW8mrb9FDPdzeOEICbcS8AWNqWb6K-mGbG5ynpAV2aoUcIYodSrIdyMkHJmFnKnGF38tfUrK2BBtkuUCverJ4t5utA2uNTeTchX1ymEG633bq6ssBZNYBhmL3xpmF5NSBvXqNi5_l3vrXXQhIQnfeVa7e019XL_a3u_RDhkRoUfx-__x7lM5s5kYfG6P3Nqk0Ef4U",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "676 N St Clair St, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8945224,
+                 "lng" : -87.6229369
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "ef6feb6c30f9c5caba5be8376b74c7830ab496c9",
+           "name" : "Tru",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1081,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/101553818906989301618/photos\"\u003eTru\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAHpfiNnXJs-ClQwZt83LhnsGdbOUThABGHyiqNii_38Cw1qTRWqkou_yWrLDEk5JcFr4A5u1I7QRR3hCI7Jp1pX1h3fJ8HgJTQktgsw44MBx9wXxw2n5hkJMRoYnQYyXiEhA9qNUbLFlFVYHe2DU3sLWsGhSjigOrOwOtUG0boOYrra9jJsb6Hg",
+                 "width" : 1081
+              }
+           ],
+           "place_id" : "ChIJjTP5T6ssDogRhTmlYCSH7xE",
+           "price_level" : 4,
+           "rating" : 4.4,
+           "reference" : "CmRWAAAAyVpnD4DnMySyebk6p-qjIQz9DJxXFpXtLpw0GUnN4pIZzdBnewDwkErvoq5l6Kd2VdyfmRSd-rm8SiMBVatqAX8XDiaOwGJBODTjFPlyDUAE_qHn5QSA5r_MFZnM0b0GEhAJI2-H2HMRmd-qEJB3NzY3GhRNPWu46k6rL2hClrQ8G4dGvD2fkw",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "661 N LaSalle St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.894166,
+                 "lng" : -87.632401
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "fd6a19206f013fb1f806023089ab24a75054a855",
+           "name" : "Fogo de Chão Brazilian Steakhouse",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1286,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/116949931406935078319/photos\"\u003eFogo de Chão Brazilian Steakhouse\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAlQClEXDwtzlBPQIx4oZZPYW-ZhhlkOZnZ8mxoAp5U70cRaTZDogAIAyEE0GduClIqivVTIHX6XwsAQmEeTq01si2qX-gb-LlTNhOHZltTACp75SAe5uwOhhBDPRPtWTREhAj9Ly7vjQNkzIbkp87QBKoGhQSC1uvyuLh7mXOenkfESLESNoGog",
+                 "width" : 900
+              }
+           ],
+           "place_id" : "ChIJi0isQbMsDogRgrJp6veYrzk",
+           "price_level" : 3,
+           "rating" : 4.6,
+           "reference" : "CoQBdQAAAP5gYTgO2WkDV1zKdB5AvYisnFDQT2pWHfIKXooX2zBVP6DzJlDEbxklAA6nVg55qYDBkQ2OWiQ3O7K6jbiU0HrurY49YShy3HpPRpXTYfqO7bysb4BDrKkBWHk8zuIO_59jf07-QBvzVMTKFbQWe20QvOreryT7ImgHeW8OqY5mEhAcJQoEYca2nFOWTBtV-58kGhR8r-LRLzMmv5ta3mBk_7aPFZMKwQ",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "1024 N Rush St, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.9011907,
+                 "lng" : -87.62803529999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "52c3d4db3a0835659e2279f285775f449a49c33b",
+           "name" : "Hugo's Frog Bar & Fish House",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 335,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/103409412381694204871/photos\"\u003eHugo&#39;s Frog Bar &amp; Fish House\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAgB93_Qte4EJPLU6o5RBXCzE-BEGrxU489ll22ar9BXvX_k4JPb37kXpFXqAyxqeIdU-xxGqmNdd-YE6vbv_DxOZ7v8pv7LXJLEI4eolgLUeIgYtE3hvSy0WZQ7RnBHN8EhB6LJ8KaZU61UxP9dGFezRPGhSiI4GBtVPpaHz6fFiPFn0ynVXIhA",
+                 "width" : 800
+              }
+           ],
+           "place_id" : "ChIJ641D6FHTD4gRajt2EFh0A5Y",
+           "rating" : 4.2,
+           "reference" : "CnRwAAAAtycK2yIbeJzcQFeKZQ52b7yOGeIx7CrlAM1-piQ2npmuv5l3rkkGqlakkY_rnEPaLjRvDeAgntTT2E1jzTuLCyPNJE7zbbw7bgq6TcFp-RPq1XinXG9t7huEZ8a9m4j1b414CcgNbm4x47IR0xMANxIQFfHJiFHIihqUjfhUHXJywBoUsihOWupyaeI-Wfihc9TBqJ2G2sQ",
+           "types" : [ "restaurant", "food", "bar", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "868 N Franklin St, Chicago, IL 60610, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8985429,
+                 "lng" : -87.63607379999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "5a653d94ef89132932584b5340bf0d300064157c",
+           "name" : "MK",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 2992,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/110613820107632932759/photos\"\u003eJeff Song\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAscodXIWrj4bYkTqMYo1vdKF2z9Oc_28b-SQNHuzpxL_lRpM2kYUdtvUSdVzQ-QDOyV2G1j1KaOGa_Pr2brEaZhcOnO07Y64wDYqe1HOsZyBpDJ-Zi0k3IFWMIUTKZBNfEhD9YxbpI9ACJodUlyQC8CjBGhRIBlu2Ht9ZS8D5z9rAGdSEamLDwQ",
+                 "width" : 4000
+              }
+           ],
+           "place_id" : "ChIJBWjMskvTD4gR3A7fMpkRhBk",
+           "price_level" : 3,
+           "rating" : 4.5,
+           "reference" : "CmRVAAAAyIbPzJUojrJEGDycUISuBHl6UcMz4Cj3SeeF5aKLZPHC9UBblz_CsfcNdqyc1LA-TauBpIRh2vmqM16B1n3N1VBbJU3tyom6pSFnfL-KJxfOVPejLpMHjrlHod-yHx6uEhABF_GRA90DWkFjfp9O-D3IGhQkw-jTd9RR8m47md45CqhiSqLTKg",
+           "types" : [ "restaurant", "bar", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "860 N Orleans St, Chicago, IL 60610, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.89831119999999,
+                 "lng" : -87.6374888
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "bb478d734da5df7faff95f8c001993edc9935a3e",
+           "name" : "Big & Little's",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 3000,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/104312364047482983516/photos\"\u003eTodor Krecu\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAASGKkU5NevZihYCK4PounP6ImzcU111BZUKzTCAUUM1Fh1_FeohOasmR4VAXgy5Io2SgHOhddmADnMw7BHl2YiIgW8TWMmQ3_FA9254UbWtx6sRNUMLc5u1Yna_lSeevSEhCnldfYQh15dvChIDdcJ4NoGhTAXlQV2kkMXODfr1UIYFxs8QLwSA",
+                 "width" : 4000
+              }
+           ],
+           "place_id" : "ChIJ61ZNH0rTD4gR4rfj2-kUuZw",
+           "price_level" : 1,
+           "rating" : 4.5,
+           "reference" : "CnRiAAAAVDHlwhHMhAccCLuUG54_pEqZA54NyOqfhB2CrGZvGTBG5n4f45BdcbMfl-8PJCOPmzq39tPgCx130zYQm-Y-E7VlFyk5kJAO_dPloFbO6b0ctMHYFkNauaRi9BOA7cBuJRTvl6Ka33AOK5_PElSJ3BIQC1kPSXVPX7oVo2WhtGRgJxoU6l3oYMr35dQWumAqqrIE8nY-75E",
+           "types" : [ "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "464 N Halsted St, Chicago, IL 60642, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8908505,
+                 "lng" : -87.6478348
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "d70327c0a706f7573e95d14639179d11e7271c0d",
+           "name" : "Piccolo Sogno",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "place_id" : "ChIJsxhF-80sDogRLLzNkOUORZ4",
+           "price_level" : 3,
+           "rating" : 4.4,
+           "reference" : "CnRhAAAA7dcgBX7nfVHvxpcVpayKvwzi5IijIg2y65LD2HI4TC_5_-qlQCCpbcY3n8aTdb94l9IcL62U7InRpW2m4vwv5eeKopZB-jD1FB_4eQgilviaKxzuLiKZc9l3N6OkMLUzsznA7HbtEXSE3cy0OtH4fRIQQVun0J-KalBXqgOtAeyCDxoU1pqCRxyM2nhLzkt4pib9bkmtbhw",
+           "types" : [ "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "200 S Halsted St, Chicago, IL 60661, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.878981,
+                 "lng" : -87.6475713
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "0af0b061d5824fb9eab9b5f1579aa8a4c9a83d0b",
+           "name" : "Greek Islands",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 2688,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/101712485944572752472/photos\"\u003eHuang William\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAN7mp5Znd8zmfiKAS4fojivTaOZOzdUBoHDfUz2chXH_tQeK2rOLpMvoukXclNJ4mNRJE2-0YgnzXDs7ogQ_pnDDEZqIaONkzMsMc9dsPMaIsApHnto8HjtuMKaaaMypmEhAQSNFNWk2zrhaqq-FjAmKHGhQ3lv9x6CZLlLDY7pwQorKC45wuvQ",
+                 "width" : 1520
+              }
+           ],
+           "place_id" : "ChIJffLJO8MsDogRLv-ZPBnvROI",
+           "price_level" : 2,
+           "rating" : 4.3,
+           "reference" : "CnRhAAAAAZGhh1cc6_51tYaNu_0ie19lI_GFuDhJSNZGShNopof-uNyYdgC8c1ZnHbIfcjUsY753tC6VW-LHiz7kNMG21cVyfIke9VFhd7vks7qA7X9Qenr3s9tFAjxa0QiKKHGqImCZ3TFf2eqkpp1ml1sy7xIQW7Imp5eoJ_8EpVoext0YlBoUin6PdOfqVD5w87cVGStv5UFudEE",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "1028 N Rush St, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.9013431,
+                 "lng" : -87.6280881
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "f8c6a66fc2b5c18d3e41033a5d1ec51d2f73af58",
+           "name" : "Gibsons Bar & Steakhouse",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 600,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/111964231426882017075/photos\"\u003eGibsons Bar &amp; Steakhouse\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAf2zSZNaGc5gNRGj2KESLJMqEvITbz30W-wELqB1zGYGoieob2B6VhPBpNTdlJR0bhVuzB6r5S6NohtJP4oD6gmn4Q8mD-iFo69aTA35UgmZIj4q-DHm15JZb7H8vfdfzEhCQJ-h0vJg7eotabk2OKzL5GhSbYozIy27VDWUklaqp-LBdjkrnNA",
+                 "width" : 900
+              }
+           ],
+           "place_id" : "ChIJIWnn51HTD4gR1Ie6zt2J2dE",
+           "price_level" : 3,
+           "rating" : 4.4,
+           "reference" : "CnRsAAAAJeH_682BWQaWgZu8V0lyrru3ZnP-jHDavwSuGD9eFLlM1Cr2lYRZXtzywaxTixJcBQKJ9Y189onN8SoC2qQreIbvoRKhmrzeIDhZFC0_ARYJKwdA7ASIWldlsNX_KoNdHk4mm7fRU4LUQh-e1qzDrRIQ5I-bNWDOdZl67x2UpPwD3BoUnXIhYc33zk4enLi9coJmKUezOlU",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "300 W Hubbard St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8902,
+                 "lng" : -87.63580669999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "fd71e81061583eb94bf17d084cbbce5a9e5c429e",
+           "name" : "Coco Pazzo",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1363,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/100429848792001135889/photos\"\u003eCoco Pazzo\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAuBb8y1icEVRaZVmnnT4SAUILLS3J6DheleIHBk4st9wjEt8cu7tY59HEcsndxXSHVJ8xYcEq2bTdWYC3CZURJftlITupIUDCR0PgMYbPXS0NYvtrdaCBIOgke9PLwtPzEhBVjJrb4Bh06iRhcc1TjhJbGhStuFWklqg70bV6Za3yZW99WWm6cA",
+                 "width" : 2048
+              }
+           ],
+           "place_id" : "ChIJM7K_gLYsDogRkmdAgJsxL54",
+           "price_level" : 3,
+           "rating" : 4.2,
+           "reference" : "CmReAAAAwpNnX9jBvPLAvYQVA9uvqHr_PG1OzgyaD_yNQxzUrpGZhSuPqGfM8Lv3zPhyxZ4c1bPSklYsX9seWRKO4qmaCZPfJTN2s5rDOnVdwRtnh-rYjuuroO7qP85cWtu04eCpEhBrrzFQpRp2B0tD2jrrAzw-GhQEP0mHYhumpT7bEl2h38ejyPphFQ",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "230 W Kinzie St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.88928360000001,
+                 "lng" : -87.6353012
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/bar-71.png",
+           "id" : "20b2cdcd2b451ef1c94a121faa81d0c1f482d40a",
+           "name" : "Gilt Bar",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1152,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/112889714621676953396/photos\"\u003eDave Mordis\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAxaGEb2H_0h57toDYBJMALj4AMPc4W_1n9Jc9QfWtBMdeNdTUFQCpkLDHt0N4fCQeHqY6wq7N-BZIX2XbdpYZlHH1Bxe2wbgJP85HCM0N--2fM6O6koL8w2Dqr6EA8JVsEhDlYv8VIMSwfu5ps7DhmZZ5GhT6BCwWMDl57cUp_8J1lsd5bHOd4A",
+                 "width" : 2048
+              }
+           ],
+           "place_id" : "ChIJWdK7jbYsDogR_th8ILdDTJM",
+           "price_level" : 2,
+           "rating" : 4.4,
+           "reference" : "CmRcAAAAST6-vsP7MJMPpeAfhUKzvTQlDsWgnUVWQD7krz7o-I3jVTgzAhcuqCvSRptXqiGN-FtGA1Ht59CTpc-yvlHESJRhxKXmzjaWLTbbIc37tWKqJGyPy4MVzAc0l2FlnsTbEhDIKsN2N3GrjJwPhQlbbmJzGhQaRCU6oT1nPfzLUhutNjPmuwGxjQ",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "1655 N Sedgwick St, Chicago, IL 60614, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.9126983,
+                 "lng" : -87.63851749999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "e1b542268512503aeeda15eec2cf66d04e32c8fc",
+           "name" : "Twin Anchors Restaurant",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1365,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/117237079687256358485/photos\"\u003eTwin Anchors Restaurant\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAACbunZLb5ECUhcT1lTGvTMxN8s474ZBifkGlCXFrh-OqgbPvG7CM-po6vtowUZiRTgDChaqgQcI51e-yTTVWWne8B02qXBb1jGjmGqEpk_0w2UEx8_q66k2gGrNYDLSZ_EhDuSxA0m-HPFi4vsGo5zXV8GhS2CYJYTzbc_HVG6TOXB7Y3rLPhZw",
+                 "width" : 2048
+              }
+           ],
+           "place_id" : "ChIJH2QIfz_TD4gRawN6EJTH5ag",
+           "price_level" : 2,
+           "rating" : 4.5,
+           "reference" : "CnRrAAAAuBm-Nn3uPE-Fvw4Zth5mFD3hb9BDk7uljTJbWAV5ZcXa-R9QloBfc0FYpuSXYs0ml_uELgkIHd5Ff-m8I8WEfMLgpUNw-cvLFYNhtaMwIhdN3rogYcux877dFUjqtBQATkdcIJz7pJT84E1gLzKDVxIQi7K6GcfUbPM1kQV3-wUWlxoUZFeJjCkyLmObFuJbe57TfXTI_R0",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "52 W Elm St, Chicago, IL 60610, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.90332089999999,
+                 "lng" : -87.6306256
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "e1d82ba0fb0a3781fbc4b5a5dbd178c1f4c8cc97",
+           "name" : "Table Fifty-Two",
+           "photos" : [
+              {
+                 "height" : 2048,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/110366336378272279314/photos\"\u003eEric Brener\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAA3IpNv0RDzbXN7R5GGSJFxniZ82Ck-zMT-WWMdV0y2c4lKe1heZ0fIVqs1_jh5Cu4yNzBQ2LC413s2L37ikNapuS4GW3__jgmwNq-56e4UWGbU75UBsC21bPHEzTy9vf4EhBiChst6ABoxq50mtGsFMECGhT0mm6dESv0Mo_ode8qmffn4cMv5g",
+                 "width" : 1536
+              }
+           ],
+           "place_id" : "ChIJD9Q6r0_TD4gRGtdBfsj-mXc",
+           "price_level" : 3,
+           "rating" : 4.2,
+           "reference" : "CnRiAAAA0UhPWEHOgtLKxVlDdWowkvAwlRSsdnOgB4Xb0tFsa7F5ByjFoeFJ8Gz4lFn7RHu8ZFmXvdKw1wbjRSYzPYo2ukZkvxIl3tVK3JzswflPLe9mLUh403cgwP4gnG3RQoz0EpC0H3p3ra04Sg_lJJZlARIQviEfhGBDZb-MhNFcV0W5-xoUqki0TdZOTfQrnUHZe5zxAO0u5OI",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "531 N Wells St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8917902,
+                 "lng" : -87.63392519999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "6bf11aec7acc053b08b5854682e53c4b81dd9c97",
+           "name" : "GT Fish & Oyster",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 3456,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/108320224573839197933/photos\"\u003eRandy F.\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAQCspDk17PHriJ1IXiPqm_DvR6IAl_-uGaPtVdNaahF7uGpiOtqI7xZ7nol7QMWMPw4uY0flI_82arckEPm4vEliR3rAArqZ3o2AG6ApIgUxWmhqqVPz_IsQXuyOmby7EEhCNJuzLHFp0G-mDDcKRSirbGhRE7bHxK6hizIEcvSOzX7GJKCTNyw",
+                 "width" : 4608
+              }
+           ],
+           "place_id" : "ChIJUX1XcrQsDogREgsXPx4xB7Q",
+           "price_level" : 3,
+           "rating" : 4.4,
+           "reference" : "CnRkAAAALC4Z5Rh2qVZj3eIeiFPtA0zXXD18SUqk7WlSLV_BhIuRadnI7TJB8QZuscRZjkM2U5bcgmNHXXOtT_t_SQSHe4h3eEc2ilzdzBVJYjWA8Gn0LYRzqBBc6u59-gDfv3UxCbltoUFy9waPOuG5qsKrNhIQK2q-p9dE4d4XERtbv6BtKRoUr5JP5v5pnR530lzn4d5Zi9GTQ6E",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "2537 N Kedzie Ave, Chicago, IL 60647, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.927684,
+                 "lng" : -87.7067943
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "d3b7b86d0d9096e2136ee67df730bd44461ed426",
+           "name" : "Lula Cafe",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 3120,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/117248297586906679292/photos\"\u003eJeff Bowman\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAwVxKtiAuL4wITbEjhcejwCBuKzdwidQgyT8rPUxNyUzMmfXkpwPPPsh2w8dy-C82AEg1S3c4YkPioljrAFfI9QVJ0iU84ExfS1pN9-Qm-AWI08DTth6uKjcx3uMiZp13EhB-0h9OgRYXpbj87mTyDR1fGhSuN2dDoThHZJzTorYTDR5_Ixkjiw",
+                 "width" : 4160
+              }
+           ],
+           "place_id" : "ChIJ-7r5qHrND4gRgmIpiTEL5Nk",
+           "price_level" : 2,
+           "rating" : 4.4,
+           "reference" : "CmRdAAAAXk9bQBew2xFcmfolCRoJETmFGy_c46U4RCuy_rhIEUGCqrDj58IZOyb3h4QtAtbCn6gVMkUdczWEtMbn3b-q2r9HJV1dh0HxOcXv1JCuS5_RfrNl581Gh6o-S922O2ZbEhDZZjIkDis_woj8Aeh8r_J1GhTjYsT5fIRC1kndgEJSq0tgiSxIKA",
+           "types" : [
+              "cafe",
+              "bar",
+              "restaurant",
+              "food",
+              "point_of_interest",
+              "establishment"
+           ]
+        },
+        {
+           "formatted_address" : "3130 North Broadway, Chicago, IL 60657, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.93867049999999,
+                 "lng" : -87.64473629999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "426835d0379cd771ce3e0de3ea001f08037cea51",
+           "name" : "Wilde Bar & Restaurant",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 720,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/112839678510419815596/photos\"\u003eWilde Bar &amp; Restaurant\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAo-QE_DuZn2e_cujH1rLxVqRgLkK3i03MWDu3w85TSdREK2FoMY4-W2iZlPGch4c49AaXFoBlfeXjqPHgr7mHoIhhuzlPSO-egONqyDGYzmt37-xZWOgtzqqgvD37EepUEhDIoQ6_qZmzTXbonPxBexD6GhQyjnNdDQ4bECx8xiuTMF9nzOpOVg",
+                 "width" : 960
+              }
+           ],
+           "place_id" : "ChIJ5T8gwqbTD4gRRV525ZDW_tA",
+           "rating" : 4.3,
+           "reference" : "CnRqAAAAVTA9Ok2_loQMe2V2S0aSwcVBlcsiqlheMYVGAfetjNehc4jSvCjJPQz3tRghLWs_JyVEwODzeJKnmLDFmjdr9cNQrL3uMuOi36j7pwoXYqV17EPhlxQelvGFLWkvARyT-05ZPVu2809O3XgFB2s6UhIQhl4kC926SEzI2f4Z3ySPghoUl5XfJD_V5xqfs7U3s3pgSLOiX0g",
+           "types" : [ "restaurant", "bar", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "108 W Kinzie St, Chicago, IL 60654, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.88920600000001,
+                 "lng" : -87.6315779
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "c02dac6de77e9917e0b89bdbe800a65c3a271fb4",
+           "name" : "Mercadito Chicago",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 805,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/110121240885311259456/photos\"\u003eMercadito Chicago\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAArpFeiRUqzagDPGslInhLgqzbXwHzF9id29CYWCPtrh1jzBFrMN60Er2Sgk9B9HAyqCVDXXIXSextI6qXz5KC3crEbzfdWl55BdilYOukTTON248vWG-nvkjx3WFb6Ek6EhDpxhwFYp4-Y0p16igTAWboGhSNpFlcIkU4RPxVIs0PR268rP1k-g",
+                 "width" : 1198
+              }
+           ],
+           "place_id" : "ChIJEz05bLEsDogRx3lY1yVO-SI",
+           "price_level" : 2,
+           "rating" : 4.1,
+           "reference" : "CnRkAAAA5bD6qSbYD6XYAQOyDPFpQsA1z8edYUJArWSReqKJxtoIrsjETi7QAoqRqtqgv1aB3_yq686v7aoY4Xf_xxvjR-5xHAgJn-NDodXuTCrUKtcX8AJLmOvJVgTP-wxGPm4K0PktS9f9p84Dp8vcjrMlqRIQjjeDREqm0QDx9FoNapw8jxoUAZWuyNX9RedZfZZdUfNY5UrfdGo",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "619 W Randolph St, Chicago, IL 60661, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8842757,
+                 "lng" : -87.64353299999999
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "8fb2727411ee5ecb769ba4b02edb0fcd503713a3",
+           "name" : "Blackbird Restaurant",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 1536,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/106203209926693924945/photos\"\u003eehab al yousef\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAw15D9JyJJfJtpyXpe_Tn-YvDJw9rsPZ2HOquBTwm_iiF7Bp5wRZEH3MrHg1k2j8BLNK_IhlEuQF9Aa0PofN-EQpn7VVbVbzEbvjhX-VM1Z3u4cSJ9r6HlGO45jYzJ-eoEhC7o1noS4Dtk5CCWtXqD68tGhS6Dwzskt2Y3JYj0nppBBLSNbEdGA",
+                 "width" : 2048
+              }
+           ],
+           "place_id" : "ChIJKQD13sUsDogR7-XywAQdDIc",
+           "price_level" : 3,
+           "rating" : 4.2,
+           "reference" : "CnRoAAAA7ZBPuiHfK0O0Qx8kRIn_NQ57PfoWbr2UDxPn7k4WcGEwNE5AROwXa0EpBpBPe7OscW0vnZ85Mhwie2q37_XbzQMYBGxBOjVBRXmkdpsufnxfa7zNDuKcWdvvD33OEojzrqa3_8Jz4i73ASR66AIaCBIQsljHHfno4nJG-zl0TPRBPBoUCBWIQp73HTjI0RJQvWKnvSWlvV4",
+           "types" : [ "bar", "restaurant", "food", "point_of_interest", "establishment" ]
+        },
+        {
+           "formatted_address" : "24 S Michigan Ave, Chicago, IL 60603, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.8812996,
+                 "lng" : -87.6249328
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "9be3bbcadd480f1a603f865a08dd64c23df0f9c1",
+           "name" : "The Gage",
+           "opening_hours" : {
+              "open_now" : true,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 816,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/114657261104442184885/photos\"\u003eThe Gage\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAAxJsJz_SqNwGVTylQixxOsv2in_yqpJNGfszw0eyKv0tiiJ--_WnuKV3dS5ZrXQNllM4l9G7w8KthA8WRv0rNHXzVLkSs_05CedM29SbFqg6y5SrOUAer4jvuA3hGiMO9EhBhGZhu-FnfgfkfaTjsA_5bGhTXanlHsso2TnHpC7cuYUiu59uvpQ",
+                 "width" : 815
+              }
+           ],
+           "place_id" : "ChIJ5a8ra6QsDogRENtJLAp40AE",
+           "price_level" : 2,
+           "rating" : 4.2,
+           "reference" : "CmRbAAAAx1_pQEDK5R4sTv28JAxJ_RNIQG242REGeF8c76CjFTpBn5CRBc6VbwVal98LTc77hesENQql3m71ifdGF_vIUR_bp4MPZthsBSi01z2Vn22uUcCtwDhD6wcqLcUMbxYaEhBtStJAJIgCckpXig4Dg9UMGhQP3xyQnVHBRgVdNMHHCpF5iD0BIg",
+           "types" : [
+              "meal_takeaway",
+              "bar",
+              "restaurant",
+              "food",
+              "point_of_interest",
+              "establishment"
+           ]
+        },
+        {
+           "formatted_address" : "937 N Rush St, Chicago, IL 60611, Stati Uniti",
+           "geometry" : {
+              "location" : {
+                 "lat" : 41.900232,
+                 "lng" : -87.6270435
+              }
+           },
+           "icon" : "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+           "id" : "e408bac6b54120fe4e556af7d51dc9dc25c2804b",
+           "name" : "Le Colonial Chicago",
+           "opening_hours" : {
+              "open_now" : false,
+              "weekday_text" : []
+           },
+           "photos" : [
+              {
+                 "height" : 627,
+                 "html_attributions" : [
+                    "\u003ca href=\"https://maps.google.com/maps/contrib/112457868511718141133/photos\"\u003eLe Colonial Chicago\u003c/a\u003e"
+                 ],
+                 "photo_reference" : "CmRdAAAARD0FQ72ezzY3hF9a2QFK_vtz-7zUfrOxqjVjPfB_b-a7-o1mPYvUqNxG13bzcW-bnqwbRPie5useMLzjdXC5z77NoyuT5diHSbkQ4ELYhFYYdpJugtf1z6E1NtKqHv5kEhCVK0YgrEKoO0qBAoXehJuxGhSU6RZo6m_Whuyp6k7SE0Z42Z9hfw",
+                 "width" : 628
+              }
+           ],
+           "place_id" : "ChIJZSnPiVHTD4gRYzpRFnFFrPo",
+           "price_level" : 3,
+           "rating" : 4.2,
+           "reference" : "CnRnAAAAkqrfBDxBZo_Rdfuykm_-4D2Nwgq-03ZvygsQUAhZmt2iN9X5Qle7t9LlPXgVMcTx7GF_Eo0vv5GgSxByfSacyXtV9-UP3whPcxU9QaemsoiAr6-5lUcMACxFw_438hPU7UllfDQQZrztWzRD9ZOMZxIQNXBAN2Raum2pmAat74Xq1BoUd8QCcE3jujeMRSyE7tMNvIuvOog",
+           "types" : [ "restaurant", "food", "bar", "point_of_interest", "establishment" ]
+        }
+     ],
+     "status" : "OK"
+  }
+}
