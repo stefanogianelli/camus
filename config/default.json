@@ -25,6 +25,7 @@
   "similarity": {
     "threshold": 0.85
   },
+  "paginationTTL": 300,
   "debug": true,
   "metrics": true
 }

@@ -39,6 +39,11 @@ if (metricsFlag) {
 
 let timer = null
 
+let sessionExpiration = 300
+if (config.has('paginationTTL')) {
+    sessionExpiration = config.get('paginationTTL')
+}
+
 /**
  * Given a user context, it invokes the components in the correct order, then return the final response
  * @param context The user context
@@ -140,7 +145,7 @@ export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArg
                     .resolveResults(userId, JSON.parse(result), paginationArgs)
                     .then(response => {
                         //update the cached information
-                        provider.setRedisValue(contextHash, JSON.stringify(response), 2000)
+                        provider.setRedisValue(contextHash, JSON.stringify(response), sessionExpiration)
                         //return the response
                         return response.results
                     })
@@ -184,7 +189,7 @@ export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArg
                                 serviceItem.nextPage = service.nextPage
                         })
                         //save the object in redis
-                        provider.setRedisValue(contextHash, JSON.stringify(cacheObj), 2000)
+                        provider.setRedisValue(contextHash, JSON.stringify(cacheObj), sessionExpiration)
                     }
                     return response.results
                 })

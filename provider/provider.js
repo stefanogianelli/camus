@@ -564,7 +564,7 @@ export default class Provider {
      * Create a new key and associate the specified value
      * @param {String} key - The key to be created
      * @param {Object} value - The value to be associated to the specified key
-     * @param {Number} ttl - The time the key live in the cace
+     * @param {Number} ttl - The time the key live in the cache, in seconds
      */
     setRedisValue (key, value, ttl) {
         if (_.isNull(key) || _.isUndefined(key)) {
