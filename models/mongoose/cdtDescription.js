@@ -59,8 +59,7 @@ const NodeSchema = new Schema({
     },
     values: [String],
     parameters: [ParameterSchema],
-    parents: [String],
-    forbidden: [String]
+    parents: [String]
 })
 
 /**
