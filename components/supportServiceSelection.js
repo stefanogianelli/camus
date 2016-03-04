@@ -70,21 +70,32 @@ export default class {
                                 if (this._metricsFlag) {
                                     this._metrics.record('SupportServiceSelection', 'getAssociations', 'DB', start)
                                 }
-                                //acquire constraint count information
-                                const ids = _(filterServices).unionWith(customServices, (arrVal, othVal) => arrVal._idOperation.equals(othVal._idOperation)).value()
-                                return this._provider
-                                    .getServicesConstraintCount(decoratedCdt._id, c, _.map(ids, '_idOperation'))
-                                    .then(constraintCount => {
-                                        return this._mergeResults(filterServices, customServices, constraintCount)
-                                    })
+                                //check if some associations are found
+                                if (!_.isEmpty(filterServices) || !_.isEmpty(customServices)) {
+                                    //acquire constraint count information
+                                    const ids = _(filterServices).unionWith(customServices, (arrVal, othVal) => arrVal._idOperation.equals(othVal._idOperation)).value()
+                                    return this._provider
+                                        .getServicesConstraintCount(decoratedCdt._id, c, _.map(ids, '_idOperation'))
+                                        .then(constraintCount => {
+                                            return this._mergeResults(filterServices, customServices, constraintCount)
+                                        })
+                                } else {
+                                    return []
+                                }
                             }
                         )
                         .then(identifiers => {
-                            return this._provider.getServicesByOperationIds(identifiers)
+                            if (!_.isEmpty(identifiers))
+                                return this._provider.getServicesByOperationIds(identifiers)
+                            else
+                                return []
                         })
                         .then(services => {
                             //compose the queries
-                            return this._composeQueries(services, c)
+                            if (!_.isEmpty(services))
+                                return this._composeQueries(services, c)
+                            else
+                                return []
                         })
                 })
                 .reduce((a, b) => {
