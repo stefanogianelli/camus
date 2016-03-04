@@ -1,6 +1,10 @@
 'use strict'
 
 import Promise from 'bluebird'
+import config from 'config'
+import objectHash from 'object-hash'
+import mongoose from 'mongoose'
+import _ from 'lodash'
 
 import ContextManager from './contextManager'
 import PrimaryService from './primaryServiceSelection'
@@ -9,7 +13,8 @@ import SupportService from './supportServiceSelection'
 import ResponseAggregator from './responseAggregator'
 import UserManager from './userManager'
 import Metrics from '../utils/MetricsUtils'
-import config from 'config'
+import Provider from '../provider/provider'
+import SessionHelper from './sessionHelper'
 
 const contextManager = new ContextManager()
 const primaryService = new PrimaryService()
@@ -17,6 +22,10 @@ const queryHandler = new QueryHandler()
 const supportService = new SupportService()
 const responseAggregator = new ResponseAggregator()
 const userManager = new UserManager()
+const sessionHelper = new SessionHelper(queryHandler, responseAggregator)
+const provider = Provider.getInstance()
+
+const ObjectId = mongoose.Types.ObjectId
 
 let metricsFlag = false
 if (config.has('metrics')) {
@@ -67,16 +76,42 @@ export function prepareResponse (context) {
 
 /**
  * Given a user context, it returns the associated decorated CDT
+ * @param userId The user's identifier
  * @param context The user context
- * @returns {Promise|Request|Promise.<T>} The decorated CDT
+ * @returns {Promise|Request|Promise.<T>} The user's identifier, the context hash and the decorated CDT
  */
-export function getDecoratedCdt (context) {
+export function getDecoratedCdt (userId, context) {
     const start = process.hrtime()
     if (metricsFlag) {
         timer = _startTimer()
     }
-    return contextManager
-        .getDecoratedCdt(context)
+    //check if the current context exists in cache
+    const contextHash = objectHash.sha1(context)
+    return provider
+        .getRedisValue(contextHash)
+        .then(result => {
+            if (result) {
+                //object found in cache
+                let res = (JSON.parse(result)).decoratedCdt
+                //cast the _id as ObjectId
+                res._id = ObjectId(res._id)
+                return {
+                    userId: userId,
+                    contextHash: contextHash,
+                    decoratedCdt: res
+                }
+            }
+            //parse the user context
+            return contextManager
+                .getDecoratedCdt(context)
+                .then(decoratedCdt => {
+                    return {
+                        userId: userId,
+                        contextHash: contextHash,
+                        decoratedCdt: decoratedCdt
+                    }
+                })
+        })
         .finally(() => {
             if (metricsFlag) {
                 metrics.record('ExecutionHelper', 'getDecoratedCdt', 'MAIN', start)
@@ -86,20 +121,73 @@ export function getDecoratedCdt (context) {
 
 /**
  * From a decorated CDT, it returns the list of responses from the primary services
+ * @param userId The user's identifier
+ * @param contextHash The context hash code
  * @param decoratedCdt The decorated CDT
+ * @param paginationArgs Object with information about pagination status
  * @returns {*|Promise|Request|Promise.<T>} The list of items found
  */
-export function getPrimaryData (decoratedCdt) {
+export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArgs) {
     const start = process.hrtime()
-    return primaryService
-        .selectServices(decoratedCdt)
-        .then(services => {
-            return queryHandler
-                .executeQueries(services, decoratedCdt)
-        })
-        .then(responses => {
-            return responseAggregator
-                .prepareResponse(responses)
+    //check if the necessary data are available in cache
+    return provider
+        .getRedisValue(contextHash)
+        .then(result => {
+            if (result) {
+                //object found in cache
+                console.log('[INFO] Retrieve results from cache')
+                return sessionHelper
+                    .resolveResults(userId, JSON.parse(result), paginationArgs)
+                    .then(response => {
+                        //update the cached information
+                        provider.setRedisValue(contextHash, JSON.stringify(response), 2000)
+                        //return the response
+                        return response.results
+                    })
+            }
+            //prepare the object that will be saved in cache
+            let cacheObj = {
+                decoratedCdt: decoratedCdt,
+                services: [],
+                results: [],
+                users: [
+                    {
+                        userId: userId,
+                        itemSeen: 0
+                    }
+                ]
+            }
+            //start the standard process
+            return primaryService
+                //acquire the services list
+                .selectServices(decoratedCdt)
+                .then(services => {
+                    //add the service found to the cached object
+                    cacheObj.services = services
+                    //request data from the selected services
+                    return queryHandler.executeQueries(services, decoratedCdt)
+                })
+                .then(responses => {
+                    //aggregate the response received
+                    return responseAggregator.prepareResponse(responses)
+                })
+                .then(response => {
+                    //check if the response contains al least one item
+                    if (!_.isEmpty(response.results)) {
+                        //add the results set to the cached object
+                        cacheObj.results = response.results
+                        //updated services list with information about current pagination status
+                        _(response.servicesStatus).forEach(service => {
+                            let serviceItem = _(cacheObj.services).find({_idOperation: service.idOperation})
+                            serviceItem.hasNextPage = service.hasNextPage
+                            if (serviceItem.hasNextPage)
+                                serviceItem.nextPage = service.nextPage
+                        })
+                        //save the object in redis
+                        provider.setRedisValue(contextHash, JSON.stringify(cacheObj), 2000)
+                    }
+                    return response.results
+                })
         })
         .finally(() => {
             if (metricsFlag) {

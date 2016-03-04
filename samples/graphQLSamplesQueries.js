@@ -47,7 +47,8 @@ const getPersonalData = `{
 // Restaurant sample context
 const restaurantContext = `query Restaurant {
     executeQuery (
-        _id: "COPY_ID_HERE",
+        userId: "COPY_ID_HERE",
+        idCdt: "COPY_ID_HERE",
         context: [
             {
                 dimension: "InterestTopic",
@@ -104,7 +105,8 @@ const restaurantContext = `query Restaurant {
 // Cinema sample context
 const cinemaContext = `query Cinema {
     executeQuery (
-        _id: "COPY_ID_HERE",
+        userId: "COPY_ID_HERE",
+        idCdt: "COPY_ID_HERE",
         context: [
             {
                 dimension: "InterestTopic",
@@ -161,7 +163,8 @@ const cinemaContext = `query Cinema {
 //Hotel sample context
 const hotelContext = `query Hotel {
     executeQuery (
-        _id: "COPY_ID_HERE",
+        userId: "COPY_ID_HERE",
+        idCdt: "COPY_ID_HERE",
         context: [
             {
                 dimension: "InterestTopic",
@@ -218,7 +221,8 @@ const hotelContext = `query Hotel {
 // Museum sample context
 const museumContext = `query Museum {
     executeQuery (
-        _id: "COPY_ID_HERE",
+        userId: "COPY_ID_HERE",
+        idCdt: "COPY_ID_HERE",
         context: [
             {
                 dimension: "InterestTopic",
@@ -275,7 +279,8 @@ const museumContext = `query Museum {
 // Theater sample context
 const theaterContext = `query Theater {
     executeQuery (
-        _id: "COPY_ID_HERE",
+        userId: "COPY_ID_HERE",
+        idCdt: "COPY_ID_HERE",
         context: [
             {
                 dimension: "InterestTopic",
@@ -332,7 +337,8 @@ const theaterContext = `query Theater {
 // Event sample context
 const eventContext = `query Event {
     executeQuery (
-        _id: "COPY_ID_HERE",
+        userId: "COPY_ID_HERE",
+        idCdt: "COPY_ID_HERE",
         context: [
             {
                 dimension: "InterestTopic",

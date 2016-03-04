@@ -83,7 +83,7 @@ export default class {
     _mergeCdtAndContext (context) {
         const startTime = process.hrtime()
         return this._provider
-            .getCdtById(context._id)
+            .getCdtById(context.idCdt)
             .then(cdt => {
                 if (this._metricsFlag) {
                     this._metrics.record('ContextManager', 'getCdt', 'MAINDB', startTime)

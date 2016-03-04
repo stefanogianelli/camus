@@ -37,6 +37,7 @@
     "mongoose": "^4.4.0",
     "natural": "^0.2.1",
     "newrelic": "^1.25.1",
+    "object-hash": "^1.1.2",
     "superagent": "^1.7.2",
     "systemjs": "^0.19.18",
     "traceur": "0.0.93"

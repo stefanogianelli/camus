@@ -43,13 +43,12 @@ export default class {
      * @returns {bluebird|exports|module.exports} The aggregated and cleaned response
      */
     prepareResponse (response) {
-        return new Promise ((resolve, reject) => {
-            if (!_.isUndefined(response) && !_.isEmpty(response)) {
-                resolve(this._findSimilarities(response))
-            } else {
-                //nothing found
-                reject('No results')
+        return new Promise (resolve => {
+            if (!_.isUndefined(response) && !_.isEmpty(response.results)) {
+                //analyze the result set to find duplicate items and merge them
+                response.results = this._findSimilarities(response.results)
             }
+            resolve(response)
         })
     }
 

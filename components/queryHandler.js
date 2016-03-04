@@ -63,13 +63,26 @@ export default class {
                     this._metrics.record('QueryHandler', 'getDescriptions', 'MAINDB', startTime)
                 }
                 //add the ranking value
-                service.service.rank = _(services).find(s => s._idOperation.equals(service._id)).rank
+                service.service.rank = _(services).find(s => service._id.equals(s._idOperation)).rank
                 //make call to the current service
-                return this._callService(service, decoratedCdt)
+                return this._callService(service, decoratedCdt, services)
             })
             //merge the results
             .reduce((a, b) => {
-                return _.concat(a,b)
+                return {
+                    servicesStatus: _.concat(a.serviceStatus, b.serviceStatus),
+                    results: _.concat(a.response, b.response)
+                }
+            })
+            .then(result => {
+                //handle the case only one service is queried
+                if (!_(result).has('servicesStatus') && !_(result).has('results')) {
+                    return {
+                        servicesStatus: [result.serviceStatus],
+                        results: result.response
+                    }
+                }
+                return result
             })
             .finally(() => {
                 if (this._metricsFlag) {
@@ -82,17 +95,24 @@ export default class {
      * Call the correct service's bridge and transform the response to make an array of items
      * @param descriptor The service description
      * @param decoratedCdt The decorated CDT
+     * @param paginationStatus The pagination information about all the services
      * @returns {Promise.<T>} The list of the responses, in order of service ranking
      * @private
      */
-    _callService (descriptor, decoratedCdt) {
+    _callService (descriptor, decoratedCdt, paginationStatus) {
         const start = process.hrtime()
         let promise
         //check if the protocol of the current service is 'rest' o 'query'
         if (descriptor.service.protocol === 'rest' || descriptor.service.protocol === 'query') {
+            //get the pagination configuration for the current service
+            const servicePaginationConfig = _(paginationStatus).find(s => descriptor._id.equals(s._idOperation))
+            let startPage = undefined
+            if (!_.isUndefined(servicePaginationConfig)) {
+                if (servicePaginationConfig.hasNextPage)
+                    startPage = servicePaginationConfig.nextPage
+            }
             //use the rest bridge
-            const paginationArgs = {}
-            promise = this._restBridge.executeQuery(descriptor, decoratedCdt, paginationArgs)
+            promise = this._restBridge.executeQuery(descriptor, decoratedCdt, {startPage})
         } else if (descriptor.service.protocol === 'custom') {
             //call the custom bridge
             //check if a bridge name is defined
@@ -114,15 +134,18 @@ export default class {
                 if (this._metricsFlag) {
                     this._metrics.record('QueryHandler', 'bridgeExecution', 'EXT', start)
                 }
-                var startTransf = process.hrtime()
                 //transform the response
-                return this._transformResponse
-                    .mappingResponse(response.response, descriptor)
-                    .finally(() => {
-                        if (this._metricsFlag) {
-                            this._metrics.record('QueryHandler', 'mappingResponse', 'FUN', startTransf)
-                        }
-                    })
+                return [response, this._transformResponse.mappingResponse(response.response, descriptor)]
+            }).spread((response, mappedResponse) => {
+                //packaging a response with information about pagination status of the service
+                return {
+                    serviceStatus: {
+                        idOperation: descriptor._id,
+                        hasNextPage: response.hasNextPage,
+                        nextPage: response.nextPage
+                    },
+                    response: mappedResponse
+                }
             })
             .catch(e => {
                 console.log('[' + descriptor.service.name + '] ' + e)

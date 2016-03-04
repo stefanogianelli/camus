@@ -24,7 +24,7 @@ import {
 } from '../models/mongoose/supportServiceAssociation'
 import userModel from '../models/mongoose/user'
 
-const ObjectId = mongoose.Types.ObjectId;
+const ObjectId = mongoose.Types.ObjectId
 
 let instance = null
 

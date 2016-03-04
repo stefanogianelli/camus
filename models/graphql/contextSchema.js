@@ -91,8 +91,12 @@ export const responseType = new GraphQLObjectType({
  * Context arguments
  */
 export const contextArgs = {
-    _id: {
-        description: 'The CDT identifier',
+    userId: {
+        description: 'The user\'s identifier',
+        type: new GraphQLNonNull(GraphQLString)
+    },
+    idCdt: {
+        description: 'The CDT\'s identifier',
         type: new GraphQLNonNull(GraphQLString)
     },
     context: {

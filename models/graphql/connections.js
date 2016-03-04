@@ -37,8 +37,8 @@ export function primaryConnection () {
     return {
         type: connectionType,
         args: connectionArgs,
-        resolve: (decoratedCdt, args) => {
-            return connectionFromPromisedArray(getPrimaryData(decoratedCdt), args)
+        resolve: ({userId, contextHash, decoratedCdt}, args) => {
+            return connectionFromPromisedArray(getPrimaryData(userId, contextHash, decoratedCdt, args), args)
         }
     }
 }
@@ -62,7 +62,7 @@ export function supportConnection () {
     return {
         type: connectionType,
         args: connectionArgs,
-        resolve: (decoratedCdt, args) => {
+        resolve: ({userId, contextHash, decoratedCdt}, args) => {
             return connectionFromPromisedArray(getSupportData(decoratedCdt), args)
         }
     }
