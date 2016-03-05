@@ -258,7 +258,7 @@ describe('Component: ContextManager', () => {
 //context used to test the merging function
 let context = idCDT => {
     return {
-        _id: idCDT,
+        idCdt: idCDT,
         context: [
             {
                 dimension: 'Location',
@@ -327,7 +327,7 @@ let context = idCDT => {
 //context used to test the decoration function
 let mergedCdt = idCDT => {
     return {
-        _id: idCDT,
+        idCdt: idCDT,
         context: [
             {
                 name: 'Location',
@@ -389,7 +389,7 @@ let mergedCdt = idCDT => {
 
 let onlyFilter = (idCDT) => {
     return {
-        _id: idCDT,
+        idCdt: idCDT,
         context: [
             {
                 dimension: 'InterestTopic',
@@ -402,7 +402,7 @@ let onlyFilter = (idCDT) => {
 
 let onlyRanking = (idCDT) => {
     return {
-        _id: idCDT,
+        idCdt: idCDT,
         context: [
             {
                 dimension: 'Festivita',
@@ -415,7 +415,7 @@ let onlyRanking = (idCDT) => {
 
 let onlyParameter = (idCDT) => {
     return {
-        _id: idCDT,
+        idCdt: idCDT,
         context: [
             {
                 dimension: 'Budget',

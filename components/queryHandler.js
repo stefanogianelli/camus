@@ -67,22 +67,19 @@ export default class {
                 //make call to the current service
                 return this._callService(service, decoratedCdt, services)
             })
-            //merge the results
-            .reduce((a, b) => {
-                return {
-                    servicesStatus: _.concat(a.serviceStatus, b.serviceStatus),
-                    results: _.concat(a.response, b.response)
+            .then(results => {
+                //merge the results
+                let output = {
+                    servicesStatus: [],
+                    results: []
                 }
-            })
-            .then(result => {
-                //handle the case only one service is queried
-                if (!_(result).has('servicesStatus') && !_(result).has('results')) {
-                    return {
-                        servicesStatus: [result.serviceStatus],
-                        results: result.response
-                    }
-                }
-                return result
+                _(results).forEach(item => {
+                    if (!_.isUndefined(item.serviceStatus))
+                        output.servicesStatus.push(item.serviceStatus)
+                    if (!_.isUndefined(item.response) && !_.isEmpty(item.response))
+                        output.results = _.concat(output.results, item.response)
+                })
+                return output
             })
             .finally(() => {
                 if (this._metricsFlag) {

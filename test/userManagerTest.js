@@ -33,10 +33,6 @@ describe('Component: UserManager', () => {
                 .login(mockModel.user.mail, mockModel.user.password)
                 .then(result => {
                     assert.notEqual(result, undefined)
-                    return [result.token, provider.getUser(mockModel.user.mail, mockModel.user.password)]
-                })
-                .spread((token, user) => {
-                    assert.equal(user.token, token)
                 })
         })
         it('check error message when an invalid email or password is provided', () => {
