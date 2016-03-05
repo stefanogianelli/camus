@@ -158,7 +158,7 @@ export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArg
                 users: [
                     {
                         userId: userId,
-                        itemSeen: 0
+                        itemSeen: paginationArgs.first || 0
                     }
                 ]
             }

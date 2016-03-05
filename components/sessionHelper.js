@@ -35,7 +35,7 @@ export default class {
                 }
                 cachedObject.users.push(userInfo)
             }
-            //check if I have enough items to return
+            //check if I have enough items to show
             const len = cachedObject.results.length
             if (startIndex <= len - first - 1) {
                 //if is specified the attribute "after" in the pagination arguments, I update the itemSeen value for the current user
@@ -45,6 +45,9 @@ export default class {
                         userInfo.itemSeen = startIndex + first
                         userInfo.lastCursor = paginationArgs.after
                     }
+                } else {
+                    //consider also the first set of data requested without the 'after' attribute
+                    userInfo.itemSeen = first
                 }
                 //I have enough data to show
                 console.log('[INFO] The system has enough data to be shown')
@@ -75,6 +78,14 @@ export default class {
                                     serviceItem.nextPage = service.nextPage
                             })
                         }))
+                }
+                //update user pagination information
+                if (_(paginationArgs).has('after')) {
+                    if (!_(userInfo).has('lastCursor') || userInfo.lastCursor !== paginationArgs.after) {
+                        //update the information about the items seen by the user
+                        userInfo.itemSeen = startIndex + first
+                        userInfo.lastCursor = paginationArgs.after
+                    }
                 }
             }
         } else {
