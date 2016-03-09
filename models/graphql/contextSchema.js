@@ -82,6 +82,10 @@ export const responseType = new GraphQLObjectType({
     name: 'Response',
     description: 'The response type. It contains the information retrieved by the services',
     fields: () => ({
+        connectionId: {
+            type: GraphQLString,
+            description: 'The connection\'s identifier'
+        },
         primaryResults: primaryConnection(),
         supportResults: supportConnection()
     })

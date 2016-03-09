@@ -4,6 +4,7 @@ import Promise from 'bluebird'
 import config from 'config'
 import objectHash from 'object-hash'
 import mongoose from 'mongoose'
+import hat from 'hat'
 import _ from 'lodash'
 
 import ContextManager from './contextManager'
@@ -97,13 +98,14 @@ export function getDecoratedCdt (userId, context) {
         .then(result => {
             if (result) {
                 //object found in cache
-                let res = (JSON.parse(result)).decoratedCdt
+                let res = JSON.parse(result)
                 //cast the _id as ObjectId
-                res._id = ObjectId(res._id)
+                res.decoratedCdt._id = ObjectId(res._id)
                 return {
                     userId: userId,
                     contextHash: contextHash,
-                    decoratedCdt: res
+                    decoratedCdt: res.decoratedCdt,
+                    connectionId: res.connectionId
                 }
             }
             //parse the user context
@@ -113,7 +115,8 @@ export function getDecoratedCdt (userId, context) {
                     return {
                         userId: userId,
                         contextHash: contextHash,
-                        decoratedCdt: decoratedCdt
+                        decoratedCdt: decoratedCdt,
+                        connectionId: hat()
                     }
                 })
         })
@@ -130,9 +133,10 @@ export function getDecoratedCdt (userId, context) {
  * @param contextHash The context hash code
  * @param decoratedCdt The decorated CDT
  * @param paginationArgs Object with information about pagination status
+ * @param connectionId The connection's identifier, to aggregate the requests from the same connection
  * @returns {*|Promise|Request|Promise.<T>} The list of items found
  */
-export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArgs) {
+export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArgs, connectionId) {
     const start = process.hrtime()
     //check if the necessary data are available in cache
     return provider
@@ -153,6 +157,7 @@ export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArg
             //prepare the object that will be saved in cache
             let cacheObj = {
                 decoratedCdt: decoratedCdt,
+                connectionId: connectionId,
                 services: [],
                 results: [],
                 users: [
