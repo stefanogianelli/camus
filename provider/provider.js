@@ -29,7 +29,7 @@ const ObjectId = mongoose.Types.ObjectId
 let instance = null
 
 /**
- * Provider
+ * The Provider is used to collect all the methods that interacts with the databases.
  */
 export default class Provider {
 
@@ -96,8 +96,8 @@ export default class Provider {
 
     /**
      * Retrieve the CDT schema associated to the current identifier
-     * @param {String} idCDT - The CDT identifier
-     * @returns {Object} Returns the CDT schema
+     * @param {String} idCDT - The CDT's identifier
+     * @returns {Promise<Object>} Returns the CDT schema
      * @throws {Error} If the identifier does not exists in the database
      */
     getCdtById (idCDT) {
@@ -125,7 +125,7 @@ export default class Provider {
     /**
      * Retrieve the CDT schema associated to the user. If the user hasn't got any CDT associated it retrieves the global one
      * @param {String} userId - The user's identifier
-     * @returns {Object} The CDT schema found
+     * @returns {Promise<Object>} The CDT schema found
      */
     getCdtByUser (userId) {
         const start = process.hrtime()
@@ -169,7 +169,7 @@ export default class Provider {
 
     /**
      * Return the global CDT
-     * @returns {Object} The global CDT
+     * @returns {Promise<Object>} The global CDT
      */
     getGlobalCdt () {
         const start = process.hrtime()
@@ -205,7 +205,7 @@ export default class Provider {
      * Retrieve the service description for the requested operation.
      * This schema contains only the requested operation.
      * @param {ObjectId} idOperation - The operation identifier
-     * @returns {Object} Returns the service and operation schema
+     * @returns {Promise<Object>} Returns the service and operation schema
      */
     getServiceByOperationId (idOperation) {
         const start = process.hrtime()
@@ -235,7 +235,7 @@ export default class Provider {
      * Retrieve the service descriptions for the requested operations.
      * This schema contains only the requested operations.
      * @param {Array} idOperations - The list of operation identifiers
-     * @returns {Array} Returns the service list with only the requested operations
+     * @returns {Promise<Array>} Returns the service list with only the requested operations
      */
     getServicesByOperationIds (idOperations) {
         const start = process.hrtime()
@@ -272,7 +272,7 @@ export default class Provider {
      * { name: 'dimension name', value: 'associated value' }
      * @param {ObjectId} idCDT - The CDT identifier
      * @param {Array} attributes - The list of filter nodes selected
-     * @returns {Array} The list of operation id, with ranking and weight, of the found services
+     * @returns {Promise<Array>} The list of operation id, with ranking and weight, of the found services
      */
     filterPrimaryServices (idCDT, attributes) {
         const start = process.hrtime()
@@ -314,7 +314,7 @@ export default class Provider {
      * Search the primary services that are associated near the current position
      * @param {ObjectId} idCdt - The CDT identifier
      * @param {Object} node - The current position node
-     * @returns {Array} The list of operation identifiers found
+     * @returns {Promise<Array>} The list of operation identifiers found
      */
     searchPrimaryByCoordinates (idCdt, node) {
         return this._searchByCoordinates(primaryServiceModel, idCdt, node, 'searchPrimaryByCoordinates')
@@ -331,7 +331,7 @@ export default class Provider {
      * @param {ObjectId} idCDT - The CDT identifier
      * @param {String} category - The service category
      * @param {Array} attributes - The list of attributes
-     * @returns {Array} The list of services found, with the number of constraints defined for each operation and the count of constraint that are satisfied
+     * @returns {Promise<Array>} The list of services found, with the number of constraints defined for each operation and the count of constraint that are satisfied
      */
     filterSupportServices (idCDT, category, attributes) {
         const start = process.hrtime()
@@ -371,7 +371,7 @@ export default class Provider {
      * @param {ObjectId} idCDT - The CDT identifier
      * @param {String} category The support service category
      * @param {Array} idOperations The operations identifiers
-     * @returns {Array} The list of services identifiers with associated the constraint count
+     * @returns {Promise<Array>} The list of services identifiers with associated the constraint count
      */
     getServicesConstraintCount (idCDT, category, idOperations) {
         const start = process.hrtime()
@@ -406,7 +406,7 @@ export default class Provider {
      * Search the support services that are associated near the current position
      * @param {ObjectId} idCdt - The CDT identifier
      * @param {Object} node - The current position node
-     * @returns {Array} The list of operation identifiers found
+     * @returns {Promise<Array>} The list of operation identifiers found
      */
     searchSupportByCoordinates (idCdt, node) {
         return this._searchByCoordinates(supportAssociation, idCdt, node, 'searchSupportByCoordinates')
@@ -422,7 +422,7 @@ export default class Provider {
      * Retrieve user's details based on mail and password
      * @param {String} mail - The user's email address
      * @param {String} password - The user's password
-     * @returns {Object} The user's details
+     * @returns {Promise<Object>} The user's details
      */
     getUser (mail, password) {
         const start = process.hrtime()
@@ -460,7 +460,7 @@ export default class Provider {
      * Check if the user is correctly logged in
      * @param {String} id - The user's identifier
      * @param {String} token - The session token
-     * @returns {Boolean} If the function returns true, then the user is correctly logged into the system, otherwise returns an error message
+     * @returns {Promise<Boolean>} If the function returns true, then the user is correctly logged into the system, otherwise returns an error message
      */
     checkUserLogin (id, token) {
         const start = process.hrtime()
@@ -508,7 +508,7 @@ export default class Provider {
      * @param {ObjectId} idCdt - The CDT identifier
      * @param {Object} node - The current position node
      * @param {String} metricsName - The function's appearing name in the metrics log
-     * @returns {Array} The list of operation identifiers found
+     * @returns {Promise<Array>} The list of operation identifiers found
      * @private
      */
     _searchByCoordinates (model, idCdt, node, metricsName) {
@@ -551,7 +551,7 @@ export default class Provider {
     /**
      * Get the value associated to the specified key
      * @param {String} key - The key to be searched
-     * @returns {Object} The value saved in the cache
+     * @returns {Promise<Object>} The value saved in the cache
      */
     getRedisValue (key) {
         if (_.isNull(key) || _.isUndefined(key)) {

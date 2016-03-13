@@ -8,7 +8,7 @@ import Provider from '../provider/provider'
 import Metrics from '../utils/MetricsUtils'
 
 /**
- * ContextManager
+ * The Context Manager receive the user's context and transform it in a 'decorated' version, more suitable for the next elaborations
  */
 export default class {
     
@@ -36,7 +36,7 @@ export default class {
      * - parametersNodes: the list of parameter nodes
      * - supportServiceCategories: the list of categories for which retrieve the support services
      * @param {Object} context - The user's context
-     * @returns {Object} The decorated CDT
+     * @returns {Promise<Object>} The decorated CDT
      */
     getDecoratedCdt (context) {
         const startTime = process.hrtime()
@@ -75,8 +75,8 @@ export default class {
 
     /**
      * Find the current CDT and add values for the dimension and parameters node from the user context
-     * @param {Object} context - The user context
-     * @returns {Object} The merged CDT
+     * @param {Object} context - The user's context
+     * @returns {Promise<Object>} The merged CDT
      * @throws {Error} If the CDT is not found in the database
      * @private
      */

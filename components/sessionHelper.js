@@ -3,6 +3,9 @@
 import _ from 'lodash'
 import Promise from 'bluebird'
 
+/**
+ * This class manages the data saved in cache and, if necessary, it performs new queries to the services to retrieve more data
+ */
 export default class {
 
     constructor (queryHandler, responseAggregator) {
@@ -12,10 +15,10 @@ export default class {
 
     /**
      * Check if the current request can be fulfilled with the cached data or will be needed a new query to the services
-     * @param userId The user's identifier
-     * @param cachedObject The session object saved in cache
-     * @param paginationArgs The pagination data requested
-     * @returns {Promise|Promise.<T>} The updated session object
+     * @param {ObjectId} userId - The user's identifier
+     * @param {ObjectId} cachedObject - The session object saved in cache
+     * @param {Object} paginationArgs - The pagination data requested
+     * @returns {Promise<Object>} The updated session object
      */
     resolveResults (userId, cachedObject, paginationArgs) {
         let promises = []

@@ -1,5 +1,9 @@
 'use strict'
 
+/**
+ * This class initialize the other system's components and orchestrate the pipelines needed to retrieve the necessary data
+ */
+
 import Promise from 'bluebird'
 import config from 'config'
 import objectHash from 'object-hash'
@@ -46,9 +50,9 @@ if (config.has('paginationTTL')) {
 }
 
 /**
- * Given a user context, it invokes the components in the correct order, then return the final response
- * @param context The user context
- * @returns {Promise|Request|Promise.<T>} The final response
+ * Given a user context, it invokes the components in the correct order, then returns the final response
+ * @param {Object} context - The user's context
+ * @returns {Promise<Object>} The final response
  */
 export function prepareResponse (context) {
     const start = process.hrtime()
@@ -82,9 +86,15 @@ export function prepareResponse (context) {
 
 /**
  * Given a user context, it returns the associated decorated CDT
- * @param userId The user's identifier
- * @param context The user context
- * @returns {Promise|Request|Promise.<T>} The user's identifier, the context hash and the decorated CDT
+ * @param {String} userId - The user's identifier
+ * @param {Object} context - The user's context
+ * @returns {Promise<Object>} The decorated CDT object, composed as follow:
+ * {
+ *  {ObjectId} userId: the user's identifier
+ *  {String} contextHash: the unique identifier for the current context
+ *  {Object} decoratedCdt: the decorated CDT, based on the user's context received
+ *  {String} connectionId: the connection's identifier
+ * }
  */
 export function getDecoratedCdt (userId, context) {
     const start = process.hrtime()
@@ -128,13 +138,13 @@ export function getDecoratedCdt (userId, context) {
 }
 
 /**
- * From a decorated CDT, it returns the list of responses from the primary services
- * @param userId The user's identifier
- * @param contextHash The context hash code
- * @param decoratedCdt The decorated CDT
- * @param paginationArgs Object with information about pagination status
- * @param connectionId The connection's identifier, to aggregate the requests from the same connection
- * @returns {*|Promise|Request|Promise.<T>} The list of items found
+ * Based on a decorated CDT, it returns the list of items from the primary services
+ * @param {ObjectId} userId - The user's identifier
+ * @param {String} contextHash - The context's hash code
+ * @param {Object} decoratedCdt - The decorated CDT
+ * @param {Object} paginationArgs - Object with information about pagination status provided by GraphQL
+ * @param {String} connectionId - The connection's identifier, to aggregate the requests from the same connection
+ * @returns {Promise<Array>} The list of items found
  */
 export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArgs, connectionId) {
     const start = process.hrtime()
@@ -207,9 +217,9 @@ export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArg
 }
 
 /**
- * From a decorated CDT, it returns the list of support services
- * @param decoratedCdt The decorated CDT
- * @returns {bluebird|exports|module.exports} The list of support services found
+ * Based on a decorated CDT, it returns the list of support services URLs
+ * @param {Object} decoratedCdt - The decorated CDT
+ * @returns {Promise<Array>} The list of support services found
  */
 export function getSupportData (decoratedCdt) {
     const start = process.hrtime()
@@ -223,10 +233,10 @@ export function getSupportData (decoratedCdt) {
 }
 
 /**
- * User login method
- * @param mail The user's email address
- * @param password The user's password
- * @returns {Object} The user's identifier and session token
+ * Method to allow user authentication
+ * @param {String} mail - The user's email address
+ * @param {String} password - The user's password
+ * @returns {Promise<Object>} The user's identifier and session token
  */
 export function login (mail, password) {
     if (metricsFlag) {
@@ -236,10 +246,11 @@ export function login (mail, password) {
 }
 
 /**
- * Retrieve the user's personal data. First it checks that the user is correctly logged in
+ * Retrieve the user's personal data.
+ * First it checks that the user is correctly logged in
  * @param {String} id - The user's identifier
  * @param {String} token - The session token associated to the user
- * @returns {Object} The CDT associated to the user
+ * @returns {Promise<Object>} The CDT associated to the user
  */
 export function getPersonalData (id, token) {
     if (metricsFlag) {

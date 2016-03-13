@@ -5,6 +5,9 @@ import Promise from 'bluebird'
 
 import Provider from '../provider/provider'
 
+/**
+ * This class handle the user's management methods
+ */
 export default class {
 
     constructor () {
@@ -13,10 +16,13 @@ export default class {
 
     /**
      * Check if the specified mail and password correspond to a valid user.
-     * It also creates and update the sessione token associated to the user
+     * It also creates and update the session token associated to the user
      * @param {String} mail - The user's email address
      * @param {String} password - The user's password
-     * @returns {Promise<{id: String, token: String}>} Return the user's identifier and token
+     * @returns {Promise<Object>} It returns an object composed as follow:
+     * {
+     *  {String} id: the user's identifier
+     *  {String} token: random token valid only for the current session
      */
     login (mail, password) {
         return new Promise ((resolve, reject) => {
@@ -43,17 +49,17 @@ export default class {
 
     /**
      * Retrieve the user's personal data. First it checks that the user is correctly logged in
-     * @param {String} id - The user's identifier
+     * @param {String} userId - The user's identifier
      * @param {String} token - The session token associated to the user
      * @returns {Object} The CDT associated to the user
      */
-    getPersonalData (id, token) {
+    getPersonalData (userId, token) {
         //check if the user is correctly logged in
         return this._provider
-            .checkUserLogin(id, token)
+            .checkUserLogin(userId, token)
             .then(() => {
                 //retrieve the user CDT
-                return this._provider.getCdtByUser(id)
+                return this._provider.getCdtByUser(userId)
             })
     }
 

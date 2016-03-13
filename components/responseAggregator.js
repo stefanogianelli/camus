@@ -11,7 +11,9 @@ import {
 import Metrics from '../utils/MetricsUtils'
 
 /**
- * ResponseAggregator
+ * This class performs the necessary operations on the information received by the services. In particular two tasks are involved:
+ * 1) duplicate detection: check the dataset to search duplicate entities. If some duplicates are found they will be merged in a unique item
+ * 2) scoring: WIP
  */
 export default class {
 
@@ -38,9 +40,9 @@ export default class {
     }
 
     /**
-     * Remove duplicate items from the response list
-     * @param response The list of items
-     * @returns {bluebird|exports|module.exports} The aggregated and cleaned response
+     * It calls the necessary methods for cleaning the data received from the services.
+     * @param {Object} response - The object coming from the QueryHandler component
+     * @returns {Promise<Object>} It returns back the same Object received, with the cleaned list of items
      */
     prepareResponse (response) {
         return new Promise (resolve => {
@@ -57,15 +59,15 @@ export default class {
      * It first creates clusters of probable similar items using their phonetics as key, with SoundEx algorithm on the 'title' attribute.
      * Then in depth pairwise comparisons are made inside each cluster to find similar objects.
      * If similar objects are found they will be merged in one single item.
-     * @param response The list of items
+     * @param {Array} items - The list of items
      * @returns {Array} The list of items without duplicates (the duplicate items are merged in a unique item)
      * @private
      */
-    _findSimilarities (response) {
+    _findSimilarities (items) {
         const startTime = process.hrtime()
         //create a map of items that sounds similar (using SoundEx algorithm)
         let clusters = new Map()
-        _(response).forEach(item => {
+        _(items).forEach(item => {
             const phonetic = SoundEx.process(item.title)
             if (clusters.has(phonetic)) {
                 //add the current item to the cluster
@@ -127,9 +129,9 @@ export default class {
      * Perform a similarity check of two objects based on attributes that they have in common.
      * Only string values are taken into account.
      * It uses the Dice Coefficient as similarity index algorithm.
-     * @param obj1 The first object
-     * @param obj2 The second object
-     * @returns {number} The similarity index of the two objects
+     * @param {Object} obj1 - The first object
+     * @param {Object} obj2 - The second object
+     * @returns {Number} The similarity index of the two objects
      * @private
      */
     _calculateObjectSimilarity (obj1, obj2) {

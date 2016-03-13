@@ -8,7 +8,7 @@ import Provider from '../provider/provider'
 import Metrics from '../utils/MetricsUtils'
 
 /**
- * PrimaryServiceSelection
+ * This component choose the most appropriate primary operations to be queried to retrieve the data
  */
 export default class  {
 
@@ -49,7 +49,7 @@ export default class  {
     /**
      * Search the services that best fit the current context
      * @param {Object} decoratedCdt - The decorated CDT
-     * @returns {Array} The ordered operations id
+     * @returns {Promise<Array>} The ordered operations id with their ranking value
      */
     selectServices (decoratedCdt) {
         const startTime = process.hrtime()
@@ -96,10 +96,10 @@ export default class  {
 
     /**
      * This function dispatch the specific nodes to the correct search function.
-     * It collects the results and return them to the main method
+     * It collects the results and return them to the main method.
      * @param {ObjectId} idCdt - The CDT identifier
      * @param {Array} nodes - The list of specific nodes
-     * @returns {Array} The list of associations found. Each association must be composed of an operation identifier and a ranking (starting from 1)
+     * @returns {Promise<Array>} The list of associations found. Each association must be composed by an operation identifier and a ranking (starting from 1)
      * @private
      */
     _specificSearch (idCdt, nodes) {
@@ -132,7 +132,7 @@ export default class  {
 
     /**
      * Compute the ranking of each operation found by the previous steps
-     * @param {Object} services - The list of services, with own rank and weight
+     * @param {Array} services - The list of services, with own rank and weight
      * @returns {Array} The ranked list of Top-N services
      * @private
      */
@@ -181,7 +181,7 @@ export default class  {
      * It also assigns a ranking starting from the nearest service
      * @param {ObjectId} idCdt - The CDT identifier
      * @param {Object} node - The node with the coordinates
-     * @returns {Array} The list of operation identifiers with ranking
+     * @returns {Promise<Array>} The list of operation identifiers with ranking
      * @private
      */
     _searchByCoordinates (idCdt, node) {

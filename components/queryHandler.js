@@ -21,7 +21,8 @@ System.config({
 })
 
 /**
- * QueryHandler
+ * The Query Handler receives the list of services to be queried and call the most appropriate bridge to complete this task.
+ * After a response is received, it handles the transformation in the 'semantic term' form.
  */
 export default class {
 
@@ -45,10 +46,14 @@ export default class {
 
     /**
      * It receives a list of services, then translate the parameters (if needed) and prepare the bridges for service calls.
-     * When all responses are returned there are translated in the internal format based on response mapping in the service description.
-     * @param services The list of operation identifiers in ascending order of priority
-     * @param decoratedCdt The decorated CDT
-     * @returns {bluebird|exports|module.exports} The list of responses received by the services, already transformed in internal representation
+     * When all responses are returned they are translated in the internal format based on response mapping information in the service description.
+     * @param {Array} services - The list of operation identifiers in ascending order of priority
+     * @param {Object} decoratedCdt - The decorated CDT
+     * @returns {Promise<Object>} It returns an object composed as follow:
+     * {
+     *  {Array} servicesStatus: the metadata about the service status (eg.: it provides information about pagination)
+     *  {Array} results: the list of responses received by the services, already transformed in internal representation
+     * }
      */
     executeQueries (services, decoratedCdt) {
         //if no service was selected, return an empty object
@@ -89,11 +94,19 @@ export default class {
     }
 
     /**
-     * Call the correct service's bridge and transform the response to make an array of items
-     * @param descriptor The service description
-     * @param decoratedCdt The decorated CDT
-     * @param paginationStatus The pagination information about all the services
-     * @returns {Promise.<T>} The list of the responses, in order of service ranking
+     * Call the correct service's bridge and transform the response to make it an array of items
+     * @param {Object} descriptor - The service description
+     * @param {Object} decoratedCdt - The decorated CDT
+     * @param {Object} paginationStatus - The pagination information about all the services
+     * @returns {Promise<Object>} It returns an object composed as follow:
+     * {
+     *  serviceStatus: {
+     *      {idOperation} idOperation: the operation's identifier
+     *      {Boolean} hasNextPage: true if the service can give back another page with other results
+     *      {String|Number} nextPage: the token or number to request the next page
+     *  }
+     *  {Array} response: the transformed list of items received from the service
+     * }
      * @private
      */
     _callService (descriptor, decoratedCdt, paginationStatus) {

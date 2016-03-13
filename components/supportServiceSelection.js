@@ -8,7 +8,7 @@ import Provider from '../provider/provider'
 import Metrics from '../utils/MetricsUtils'
 
 /**
- * SupportServiceSelection
+ * This class chooses the most appropriate support services to be used in the current context.
  */
 export default class {
 
@@ -28,8 +28,8 @@ export default class {
 
     /**
      * Create the list of support services associated to the current context
-     * @param decoratedCdt The decorated CDT
-     * @returns {bluebird|exports|module.exports} The list of services, with the query associated
+     * @param {Object} decoratedCdt - The decorated CDT
+     * @returns {Promise<Array>} The list of URLs for the support services or intents
      */
     selectServices (decoratedCdt) {
         const startTime = process.hrtime()
@@ -48,9 +48,9 @@ export default class {
 
     /**
      * Select the services associated to a category
-     * @param categories The list of categories
-     * @param decoratedCdt The decorated CDT
-     * @returns {bluebird|exports|module.exports} The list of service objects, composed by the service name and the query associated
+     * @param {Array} categories - The list of categories
+     * @param {Object} decoratedCdt - The decorated CDT
+     * @returns {Promise<Array>} The list of URLs for the support services or intents
      * @private
      */
     _selectServiceFromCategory (categories, decoratedCdt) {
@@ -108,10 +108,10 @@ export default class {
 
     /**
      * Create the final list of support services selected for a specific category
-     * @param filterServices The services found by the standard search
-     * @param customServices The services found by the custom searches
-     * @param constraintCount The count of the constraints associated to a service
-     * @returns {Array} The operation identifiers of the selected support services
+     * @param {Array} filterServices - The services found by the standard search
+     * @param {Array} customServices - The services found by the custom searches
+     * @param {Number} constraintCount - The count of the constraints associated to a service
+     * @returns {Array} The operation's identifiers of the selected support services
      * @private
      */
     _mergeResults (filterServices, customServices, constraintCount) {
@@ -150,13 +150,13 @@ export default class {
 
     /**
      * Compose the queries of the selected services
-     * @param services The list of services
-     * @param category (optional) The service category
+     * @param {Array} descriptors - The list of services descriptions
+     * @param {String} category - The service category (optional)
      * @returns {Array} The list of services with the composed queries
      * @private
      */
-    _composeQueries (services, category) {
-        return _(services)
+    _composeQueries (descriptors, category) {
+        return _(descriptors)
             .map(s => {
                 //configure parameters (the default ones are useful for standard query composition)
                 let start = '?'
@@ -228,16 +228,16 @@ export default class {
 
     /**
      * This function dispatch the specific nodes to the correct search function.
-     * It collects the results and return them to the main method
-     * @param idCdt The CDT identifier
-     * @param nodes The list of specific ndoes
-     * @returns {bluebird|exports|module.exports} The list of associations found. Each association must be composed of an operation identifier
+     * It collects the results and return them to the main method.
+     * @param {ObjectId} idCdt - The CDT's identifier
+     * @param {Array} specificNodes The list of specific nodes
+     * @returns {Promise<Array>} The list of associations found. Each association must be composed of an operation's identifier
      * @private
      */
-    _specificSearch (idCdt, nodes) {
+    _specificSearch (idCdt, specificNodes) {
         let promises = []
         //check if the node dimension have a specific search associated
-        _(nodes).forEach(node => {
+        _(specificNodes).forEach(node => {
             switch (node.name) {
                 case 'CityCoord':
                     //load specific coordinates search
@@ -254,9 +254,9 @@ export default class {
 
     /**
      * Search associations by coordinates.
-     * @param idCdt The CDT identifier
-     * @param node The node with the coordinates
-     * @returns {Promise.<T>} The list of operation identifiers
+     * @param {ObjectId} idCdt - The CDT's identifier
+     * @param {Object} node - The node with the coordinates
+     * @returns {Promise<Array>} The list of operation identifiers
      * @private
      */
     _searchByCoordinates (idCdt, node) {

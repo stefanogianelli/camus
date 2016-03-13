@@ -7,7 +7,7 @@ import config from 'config'
 import Metrics from '../utils/MetricsUtils'
 
 /**
- * TransformResponse
+ * This class handle the trasformation of the results received from the service in the internal format, based on association with the semantic terms
  */
 export default class {
 
@@ -25,9 +25,9 @@ export default class {
 
     /**
      * It transforms the response of the service to make it in internal representation
-     * @param response The response from the service. It must be an array of items
-     * @param descriptor The service's descriptor
-     * @returns {bluebird|exports|module.exports}
+     * @param {Object} response - The response from the service
+     * @param {Object} descriptor - The service's descriptor
+     * @returns {Promise<Array>} The transformed list of items
      */
     mappingResponse (response, descriptor) {
         const start = process.hrtime()
@@ -67,9 +67,9 @@ export default class {
     /**
      * It retrieve the base path where find the list of result items.
      * If the specified path is not an array it converts it to an array.
-     * @param response The response received from the web service
-     * @param listItem The base path where find the items. If the root of the document is the base path leave this field empty
-     * @returns {Array} The array of items
+     * @param {Object} response - The response received from the web service
+     * @param {String} listItem - The base path where find the items. If the root of the document is the base path leave this field empty
+     * @returns {Array} The list of items, as received from the service
      * @private
      */
     _retrieveListOfResults (response, listItem) {
@@ -110,9 +110,9 @@ export default class {
      *   }
      * }
      * key = a.b --> test
-     * @param item The item where to search the key
-     * @param key The key to be searched. Write it in dot notation
-     * @returns {*} The value found or null
+     * @param {Object} item - The item where to search the key
+     * @param {String} key - The key to be searched. Dot notation is supported
+     * @returns {String} The value found, otherwise returns null
      * @private
      */
     _getItemValue (item, key) {
@@ -135,10 +135,10 @@ export default class {
     }
 
     /**
-     * Transform a single item in the new representation
-     * @param item The original item
-     * @param descriptor The mapping rules
-     * @returns {{}} The transformed object
+     * Transform a single item in the new representation.
+     * @param {Object} item - The original item
+     * @param {Object} descriptor - The service descriptor that contains the mapping rules
+     * @returns {Object} The transformed object
      * @private
      */
     _transformItem (item, descriptor) {
@@ -162,9 +162,9 @@ export default class {
 
     /**
      * Execute custom function on attributes
-     * @param items The list of transformed items
-     * @param descriptor The service's descriptor
-     * @returns {*} The modified list of items
+     * @param {Array} items - The list of transformed items
+     * @param {Object} descriptor - The service's descriptor
+     * @returns {Array} The modified list of items
      * @private
      */
     _executeFunctions (items, descriptor) {
@@ -188,8 +188,8 @@ export default class {
 
     /**
      * This function filters out the invalid values from the response
-     * @param value The value to be checked
-     * @returns {boolean} True if it's invalid, false otherwise
+     * @param {String} value - The value to be checked
+     * @returns {Boolean} True if it's invalid, false otherwise
      * @private
      */
     _isInvalidValue (value) {

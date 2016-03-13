@@ -3,7 +3,8 @@
 import _ from 'lodash'
 
 /**
- * Bridge
+ * Abstract class for every Bridge.
+ * Each bridge must implements the method 'executeQuery' that handles the necessary logic to invoke the service.
  */
 export default class {
 

@@ -10,7 +10,7 @@ import Provider from '../provider/provider'
 import Metrics from '../utils/MetricsUtils'
 
 /**
- * REST Bridge
+ * Bridge implementation for REST and Query services
  */
 export default class extends Bridge {
 
@@ -45,13 +45,13 @@ export default class extends Bridge {
     }
 
     /**
-     * Default bridge for rest and query services.
-     * It executes the mapping between the service parameters and the values in the CDT.
-     * Then compose the query and invoke the service
-     * @param descriptor The service description
-     * @param decoratedCdt The decorated CDT
-     * @param paginationArgs Define the starting point for pagination and how many pages retrieve, if they are available
-     * @returns {Promise|Request|Promise.<T>} The promise with the service responses
+     * It makes the query to the selected service and returns the results
+     * First it executes the mapping between the service parameters and the values in the CDT.
+     * Then compose the query and invoke the service.
+     * @param {Object} descriptor - The service description, with the information about how to handle the service
+     * @param {Object} decoratedCdt - The decorated CDT
+     * @param {Object} paginationArgs - Define the starting point for pagination and how many pages retrieve, if they are available
+     * @returns {Promise<Object>} The promise for the service responses. The object format is the same as @see {@link _invokeService} method
      */
     executeQuery (descriptor, decoratedCdt, paginationArgs) {
         const startTime = process.hrtime()
@@ -71,11 +71,11 @@ export default class extends Bridge {
     }
 
     /**
-     * Map the service parameters to the values derived from the CDT
-     * @param descriptor The service description
-     * @param decoratedCdt The decorated CDT
-     * @returns {bluebird|exports|module.exports} The mapped parameters
-     * These object are composed as follow:
+     * Map the service parameters to the values derived from the CDT.
+     * @param {Object} descriptor - The service description
+     * @param {Object} decoratedCdt - The decorated CDT
+     * @returns {Promise<Array>} The mapped parameters
+     * These objects are composed as follow:
      * {
      *   name: the parameter name
      *   value: the value or the list of values
@@ -151,10 +151,10 @@ export default class extends Bridge {
     }
 
     /**
-     * Search the value of a dimension in the CDT
-     * @param nodes The nodes of the CDT to be taken into account
-     * @param name The name of the dimension
-     * @returns {*} The value found, if exists
+     * Search the value of a dimension in the CDT.
+     * @param {Array} nodes - The nodes of the CDT to be taken into account
+     * @param {String} name - The dimension's name
+     * @returns {String} The value found, if exists
      * @private
      */
     _searchMapping (nodes, name) {
@@ -172,9 +172,9 @@ export default class extends Bridge {
     }
 
     /**
-     * Translate a value into another, based on mapping rule.
-     * A mapping rule consist in objects with the fileds 'from' and 'to', where 'from' is the value to be searched
-     * and 'to' is the output value
+     * Translate a value into another, based on mapping rules.
+     * A mapping rule consist in objects with the fields 'from' and 'to', where 'from' is the value to be searched
+     * and 'to' is the output value.
      * @param {String} value - The current value
      * @param {Array} rules - The list of translation rules
      * @returns {String} The translated value, or the original value if no mappings are found
@@ -191,11 +191,16 @@ export default class extends Bridge {
 
     /**
      * Compose the address of the service, add the header information and call the service.
-     * Then return the service response (parsed)
-     * @param descriptor The service description
-     * @param params The parameters that will be used for query composition
-     * @param pagination Define the starting point for pagination and how many pages retrieve, if they are available
-     * @returns {bluebird|exports|module.exports} The parsed response
+     * Then return the service parsed response.
+     * @param {Object} descriptor - The service description
+     * @param {Array} params - The parameters that will be used for query composition
+     * @param {Object} pagination - Define the starting point for pagination and how many pages retrieve, if they are available
+     * @returns {Promise<Object>} The parsed response with metadata about the status of the query. The response is composed as follow:
+     * {
+     *  {Boolean} hasNextPage: true if the service can be requered in future to acquire new data
+     *  {String|Number} nextPage: the token or the number that will be used to retrieve the next page
+     *  {Array} response: the list of data received from the current query
+     * }
      * @private
      */
     _invokeService (descriptor, params, pagination) {
@@ -253,11 +258,11 @@ export default class extends Bridge {
     }
 
     /**
-     * Make a request to the current web service and retrieve the response
-     * @param address The service's address
-     * @param headers The headers to be appended to the request
-     * @param service The service name
-     * @returns {Object} The received response
+     * Make a request to the current web service and retrieve the response.
+     * @param {String} address - The service's address
+     * @param {Array} headers - The header values to be appended to the request
+     * @param {String} service - The service name, used only for metrics logging
+     * @returns {Promise<Object>} The service response
      * @private
      */
     _makeCall (address, headers, service) {
@@ -323,11 +328,16 @@ export default class extends Bridge {
     }
 
     /**
-     * Check if can be requested a new page from the current service
-     * @param descriptor The service description
-     * @param currentPage The last page queried
-     * @param response The last responses received by the service
-     * @returns {{hasNextPage: boolean, nextPage: *}} hasNextPage is a boolean attribute that specify if exists another page to be queried nextPage define the identifier of the following page, and can be a number or a token depends on the service implementation.
+     * Check the pagination status for the current service.
+     * The status is composed by the information if another information page is available and what is the identifier to retrieve it.
+     * @param {Object} descriptor - The service description
+     * @param {Number} currentPage - The last page queried, used only for 'number' pagination type
+     * @param {Object} response - The last response received by the service
+     * @returns {Object} Return the status of the service's query. This object is created as follow:
+     * {
+     *  {Boolean} hasNextPage: specify if exists another page to be queried
+     *  {String|Number} nextPage: define the identifier of the following page, and can be a number or a token depends on the service implementation
+     * }
      * @private
      */
     _getPaginationStatus (descriptor, currentPage, response) {
@@ -370,9 +380,9 @@ export default class extends Bridge {
     }
 
     /**
-     * Define the initial status of pagination attributes
-     * @param descriptor The service description
-     * @param paginationArgs The pagination arguments received by the caller
+     * Define the initial status of pagination attributes.
+     * @param {Object} descriptor The service description
+     * @param {Object} paginationArgs The pagination arguments received by the caller
      * @returns {String} The startPage attribute defines the starting identifier that will be queried
      * @private
      */
