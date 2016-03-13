@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 
-import Bridge from '../bridges/bridge'
+import Bridge from '../src/bridges/bridge'
 
 describe('Component: Bridge', () => {
 

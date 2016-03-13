@@ -4,8 +4,8 @@ import assert from 'assert'
 
 import MockDatabase from './mockDatabaseCreator'
 import * as mockData from './mockModel'
-import ServiceManager from '../components/primaryServiceSelection'
-import QueryHandler from '../components/queryHandler'
+import ServiceManager from '../src/components/primaryServiceSelection'
+import QueryHandler from '../src/components/queryHandler'
 
 const mockDatabase = new MockDatabase()
 const serviceManager = new ServiceManager()

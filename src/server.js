@@ -6,7 +6,7 @@ import graphqlHTTP from 'express-graphql'
 import config from 'config'
 import _ from 'lodash'
 
-import DatabaseHelper from'./databaseHelper'
+import DatabaseHelper from'./../databaseHelper'
 
 import {
     camusSchema

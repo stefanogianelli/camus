@@ -5,10 +5,10 @@ import Promise from 'bluebird'
 import hat from 'hat'
 import mongoose from 'mongoose'
 
-import User from '../components/userManager'
+import User from '../src/components/userManager'
 import MockDatabase from './mockDatabaseCreator'
 import * as mockModel from './mockModel'
-import Provider from '../provider/provider'
+import Provider from '../src/provider/provider'
 
 const user = new User()
 const mockDatabase = new MockDatabase()

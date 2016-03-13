@@ -3,7 +3,7 @@
 import assert from 'assert'
 import _ from 'lodash'
 
-import ResponseAggregator from '../components/responseAggregator'
+import ResponseAggregator from '../src/components/responseAggregator'
 
 const responseAggregator = new ResponseAggregator()
 

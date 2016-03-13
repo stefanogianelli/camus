@@ -3,7 +3,7 @@
 import assert from 'assert'
 import Promise from 'bluebird'
 
-import ContextManager from '../components/contextManager'
+import ContextManager from '../src/components/contextManager'
 import MockDatabase from './mockDatabaseCreator'
 import * as mockModel from './mockModel'
 

@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 
-import TransformResponse from '../components/transformResponse'
+import TransformResponse from '../src/components/transformResponse'
 
 const transformResponse = new TransformResponse()
 

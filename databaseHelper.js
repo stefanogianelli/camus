@@ -7,17 +7,17 @@ import Promise from 'bluebird'
 import {
     serviceModel,
     operationModel
-} from './models/mongoose/serviceDescription'
-import PrimaryServiceModel from './models/mongoose/primaryServiceAssociation'
+} from './src/models/mongoose/serviceDescription'
+import PrimaryServiceModel from './src/models/mongoose/primaryServiceAssociation'
 import {
     supportAssociation,
     supportConstraint
-} from './models/mongoose/supportServiceAssociation'
+} from './src/models/mongoose/supportServiceAssociation'
 import {
     cdtModel,
     globalCdtModel
-} from './models/mongoose/cdtDescription'
-import UserModel from './models/mongoose/user'
+} from './src/models/mongoose/cdtDescription'
+import UserModel from './src/models/mongoose/user'
 
 /**
  * DatabaseHelper

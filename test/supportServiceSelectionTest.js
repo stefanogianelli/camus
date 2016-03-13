@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 
-import SupportServiceSelection from '../components/supportServiceSelection'
+import SupportServiceSelection from '../src/components/supportServiceSelection'
 import * as mockData from './mockModel'
 import MockDatabase from './mockDatabaseCreator'
 

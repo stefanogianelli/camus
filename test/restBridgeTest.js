@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 
-import RestBridge from '../bridges/restBridge'
+import RestBridge from '../src/bridges/restBridge'
 import * as mockModel from './mockModel'
 
 const restBridge = new RestBridge()
