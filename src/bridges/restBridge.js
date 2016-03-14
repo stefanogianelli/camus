@@ -8,6 +8,7 @@ import config from 'config'
 import Bridge from './bridge'
 import Provider from '../provider/provider'
 import Metrics from '../utils/MetricsUtils'
+import * as Composer from '../utils/QueryComposer'
 
 /**
  * Bridge implementation for REST and Query services
@@ -56,13 +57,7 @@ export default class extends Bridge {
     executeQuery (descriptor, decoratedCdt, paginationArgs) {
         const startTime = process.hrtime()
         return this
-            ._parameterMapping(descriptor, decoratedCdt)
-            .then(params => {
-                if (this._metricsFlag) {
-                    this._metrics.record('RestBridge', 'parameterMapping/' + descriptor.service.name, 'FUN', startTime)
-                }
-                return this._invokeService(descriptor, params, paginationArgs)
-            })
+            ._invokeService(descriptor, decoratedCdt, paginationArgs)
             .finally(() => {
                 if (this._metricsFlag) {
                     this._metrics.record('RestBridge', 'executeQuery/' + descriptor.service.name, 'MAIN', startTime)
@@ -71,129 +66,10 @@ export default class extends Bridge {
     }
 
     /**
-     * Map the service parameters to the values derived from the CDT.
-     * @param {Object} descriptor - The service description
-     * @param {Object} decoratedCdt - The decorated CDT
-     * @returns {Promise<Array>} The mapped parameters
-     * These objects are composed as follow:
-     * {
-     *   name: the parameter name
-     *   value: the value or the list of values
-     * }
-     * @private
-     */
-    _parameterMapping (descriptor, decoratedCdt) {
-        return new Promise((resolve, reject) => {
-            let params = []
-            let nodes = _.concat(decoratedCdt.filterNodes, decoratedCdt.parameterNodes)
-            _(descriptor.parameters).forEach(p => {
-                if (_.isEmpty(p.mappingCDT)) {
-                    //use default value if the parameter is required and no mapping on the CDT was added
-                    if (!_.isUndefined(p.default)) {
-                        params.push({
-                            name: p.name,
-                            value: p.default
-                        })
-                    } else {
-                        if (p.required) {
-                            //the service cannot be invoked
-                            reject('lack of required parameter \'' + p.name + '\'')
-                        }
-                    }
-                } else {
-                    //search for the value(s) in the CDT
-                    let values = ''
-                    let separator = ','
-                    switch (p.collectionFormat) {
-                        case 'csv':
-                            separator = ','
-                            break
-                        case 'ssv':
-                            separator = ' '
-                            break
-                        case 'tsv':
-                            separator = '/'
-                            break
-                        case 'pipes':
-                            separator = '|'
-                            break
-                    }
-                    _(p.mappingCDT).forEach(m => {
-                        //search value in the CDT
-                        let v = this._searchMapping(nodes, m)
-                        if (!_.isUndefined(v)) {
-                            //if needed translate the acquired value
-                            if (_(p).has('translate') && !_.isEmpty(p.translate)) {
-                                v = this._translateValue(v, p.translate)
-                            }
-                            if (_.isEmpty(values)) {
-                                values = v
-                            } else {
-                                values = values.concat(separator + v)
-                            }
-                        }
-                    })
-                    if (!_.isEmpty(values)) {
-                        params.push({
-                            name: p.name,
-                            value: values
-                        })
-                    } else {
-                        if (p.required) {
-                            //the service cannot be invoked
-                            reject('lack of required parameter \'' + p.name + '\'')
-                        }
-                    }
-                }
-            })
-            resolve(params)
-        })
-    }
-
-    /**
-     * Search the value of a dimension in the CDT.
-     * @param {Array} nodes - The nodes of the CDT to be taken into account
-     * @param {String} name - The dimension's name
-     * @returns {String} The value found, if exists
-     * @private
-     */
-    _searchMapping (nodes, name) {
-        let names = name.split('.')
-        let obj = {}
-        if (names.length > 0) {
-            obj = _(nodes).find({name: names[0]})
-        }
-        if (!_.isUndefined(obj)) {
-            if (names.length > 1) {
-                obj = _(obj.fields).find({name: names[1]})
-            }
-            return obj.value
-        }
-    }
-
-    /**
-     * Translate a value into another, based on mapping rules.
-     * A mapping rule consist in objects with the fields 'from' and 'to', where 'from' is the value to be searched
-     * and 'to' is the output value.
-     * @param {String} value - The current value
-     * @param {Array} rules - The list of translation rules
-     * @returns {String} The translated value, or the original value if no mappings are found
-     * @private
-     */
-    _translateValue (value, rules) {
-        for (let rule of rules) {
-            if (rule.from === value) {
-                return rule.to
-            }
-        }
-        return value
-    }
-
-    /**
      * Compose the address of the service, add the header information and call the service.
      * Then return the service parsed response.
      * @param {Object} descriptor - The service description
-     * @param {Array} params - The parameters that will be used for query composition
+     * @param {Object} decoratedCdt - The decoratedCdt
      * @param {Object} pagination - Define the starting point for pagination and how many pages retrieve, if they are available
      * @returns {Promise<Object>} The parsed response with metadata about the status of the query. The response is composed as follow:
      * {
@@ -203,40 +79,16 @@ export default class extends Bridge {
      * }
      * @private
      */
-    _invokeService (descriptor, params, pagination) {
+    _invokeService (descriptor, decoratedCdt, pagination) {
         const start = process.hrtime()
-        //configure parameters (the default ones are useful for standard query composition)
-        let querySymbols = {
-            start: '?',
-            assign: '=',
-            separator: '&'
-        }
-        //change parameter value if the service is REST
-        if (descriptor.service.protocol === 'rest') {
-            querySymbols.start = querySymbols.assign = querySymbols.separator = '/'
-        }
-        //setting up the query path and parameters
-        let address = descriptor.service.basePath + descriptor.path + querySymbols.start
-        let parameters = _(params)
-            .reduce((output, p) => {
-                //add the value(s) to the query
-                if (_.isEmpty(output)) {
-                    return p.name + querySymbols.assign + p.value
-                } else {
-                    return output + querySymbols.separator + p.name + querySymbols.assign + p.value
-                }
-            }, '')
         //acquire pagination parameters
         let startPage = this._getStartPage(descriptor, pagination)
-        //check if next page is defined
-        let currentPageAddress = null
-        if (startPage) {
-            currentPageAddress = descriptor.pagination.attributeName + querySymbols.assign + startPage
-        }
-        //add the address to the request object
-        let fullAddress = address + parameters
-        if (currentPageAddress) {
-            fullAddress += querySymbols.separator + currentPageAddress
+        //get the service address
+        let fullAddress = ''
+        try {
+            fullAddress = Composer.composeAddress(descriptor, decoratedCdt, startPage)
+        } catch (err) {
+            return Promise.reject(err.message)
         }
         if (this._debug) {
             console.log('Querying service \'' + descriptor.service.name + '\': ' + fullAddress)

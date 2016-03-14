@@ -224,35 +224,29 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    async.map(mericiSupportOperations(idService),
-                                        (op, callback) => {
-                                            new operationModel(op).save((err, operation) => {
-                                                callback(err, operation.id)
+                                    new operationModel(mericiSupportOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(mericiSupportAssociations(idCdt, idOperation), (a, callback) => {
+                                            new supportAssociation(a).save(err => {
+                                                callback(err)
                                             })
                                         },
-                                        (err, operations) => {
-                                            callback(err, operations[0], operations[1], operations[2])
+                                        err => {
+                                            callback(err, idOperation)
                                         })
                                 },
-                                (idTaxi, idCarSharing, idDriver, callback) => {
-                                    async.each(mericiSupportAssociations(idCdt, idTaxi, idCarSharing, idDriver), (a, callback) => {
-                                        new supportAssociation(a).save(err => {
+                                (idOperation, callback) => {
+                                    async.each(mericiSupportConstraints(idCdt, idOperation), (c, callback) => {
+                                            new supportConstraint(c).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
                                             callback(err)
                                         })
-                                    },
-                                    err => {
-                                        callback(err, idTaxi, idCarSharing, idDriver)
-                                    })
-                                },
-                                (idTaxi, idCarSharing, idDriver, callback) => {
-                                    async.each(mericiSupportConstraints(idCdt, idTaxi, idCarSharing, idDriver), (c, callback) => {
-                                        new supportConstraint(c).save(err => {
-                                           callback(err)
-                                        })
-                                    },
-                                    err => {
-                                        callback(err)
-                                    })
                                 }
                             ], err => {
                                 callback(err)
@@ -460,28 +454,22 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    async.map(mericiSupportOperations(idService),
-                                        (op, callback) => {
-                                            new operationModel(op).save((err, operation) => {
-                                                callback(err, operation.id)
-                                            })
-                                        },
-                                        (err, operations) => {
-                                            callback(err, operations[0], operations[1], operations[2])
-                                        })
+                                    new operationModel(mericiSupportOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
                                 },
-                                (idTaxi, idCarSharing, idDriver, callback) => {
-                                    async.each(mericiSupportAssociations(idCdt, idTaxi, idCarSharing, idDriver), (a, callback) => {
+                                (idOperation, callback) => {
+                                    async.each(mericiSupportAssociations(idCdt, idOperation), (a, callback) => {
                                             new supportAssociation(a).save(err => {
                                                 callback(err)
                                             })
                                         },
                                         err => {
-                                            callback(err, idTaxi, idCarSharing, idDriver)
+                                            callback(err, idOperation)
                                         })
                                 },
-                                (idTaxi, idCarSharing, idDriver, callback) => {
-                                    async.each(mericiSupportConstraints(idCdt, idTaxi, idCarSharing, idDriver), (c, callback) => {
+                                (idOperation, callback) => {
+                                    async.each(mericiSupportConstraints(idCdt, idOperation), (c, callback) => {
                                             new supportConstraint(c).save(err => {
                                                 callback(err)
                                             })
@@ -698,28 +686,22 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    async.map(mericiSupportOperations(idService),
-                                        (op, callback) => {
-                                            new operationModel(op).save((err, operation) => {
-                                                callback(err, operation.id)
-                                            })
-                                        },
-                                        (err, operations) => {
-                                            callback(err, operations[0], operations[1], operations[2])
-                                        })
+                                    new operationModel(mericiSupportOperations(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
                                 },
-                                (idTaxi, idCarSharing, idDriver, callback) => {
-                                    async.each(mericiSupportAssociations(idCdt, idTaxi, idCarSharing, idDriver), (a, callback) => {
+                                (idOperation, callback) => {
+                                    async.each(mericiSupportAssociations(idCdt, idOperation), (a, callback) => {
                                             new supportAssociation(a).save(err => {
                                                 callback(err)
                                             })
                                         },
                                         err => {
-                                            callback(err, idTaxi, idCarSharing, idDriver)
+                                            callback(err, idOperation)
                                         })
                                 },
-                                (idTaxi, idCarSharing, idDriver, callback) => {
-                                    async.each(mericiSupportConstraints(idCdt, idTaxi, idCarSharing, idDriver), (c, callback) => {
+                                (idOperation, callback) => {
+                                    async.each(mericiSupportConstraints(idCdt, idOperation), (c, callback) => {
                                             new supportConstraint(c).save(err => {
                                                 callback(err)
                                             })
@@ -868,7 +850,7 @@ const cdt = {
             ]
         },
         {
-            name: 'Tipology',
+            name: 'Typology',
             for: 'filter',
             values: [
                 'Bus',
@@ -923,7 +905,7 @@ const cdt1 = userId => {
                 ]
             },
             {
-                name: 'Tipology',
+                name: 'Typology',
                 for: 'filter',
                 values: [
                     'Bus',
@@ -983,7 +965,7 @@ const cdt2 = userId => {
                 ]
             },
             {
-                name: 'Tipology',
+                name: 'Typology',
                 for: 'filter',
                 values: [
                     'Bus',
@@ -1198,64 +1180,6 @@ const eventfulAssociations = (idOperation, idCDT) => {
             ranking: 1
         }
     ]
-}
-
-//google maps service
-const googleMaps = {
-    name: 'GoogleMaps',
-    protocol: 'query',
-    basePath: 'https://maps.googleapis.com/maps/api'
-}
-
-//google maps operations
-const googleMapsOperations = idService => {
-    return {
-        service: idService,
-        name: 'distanceMatrix',
-        type: 'support',
-        path: '/distancematrix/json',
-        parameters: [
-            {
-                name: 'origins',
-                mappingTerm: [
-                    'startCity'
-                ]
-            },
-            {
-                name: 'destinations',
-                mappingTerm: [
-                    'endCity'
-                ]
-            },
-            {
-                name: 'mode',
-                default: 'car'
-            }
-        ]
-    }
-}
-
-//google maps service associations
-const googleMapsAssociations = (idOperation, idCDT) => {
-    return [
-        {
-            _idOperation: idOperation,
-            category: 'Transport',
-            _idCDT: idCDT,
-            dimension: 'Transport',
-            value: 'WithCar'
-        }
-    ]
-}
-
-//google maps service constraint
-const googleMapsConstraint = (idOperation, idCDT) => {
-    return {
-        _idOperation: idOperation,
-        category: 'Transport',
-        _idCDT: idCDT,
-        constraintCount: 1
-    }
 }
 
 //cinema stub service
@@ -1547,6 +1471,64 @@ const mericiPrimaryAssociations = (idCDT, idOperation) => {
     ]
 }
 
+//google maps service
+const googleMaps = {
+    name: 'GoogleMaps',
+    protocol: 'query',
+    basePath: 'https://maps.googleapis.com/maps/api'
+}
+
+//google maps operations
+const googleMapsOperations = idService => {
+    return {
+        service: idService,
+        name: 'distanceMatrix',
+        type: 'support',
+        path: '/distancematrix/json',
+        parameters: [
+            {
+                name: 'origins',
+                mappingTerm: [
+                    'startCity'
+                ]
+            },
+            {
+                name: 'destinations',
+                mappingTerm: [
+                    'endCity'
+                ]
+            },
+            {
+                name: 'mode',
+                default: 'car'
+            }
+        ]
+    }
+}
+
+//google maps service associations
+const googleMapsAssociations = (idOperation, idCDT) => {
+    return [
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            _idCDT: idCDT,
+            dimension: 'Transport',
+            value: 'WithCar'
+        }
+    ]
+}
+
+//google maps service constraint
+const googleMapsConstraint = (idOperation, idCDT) => {
+    return {
+        _idOperation: idOperation,
+        category: 'Transport',
+        _idCDT: idCDT,
+        constraintCount: 1
+    }
+}
+
 //merici support service
 const mericiSupport = {
     name: 'mericiSupport',
@@ -1556,141 +1538,86 @@ const mericiSupport = {
 
 //merici support operations
 const mericiSupportOperations = idService => {
-    return [
-        {
-            service: idService,
-            name: 'searchTaxi',
-            type: 'support',
-            path: '/service_process.php',
-            parameters: [
-                {
-                    name: 'service',
-                    required: true,
-                    default: 'taxi'
-                },
-                {
-                    name: 'lat',
-                    required: true,
-                    default: '45.46867',
-                    mappingTerm: [
-                        'latitude'
-                    ]
-                },
-                {
-                    name: 'lon',
-                    required: true,
-                    default: '9.11144',
-                    mappingTerm: [
-                        'longitude'
-                    ]
-                }
-            ]
-        },
-        {
-            service: idService,
-            name: 'searchCarSharing',
-            type: 'support',
-            path: '/service_process.php',
-            parameters: [
-                {
-                    name: 'service',
-                    required: true,
-                    default: 'carsharing'
-                },
-                {
-                    name: 'lat',
-                    required: true,
-                    default: '45.46867',
-                    mappingTerm: [
-                        'latitude'
-                    ]
-                },
-                {
-                    name: 'lon',
-                    required: true,
-                    default: '9.11144',
-                    mappingTerm: [
-                        'longitude'
-                    ]
-                }
-            ]
-        },
-        {
-            service: idService,
-            name: 'searchDriver',
-            type: 'support',
-            path: '/service_process.php',
-            parameters: [
-                {
-                    name: 'service',
-                    required: true,
-                    default: 'driver'
-                },
-                {
-                    name: 'lat',
-                    required: true,
-                    default: '45.46867',
-                    mappingTerm: [
-                        'latitude'
-                    ]
-                },
-                {
-                    name: 'lon',
-                    required: true,
-                    default: '9.11144',
-                    mappingTerm: [
-                        'longitude'
-                    ]
-                }
-            ]
-        }
-    ]
+    return {
+        service: idService,
+        name: 'searchTaxi',
+        type: 'support',
+        path: '/service_process.php',
+        parameters: [
+            {
+                name: 'service',
+                required: true,
+                mappingCDT: [
+                    'Typology'
+                ],
+                translate: [
+                    {
+                        from: 'Taxi',
+                        to: 'taxi'
+                    },
+                    {
+                        from: 'CarSharing',
+                        to: 'carsharing'
+                    },
+                    {
+                        from: 'WithDriver',
+                        to: 'driver'
+                    }
+                ]
+
+            },
+            {
+                name: 'lat',
+                required: true,
+                default: '45.46867',
+                mappingTerm: [
+                    'latitude'
+                ]
+            },
+            {
+                name: 'lon',
+                required: true,
+                default: '9.11144',
+                mappingTerm: [
+                    'longitude'
+                ]
+            }
+        ]
+    }
 }
 
 //merici support service associations
-const mericiSupportAssociations = (idCDT, idTaxi, idCarSharing, idDriver) => {
+const mericiSupportAssociations = (idCDT, idOperation) => {
     return [
         {
-            _idOperation: idTaxi,
+            _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            dimension: 'Tipology',
+            dimension: 'Typology',
             value: 'Taxi'
         },
         {
-            _idOperation: idCarSharing,
+            _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            dimension: 'Tipology',
+            dimension: 'Typology',
             value: 'CarSharing'
         },
         {
-            _idOperation: idDriver,
+            _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
-            dimension: 'Tipology',
+            dimension: 'Typology',
             value: 'WithDriver'
         }
     ]
 }
 
 //merici support service constraints
-const mericiSupportConstraints = (idCDT, idTaxi, idCarSharing, idDriver) => {
+const mericiSupportConstraints = (idCDT, idOperation) => {
     return [
         {
-            _idOperation: idTaxi,
-            category: 'Transport',
-            _idCDT: idCDT,
-            constraintCount: 1
-        },
-        {
-            _idOperation: idCarSharing,
-            category: 'Transport',
-            _idCDT: idCDT,
-            constraintCount: 1
-        },
-        {
-            _idOperation: idDriver,
+            _idOperation: idOperation,
             category: 'Transport',
             _idCDT: idCDT,
             constraintCount: 1

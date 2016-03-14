@@ -52,27 +52,6 @@ describe('Component: RestBridge', () => {
         })
     })
 
-    describe('#searchMapping()', () => {
-        it('check if simple attribute are correctly handled', () => {
-            const value = restBridge._searchMapping(simpleParameters, 'CityName')
-            assert.equal(value, 'Milan')
-        })
-        it('check if composite attributes are correctly handled', () => {
-            const latitude = restBridge._searchMapping(compositeParameters, 'CityCoord.Latitude')
-            assert.equal(latitude, 45.478906)
-            const longitude = restBridge._searchMapping(compositeParameters, 'CityCoord.Longitude')
-            assert.equal(longitude, 9.234297)
-        })
-        it('check value if a non valid mapping is provided', () => {
-            const value =  restBridge._searchMapping(simpleParameters, 'Budget')
-            assert.equal(typeof value, 'undefined')
-        })
-        it('check value if dot notation mapping is provided but the object doesn\'t have fields', () => {
-            const value =  restBridge._searchMapping(simpleParameters, 'Budget.Name')
-            assert.equal(typeof value, 'undefined')
-        })
-    })
-
 })
 
 const eventful = {

@@ -6,6 +6,7 @@ import config from 'config'
 
 import Provider from '../provider/provider'
 import Metrics from '../utils/MetricsUtils'
+import * as Composer from '../utils/QueryComposer'
 
 /**
  * This class chooses the most appropriate support services to be used in the current context.
@@ -93,7 +94,7 @@ export default class {
                         .then(services => {
                             //compose the queries
                             if (!_.isEmpty(services))
-                                return this._composeQueries(services, c)
+                                return this._composeQueries(services, decoratedCdt, c)
                             else
                                 return []
                         })
@@ -139,7 +140,7 @@ export default class {
         const maxCount = _(results).maxBy('count').count
         //filter out the operations with the maximum count value and that respect their total constraint counter
         results = _(results)
-            .filter(r => (r.count === maxCount && r.constraintCount === r.count))
+            .filter(r => (r.count === maxCount && r.constraintCount <= r.count))
             .map('_idOperation')
             .value()
         if (this._metricsFlag) {
@@ -151,75 +152,27 @@ export default class {
     /**
      * Compose the queries of the selected services
      * @param {Array} descriptors - The list of services descriptions
+     * @param {Object} decoratedCdt - The decorated CDT
      * @param {String} category - The service category (optional)
      * @returns {Array} The list of services with the composed queries
      * @private
      */
-    _composeQueries (descriptors, category) {
+    _composeQueries (descriptors, decoratedCdt, category) {
         return _(descriptors)
             .map(s => {
-                //configure parameters (the default ones are useful for standard query composition)
-                let start = '?'
-                let assign = '='
-                let separator = '&'
-                //change parameter value if the service is REST
-                if (s.service.protocol === 'rest') {
-                    start = assign = separator = '/'
-                }
-                //add the base path and the operation path to the address
-                let address = s.service.basePath + s.path + start
-                //compose the parameters part of the query
-                let output = _(s.parameters).reduce((output, p) => {
-                    let values
-                    if (_.isEmpty(p.mappingTerm)) {
-                        //if no term is associated use the default value
-                        values = p.default
-                    } else {
-                        // compose the values part of the parameter
-                        let valueSeparator = ','
-                        //select the correct separator (the default one is the comma)
-                        switch (p.collectionFormat) {
-                            case 'csv':
-                                valueSeparator = ','
-                                break
-                            case 'ssv':
-                                valueSeparator = ' '
-                                break
-                            case 'tsv':
-                                valueSeparator = '/'
-                                break
-                            case 'pipes':
-                                valueSeparator = '|'
-                                break
-                        }
-                        //concatenate one or more terms, separated by the symbol selected above
-                        values = _(p.mappingTerm).reduce((values, m) => {
-                            if (_.isEmpty(values)) {
-                                return m
-                            } else {
-                                return values + valueSeparator + m
-                            }
-                        }, '')
-                        values = '{' + values + '}'
-                    }
-                    //add the value(s) to the query
-                    if (_.isEmpty(output)) {
-                        return p.name + assign + values
-                    } else {
-                        return output + separator + p.name + assign + values
-                    }
-                }, '')
+                //get the full address
+                let address = Composer.composeAddress(s, decoratedCdt)
                 //return the object
                 if (!_.isUndefined(category) && !_.isEmpty(category)) {
                     return {
                         category: category,
                         service: s.service.name,
-                        url: address + output
+                        url: address
                     }
                 } else {
                     return {
                         name: s.service.name,
-                        url: address + output
+                        url: address
                     }
                 }
             })
