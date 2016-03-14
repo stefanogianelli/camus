@@ -120,7 +120,7 @@ export function composeAddress (descriptor, decoratedCdt, pageInfo) {
         address += querySymbols.start + parameters
     }
     //if is specified a start page, I add it to the address
-    if (!_.isUndefined(pageInfo)) {
+    if (!_.isUndefined(pageInfo) && !_.isNull(pageInfo)) {
         address += descriptor.pagination.attributeName + querySymbols.assign + pageInfo
     }
     return address
