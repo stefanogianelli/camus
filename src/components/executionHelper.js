@@ -50,41 +50,6 @@ if (config.has('paginationTTL')) {
 }
 
 /**
- * Given a user context, it invokes the components in the correct order, then returns the final response
- * @param {Object} context - The user's context
- * @returns {Promise<Object>} The final response
- */
-export function prepareResponse (context) {
-    const start = process.hrtime()
-    if (metricsFlag) {
-        timer = _startTimer()
-    }
-    return contextManager
-        .getDecoratedCdt(context)
-        .then(decoratedCdt => {
-            return Promise
-                .props({
-                    data: primaryService
-                        .selectServices(decoratedCdt)
-                        .then(services => {
-                            return queryHandler
-                                .executeQueries(services, decoratedCdt)
-                        })
-                        .then(responses => {
-                            return responseAggregator
-                                .prepareResponse(responses)
-                        }),
-                    support: supportService.selectServices(decoratedCdt)
-                })
-        })
-        .finally(() => {
-            if (metricsFlag) {
-                metrics.record('ExecutionHelper', 'executionTime', 'MAIN', start)
-            }
-        })
-}
-
-/**
  * Given a user context, it returns the associated decorated CDT
  * @param {String} userId - The user's identifier
  * @param {Object} context - The user's context

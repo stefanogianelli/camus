@@ -12,10 +12,6 @@ import {
     camusSchema
 } from './models/graphql/rootSchema'
 
-import {
-    prepareResponse
-} from './components/executionHelper'
-
 const databaseHelper = new DatabaseHelper()
 
 const app = express()
@@ -28,22 +24,6 @@ app.use(bodyParser.json())
  */
 app.get('/', (req, res) => {
     res.send('Hello CAMUS!')
-})
-
-/**
- * Route necessary by the mobile app to retrieve the data
- * It needs a context for Service selection
- * @deprecated
- */
-app.post('/query', (req, res) => {
-    prepareResponse(req.body)
-        .then(response => {
-            res.send(response)
-        })
-        .catch(e => {
-            console.log('[ERROR] ' + e)
-            res.status(500).send(e)
-        })
 })
 
 /**
