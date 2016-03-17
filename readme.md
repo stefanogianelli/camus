@@ -18,6 +18,10 @@ Clone the repository and execute
     npm install
     
 to install the dependencies.
+
+For tests running install globally the module [PM2](https://github.com/Unitech/pm2):
+
+    npm install pm2 -g
     
 Running
 =======
@@ -29,11 +33,9 @@ Make sure that a mongodb and redis daemon instances are running. Then:
 Test
 ====
 
-Make sure that a mongodb and redis daemon instances are running. Then start the mock services using the command in a new command line:
+Make sure that a mongodb and redis daemon instances are running.
 
-    npm run services
-
-After that, for running the test cases execute:
+Running the test cases with command:
 
     npm test
     
