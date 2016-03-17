@@ -1,7 +1,6 @@
 {
   "server": {
-    "port": 3001,
-    "hostname": "localhost"
+    "port": 3001
   },
   "rest": {
     "timeout": {

@@ -31,13 +31,13 @@ describe('Component: PrimaryServiceSelection', () => {
                 .selectServices(decoratedCdt(_idCDT))
                 .then(services => {
                     assert.equal(services.length, 2)
-                    assert.equal(services[0].rank, 5)
+                    assert.equal(services[0].rank, 4.5)
                     return [services, provider.getServiceByOperationId(services[0]._idOperation)]
                 })
                 .spread((services, data) => {
                     assert.equal(data.service.name, 'Eventful')
                     assert.equal(data.name, 'eventSearch')
-                    assert.equal(services[1].rank, 2)
+                    assert.equal(services[1].rank, 1)
                     return provider.getServiceByOperationId(services[1]._idOperation)
                 })
                 .then(data => {
@@ -53,19 +53,19 @@ describe('Component: PrimaryServiceSelection', () => {
                     return [services, provider.getServiceByOperationId(services[0]._idOperation)]
                 })
                 .spread((services, data) => {
-                    assert.equal(services[0].rank, 2)
+                    assert.equal(services[0].rank, 1)
                     assert.equal(data.service.name, 'GooglePlaces')
                     assert.equal(data.name, 'placeTextSearch')
                     return [services, provider.getServiceByOperationId(services[1]._idOperation)]
                 })
                 .spread((services, data) => {
-                    assert.equal(services[1].rank, 2)
+                    assert.equal(services[1].rank, 1)
                     assert.equal(data.service.name, 'Eventful')
                     assert.equal(data.name, 'eventSearch')
                     return [services, provider.getServiceByOperationId(services[2]._idOperation)]
                 })
                 .spread((services, data) => {
-                    assert.equal(services[2].rank, 2)
+                    assert.equal(services[2].rank, 1)
                     assert.equal(data.service.name, 'fakeService')
                     assert.equal(data.name, 'eventSearch')
                 })
@@ -78,19 +78,19 @@ describe('Component: PrimaryServiceSelection', () => {
                     return [services, provider.getServiceByOperationId(services[0]._idOperation)]
                 })
                 .spread((services, data) => {
-                    assert.equal(services[0].rank, 2)
+                    assert.equal(services[0].rank, 1)
                     assert.equal(data.service.name, 'GooglePlaces')
                     assert.equal(data.name, 'placeTextSearch')
                     return [services, provider.getServiceByOperationId(services[1]._idOperation)]
                 })
                 .spread((services, data) => {
-                    assert.equal(services[1].rank, 2)
+                    assert.equal(services[1].rank, 1)
                     assert.equal(data.service.name, 'Eventful')
                     assert.equal(data.name, 'eventSearch')
                     return [services, provider.getServiceByOperationId(services[2]._idOperation)]
                 })
                 .spread((services, data) => {
-                    assert.equal(services[2].rank, 2)
+                    assert.equal(services[2].rank, 1)
                     assert.equal(data.service.name, 'fakeService')
                     assert.equal(data.name, 'eventSearch')
                 })
