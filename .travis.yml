@@ -7,4 +7,4 @@ services:
 before_install:
   - npm install -g pm2
 before_script:
-  - sleep 15
+  - sleep 20
