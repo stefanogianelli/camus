@@ -7,7 +7,7 @@ import config from 'config'
 
 import RestBridge from '../bridges/restBridge'
 import Provider from '../provider/provider'
-import TransformResponse from './transformResponse'
+import ResponseParser from './responseParser'
 import Metrics from '../utils/MetricsUtils'
 
 System.config({
@@ -32,7 +32,7 @@ export default class {
         //initialize components
         this._restBridge = new RestBridge()
         this._provider = Provider.getInstance()
-        this._transformResponse = new TransformResponse()
+        this._responseParser = new ResponseParser()
         //initialize metrics utility
         this._metricsFlag = false
         if (config.has('metrics')) {
@@ -145,7 +145,7 @@ export default class {
                     this._metrics.record('QueryHandler', 'bridgeExecution', 'EXT', start)
                 }
                 //transform the response
-                return [response, this._transformResponse.mappingResponse(response.response, descriptor)]
+                return [response, this._responseParser.mappingResponse(response.response, descriptor)]
             }).spread((response, mappedResponse) => {
                 //packaging a response with information about pagination status of the service
                 return {

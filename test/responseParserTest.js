@@ -2,24 +2,24 @@
 
 import assert from 'assert'
 
-import TransformResponse from '../src/components/transformResponse'
+import ResponseParser from '../src/components/responseParser'
 
-const transformResponse = new TransformResponse()
+const responseParser = new ResponseParser()
 
-describe('Component: TransformResponse', () => {
+describe('Component: ResponseParser', () => {
 
     describe('#retrieveListOfResults()', () => {
         it('check if the transform operation is done correctly', () => {
-            const array = transformResponse._retrieveListOfResults(googlePlacesResponse, googlePlacesMapping.list)
+            const array = responseParser._retrieveListOfResults(googlePlacesResponse, googlePlacesMapping.list)
             assert.equal(array.length, 2)
         })
         it('check behaviour when the root element doesn\'t have an array nor an object', () => {
-            const array = transformResponse._retrieveListOfResults(stringResponse, 'data')
+            const array = responseParser._retrieveListOfResults(stringResponse, 'data')
             assert.equal(array.length, 0)
         })
         it('check error message when no response is specified', () => {
             try {
-                transformResponse._retrieveListOfResults()
+                responseParser._retrieveListOfResults()
             } catch (e) {
                 assert.equal(e.message, 'Empty response. Please add a response to be mapped')
             }
@@ -28,7 +28,7 @@ describe('Component: TransformResponse', () => {
 
     describe('#mappingResponse()', () => {
         it('check if the mapping is done correctly', () => {
-            return transformResponse
+            return responseParser
                 .mappingResponse(googlePlacesResponse, googlePlacesMapping)
                 .then(data => {
                     assert.equal(data[0].title, 'Girl & the Goat')
@@ -42,7 +42,7 @@ describe('Component: TransformResponse', () => {
                 })
         })
         it('check if a custom function on an attribute is correctly executed', () => {
-            return transformResponse
+            return responseParser
                 .mappingResponse(googlePlacesResponse, mappingWithFunction)
                 .then(data => {
                     assert.equal(data[0].title, 'Restaurant Girl & the Goat')
@@ -56,7 +56,7 @@ describe('Component: TransformResponse', () => {
                 })
         })
         it('check if a function on a non existent attribute doesn\'t change the response', () => {
-            return transformResponse
+            return responseParser
                 .mappingResponse(googlePlacesResponse, mappingWithInvalidFunction)
                 .then(data => {
                     assert.equal(data[0].title, 'Girl & the Goat')
@@ -72,7 +72,7 @@ describe('Component: TransformResponse', () => {
                 })
         })
         it('check if nested base list is correctly handled', () => {
-            return transformResponse
+            return responseParser
                 .mappingResponse(eventfulResponse, eventfulMapping)
                 .then(data => {
                     assert.equal(data[0].title, 'Wine Lover\'s New Year\'s Eve at Volo Restaurant Wine Bar')
@@ -86,7 +86,7 @@ describe('Component: TransformResponse', () => {
                 })
         })
         it('check if null values are deleted from the response', () => {
-            return transformResponse
+            return responseParser
                 .mappingResponse(eventfulResponse, mappgingWithNullValue)
                 .then(data => {
                     assert.equal(typeof data[0].count, 'undefined')
@@ -94,7 +94,7 @@ describe('Component: TransformResponse', () => {
                 })
         })
         it('check root and non array base list is correctly handled', () => {
-            return transformResponse
+            return responseParser
                 .mappingResponse(cinemaResponse, cinemaMapping)
                 .then(data => {
                     assert.equal(data[0].title, 'Cinema Pierrot')
@@ -115,21 +115,21 @@ describe('Component: TransformResponse', () => {
                 })
         })
         it('check error message when no response is specified', () => {
-            return transformResponse
+            return responseParser
                 .mappingResponse()
                 .catch(e => {
                     assert.equal(e, 'Empty response. Please add a response to be mapped')
                 })
         })
         it('check error when no descriptor is provided', () => {
-            return transformResponse
+            return responseParser
                 .mappingResponse(googlePlacesResponse)
                 .catch(e => {
                     assert.equal(e, 'No descriptor defined. Please add a descriptor for the current service')
                 })
         })
         it('check error when no mapping is defined', () => {
-            return transformResponse
+            return responseParser
                 .mappingResponse(googlePlacesResponse, {})
                 .catch(e => {
                     assert.equal(e, 'No mapping defined. Please add a mapping for the current service')
