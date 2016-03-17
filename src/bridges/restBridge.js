@@ -23,7 +23,7 @@ export default class extends Bridge {
             this._timeout = config.get('rest.timeout.service')
         }
         //validity time for cache content (in s)
-        this._cacheTTL = 3600
+        this._cacheTTL = 1800
         if (config.has('rest.timeout.cache')) {
             this._cacheTTL = config.get('rest.timeout.cache')
         }

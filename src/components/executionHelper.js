@@ -44,7 +44,7 @@ if (metricsFlag) {
 
 let timer = null
 
-let sessionExpiration = 300
+let sessionExpiration = 1800
 if (config.has('paginationTTL')) {
     sessionExpiration = config.get('paginationTTL')
 }

@@ -12,20 +12,20 @@
   "rest": {
     "timeout": {
       "service": 3000,
-      "cache": 3600
+      "cache": 1800
     }
   },
   "primaryService": {
     "n": 3,
     "weight": {
-      "filter": 2,
+      "filter": 1,
       "ranking": 4
     }
   },
   "similarity": {
     "threshold": 0.85
   },
-  "paginationTTL": 300,
+  "paginationTTL": 1800,
   "debug": true,
   "metrics": true
 }

@@ -35,7 +35,7 @@ export default class  {
             this._n = config.get('primaryService.n')
         }
         //filter nodes weight
-        this._filterWeight = 2
+        this._filterWeight = 1
         if (config.has('primaryService.weight.filter')) {
             this._filterWeight = config.get('primaryService.weight.filter')
         }
