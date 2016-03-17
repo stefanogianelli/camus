@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/stefanogianelli/camus.svg?token=efsduJeDxrmWMeSyeDHM&branch=master)](https://travis-ci.com/stefanogianelli/camus)
+
 Overview
 ========
 
@@ -16,13 +18,13 @@ Installing and running
 Clone the repository and execute
 
     npm install
-    
+
 to install the dependencies.
 
 For tests running install globally the module [PM2](https://github.com/Unitech/pm2):
 
     npm install pm2 -g
-    
+
 Running
 =======
 
@@ -38,13 +40,13 @@ Make sure that a mongodb and redis daemon instances are running.
 Running the test cases with command:
 
     npm test
-    
+
 or to produce a coverage report execute:
 
     npm run cover
-    
+
 The report will be created in the folder called 'coverage' inside the project's root folder.
-    
+
 Endpoints
 =========
 
