@@ -39,10 +39,6 @@ const parameterSchema = new GraphQLObjectType ({
             description: 'The expected type of the parameter',
             type: GraphQLString
         },
-        enum: {
-            description: 'The list of possible values that the parameter can assume',
-            type: new GraphQLList(GraphQLString)
-        },
         fields: {
             description: 'The list of fields that the parameter can be composed',
             type: new GraphQLList(fieldSchema)
