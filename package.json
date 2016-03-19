@@ -9,8 +9,8 @@
     "cover": "npm run startServices && npm run startIstanbul && npm run stopServices",
     "startMocha": "NODE_ENV=testing ./node_modules/.bin/babel-node ./node_modules/.bin/_mocha",
     "startIstanbul": "NODE_ENV=testing ./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover _mocha",
-    "startServices": "pm2 start ./mockServices/startServices.js",
-    "stopServices": "pm2 stop all"
+    "startServices": "pm2 -s start ./mockServices/startServices.js",
+    "stopServices": "pm2 -s stop all"
   },
   "repository": {
     "type": "git",
