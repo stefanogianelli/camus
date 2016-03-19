@@ -40,7 +40,6 @@ const ParameterSchema = new Schema({
         required: true
     },
     type: String,
-    enum: [String],
     fields: [fieldSchema]
 })
 
