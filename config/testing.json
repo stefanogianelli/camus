@@ -1,0 +1,30 @@
+{
+  "server": {
+    "port": 3001
+  },
+  "database": {
+    "address": "mongodb://localhost/camus_test"
+  },
+  "redis": {
+    "address": "localhost:6379"
+  },
+  "rest": {
+    "timeout": {
+      "service": 3000,
+      "cache": 1800
+    }
+  },
+  "primaryService": {
+    "n": 3,
+    "weight": {
+      "filter": 1,
+      "ranking": 4
+    }
+  },
+  "similarity": {
+    "threshold": 0.85
+  },
+  "paginationTTL": 1800,
+  "debug": false,
+  "metrics": false
+}
