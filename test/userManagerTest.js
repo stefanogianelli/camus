@@ -17,12 +17,14 @@ const provider = Provider.getInstance()
 const ObjectId = mongoose.Types.ObjectId
 
 let _idCdt = null
+let _mashupId = null
 
 describe('Component: UserManager', () => {
 
     before(done => {
-        mockDatabase.createDatabase((err, idCDT) => {
+        mockDatabase.createDatabase((err, idCDT, x, y, mashupId) => {
             _idCdt = idCDT
+            _mashupId = mashupId
             done(err)
         })
     })
@@ -59,8 +61,9 @@ describe('Component: UserManager', () => {
                 .then(result => {
                     return user.getPersonalData(result.id, result.token)
                 })
-                .then(cdt => {
-                    assert.equal(cdt._id.toString(), _idCdt)
+                .then(data => {
+                    assert.equal(data.cdt._id.toString(), _idCdt)
+                    assert.equal(data.mashup._userId.length, 1)
                 })
         })
         it('check error message when an invalid user id is provided', () => {
@@ -86,8 +89,9 @@ describe('Component: UserManager', () => {
                 .then(result => {
                     return user.getPersonalData(result.id, result.token)
                 })
-                .then(cdt => {
-                    assert.equal(cdt._id.toString(), _idCdt)
+                .then(data => {
+                    assert.equal(data.cdt._id.toString(), _idCdt)
+                    assert.equal(data.mashup._id.toString(), _mashupId)
                 })
         })
     })

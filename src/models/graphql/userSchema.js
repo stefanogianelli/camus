@@ -12,6 +12,10 @@ import {
     defaultSchema
 } from './cdtSchema'
 
+import {
+    mashupType
+} from './mashupSchema'
+
 /**
  * LOGIN SCHEMA
  */
@@ -58,9 +62,9 @@ export const loginArgs = {
  * PERSONAL DATA SCHEMA
  */
 
-export const personalDataType = new GraphQLObjectType({
-    name: 'personalData',
-    description: 'The personal data of the user (CDT)',
+const cdtType = new GraphQLObjectType({
+    name: 'cdtDescriptor',
+    description: 'The CDT descriptor',
     fields: () => ({
         idCdt: {
             type: GraphQLString,
@@ -74,6 +78,21 @@ export const personalDataType = new GraphQLObjectType({
         defaultValues: {
             type: new GraphQLList(defaultSchema),
             description: 'The list of default values that are always enabled in the context-based search'
+        }
+    })
+})
+
+export const personalDataType = new GraphQLObjectType({
+    name: 'personalData',
+    description: 'The personal data of the user (CDT)',
+    fields: () => ({
+        cdt: {
+            type: cdtType,
+            description: 'The CDT descriptor'
+        },
+        mashup: {
+            type: mashupType,
+            description: 'The mashup schema'
         }
     })
 })

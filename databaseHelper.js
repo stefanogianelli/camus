@@ -18,6 +18,10 @@ import {
     globalCdtModel
 } from './src/models/mongoose/cdtDescription'
 import UserModel from './src/models/mongoose/user'
+import {
+    mashupModel,
+    globalMashupModel
+} from './src/models/mongoose/mashupSchema'
 
 /**
  * DatabaseHelper
@@ -30,6 +34,16 @@ export default class {
     createDatabase () {
         return new Promise((resolve, reject) => {
             async.waterfall([
+                callback => {
+                    new mashupModel(globalMashup).save((err, mashup) => {
+                        callback(err, mashup._id)
+                    })
+                },
+                (mashupId, callback) => {
+                    new globalMashupModel({mashupId: mashupId}).save(err => {
+                        callback(err)
+                    })
+                },
                 callback => {
                     //create the CDT
                     new cdtModel(cdt).save((err, savedCdt) => callback(err, savedCdt._id))
@@ -861,6 +875,73 @@ const cdt = {
             ],
             parents: [
                 'PublicTransport'
+            ]
+        }
+    ]
+}
+
+const globalMashup = {
+    list: [
+        {
+            topics: [ 'Restaurant' ],
+            contents: [
+                {
+                    type: 'text',
+                    contents: [ 'title' ]
+                },
+                {
+                    type: 'text',
+                    contents: [ 'address' ]
+                }
+            ]
+        },
+        {
+            topics: [ 'Movies' ],
+            contents: [
+                {
+                    type: 'text',
+                    contents: [ 'title' ]
+                },
+                {
+                    type: 'text',
+                    contents: [ 'address' ]
+                }
+            ]
+        }
+    ],
+    details: [
+        {
+            topics: [ 'Movies' ],
+            contents: [
+                {
+                    type: 'text',
+                    contents: [ 'title' ]
+                },
+                {
+                    type: 'text',
+                    contents: [ 'address' ]
+                },
+                {
+                    type: 'text',
+                    contents: [ 'longitude' ]
+                }
+            ]
+        },
+        {
+            topics: [ 'Restaurants' ],
+            contents: [
+                {
+                    type: 'text',
+                    contents: [ 'title' ]
+                },
+                {
+                    type: 'text',
+                    contents: [ 'address' ]
+                },
+                {
+                    type: 'map',
+                    contents: [ 'longitude', 'latitude' ]
+                }
             ]
         }
     ]

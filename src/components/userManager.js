@@ -59,7 +59,10 @@ export default class {
             .checkUserLogin(userId, token)
             .then(() => {
                 //retrieve the user CDT
-                return this._provider.getCdtByUser(userId)
+                return Promise.props({
+                    cdt: this._provider.getCdtByUser(userId),
+                    mashup: this._provider.getUserMashup(userId)
+                })
             })
     }
 

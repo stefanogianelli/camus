@@ -14,7 +14,6 @@ import {
     globalCdtModel
 } from '../models/mongoose/cdtDescription'
 import {
-    serviceModel,
     operationModel
 } from '../models/mongoose/serviceDescription'
 import primaryServiceModel from '../models/mongoose/primaryServiceAssociation'
@@ -23,6 +22,10 @@ import {
     supportConstraint
 } from '../models/mongoose/supportServiceAssociation'
 import userModel from '../models/mongoose/user'
+import {
+    mashupModel,
+    globalMashupModel
+} from '../models/mongoose/mashupSchema'
 
 const ObjectId = mongoose.Types.ObjectId
 
@@ -492,6 +495,51 @@ export default class Provider {
             } else {
                 reject('User not logged in')
             }
+        })
+    }
+
+    /**
+     * Search for customized mashup for the current user. If no mashup is found, it returns the universal mashup schema, valid for all users
+     * @param userId The user's identifier
+     * @returns {Promise<Object>} The user's mashup if exists, otherwise returns the global mashup
+     */
+    getUserMashup (userId) {
+        const start = process.hrtime()
+        return new Promise ((resolve, reject) => {
+            mashupModel.collection
+                .find({_userId: ObjectId(userId)})
+                .limit(1)
+                .toArray((err, results) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    if (results.length === 1) {
+                        if (this._metricsFlag) {
+                            this._metrics.record('Provider', 'getUserMashup', 'DB', start)
+                        }
+                        resolve(results[0])
+                    } else {
+                        //get the global CDT
+                        globalMashupModel
+                            .find({})
+                            .limit(1)
+                            .populate('mashupId')
+                            .lean()
+                            .exec((err, results) => {
+                                if (err) {
+                                    reject(err)
+                                }
+                                if (results.length === 1) {
+                                    if (this._metricsFlag) {
+                                        this._metrics.record('Provider', 'getUserMashup', 'DB', start)
+                                    }
+                                    resolve(results[0].mashupId)
+                                } else {
+                                    reject('No global mashup defined')
+                                }
+                            })
+                    }
+                })
         })
     }
 

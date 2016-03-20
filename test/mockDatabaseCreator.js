@@ -17,6 +17,10 @@ import {
     globalCdtModel
 } from '../src/models/mongoose/cdtDescription'
 import UserModel from '../src/models/mongoose/user'
+import {
+    mashupModel,
+    globalMashupModel
+} from '../src/models/mongoose/mashupSchema'
 
 let instance = null
 
@@ -40,9 +44,21 @@ export default class {
         let _idCDT
         let _idNestedCdt
         let _idMultipleSonsCdt
+        let _mashupId
         async.series([
                 callback => {
                     async.waterfall([
+                        callback => {
+                            new mashupModel(mockData.globalMashup).save((err, mashup) => {
+                                _mashupId = mashup._id
+                                callback(err, mashup._id)
+                            })
+                        },
+                        (mashupId, callback) => {
+                            new globalMashupModel({mashupId: mashupId}).save(err => {
+                                callback(err)
+                            })
+                        },
                         callback => {
                             new UserModel(mockData.anotherUser).save(err => {
                                 callback(err)
@@ -61,6 +77,11 @@ export default class {
                         },
                         (idCdt, userId, callback) => {
                             new globalCdtModel({globalId: idCdt}).save(err => {
+                                callback(err, userId)
+                            })
+                        },
+                        (userId, callback) => {
+                            new mashupModel(mockData.userMashup(userId)).save(err => {
                                 callback(err, userId)
                             })
                         },
@@ -382,7 +403,7 @@ export default class {
                 }
             ],
             err => {
-                callback(err, _idCDT, _idNestedCdt, _idMultipleSonsCdt)
+                callback(err, _idCDT, _idNestedCdt, _idMultipleSonsCdt, _mashupId)
             })
     }
 
@@ -430,6 +451,16 @@ export default class {
                 },
                 callback => {
                     supportConstraint.remove({}, err => {
+                        callback(err)
+                    })
+                },
+                callback => {
+                    mashupModel.remove({}, err => {
+                        callback(err)
+                    })
+                },
+                callback => {
+                    globalMashupModel.remove({}, err => {
                         callback(err)
                     })
                 }

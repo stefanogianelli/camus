@@ -116,6 +116,113 @@ export const cdt = userId => {
     }
 }
 
+export const globalMashup = {
+    list: [
+        {
+            topics: [ 'Restaurant' ],
+            contents: [
+                {
+                    type: 'text',
+                    contents: [ 'title' ]
+                },
+                {
+                    type: 'text',
+                    contents: [ 'address' ]
+                }
+            ]
+        },
+        {
+            topics: [ 'Movies' ],
+            contents: [
+                {
+                    type: 'text',
+                    contents: [ 'title' ]
+                },
+                {
+                    type: 'text',
+                    contents: [ 'address' ]
+                }
+            ]
+        }
+    ],
+    details: [
+        {
+            topics: [ 'Movies' ],
+            contents: [
+                {
+                    type: 'text',
+                    contents: [ 'title' ]
+                },
+                {
+                    type: 'text',
+                    contents: [ 'address' ]
+                },
+                {
+                    type: 'text',
+                    contents: [ 'longitude' ]
+                }
+            ]
+        },
+        {
+            topics: [ 'Restaurants' ],
+            contents: [
+                {
+                    type: 'text',
+                    contents: [ 'title' ]
+                },
+                {
+                    type: 'text',
+                    contents: [ 'address' ]
+                },
+                {
+                    type: 'map',
+                    contents: [ 'longitude', 'latitude' ]
+                }
+            ]
+        }
+    ]
+}
+
+export const userMashup = userId => {
+    return {
+        _userId: [ userId ],
+        list: [
+            {
+                topics: ['Restaurant'],
+                contents: [
+                    {
+                        type: 'text',
+                        contents: ['title']
+                    },
+                    {
+                        type: 'text',
+                        contents: ['address']
+                    }
+                ]
+            }
+        ],
+        details: [
+            {
+                topics: ['Restaurants'],
+                contents: [
+                    {
+                        type: 'text',
+                        contents: ['title']
+                    },
+                    {
+                        type: 'text',
+                        contents: ['address']
+                    },
+                    {
+                        type: 'map',
+                        contents: ['longitude', 'latitude']
+                    }
+                ]
+            }
+        ]
+    }
+}
+
 //CDT with nested sons
 export const nestedCdt = userId => {
     return {

@@ -18,23 +18,42 @@ const loginQuery = `{
 
 const getPersonalData = `{
   getPersonalData(id: "COPY_ID_HERE", token: "COPY_TOKEN_HERE") {
-    idCdt
-    context {
-      name
-      values
-      parameters {
+    cdt {
+      idCdt
+      context {
         name
-        type
-        enum
-        fields {
+        values
+        parameters {
           name
+          type
+          fields {
+            name
+          }
+        }
+        parents
+      }
+      defaultValues {
+        dimension
+        value
+      }
+    }
+    mashup {
+      list {
+        topics
+        contents {
+          type
+          style
+          contents
         }
       }
-      parents
-    }
-    defaultValues {
-      dimension
-      value
+      details {
+        topics
+        contents {
+          type
+          style
+          contents
+        }
+      }
     }
   }
 }`
