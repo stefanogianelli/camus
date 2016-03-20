@@ -51,7 +51,7 @@ export default class {
      * Retrieve the user's personal data. First it checks that the user is correctly logged in
      * @param {String} userId - The user's identifier
      * @param {String} token - The session token associated to the user
-     * @returns {Object} The CDT associated to the user
+     * @returns {Promise<Object>} Returns the user's CDT and mashup schema. If the no specific CDT or mashup are defined for the current user it return the global ones
      */
     getPersonalData (userId, token) {
         //check if the user is correctly logged in
