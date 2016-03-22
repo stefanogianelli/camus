@@ -63,7 +63,7 @@ export const loginArgs = {
  */
 
 const cdtType = new GraphQLObjectType({
-    name: 'cdtDescriptor',
+    name: 'CdtDescriptor',
     description: 'The CDT descriptor',
     fields: () => ({
         idCdt: {
@@ -83,7 +83,7 @@ const cdtType = new GraphQLObjectType({
 })
 
 export const personalDataType = new GraphQLObjectType({
-    name: 'personalData',
+    name: 'PersonalData',
     description: 'The personal data of the user (CDT)',
     fields: () => ({
         cdt: {

@@ -10,7 +10,7 @@ import {
  * Schema for the fields associated to a parameter
  */
 const fieldSchema = new GraphQLObjectType ({
-    name: 'field',
+    name: 'Field',
     description: 'A field associated to a parameter of the CDT',
     fields: () => ({
         name: {
@@ -28,7 +28,7 @@ const fieldSchema = new GraphQLObjectType ({
  * Schema for the node's parameters
  */
 const parameterSchema = new GraphQLObjectType ({
-    name: 'parameter',
+    name: 'Parameter',
     description: 'A parameter associated to a node of the CDT',
     fields: () => ({
         name: {
@@ -50,7 +50,7 @@ const parameterSchema = new GraphQLObjectType ({
  * Schema for each object that compose the CDT
  */
 const nodeSchema = new GraphQLObjectType({
-    name: 'cdtNode',
+    name: 'CdtNode',
     description: 'A single node of the CDT',
     fields: () => ({
         name: {
@@ -76,7 +76,7 @@ const nodeSchema = new GraphQLObjectType({
  * Schema for default values in the user's CDTs
  */
 const defaultSchema = new GraphQLObjectType({
-    name: 'defaultValues',
+    name: 'DefaultValue',
     description: 'The list of values that are always valid',
     fields: () => ({
         dimension: {

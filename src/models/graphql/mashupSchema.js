@@ -7,7 +7,7 @@ import {
 } from 'graphql'
 
 const contentType = new GraphQLObjectType({
-    name: 'contentType',
+    name: 'ContentType',
     description: 'The content of an item',
     fields: () => ({
         type: {
@@ -26,7 +26,7 @@ const contentType = new GraphQLObjectType({
 })
 
 const itemType = new GraphQLObjectType({
-    name: 'itemType',
+    name: 'ItemType',
     description: 'Define rules for items to be shown',
     fields: () => ({
         topics: {
@@ -41,7 +41,7 @@ const itemType = new GraphQLObjectType({
 })
 
 const mashupType = new GraphQLObjectType({
-    name: 'mashupSchema',
+    name: 'MashupSchema',
     description: 'The mashup schema',
     fields: () => ({
         list: {
