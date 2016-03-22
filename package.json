@@ -10,7 +10,8 @@
     "startMocha": "NODE_ENV=testing ./node_modules/.bin/babel-node ./node_modules/.bin/_mocha",
     "startIstanbul": "NODE_ENV=testing ./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover _mocha",
     "startServices": "pm2 -s start ./mockServices/startServices.js",
-    "stopServices": "pm2 -s stop all"
+    "stopServices": "pm2 -s stop all",
+    "deploy": "git push heroku master"
   },
   "repository": {
     "type": "git",
