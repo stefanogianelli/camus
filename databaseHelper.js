@@ -791,6 +791,16 @@ export default class {
                     supportConstraint.remove({}, err => {
                         callback(err)
                     })
+                },
+                callback => {
+                    mashupModel.remove({}, err => {
+                        callback(err)
+                    })
+                },
+                callback => {
+                    globalMashupModel.remove({}, err => {
+                        callback(err)
+                    })
                 }
             ], err => {
                 if (err) {
