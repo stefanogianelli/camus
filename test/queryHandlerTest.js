@@ -46,17 +46,16 @@ describe('Component: QueryHandler', () => {
                 })
         })
         it('check correct execution of custom bridge', () => {
-            //disabled due to problem with promises
-            /*return serviceManager
+            return serviceManager
                 .selectServices(testBridgeContext(_idCDT))
                 .then(function(services) {
                     return queryHandler.executeQueries(services, testBridgeContext(_idCDT))
                 })
                 .then(responses => {
-                    assert.equal(responses.length, 2)
-                    assert.equal(responses[0].title, 'Restaurant Girl & the Goat')
-                    assert.equal(responses[1].title, 'Restaurant The Purple Pig')
-                })*/
+                    assert.equal(responses.results.length, 2)
+                    assert.equal(responses.results[0].title, 'Restaurant Girl & the Goat')
+                    assert.equal(responses.results[1].title, 'Restaurant The Purple Pig')
+                })
         })
     })
 

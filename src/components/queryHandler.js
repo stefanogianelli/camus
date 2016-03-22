@@ -15,8 +15,8 @@ System.config({
     transpiler: 'traceur',
     defaultJSExtensions: true,
     map: {
-        bluebird: '../node_modules/bluebird/js/release/bluebird.js',
-        lodash: '../node_modules/lodash/index.js'
+        bluebird: './node_modules/bluebird/js/release/bluebird.js',
+        lodash: './node_modules/lodash/index.js'
     }
 })
 
@@ -28,7 +28,7 @@ export default class {
 
     constructor () {
         //shortcut to the bridges folder
-        this._bridgeFolder = '../server/bridges/'
+        this._bridgeFolder = './src/bridges/'
         //initialize components
         this._restBridge = new RestBridge()
         this._provider = Provider.getInstance()
@@ -128,11 +128,13 @@ export default class {
             //check if a bridge name is defined
             if (!_.isUndefined(descriptor.bridgeName) && !_.isEmpty(descriptor.bridgeName)) {
                 //load the module
-                promise = System
+                promise = Promise.all([System
                     .import(this._bridgeFolder + descriptor.bridgeName)
                     .then(Module => {
                         const module = new Module.default()
                         return module.executeQuery(decoratedCdt)
+                    })]).then(results => {
+                        return results[0]
                     })
             } else {
                 console.log('ERROR: The service \'' + descriptor.service.name + '\' must define a custom bridge')
