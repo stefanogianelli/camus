@@ -139,6 +139,7 @@ const operationSchema = new Schema({
         enum: protocols
     },
     path: String,
+    storeLink: String,
     bridgeName: String,
     parameters: [parameterSchema],
     headers: [headerSchema],
