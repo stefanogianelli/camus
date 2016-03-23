@@ -23,7 +23,7 @@ export function composeAddress (descriptor, decoratedCdt, pageInfo) {
         querySymbols = _configureQuerySymbol(descriptor.service.protocol)
     }
     //setting up the base path of the service
-    const baseAddress = descriptor.service.basePath + descriptor.path
+    const baseAddress = (_.isUndefined(descriptor.service.basePath) ? '' : descriptor.service.basePath) + descriptor.path
     //get the complete list of nodes available for retrieve the values
     const nodes = _.concat(decoratedCdt.filterNodes, decoratedCdt.parameterNodes)
     //add the parameters to the query
@@ -62,6 +62,7 @@ export function composeAddress (descriptor, decoratedCdt, pageInfo) {
                     break
             }
             //only one case is valid: retrieve values from the CDT or add term placeholders
+            console.log(p)
             if (!_.isEmpty(p.mappingCDT)) {
                 //search values in the CDT
                 values = _(p.mappingCDT).reduce((output, m) => {

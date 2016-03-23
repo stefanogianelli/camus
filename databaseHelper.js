@@ -886,6 +886,14 @@ const cdt = {
             parents: [
                 'PublicTransport'
             ]
+        },
+        {
+            name: 'OS',
+            for: 'filter',
+            values: [
+                'iOS',
+                'Android'
+            ]
         }
     ]
 }
@@ -1054,6 +1062,14 @@ const cdt1 = userId => {
                 parents: [
                     'PublicTransport'
                 ]
+            },
+            {
+                name: 'OS',
+                for: 'filter',
+                values: [
+                    'iOS',
+                    'Android'
+                ]
             }
         ]
     }
@@ -1113,6 +1129,14 @@ const cdt2 = userId => {
                 ],
                 parents: [
                     'PublicTransport'
+                ]
+            },
+            {
+                name: 'OS',
+                for: 'filter',
+                values: [
+                    'iOS',
+                    'Android'
                 ]
             }
         ]
@@ -1611,39 +1635,52 @@ const mericiPrimaryAssociations = (idCDT, idOperation) => {
 //google maps service
 const googleMaps = {
     name: 'GoogleMaps',
-    protocol: 'query',
-    basePath: 'https://maps.googleapis.com/maps/api'
+    protocol: 'query'
 }
 
 //google maps operations
 const googleMapsOperations = idService => {
     return {
         service: idService,
-        name: 'distanceMatrix',
+        name: 'iOSNavigation',
         type: 'support',
-        path: '/distancematrix/json',
+        path: 'comgooglemaps://',
         parameters: [
             {
-                name: 'origins',
+                name: 'daddr',
+                collectionFormat: 'csv',
                 mappingTerm: [
-                    'startCity'
+                    'latitude',
+                    'longitude'
                 ]
             },
             {
-                name: 'destinations',
+                name: 'saddr',
+                collectionFormat: 'csv',
                 mappingTerm: [
-                    'endCity'
+                    'devLat',
+                    'devLon'
                 ]
             },
             {
-                name: 'mode',
-                default: 'car'
+                name: 'directionsmode',
+                mappingCDT: [ 'Transport' ],
+                translate: [
+                    {
+                        from: 'WithCar',
+                        to: 'driving'
+                    },
+                    {
+                        from: 'PublicTransport',
+                        to: 'transit'
+                    }
+                ]
             }
         ]
     }
 }
 
-//google maps service associations
+//google maps iOS service associations
 const googleMapsAssociations = (idOperation, idCDT) => {
     return [
         {
@@ -1652,17 +1689,31 @@ const googleMapsAssociations = (idOperation, idCDT) => {
             _idCDT: idCDT,
             dimension: 'Transport',
             value: 'WithCar'
+        },
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            _idCDT: idCDT,
+            dimension: 'Transport',
+            value: 'PublicTransport'
+        },
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            _idCDT: idCDT,
+            dimension: 'OS',
+            value: 'iOS'
         }
     ]
 }
 
-//google maps service constraint
+//google maps iOS service constraint
 const googleMapsConstraint = (idOperation, idCDT) => {
     return {
         _idOperation: idOperation,
         category: 'Transport',
         _idCDT: idCDT,
-        constraintCount: 1
+        constraintCount: 2
     }
 }
 
