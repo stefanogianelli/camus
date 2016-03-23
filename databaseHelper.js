@@ -893,64 +893,110 @@ const cdt = {
 const globalMashup = {
     list: [
         {
-            topics: [ 'Restaurant' ],
+            topics: [
+                "Restaurant", "Hotel", "Theater", "Museum", "Event"
+            ],
             contents: [
                 {
-                    type: 'text',
-                    contents: [ 'title' ]
+                    type:"text",
+                    contents: "title"
                 },
                 {
-                    type: 'text',
-                    contents: [ 'address' ]
+                    type: "text",
+                    contents: "address"
                 }
             ]
         },
         {
-            topics: [ 'Movies' ],
+            topics: [
+                "Cinema"
+            ],
             contents: [
                 {
-                    type: 'text',
-                    contents: [ 'title' ]
+                    type: "text",
+                    contents: "title"
+
                 },
                 {
-                    type: 'text',
-                    contents: [ 'address' ]
+                    type: "text",
+                    contents: "address"
                 }
             ]
+
         }
     ],
     details: [
         {
-            topics: [ 'Movies' ],
+            topics: [
+                "Cinema", "Hotel", "Theater", "Museum", "Event"
+            ],
             contents: [
                 {
-                    type: 'text',
-                    contents: [ 'title' ]
+                    type: "text",
+                    contents: "title"
                 },
                 {
-                    type: 'text',
-                    contents: [ 'address' ]
+                    type: "text",
+                    contents: "address"
                 },
                 {
-                    type: 'text',
-                    contents: [ 'longitude' ]
+                    type: "map",
+                    contents: [
+                        "latitude",
+                        "longitude"
+                    ]
+                },
+                {
+                    type: "phoneNumber",
+                    contents: "telephone"
+                },
+                {
+                    type: "website",
+                    contents: "website"
+                },
+                {
+                    type: "email",
+                    contents: "email"
+                },
+                {
+                    type: "support",
+                    contents: "support"
+                },
+                {
+                    type: "text",
+                    contents: "meta"
                 }
             ]
         },
         {
-            topics: [ 'Restaurants' ],
-            contents: [
+            topics: [ "Restaurant" ],
+            contents:[
                 {
-                    type: 'text',
-                    contents: [ 'title' ]
+                    type: "text",
+                    contents: "title"
                 },
                 {
-                    type: 'text',
-                    contents: [ 'address' ]
+                    type: "text",
+                    contents: "address"
                 },
                 {
-                    type: 'map',
-                    contents: [ 'longitude', 'latitude' ]
+                    type: "map",
+                    contents: [
+                        "longitude", "latitude"
+                    ]
+                },
+                {
+                    type: "text",
+                    contents: "email"
+                },
+                {
+                    type: "support",
+                    contents: "transport"
+
+                },
+                {
+                    type: "text",
+                    contents: "meta"
                 }
             ]
         }
