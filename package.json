@@ -11,7 +11,7 @@
     "startIstanbul": "NODE_ENV=testing ./node_modules/.bin/babel-node ./node_modules/.bin/isparta cover _mocha",
     "startServices": "pm2 -s start ./mockServices/startServices.js",
     "stopServices": "pm2 -s stop all",
-    "deploy": "git push heroku master"
+    "deploy": "git push heroku master && curl https://camus-poli.herokuapp.com/createDatabase"
   },
   "repository": {
     "type": "git",
