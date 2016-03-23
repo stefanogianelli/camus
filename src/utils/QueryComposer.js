@@ -62,7 +62,6 @@ export function composeAddress (descriptor, decoratedCdt, pageInfo) {
                     break
             }
             //only one case is valid: retrieve values from the CDT or add term placeholders
-            console.log(p)
             if (!_.isEmpty(p.mappingCDT)) {
                 //search values in the CDT
                 values = _(p.mappingCDT).reduce((output, m) => {

@@ -136,17 +136,30 @@ export default class {
                     results[index].count += 1
                 }
             })
-        //get the maximum value of the count attribute
-        const maxCount = _(results).maxBy('count').count
-        //filter out the operations with the maximum count value and that respect their total constraint counter
-        results = _(results)
-            .filter(r => (r.count === maxCount && r.constraintCount <= r.count))
+        //get the support service that strictly respect the constraints
+        const strictResults = _(results)
+            .filter(r => r.constraintCount === r.count)
+            .orderBy('count', 'desc')
+            .value()
+        //check if some results are available
+        if (!_.isEmpty(strictResults)) {
+            //maintain only the operations with the max value of count
+            const maxCount = strictResults[0].count
+            return _(strictResults)
+                .filter(r => r.count === maxCount)
+                .map('_idOperation')
+                .value()
+        }
+        //if no strict results are found, I relax the constraint rule
+        const relaxedResults = _(results)
+            .filter(r => r.constraintCount <= r.count)
+            .orderBy('count', 'desc')
             .map('_idOperation')
             .value()
         if (this._metricsFlag) {
             this._metrics.record('SupportServiceSelection', 'mergeResults', 'FUN', start)
         }
-        return results
+        return relaxedResults
     }
 
     /**
