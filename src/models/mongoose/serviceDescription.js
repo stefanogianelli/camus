@@ -7,7 +7,7 @@ const ObjectId = Schema.Types.ObjectId
 
 const types = 'primary support'.split(' ')
 const separators = 'csv ssv tsv pipes'.split(' ')
-const protocols = 'rest query custom'.split(' ')
+const protocols = 'rest query android custom'.split(' ')
 const paginationTypes = 'number token'.split(' ')
 
 /**

@@ -1645,6 +1645,7 @@ const googleMapsOperations = idService => {
         name: 'iOSNavigation',
         type: 'support',
         path: 'comgooglemaps://',
+        storeLink: 'http://itunes.apple.com/us/app/google-maps/id585027354?mt=8',
         parameters: [
             {
                 name: 'daddr',

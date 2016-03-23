@@ -176,15 +176,17 @@ export default class {
                 //get the full address
                 let address = Composer.composeAddress(s, decoratedCdt)
                 //return the object
-                if (!_.isUndefined(category) && !_.isEmpty(category)) {
+                if (!_.isUndefined(s.storeLink)) {
                     return {
                         category: category,
                         service: s.service.name,
-                        url: address
+                        url: address,
+                        storeLink: s.storeLink
                     }
                 } else {
                     return {
-                        name: s.service.name,
+                        category: category,
+                        service: s.service.name,
                         url: address
                     }
                 }

@@ -23,6 +23,10 @@ export default new GraphQLObjectType ({
         url: {
             description: 'The service URL',
             type: GraphQLString
+        },
+        storeLink: {
+            description: 'The store link for the app required to use the associated intent',
+            type: GraphQLString
         }
     })
 })
