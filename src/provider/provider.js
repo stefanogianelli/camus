@@ -461,17 +461,17 @@ export default class Provider {
 
     /**
      * Check if the user is correctly logged in
-     * @param {String} id - The user's identifier
+     * @param {String} mail - The user's mail address
      * @param {String} token - The session token
      * @returns {Promise<Boolean>} If the function returns true, then the user is correctly logged into the system, otherwise returns an error message
      */
-    checkUserLogin (id, token) {
+    checkUserLogin (mail, token) {
         const start = process.hrtime()
         return new Promise ((resolve, reject) => {
-            if (!_.isUndefined(id) && !_.isUndefined(token)) {
+            if (!_.isUndefined(mail) && !_.isUndefined(token)) {
                 userModel
                     .find({
-                        _id: ObjectId(id),
+                        mail: mail,
                         token: token
                     }, {
                         token: 0,

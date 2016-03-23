@@ -213,15 +213,15 @@ export function login (mail, password) {
 /**
  * Retrieve the user's personal data.
  * First it checks that the user is correctly logged in
- * @param {String} id - The user's identifier
+ * @param {String} mail - The user's email address
  * @param {String} token - The session token associated to the user
  * @returns {Promise<Object>} The CDT associated to the user
  */
-export function getPersonalData (id, token) {
+export function getPersonalData (mail, token) {
     if (metricsFlag) {
         timer = _startTimer()
     }
-    return userManager.getPersonalData(id, token)
+    return userManager.getPersonalData(mail, token)
 }
 
 /**

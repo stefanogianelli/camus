@@ -50,8 +50,8 @@ const queryType = new GraphQLObjectType({
             type: personalDataType,
             description: 'The endpoint committed to provide personal data about the logged user',
             args: personalDataArgs,
-            resolve: (root, {id, token}) => {
-                return getPersonalData(id, token)
+            resolve: (root, {mail, token}) => {
+                return getPersonalData(mail, token)
             }
         }
     })

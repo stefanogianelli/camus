@@ -59,7 +59,7 @@ describe('Component: UserManager', () => {
             return user
                 .login(mockModel.user.mail, mockModel.user.password)
                 .then(result => {
-                    return user.getPersonalData(result.id, result.token)
+                    return user.getPersonalData(mockModel.user.mail, result.token)
                 })
                 .then(data => {
                     assert.equal(data.cdt._id.toString(), _idCdt)
@@ -87,7 +87,7 @@ describe('Component: UserManager', () => {
             return user
                 .login(mockModel.anotherUser.mail, mockModel.anotherUser.password)
                 .then(result => {
-                    return user.getPersonalData(result.id, result.token)
+                    return user.getPersonalData(mockModel.anotherUser.mail, result.token)
                 })
                 .then(data => {
                     assert.equal(data.cdt._id.toString(), _idCdt)

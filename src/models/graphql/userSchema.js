@@ -24,10 +24,6 @@ export const loginType = new GraphQLObjectType({
     name: 'Login',
     description: 'The login result schema',
     fields: () => ({
-        id: {
-            description: 'The user\'s identifier',
-            type: GraphQLString
-        },
         name: {
             description: 'The user\'s name',
             type: GraphQLString
@@ -98,8 +94,8 @@ export const personalDataType = new GraphQLObjectType({
 })
 
 export const personalDataArgs = {
-    id: {
-        description: 'The user\'s identifier',
+    mail: {
+        description: 'The user\'s email address',
         type: new GraphQLNonNull(GraphQLString)
     },
     token: {

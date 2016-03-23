@@ -49,19 +49,19 @@ export default class {
 
     /**
      * Retrieve the user's personal data. First it checks that the user is correctly logged in
-     * @param {String} userId - The user's identifier
+     * @param {String} mail - The user's email address
      * @param {String} token - The session token associated to the user
      * @returns {Promise<Object>} Returns the user's CDT and mashup schema. If the no specific CDT or mashup are defined for the current user it return the global ones
      */
-    getPersonalData (userId, token) {
+    getPersonalData (mail, token) {
         //check if the user is correctly logged in
         return this._provider
-            .checkUserLogin(userId, token)
-            .then(() => {
+            .checkUserLogin(mail, token)
+            .then(user => {
                 //retrieve the user CDT
                 return Promise.props({
-                    cdt: this._provider.getCdtByUser(userId),
-                    mashup: this._provider.getUserMashup(userId)
+                    cdt: this._provider.getCdtByUser(user._id),
+                    mashup: this._provider.getUserMashup(user._id)
                 })
             })
     }

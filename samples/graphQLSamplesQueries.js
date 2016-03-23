@@ -4,7 +4,6 @@
 
 const loginQuery = `{
   login (mail: "COPY_MAIL_HERE", password: "COPY_PASSWORD_HERE") {
-    id
     name
     surname
     token
@@ -17,7 +16,7 @@ const loginQuery = `{
  */
 
 const getPersonalData = `{
-  getPersonalData(id: "COPY_ID_HERE", token: "COPY_TOKEN_HERE") {
+  getPersonalData(mail: "COPY_MAIL_HERE", token: "COPY_TOKEN_HERE") {
     cdt {
       idCdt
       context {
