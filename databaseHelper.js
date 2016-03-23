@@ -68,7 +68,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(googlePlacesOperations(idService)).save((err, operation) => {
+                                    new operationModel(googlePlacesOperation(idService)).save((err, operation) => {
                                        callback(err, operation.id)
                                     })
                                 },
@@ -95,7 +95,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(eventfulOperations(idService)).save((err, operation) => {
+                                    new operationModel(eventfulOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -122,7 +122,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(cinemaStubOperations(idService)).save((err, operation) => {
+                                    new operationModel(cinemaStubOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -149,7 +149,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(theaterStubOperations(idService)).save((err, operation) => {
+                                    new operationModel(theaterStubOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -206,22 +206,32 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(googleMapsOperations(idService)).save((err, operation) => {
-                                        callback(err, operation.id)
+                                    async.map(googleMapsOperations(idService), (o, callback) => {
+                                        new operationModel(o).save((err, operation) => {
+                                            callback(err, operation.id)
+                                        })
+                                    },
+                                    (err, results) => {
+                                        callback(err, results[0], results[1])
                                     })
                                 },
-                                (idOperation, callback) => {
-                                    async.each(googleMapsAssociations(idOperation, idCdt), (a, callback) => {
+                                (idOperationiOS, idOperationAndroid, callback) => {
+                                    async.each(googleMapsAssociations(idOperationiOS, idOperationAndroid, idCdt), (a, callback) => {
                                         new supportAssociation(a).save(err => {
                                             callback(err)
                                         })
                                     },
                                     err => {
-                                        callback(err, idOperation)
+                                        callback(err, idOperationiOS, idOperationAndroid)
                                     })
                                 },
-                                (idOperation, callback) => {
-                                    new supportConstraint(googleMapsConstraint(idOperation, idCdt)).save(err => {
+                                (idOperationiOS, idOperationAndroid, callback) => {
+                                    async.each(googleMapsConstraints(idOperationiOS, idOperationAndroid, idCdt), (c, callback) => {
+                                        new supportConstraint(c).save(err => {
+                                            callback(err)
+                                        })
+                                    },
+                                    err => {
                                         callback(err)
                                     })
                                 }
@@ -238,7 +248,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(mericiSupportOperations(idService)).save((err, operation) => {
+                                    new operationModel(mericiSupportOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -254,6 +264,43 @@ export default class {
                                 },
                                 (idOperation, callback) => {
                                     async.each(mericiSupportConstraints(idCdt, idOperation), (c, callback) => {
+                                            new supportConstraint(c).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save apple maps support service
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(appleMaps).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(appleMapsOperation(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(appleMapsAssociations(idCdt, idOperation), (a, callback) => {
+                                            new supportAssociation(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err, idOperation)
+                                        })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(appleMapsConstraints(idCdt, idOperation), (c, callback) => {
                                             new supportConstraint(c).save(err => {
                                                 callback(err)
                                             })
@@ -298,7 +345,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(googlePlacesOperations(idService)).save((err, operation) => {
+                                    new operationModel(googlePlacesOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -325,7 +372,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(eventfulOperations(idService)).save((err, operation) => {
+                                    new operationModel(eventfulOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -352,7 +399,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(cinemaStubOperations(idService)).save((err, operation) => {
+                                    new operationModel(cinemaStubOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -379,7 +426,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(theaterStubOperations(idService)).save((err, operation) => {
+                                    new operationModel(theaterStubOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -436,24 +483,34 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(googleMapsOperations(idService)).save((err, operation) => {
-                                        callback(err, operation.id)
-                                    })
+                                    async.map(googleMapsOperations(idService), (o, callback) => {
+                                            new operationModel(o).save((err, operation) => {
+                                                callback(err, operation.id)
+                                            })
+                                        },
+                                        (err, results) => {
+                                            callback(err, results[0], results[1])
+                                        })
                                 },
-                                (idOperation, callback) => {
-                                    async.each(googleMapsAssociations(idOperation, idCdt), (a, callback) => {
+                                (idOperationiOS, idOperationAndroid, callback) => {
+                                    async.each(googleMapsAssociations(idOperationiOS, idOperationAndroid, idCdt), (a, callback) => {
                                             new supportAssociation(a).save(err => {
                                                 callback(err)
                                             })
                                         },
                                         err => {
-                                            callback(err, idOperation)
+                                            callback(err, idOperationiOS, idOperationAndroid)
                                         })
                                 },
-                                (idOperation, callback) => {
-                                    new supportConstraint(googleMapsConstraint(idOperation, idCdt)).save(err => {
-                                        callback(err)
-                                    })
+                                (idOperationiOS, idOperationAndroid, callback) => {
+                                    async.each(googleMapsConstraints(idOperationiOS, idOperationAndroid, idCdt), (c, callback) => {
+                                            new supportConstraint(c).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
                                 }
                             ], err => {
                                 callback(err)
@@ -468,7 +525,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(mericiSupportOperations(idService)).save((err, operation) => {
+                                    new operationModel(mericiSupportOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -484,6 +541,43 @@ export default class {
                                 },
                                 (idOperation, callback) => {
                                     async.each(mericiSupportConstraints(idCdt, idOperation), (c, callback) => {
+                                            new supportConstraint(c).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save apple maps support service
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(appleMaps).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(appleMapsOperation(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(appleMapsAssociations(idCdt, idOperation), (a, callback) => {
+                                            new supportAssociation(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err, idOperation)
+                                        })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(appleMapsConstraints(idCdt, idOperation), (c, callback) => {
                                             new supportConstraint(c).save(err => {
                                                 callback(err)
                                             })
@@ -530,7 +624,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(googlePlacesOperations(idService)).save((err, operation) => {
+                                    new operationModel(googlePlacesOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -557,7 +651,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(eventfulOperations(idService)).save((err, operation) => {
+                                    new operationModel(eventfulOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -584,7 +678,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(cinemaStubOperations(idService)).save((err, operation) => {
+                                    new operationModel(cinemaStubOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -611,7 +705,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(theaterStubOperations(idService)).save((err, operation) => {
+                                    new operationModel(theaterStubOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -668,24 +762,34 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(googleMapsOperations(idService)).save((err, operation) => {
-                                        callback(err, operation.id)
-                                    })
+                                    async.map(googleMapsOperations(idService), (o, callback) => {
+                                            new operationModel(o).save((err, operation) => {
+                                                callback(err, operation.id)
+                                            })
+                                        },
+                                        (err, results) => {
+                                            callback(err, results[0], results[1])
+                                        })
                                 },
-                                (idOperation, callback) => {
-                                    async.each(googleMapsAssociations(idOperation, idCdt), (a, callback) => {
+                                (idOperationiOS, idOperationAndroid, callback) => {
+                                    async.each(googleMapsAssociations(idOperationiOS, idOperationAndroid, idCdt), (a, callback) => {
                                             new supportAssociation(a).save(err => {
                                                 callback(err)
                                             })
                                         },
                                         err => {
-                                            callback(err, idOperation)
+                                            callback(err, idOperationiOS, idOperationAndroid)
                                         })
                                 },
-                                (idOperation, callback) => {
-                                    new supportConstraint(googleMapsConstraint(idOperation, idCdt)).save(err => {
-                                        callback(err)
-                                    })
+                                (idOperationiOS, idOperationAndroid, callback) => {
+                                    async.each(googleMapsConstraints(idOperationiOS, idOperationAndroid, idCdt), (c, callback) => {
+                                            new supportConstraint(c).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
                                 }
                             ], err => {
                                 callback(err)
@@ -700,7 +804,7 @@ export default class {
                                     })
                                 },
                                 (idService, callback) => {
-                                    new operationModel(mericiSupportOperations(idService)).save((err, operation) => {
+                                    new operationModel(mericiSupportOperation(idService)).save((err, operation) => {
                                         callback(err, operation.id)
                                     })
                                 },
@@ -716,6 +820,43 @@ export default class {
                                 },
                                 (idOperation, callback) => {
                                     async.each(mericiSupportConstraints(idCdt, idOperation), (c, callback) => {
+                                            new supportConstraint(c).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err)
+                                        })
+                                }
+                            ], err => {
+                                callback(err)
+                            })
+                        },
+                        callback => {
+                            //save apple maps support service
+                            async.waterfall([
+                                callback => {
+                                    new serviceModel(appleMaps).save((err, service) => {
+                                        callback(err, service.id)
+                                    })
+                                },
+                                (idService, callback) => {
+                                    new operationModel(appleMapsOperation(idService)).save((err, operation) => {
+                                        callback(err, operation.id)
+                                    })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(appleMapsAssociations(idCdt, idOperation), (a, callback) => {
+                                            new supportAssociation(a).save(err => {
+                                                callback(err)
+                                            })
+                                        },
+                                        err => {
+                                            callback(err, idOperation)
+                                        })
+                                },
+                                (idOperation, callback) => {
+                                    async.each(appleMapsConstraints(idCdt, idOperation), (c, callback) => {
                                             new supportConstraint(c).save(err => {
                                                 callback(err)
                                             })
@@ -898,6 +1039,7 @@ const cdt = {
     ]
 }
 
+//global mashup schema
 const globalMashup = {
     list: [
         {
@@ -1150,8 +1292,8 @@ const googlePlaces = {
     basePath: 'https://maps.googleapis.com/maps/api/place'
 }
 
-//googlePlaces operations
-const googlePlacesOperations = idService => {
+//googlePlaces operation
+const googlePlacesOperation = idService => {
     return {
         service: idService,
         name: 'nearBySearch',
@@ -1262,8 +1404,8 @@ const eventful = {
     basePath: 'http://api.eventful.com/json'
 }
 
-//eventful operations
-const eventfulOperations = idService => {
+//eventful operation
+const eventfulOperation = idService => {
     return {
         service: idService,
         name: 'eventSearch',
@@ -1350,8 +1492,8 @@ const cinemaStub = {
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/cinema/api/v1/queryDB'
 }
 
-//cinema stub operations
-const cinemaStubOperations = idService => {
+//cinema stub operation
+const cinemaStubOperation = idService => {
     return {
         service: idService,
         name: 'search',
@@ -1425,8 +1567,8 @@ const theaterStub = {
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/milanotheater'
 }
 
-//theater stub operations
-const theaterStubOperations = idService => {
+//theater stub operation
+const theaterStubOperation = idService => {
     return {
         service: idService,
         name: 'search',
@@ -1507,7 +1649,7 @@ const mericiPrimary = {
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici'
 }
 
-//merici primary operations
+//merici primary operation
 const mericiPrimaryOperation = idService => {
     return {
         service: idService,
@@ -1640,82 +1782,144 @@ const googleMaps = {
 
 //google maps operations
 const googleMapsOperations = idService => {
-    return {
-        service: idService,
-        name: 'iOSNavigation',
-        type: 'support',
-        path: 'comgooglemaps://',
-        storeLink: 'http://itunes.apple.com/us/app/google-maps/id585027354?mt=8',
-        parameters: [
-            {
-                name: 'daddr',
-                collectionFormat: 'csv',
-                mappingTerm: [
-                    'latitude',
-                    'longitude'
-                ]
-            },
-            {
-                name: 'saddr',
-                collectionFormat: 'csv',
-                mappingTerm: [
-                    'devLat',
-                    'devLon'
-                ]
-            },
-            {
-                name: 'directionsmode',
-                mappingCDT: [ 'Transport' ],
-                translate: [
-                    {
-                        from: 'WithCar',
-                        to: 'driving'
-                    },
-                    {
-                        from: 'PublicTransport',
-                        to: 'transit'
-                    }
-                ]
-            }
-        ]
-    }
-}
-
-//google maps iOS service associations
-const googleMapsAssociations = (idOperation, idCDT) => {
     return [
         {
-            _idOperation: idOperation,
+            service: idService,
+            name: 'iOSNavigation',
+            type: 'support',
+            path: 'comgooglemaps://',
+            storeLink: 'http://itunes.apple.com/us/app/google-maps/id585027354?mt=8',
+            parameters: [
+                {
+                    name: 'daddr',
+                    collectionFormat: 'csv',
+                    mappingTerm: [
+                        'latitude',
+                        'longitude'
+                    ]
+                },
+                {
+                    name: 'saddr',
+                    collectionFormat: 'csv',
+                    mappingTerm: [
+                        'devLat',
+                        'devLon'
+                    ]
+                },
+                {
+                    name: 'directionsmode',
+                    mappingCDT: [ 'Transport' ],
+                    translate: [
+                        {
+                            from: 'WithCar',
+                            to: 'driving'
+                        },
+                        {
+                            from: 'PublicTransport',
+                            to: 'transit'
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            service: idService,
+            name: 'AndroidNavigation',
+            type: 'support',
+            protocol: 'android',
+            path: 'google.navigation',
+            parameters: [
+                {
+                    name: 'q',
+                    collectionFormat: 'csv',
+                    mappingTerm: [
+                        'latitude',
+                        'longitude'
+                    ]
+                },
+                {
+                    name: 'mode',
+                    mappingCDT: 'Transport',
+                    translate: [
+                        {
+                            from: 'WithCar',
+                            to: 'd'
+                        },
+                        {
+                            from: 'PublicTransport',
+                            to: 't'
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+//google maps service associations
+const googleMapsAssociations = (idOperationiOS, idOperationAndroid, idCDT) => {
+    return [
+        {
+            _idOperation: idOperationiOS,
             category: 'Transport',
             _idCDT: idCDT,
             dimension: 'Transport',
             value: 'WithCar'
         },
         {
-            _idOperation: idOperation,
+            _idOperation: idOperationiOS,
             category: 'Transport',
             _idCDT: idCDT,
             dimension: 'Transport',
             value: 'PublicTransport'
         },
         {
-            _idOperation: idOperation,
+            _idOperation: idOperationiOS,
             category: 'Transport',
             _idCDT: idCDT,
             dimension: 'OS',
             value: 'iOS'
+        },
+        {
+            _idOperation: idOperationAndroid,
+            category: 'Transport',
+            _idCDT: idCDT,
+            dimension: 'Transport',
+            value: 'WithCar'
+        },
+        {
+            _idOperation: idOperationAndroid,
+            category: 'Transport',
+            _idCDT: idCDT,
+            dimension: 'Transport',
+            value: 'PublicTransport'
+        },
+        {
+            _idOperation: idOperationAndroid,
+            category: 'Transport',
+            _idCDT: idCDT,
+            dimension: 'OS',
+            value: 'Android'
         }
     ]
 }
 
-//google maps iOS service constraint
-const googleMapsConstraint = (idOperation, idCDT) => {
-    return {
-        _idOperation: idOperation,
-        category: 'Transport',
-        _idCDT: idCDT,
-        constraintCount: 2
-    }
+//google maps service constraints
+const googleMapsConstraints = (idOperationiOS, idOperationAndroid, idCDT) => {
+    return [
+        {
+            _idOperation: idOperationiOS,
+            category: 'Transport',
+            _idCDT: idCDT,
+            constraintCount: 2
+        },
+        {
+            _idOperation: idOperationAndroid,
+            category: 'Transport',
+            _idCDT: idCDT,
+            constraintCount: 2
+        }
+    ]
 }
 
 //merici support service
@@ -1725,8 +1929,8 @@ const mericiSupport = {
     basePath: 'http://pedigree.deib.polimi.it/camus/stub/merici'
 }
 
-//merici support operations
-const mericiSupportOperations = idService => {
+//merici support operation
+const mericiSupportOperation = idService => {
     return {
         service: idService,
         name: 'searchTaxi',
@@ -1810,6 +2014,74 @@ const mericiSupportConstraints = (idCDT, idOperation) => {
             category: 'Transport',
             _idCDT: idCDT,
             constraintCount: 1
+        }
+    ]
+}
+
+//apple maps service
+const appleMaps = {
+    name: 'AppleMaps',
+    protocol: 'query'
+}
+
+//apple maps operation
+const appleMapsOperation = idService => {
+    return {
+        service: idService,
+        name: 'navigation',
+        type: 'support',
+        path: 'http://maps.apple.com/',
+        parameters: [
+            {
+                name: 'll',
+                collectionFormat: 'csv',
+                mappingTerm: [
+                    'latitude',
+                    'longitude'
+                ]
+            },
+            {
+                name: 'dirflg',
+                required: true,
+                default: 'd'
+            },
+            {
+                name: 't',
+                required: true,
+                default: 'r'
+            }
+        ]
+    }
+}
+
+//apple maps service associations
+const appleMapsAssociations = (idOperation, idCDT) => {
+    return [
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            _idCDT: idCDT,
+            dimension: 'Transport',
+            value: 'WithCar'
+        },
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            _idCDT: idCDT,
+            dimension: 'OS',
+            value: 'iOS'
+        }
+    ]
+}
+
+//apple maps service constraints
+const appleMapsConstraints = (idOperation, idCDT) => {
+    return [
+        {
+            _idOperation: idOperation,
+            category: 'Transport',
+            _idCDT: idCDT,
+            constraintCount: 2
         }
     ]
 }

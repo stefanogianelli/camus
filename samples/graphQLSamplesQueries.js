@@ -93,6 +93,10 @@ const restaurantContext = `query Restaurant {
             {
                 dimension: "Transport",
                 value: "PublicTransport"
+            },
+            {
+                dimension: "OS",
+                value: "iOS"
             }
         ],
         support: ["Transport"]
@@ -115,6 +119,7 @@ const restaurantContext = `query Restaurant {
                 category
                 service
                 url
+                storeLink
             }
         }
     }
@@ -151,6 +156,10 @@ const cinemaContext = `query Cinema {
             {
                 dimension: "Transport",
                 value: "PublicTransport"
+            },
+            {
+                dimension: "OS",
+                value: "iOS"
             }
         ],
         support: ["Transport"]
@@ -173,6 +182,7 @@ const cinemaContext = `query Cinema {
                 category
                 service
                 url
+                storeLink
             }
         }
     }
@@ -209,6 +219,10 @@ const hotelContext = `query Hotel {
             {
                 dimension: "Transport",
                 value: "PublicTransport"
+            },
+            {
+                dimension: "OS",
+                value: "iOS"
             }
         ],
         support: ["Transport"]
@@ -231,6 +245,7 @@ const hotelContext = `query Hotel {
                 category
                 service
                 url
+                storeLink
             }
         }
     }
@@ -267,6 +282,10 @@ const museumContext = `query Museum {
             {
                 dimension: "Transport",
                 value: "PublicTransport"
+            },
+            {
+                dimension: "OS",
+                value: "iOS"
             }
         ],
         support: ["Transport"]
@@ -289,6 +308,7 @@ const museumContext = `query Museum {
                 category
                 service
                 url
+                storeLink
             }
         }
     }
@@ -325,6 +345,10 @@ const theaterContext = `query Theater {
             {
                 dimension: "Transport",
                 value: "PublicTransport"
+            },
+            {
+                dimension: "OS",
+                value: "iOS"
             }
         ],
         support: ["Transport"]
@@ -347,6 +371,7 @@ const theaterContext = `query Theater {
                 category
                 service
                 url
+                storeLink
             }
         }
     }
@@ -383,6 +408,10 @@ const eventContext = `query Event {
             {
                 dimension: "Transport",
                 value: "PublicTransport"
+            },
+            {
+                dimension: "OS",
+                value: "iOS"
             }
         ],
         support: ["Transport"]
@@ -405,6 +434,7 @@ const eventContext = `query Event {
                 category
                 service
                 url
+                storeLink
             }
         }
     }
