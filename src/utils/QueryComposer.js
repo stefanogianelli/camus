@@ -11,15 +11,16 @@ import _ from 'lodash'
  * @returns {String} The complete address to query the service
  */
 export function composeAddress (descriptor, decoratedCdt, pageInfo) {
-    //configure parameters (the default ones are useful for standard query composition)
-    let querySymbols = {
-        start: '?',
-        assign: '=',
-        separator: '&'
+    //object for query symbols parameters
+    let querySymbols = {}
+    //check if the current operation override the service protocol
+    if (!_.isUndefined(descriptor.protocol)) {
+        //use the operation protocol
+        querySymbols = _configureQuerySymbol(descriptor.protocol)
     }
-    //change parameter value if the service is REST
-    if (descriptor.service.protocol === 'rest') {
-        querySymbols.start = querySymbols.assign = querySymbols.separator = '/'
+    else {
+        //use the service protocol information
+        querySymbols = _configureQuerySymbol(descriptor.service.protocol)
     }
     //setting up the base path of the service
     const baseAddress = descriptor.service.basePath + descriptor.path
@@ -168,4 +169,38 @@ function _translateValue (value, rules) {
         }
     }
     return value
+}
+
+/**
+ * Configure the query symbols used to compose the final address
+ * @param {String} type - The protocol type
+ * @returns {Object} Return the query symbol object, composed as follow:
+ * {
+ *   start: the start symbol
+ *   assign: the assign symbol
+ *   separator: the separator symbol
+ * }
+ * @private
+ */
+function _configureQuerySymbol (type) {
+    switch (type) {
+        case 'query':
+            return {
+                start: '?',
+                assign: '=',
+                separator: '&'
+            }
+        case 'rest':
+            return {
+                start: '/',
+                assign: '/',
+                separator: '/'
+            }
+        case 'android':
+            return {
+                start: ':',
+                assign: '=',
+                separator: '&'
+            }
+    }
 }

@@ -134,6 +134,10 @@ const operationSchema = new Schema({
         enum: types
     },
     description: String,
+    protocol: {
+        type: String,
+        enum: protocols
+    },
     path: String,
     bridgeName: String,
     parameters: [parameterSchema],
