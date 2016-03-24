@@ -15,25 +15,27 @@ export default class {
 
     /**
      * Check if the current request can be fulfilled with the cached data or will be needed a new query to the services
-     * @param {ObjectId} userId - The user's identifier
+     * @param {String} userMail - The user's mail addres
      * @param {ObjectId} cachedObject - The session object saved in cache
      * @param {Object} paginationArgs - The pagination data requested
      * @returns {Promise<Object>} The updated session object
      */
-    resolveResults (userId, cachedObject, paginationArgs) {
+    resolveResults (userMail, cachedObject, paginationArgs) {
         let promises = []
         //check if a limit is specified
         if (_(paginationArgs).has('first')) {
             const first = paginationArgs.first
             //check the items already seen by the user
-            let userInfo = _(cachedObject.users).find({userId: userId})
+            let userInfo = _(cachedObject.users).find({userMail: userMail})
+            console.log('USER INFO')
+            console.log(userInfo)
             let startIndex = 0
             if (!_.isUndefined(userInfo)) {
                 startIndex = userInfo.itemSeen
             } else {
                 //create entry for the new user
                 userInfo = {
-                    userId: userId,
+                    userMail: userMail,
                     itemSeen: 0
                 }
                 cachedObject.users.push(userInfo)

@@ -65,7 +65,7 @@ const getPersonalData = `{
 // Restaurant sample context
 const restaurantContext = `query Restaurant {
     executeQuery (
-        userId: "COPY_ID_HERE",
+        userMail: "COPY_MAIL_HERE",
         idCdt: "COPY_ID_HERE",
         context: [
             {
@@ -128,7 +128,7 @@ const restaurantContext = `query Restaurant {
 // Cinema sample context
 const cinemaContext = `query Cinema {
     executeQuery (
-        userId: "COPY_ID_HERE",
+        userMail: "COPY_MAIL_HERE",
         idCdt: "COPY_ID_HERE",
         context: [
             {
@@ -191,7 +191,7 @@ const cinemaContext = `query Cinema {
 //Hotel sample context
 const hotelContext = `query Hotel {
     executeQuery (
-        userId: "COPY_ID_HERE",
+        userMail: "COPY_MAIL_HERE",
         idCdt: "COPY_ID_HERE",
         context: [
             {
@@ -254,7 +254,7 @@ const hotelContext = `query Hotel {
 // Museum sample context
 const museumContext = `query Museum {
     executeQuery (
-        userId: "COPY_ID_HERE",
+        userMail: "COPY_MAIL_HERE",
         idCdt: "COPY_ID_HERE",
         context: [
             {
@@ -317,7 +317,7 @@ const museumContext = `query Museum {
 // Theater sample context
 const theaterContext = `query Theater {
     executeQuery (
-        userId: "COPY_ID_HERE",
+        userMail: "COPY_MAIL_HERE",
         idCdt: "COPY_ID_HERE",
         context: [
             {
@@ -380,7 +380,7 @@ const theaterContext = `query Theater {
 // Event sample context
 const eventContext = `query Event {
     executeQuery (
-        userId: "COPY_ID_HERE",
+        userMail: "COPY_MAIL_HERE",
         idCdt: "COPY_ID_HERE",
         context: [
             {

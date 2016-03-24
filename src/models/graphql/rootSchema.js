@@ -34,8 +34,8 @@ const queryType = new GraphQLObjectType({
             type: responseType,
             description: 'The endpoint committed to the query execution',
             args: contextArgs,
-            resolve: (root, {userId, idCdt, context, support}) => {
-                return getDecoratedCdt(userId, {idCdt, context, support})
+            resolve: (root, {userMail, idCdt, context, support}) => {
+                return getDecoratedCdt(userMail, {idCdt, context, support})
             }
         },
         login: {

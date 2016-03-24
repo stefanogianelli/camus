@@ -95,8 +95,8 @@ export const responseType = new GraphQLObjectType({
  * Context arguments
  */
 export const contextArgs = {
-    userId: {
-        description: 'The user\'s identifier',
+    userMail: {
+        description: 'The user\'s email address',
         type: new GraphQLNonNull(GraphQLString)
     },
     idCdt: {

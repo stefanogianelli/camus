@@ -51,7 +51,7 @@ if (config.has('paginationTTL')) {
 
 /**
  * Given a user context, it returns the associated decorated CDT
- * @param {String} userId - The user's identifier
+ * @param {String} userMail - The user's mail address
  * @param {Object} context - The user's context
  * @returns {Promise<Object>} The decorated CDT object, composed as follow:
  * {
@@ -61,7 +61,7 @@ if (config.has('paginationTTL')) {
  *  {String} connectionId: the connection's identifier
  * }
  */
-export function getDecoratedCdt (userId, context) {
+export function getDecoratedCdt (userMail, context) {
     const start = process.hrtime()
     if (metricsFlag) {
         timer = _startTimer()
@@ -77,7 +77,7 @@ export function getDecoratedCdt (userId, context) {
                 //cast the _id as ObjectId
                 res.decoratedCdt._id = ObjectId(res._id)
                 return {
-                    userId: userId,
+                    userMail: userMail,
                     contextHash: contextHash,
                     decoratedCdt: res.decoratedCdt,
                     connectionId: res.connectionId
@@ -88,7 +88,7 @@ export function getDecoratedCdt (userId, context) {
                 .getDecoratedCdt(context)
                 .then(decoratedCdt => {
                     return {
-                        userId: userId,
+                        userMail: userMail,
                         contextHash: contextHash,
                         decoratedCdt: decoratedCdt,
                         connectionId: hat()
@@ -104,14 +104,14 @@ export function getDecoratedCdt (userId, context) {
 
 /**
  * Based on a decorated CDT, it returns the list of items from the primary services
- * @param {ObjectId} userId - The user's identifier
+ * @param {String} userMail - The user's mail address
  * @param {String} contextHash - The context's hash code
  * @param {Object} decoratedCdt - The decorated CDT
  * @param {Object} paginationArgs - Object with information about pagination status provided by GraphQL
  * @param {String} connectionId - The connection's identifier, to aggregate the requests from the same connection
  * @returns {Promise<Array>} The list of items found
  */
-export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArgs, connectionId) {
+export function getPrimaryData (userMail, contextHash, decoratedCdt, paginationArgs, connectionId) {
     const start = process.hrtime()
     //check if the necessary data are available in cache
     return provider
@@ -121,7 +121,7 @@ export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArg
                 //object found in cache
                 console.log('[INFO] Retrieve results from cache')
                 return sessionHelper
-                    .resolveResults(userId, JSON.parse(result), paginationArgs)
+                    .resolveResults(userMail, JSON.parse(result), paginationArgs)
                     .then(response => {
                         //update the cached information
                         provider.setRedisValue(contextHash, JSON.stringify(response), sessionExpiration)
@@ -137,7 +137,7 @@ export function getPrimaryData (userId, contextHash, decoratedCdt, paginationArg
                 results: [],
                 users: [
                     {
-                        userId: userId,
+                        user: userMail,
                         itemSeen: paginationArgs.first || 0
                     }
                 ]
