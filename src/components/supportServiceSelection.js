@@ -152,7 +152,7 @@ export default class {
         }
         //if no strict results are found, I relax the constraint rule
         const relaxedResults = _(results)
-            .filter(r => r.constraintCount <= r.count)
+            .filter(r => r.count > r.constraintCount)
             .orderBy('count', 'desc')
             .map('_idOperation')
             .value()
