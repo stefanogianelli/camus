@@ -1,0 +1,23 @@
+app:
+    build: .
+    volumes: 
+        - ./:/src
+    environment:
+        - MONGOLAB_URI=mongodb://mongo/camus
+        - REDIS_URL=redis:6379
+        - NODE_ENV=production
+    links:
+        - mongo
+        - redis
+    ports:
+        - "3001:3001"
+mongo:
+    image: mongo
+    ports:
+        - "27017:27017"
+    volumes:
+        - db:/data/db
+redis:
+    image: redis
+    ports:
+        - "6379:6379"

@@ -32,6 +32,35 @@ Make sure that a mongodb and redis daemon instances are running. Then:
 
     npm start
 
+
+Docker
+======
+
+It's possible to execute the application on a [Docker](https://www.docker.com/) container. Make sure to install also [Docker Compose](https://www.docker.com/products/docker-compose).
+First build the container with the command:
+
+    docker-compose build
+
+Then run the container:
+
+    docker-compose up
+
+To get the docker machine's ip address execute the command:
+
+    docker-machine ls
+    
+Note: get only the ip address becuase the mapped port for CAMUS remain 3001.
+
+For the first run assure to create the entries in the database using the /createDatabase endpoint
+
+Note for MAC OS X users: if you get the error message:
+
+    Couldn't connect to Docker daemon - you might need to run `docker-machine start default`.
+    
+execute first:
+
+    eval "$(docker-machine env default)"
+
 Test
 ====
 
