@@ -1,7 +1,5 @@
 app:
     build: .
-    volumes: 
-        - ./:/src
     environment:
         - MONGOLAB_URI=mongodb://mongo/camus
         - REDIS_URL=redis:6379

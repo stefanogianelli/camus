@@ -27,8 +27,6 @@ export default class {
             const first = paginationArgs.first
             //check the items already seen by the user
             let userInfo = _(cachedObject.users).find({userMail: userMail})
-            console.log('USER INFO')
-            console.log(userInfo)
             let startIndex = 0
             if (!_.isUndefined(userInfo)) {
                 startIndex = userInfo.itemSeen
