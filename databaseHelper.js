@@ -1316,7 +1316,7 @@ const googlePlacesOperation = idService => {
                 default: '20000'
             },
             {
-                name: 'types',
+                name: 'type',
                 required: true,
                 mappingCDT: [
                     'InterestTopic'
