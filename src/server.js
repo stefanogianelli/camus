@@ -6,13 +6,9 @@ import graphqlHTTP from 'express-graphql'
 import config from 'config'
 import _ from 'lodash'
 
-import DatabaseHelper from'./../databaseHelper'
-
 import {
     camusSchema
 } from './models/graphql/rootSchema'
-
-const databaseHelper = new DatabaseHelper()
 
 const app = express()
 
@@ -24,25 +20,6 @@ app.use(bodyParser.json())
  */
 app.get('/', (req, res) => {
     res.send('Hello CAMUS!')
-})
-
-/**
- * Route used for testing purpose. It deletes and recreates the database from scratch
- */
-app.get('/createDatabase', (req, res) => {
-    databaseHelper
-        //first I clean the existing database
-        .deleteDatabase()
-        //recreate the database
-        .then(() => {
-            return databaseHelper.createDatabase()
-        })
-        .then(idCDT => {
-            res.send('Database created!<br/>idCDT: ' + idCDT)
-        })
-        .catch(e => {
-            res.status(500).send(e)
-        })
 })
 
 //register the graphql endpoint

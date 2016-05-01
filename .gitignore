@@ -36,3 +36,7 @@ node_modules
 .idea
 .DS_Store
 metrics
+
+# database creator tool
+databaseCreator.es6
+databaseCreator.js

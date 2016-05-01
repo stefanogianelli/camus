@@ -81,6 +81,15 @@ Endpoints
 
 By default the server's address is [http://localhost:3001](http://localhost:3001)
 
-The available endpoints are:
-* **GET /createDatabase**: it first destroys the existing database, then create from scratch a new one with the default data
+The available endpoint is:
+
 * **GET /graphql**: graphiql interface for making queries in GraphQL style. Documentation about allowed input and output fields is available in the "Docs" section, on top-right corner of the page
+
+Database Creator Tool
+=====================
+
+Tool to populate the database with sample data. This tool is not pushed to git due to private API keys in it. To load data in the database execute command:
+
+    node databaseCreator.js
+    
+This will first delete all the existent tables then recreate them from scratch.
