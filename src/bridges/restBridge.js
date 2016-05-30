@@ -43,6 +43,8 @@ export default class extends Bridge {
         if (this._metricsFlag) {
             this._metrics = Metrics.getInstance()
         }
+        // FIXME: resolve issue with certificate, need a better way to handle this case
+        process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
     }
 
     /**

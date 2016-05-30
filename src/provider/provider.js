@@ -255,6 +255,11 @@ export default class Provider {
                         if (this._metricsFlag) {
                             this._metrics.record('Provider', 'getServicesByOperationIds', 'DB', start)
                         }
+                        // reorder the results based on provided array
+                        results.sort((a, b) => {
+                            return _.findIndex(idOperations, id => a._id.equals(id)) -
+                                   _.findIndex(idOperations, id => b._id.equals(id));
+                        })
                         resolve(results)
                     })
             } else {
