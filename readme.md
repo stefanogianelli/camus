@@ -53,7 +53,17 @@ To get the docker machine's ip address execute the command:
     
 Note: get only the ip address becuase the mapped port for CAMUS remain 3001.
 
-For the first run assure to create the entries in the database using the /createDatabase endpoint
+### Create database
+
+It's possible to use the Database Populator tool inside a docker container. First step is retrieve the server container id. Execute the command
+
+    docker ps
+
+And get the id of the container named "server_app". The, to run the database tool, execute the command:
+
+    docker exec <container_id> node databasePopulator.js
+
+### Notes
 
 Note for MAC OS X users: if you get the error message:
 
